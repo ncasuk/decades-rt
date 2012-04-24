@@ -1,0 +1,161 @@
+
+                                                                APPENDIX 30
+                                                             4th April 2000
+                                AVAPS - Dropsonde System
+
+This page presently being updated.
+The data shown relates to the old dropsonde system which is no longer in use.
+----------------------------------------------------------------------------------------
+Circuit Breakers Required
+
+1.   Co-pilots upper CB panel - Main AC BUS
+                              - MRF power - Phases A, B, C
+
+2.   Co-pilots DC CB panel - MRF main and ESS DC BUS
+                           - MRF power control
+
+3.   Cargo hold forward bulkhead - MRF Main Distribution panel
+          a.   28V DC - Lamp test
+          b.          - Dropsonde Ejector (2 CBs)
+          c.   200V AC - TRU
+
+Pre-Flight
+
+1.   Check that External ejector cover plate has been removed.
+2.   Check that Internal ejector cover plate has been removed.
+3.   Check that T-handle tool is stowed in Ejector's foot well.
+4.   Check receive/transmit facilities on both Conf and I/C.
+5.   Check condition of sonde carriage.
+6.   Switch on and check dropsonde timer.
+7.   Zero ejection counter.
+8.   If a ground test is required proceed as relevant below, but using dummy
+     sonde.
+9.   Switch master switch to ON.
+10   Switch Service switch to ARMED.
+11.  ON TAXY, Request Engineer/Loadmaster to switch Hydraulic Isolation Cock
+     to ON.
+12.  Press Ejection Start button and hold until illuminated.  Ejection System 
+     Energised lamp will illuminate.  When drum has rotated to loading 
+     position both lights will go out.
+13.  Switch Master switch OFF.
+14.  Request Engineer/Loadmaster to switch Hydraulic Isolation Cock OFF.
+
+In-Flight
+
+1.   When nearing operating area check with Flight Leader that Ramp TV and
+     Video system is ready.
+2.   Reset dropsonde timer.
+3.   Open loading door and load sonde.
+4.   Check that arming clip is located over peg and that seam is located in
+     groove.
+5.   Draw strap over sonde and secure in position.
+6.   Remove arming plug and wait three seconds to ensure that parachute does
+     not deploy.
+7.   Close and lock sonde loading door.  Report on I/C that sonde number .....
+     is LOADED. 
+9.   Monitor countdown to sonde ejection point and at one minute to go switch 
+     Master Switch to ON and Request Engineer/Loadmaster to switch Hydraulic 
+     Isolator Cock to ON..
+
+
+                                        -1-
+
+
+                                                                APPENDIX 30
+                                                           12 February 1991
+
+10.  On the call "5, 4, 3, 2, 1, now" simultaneously press Ejection Start
+     button (hold until illuminated) and event mark.
+11.  On completion of rotation sequence switch Master Switch OFF, request
+     Hydraulics OFF, open loading  door and confirm that sonde has or has not
+     ejected, report on I/C.
+12.  Check condition of carriage.  Note Dropsonde Timer Reading.  See Notes.
+
+SONDE REMOVAL
+
+1.   Check Master switch is OFF.
+2.   Open sonde loading door.
+3.   Replace Arming Plug.
+4.   Unstrap sonde from carriage, remove and pass to Handler.
+
+Pre-landing Checks
+
+1.   Inform Engineer/Loadmaster of number of ejections.
+2.   Check that Master Switch is OFF.
+3.   Request Engineer/Loadmaster to switch Hydraulic Isolation Cock to OFF.
+
+Post-Flight
+
+1.   BEFORE ENGINE SHUTDOWN, check that sonde drum is empty.
+2.   Switch Service Switch to NEUTRAL.
+3.   Switch Master Switch to ON.
+4.   Request Engineer/Loadmaster to switch Hydraulic Isolation Cock to ON.
+5.   Press Ejection Start button and hold until light illuminates (The
+     Ejection Energised lamp and Ejection Start lamps will illuminate.
+     When the drum has rotated to the neutral position the Ejection System
+     Energised and Ejection Start lamps will extinguish but the Neutral lamp
+     will remain illuminated.)
+6.   Switch Master Switch to OFF.  All lights will extinguish.
+7.   Request Engineer/Loadmaster to switch Hydraulic Isolation Cock to
+     ISOLATE.
+8.   Switch dropsonde timer OFF.
+9.   Return all ties, labels, arming plugs to MRF.
+
+Special Handling Features or Safety Recommendations
+
+NOTES
+
+1.  The normal ground position of the sonde carriage is facing outwards ie in
+     the NEUTRAL position, (springs untensioned and condensation cannot build
+     up on the balsa carriage).
+
+2.   Each ejection shall be observed using the Ramp TV System.  If an
+     operational sonde is observed to rise within 7 feet of the aircraft after
+     ejection, a frangible sonde shall be ejected.  The trial with operational
+     sondes may continue if this ejection is successful.  If it is not, two
+     further frangible sondes may be ejected.  Both ejections shall be
+     successful for the trial to continue with sondes.  The trial, with
+     sondes, shall be discontinued if a total of any three ejections result in
+     the sonde rising to within 7 feet of the aircraft.
+                                   -2-
+
+                                                                APPENDIX 30
+                                                           26 November 1990
+
+3.   The time difference between release of each end of the carriage shall be
+     observed.  If the carriage time shows a time difference of more than 10
+     ms, the ejector shall be fired twice without a sonde.  Sonde ejection may
+     continue if both operations give a time difference of less than 10 ms. 
+     If either time difference is more than 10 ms, two frangible sondes shall
+     be ejected.  The further successful ejection of operational sondes will
+     indicate a time malfunction and its indications during the rest of the
+     sortie may be ignored.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        -3-
+
+
+                                                                      

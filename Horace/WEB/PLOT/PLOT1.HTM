@@ -1,0 +1,24 @@
+<HTML>
+<BODY bgcolor=#FFFFFF text=#0C2174 link=#000000><CENTER>
+<A HREF=
+"javascript:window.open('plot.html#'+document.applets[0].gettimes());void(0);">
+New plot, same times</A><br>
+<APPLET CODE='plotapp.class' ARCHIVE='Plot.jar' WIDTH=600 HEIGHT=800 MAYSCRIPT>
+<param name='plottype' value='mxplot'>
+<param name='parameters' value='515,520'>
+<param name='start' value='12:22:56'>
+<param name='stop' value='now'>
+<param name='names' value='TIME FROM MIDNIGHT           ,DEICED TRUE AIR TEMP         '>
+<param name='units' value='secs,K'>
+<param name='symbols' value='-1'>
+<param name='colours' value='1'>
+<param name='port' value='1500'>
+<param name='printfactor' value='10'>
+<param name='normalfactor' value='14'>
+</APPLET>
+<br>
+<form name=form1>
+<input type=hidden name=zm>
+</form>
+</BODY>
+</HTML>

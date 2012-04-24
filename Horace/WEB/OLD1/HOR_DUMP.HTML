@@ -1,0 +1,18 @@
+<HTML>
+<HEAD><TITLE>HOR_DUMP</TITLE>
+<SCRIPT>
+function test1() {
+document.layers.L1.src="cgi-bin/hor_dump"}
+
+function test2() {
+document.layers.L2.src="cgi-bin/hor_dump"}
+</SCRIPT>
+</HEAD>
+
+<BODY>
+<LAYER NAME="L1" VISIBILITY="show" onload="test2()" bgcolor="red" src="cgi-bin/hor_dump">
+</LAYER>
+<LAYER NAME="L2" VISIBILITY="show" onload="test1()" bgcolor="green">
+</LAYER>
+</BODY>
+</HTML>

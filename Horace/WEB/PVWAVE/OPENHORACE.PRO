@@ -1,0 +1,1 @@
+pro openhorace,host=host1,port=port1  common horace,sock,outd,host,port,derindex,dercount,mapstatus,status,fltno  if n_elements(host1) EQ 0 then host1='horace'  if n_elements(port1) EQ 0 then port1=1500  host=host1  port=port1  sock=socket_connect(host,port)  outd=bytarr(256)  returnend

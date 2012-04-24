@@ -1,0 +1,209 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<TITLE>HORNET Terminal Server</TITLE>
+</HEAD>
+<BODY>
+
+<FONT SIZE=2><U><P ALIGN="CENTER">HORNET Terminal Server</P>
+</U><P> </P>
+<U><P>Circuit Breakers Required</P>
+</U>
+<OL>
+
+<LI>UPS - ON.</LI>
+<LI>Forward core console, UPS distribution (H831A), S1-S6 - ON.</LI></OL>
+
+
+<U><P>Normal Operation</P>
+</U></FONT>
+<P ALIGN="LEFT"><TABLE CELLSPACING=0 BORDER=0 CELLPADDING=1 WIDTH=598>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>1.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Power lamp (@)</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>2.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Selftest lamp (C)</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>3.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Network lamp (#)</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>4.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 1 lamp</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green - Flashes when data sent to AVAPS (every 3s)</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>5.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 2 lamp</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green - Flashes when receiving data from AVAPS</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>6.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 3 lamp</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green - Flashes when data sent to SEADAS (every 10s)</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>7.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 4 lamp</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green - Flashes when communicating with nephelometer</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>8.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 5 lamp</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green - Flashes when INU Serial Interface is in use.</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>9.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 6 lamp</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green - Flashes when new Satcom-C message received</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>10.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 7 lamp</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green - Flashes when communicating with Satcom-C</FONT></TD>
+</TR>
+<TR><TD WIDTH="8%" VALIGN="TOP">
+<FONT SIZE=2><P>11.</FONT></TD>
+<TD WIDTH="23%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 8 lamp</FONT></TD>
+<TD WIDTH="69%" VALIGN="TOP">
+<FONT SIZE=2><P>Green - Flashes when data sent to CVI (every 3s)</FONT></TD>
+</TR>
+</TABLE>
+</P>
+
+<FONT SIZE=2>
+<U><P>Description</P>
+</U>
+<P>The HORNET terminal server is mounted at the bottom rear of the forward core console, together with its mains-to-DC converter.  It provides eight RS423 input/output ports to HORACE, to which it is connected by 10Base2 thin wire Ethernet cable.  Eight 9-pin D connectors, labelled P1 to P8, are provided on the DECserver panel (H814) for connecting to the HORNET ports.</P>
+
+<P>Only non-critical systems are attached to HORNET, so that even if HORNET is not working HORACE will retain its most important recording and display capability.</P>
+
+<P>HORNET has to down load its operating software from HORACE each time it is switched on; however once this is loaded it remains in place even when HORACE is switched off or rebooted.</P>
+
+<P>There are a set of eleven green lights on the front of HORNET which give a useful indication of its current state, and also the state of the systems attached to HORNET's ports.</P>
+
+<U><P>Switching on</P>
+</U>
+<OL>
+
+<LI>Ensure the UPS is supplying 230V 50Hz power.</LI>
+<LI>Forward core console, UPS distribution (H831A), S1-S6 - ON.</LI>
+<LI>Observe the power up sequence on the 11 indicator lamps (from left to right - @C#12345678):</LI>
+
+<OL TYPE="a">
+
+<LI>The @ light comes on immediately to indicate power is present.</LI>
+<LI>The port lights (8-1) come on one at a time until all self tests are complete and the C light comes on.  This takes about 25 s.</LI>
+<LI>The # light comes on if the Ethernet circuit is OK.</LI>
+<LI>The # light flashes and the port lights 8 to 5 come on in turn while the server tries to download its software from HORACE.</LI>
+<LI>The # light stays on permanently once the server has its software.  This is typically 2.5 mins after HORACE is switched on, or 40 s after HORNET is switched on if HORACE is already on.</LI>
+<LI>Individual port lights now come on when the corresponding HORACE processes make connections to them.</LI></OL>
+</OL>
+
+<U><P>Pre-flight and In-flight checks</P>
+</U>
+<OL>
+
+<LI>There is no need for pre-flight or in-flight checks unless there are doubts about system operation; in which case check the HORNET indicator lamps as shown for Normal Operation.</LI></OL>
+
+
+<U><P>Post-flight</P>
+</U>
+<OL>
+
+<LI>No special action, HORNET is always powered when the UPS and UPS distribution S1-S6 are on.</LI></OL>
+
+
+<U><P>Use of ports</P>
+</U>
+<P>The processes using each port are as follows:</P>
+</FONT>
+<P ALIGN="LEFT"><TABLE CELLSPACING=0 BORDER=0 CELLPADDING=1 WIDTH=220>
+<TR><TD WIDTH="30%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 1</FONT></TD>
+<TD WIDTH="70%" VALIGN="TOP">
+<FONT SIZE=2><P>H_AVAPS_SND</FONT></TD>
+</TR>
+<TR><TD WIDTH="30%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 2</FONT></TD>
+<TD WIDTH="70%" VALIGN="TOP">
+<FONT SIZE=2><P>H_AVAPS_GET</FONT></TD>
+</TR>
+<TR><TD WIDTH="30%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 3</FONT></TD>
+<TD WIDTH="70%" VALIGN="TOP">
+<FONT SIZE=2><P>H_SEADAS</FONT></TD>
+</TR>
+<TR><TD WIDTH="30%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 4</FONT></TD>
+<TD WIDTH="70%" VALIGN="TOP">
+<FONT SIZE=2><P>H_NEPH</FONT></TD>
+</TR>
+<TR><TD WIDTH="30%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 5</FONT></TD>
+<TD WIDTH="70%" VALIGN="TOP">
+<FONT SIZE=2><P>H_INU</FONT></TD>
+</TR>
+<TR><TD WIDTH="30%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 6</FONT></TD>
+<TD WIDTH="70%" VALIGN="TOP">
+<FONT SIZE=2><P>H_FLASH</FONT></TD>
+</TR>
+<TR><TD WIDTH="30%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 7</FONT></TD>
+<TD WIDTH="70%" VALIGN="TOP">
+<FONT SIZE=2><P>H_SATCOM</FONT></TD>
+</TR>
+<TR><TD WIDTH="30%" VALIGN="TOP">
+<FONT SIZE=2><P>Port 8</FONT></TD>
+<TD WIDTH="70%" VALIGN="TOP">
+<FONT SIZE=2><P>H_CVI</FONT></TD>
+</TR>
+</TABLE>
+</P>
+
+<FONT SIZE=2>
+<P>Note that processes may not make connections immediately the server becomes available; some processes only check the availability of the server on an occasional basis.  Also the ports that are being used for keypads only may not start until the appropriate graphics box is also available.</P>
+
+<P>Most HORACE processes operate with no handshaking.  Therefore they send data out through the HORNET ports without checking that any system is connected to them or working.</P>
+
+<U><P>Possible problems</P>
+</U>
+<OL>
+
+<LI>The @ (power) light does not light - no power getting through.  Check the UPS and S1-S6 CB are on and cables to/from the server power converter and server are in place.</LI>
+<LI>The C (selftest) light does not light - probably a hardware problem with the server - it will need to be replaced, but note the status of the eight port lights since these will indicate the nature of the fault.  If all port lights except 1 and 2 are lit, then there is a problem with the Ethernet connection to the server.</LI>
+<LI>The # (network) light does not light - probably a problem with the Ethernet circuit - either open circuit or not terminated properly.</LI>
+<LI>The # (network) light stays flashing - failing to download the software.  HORACE must be up and running (ie DECnet must be running).  Even when HORACE is running there may be a delay of up to a minute as the server tries different protocols and waits before retrying.  If the server has recently been changed the problem may be that the new server and its Ethernet address has not been entered in the DECnet database.</LI>
+<LI>If a particular port light does not come on or no communication takes place through it (light doesn't flash) then try stopping and starting the HORACE process associated with that port.  If this has no effect switch off the server, switch it on again, and then again try stopping and starting any HORACE processes which don't start working by themselves.</LI></OL>
+
+
+<P>Appendix 45, Revised 4/10/2002, WDNJ</P></FONT></BODY>
+</HTML>

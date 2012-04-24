@@ -1,0 +1,346 @@
+
+                                                                  APPENDIX 40
+                                                                 19 April 1988
+                            Holographic Disdrometer
+
+Circuit Breakers Required
+
+Position                                Labelled
+
+Flight-deck overhead panel (RHS)        Laser Master (toggle switch)
+MRF LH AC BUS (Flight-deck)             Laser Control (Phases A,B,C) 
+Junction-box JB4B                       28V DC        Camera
+(rear of the recorder van)                            Camera Htr.
+                                                      Laser
+          "                             200V AC       Holog CU
+
+Principles of Operation
+
+1.   The holography installation comprises three main parts:
+
+     a)   The laser head and associated electronics - in the starboard
+          maxipod.
+     b)   The F95 camera and associated electronics - in the minipod.
+     c)   The holographic control unit (HCU) - presently situated in the rear
+          of the van but due to be moved to the top of the 2D console.
+
+2.   The equipment is designed to expose holographs on special photographic
+     film when the aircraft is in cloud.  This film is developed after the
+     flight when 3-dimensional images of cloud ice particles and water drops
+     may be reconstructed.
+
+3.   In normal operation, the camera and the laser are synchronised such that
+     when the shutter reaches its maximum open position, the laser is fired
+     via a microswitch inside the camera thus exposing the hologram.  The
+     camera is operated by pulses sent to its control electronics by the HCU. 
+     In addition, the laser may be fired separately without advancing the
+     film and the film advanced without firing the laser.  The former is only
+     done on the ground in order to check the laser operation, whilst the
+     latter may also be used in the air to insert blank frames into the
+     sequence of exposed holograms.  Holograms may be exposed either singly or
+     at a rate of 2 per second by holding down the 'expose hologram' button. 
+     The frame counter reading on the HCU is recorded at 4Hz on the DRS
+     (Parameter 46).  In addition, the 'expose hologram' pulses are sent to
+     the 2D DAS, where the pulse time is stored in a buffer and recorded as
+     part of the housekeeping data.
+
+4.   The controls on the HCU front panel are:
+     
+     a)   HCU on.
+     b)   Camera and Htr.
+     c)   Laser on (key-switch).
+
+
+
+
+
+                                        -1-
+
+
+                                                                  APPENDIX 40
+                                                                 19 April 1988                  
+     These three should be switched on in this order.
+
+     d)   Fire laser.  Fires the laser directly without operating the camera.
+     e)   Advance film.  This advances the film by one frame without the laser
+          being fired.
+     f)   Expose hologram.  Advances the film by one frame with the laser
+          being fired to expose the hologram when the shutter reaches its
+          full-open position.
+
+     Advance film and Expose hologram buttons are duplicated on the 2D
+     console.  Holding any of these buttons depressed will cause the laser
+     and/or camera to run continuously at 2 frames/firings per second. 
+
+     g)   Manual/remote.  Determines whether the system will be operated from
+          the van (manual) or 2D (remote) position.
+     h)   Mark frame number.  This is currently inoperative.
+     i)   Reset frame count.  Resets the HCU frame counter to zero.
+     j)   Lamp test.  Illuminates all segments of the HCU frame counter
+          display.
+
+Pre Flight
+
+1.   Separate instructions for the loading of the film magazines are included
+     in Annex A of these instructions.
+
+2.   Items that should be taken to the aircraft are:
+
+     a)   2 headsets
+     b)   Holography laser key (booked out from FLO's office by an authorised
+          keyholder)
+     c)   Loaded film magazine.
+     d)   Holography laser safety goggles (amber).  These are normally
+          resident in FLO's office.
+     e)   Laser safety notices and Met 0 15 toolkit.  These are normally in
+          the Met O 15 barrow.
+
+3.   The pre-flight checking of the holographic system consists of checking
+     the satisfactory operation of the laser and film advance mechanism.  This
+     requires two people, one inside the aircraft to operate the controls and
+     one outside to monitor the operation of the equipment.
+
+4.   The laser safety notices should be placed a few feet in front of and
+     behind the wing at a point roughly between the maxipod and minipod.
+
+5.   A safety raiser should be placed under the minipos to enable easy access
+     to the camera loading panel.  The latter should be removed, and the dummy
+     magazine removed.
+
+6.   The loaded magazine should then be fitted to the camera.  This is
+     sometimes a 'fiddly' operation and care should be taken to ensure that
+     the magazine is correctly located.  The insulating muff should then be
+     replaced around the camera.
+
+                                        -2-
+
+
+                                                                  APPENDIX 40
+                                                                 19 April 1988           
+7.   The MRF long intercom extension lead (stowed just forward of the
+     right-hand para. door) should be run out to the maxipod position and
+     connected the the intercom box by the right-hand passenger seats
+     (switched to transmit on 'PA').
+
+8.   Having made all the necessary circuit breakers, the equipment should be
+     switched on in the order:
+
+     a)   HCU
+     b)   Camera and Htr
+     c)   Laser (using the key-switch).
+       
+     The sound of the laser running should be clearly audible to the person
+     standing outside the laser hazard zone (defined in MRF Admin Instruction
+     3/83) in front of the nose of the maxipod.  It may however be necessary
+     to switch off the In-cloud Temperature Probe in order to hear this.
+
+9.   Having checked with the outside person that it is clear to fire the
+     laser, the person in the van should perform the following operations:
+
+     a)   Fire laser.  A bright green flash will be visible to the outside
+          person in the area around the camera aperture in the minipod.  The
+          visibility of this flash may be reduced when the minipod is brightly
+          illuminated by the sun.
+     b)   Expose hologram.  2 to 3 frames should be exposed.  The sound of the
+          camera operating will be audible to the outside person, and the
+          laser flash should be visible on each exposure.
+     c)   Advance film.  1 or 2 blank frames to ensure that this function is
+          operating and to clearly separate the frames exposed on the ground.
+
+10.  When these checks have been satisfactorily completed, the camera loading
+     panel should be secured and checked by the flight engineer.  The
+     equipment in the van may be switched off in the reverse of the order
+     given in para 8 above.
+
+In Flight
+
+1.   As soon as possible after take-off, the camera and heater should be
+     switched on.  If this is not done and the camera allowed to fall to low
+     temperatures, the film will become very rigid.  This may cause
+     malfunctions of the film advance.
+
+2.   The laser may also be conveniently switched on at this stage, having
+     ensured that the flight-deck laser master switch is on.  Note that the
+     liquid coolant in the laser does not freeze above about -55oC and hence
+     it is not necessary to switch on the laser on flights where it will not
+     be required for experimental use.
+
+3.   Holograms may be fired from either the HCU or the 2D console depending on
+     the setting of the MANUAL/REMOTE switch.
+
+
+                                        -3-
+
+
+                                                                  APPENDIX 40
+                                                                 19 April 1988                         
+4.   It is normal practice to expose holograms in sequences of a minimum of
+     about 10 exposures.  This then enables the representativeness of the
+     holographic data obtained from individual exposures to be determined. 
+     Such a sequence may be obtained by holding down the 'expose hologram'
+     button for a period of 5 seconds, or alternatively each shot may be
+     exposed manually at intervals of about 1 second.
+
+5.   After each sequence of exposures, a single blank frame should then be
+     taken to event-mark the film using the 'advance film' button.  This is
+     particularly important if holograms are being exposed in sequences
+     greater than 10.  The frame counter reading should then be recorded. 
+     Note that the display on the HCU is in octal.  If the frame count is
+     being monitored on the DRS display, note that only the 8 least
+     significant bits are used.
+ 
+6.   The holographic film is currently loaded in lengths of 110 metres. 
+     Allowing for a small amount of wastage at the beginning of the film, this
+     is sufficient for a total of about 150 frames (including any blanks). 
+     The HCU frame counter will therefore read about 230 when all the film is
+     used.
+
+7.   The camera should remain switched on until the pre-landing checks stage. 
+     Again this is to ensure that the film does not get excessively cold, when
+     moisture may condense on it after landing.
+
+8.   Equipment should be switched off in the order:
+
+     a)   Laser
+     b)   Camera
+     c)   Holography Control Unit.
+
+     Following this, the four circuit breakers on JB4B in the rear of the van
+     may be pulled.
+
+Post Flight
+
+1.   The film magazine should be unloaded, the dummy magazine refitted, and
+     the access panel secured.
+
+2.   The magazine may be unloaded in the darkroom under a dark-red safelight. 
+     The exposed film should be sealed in a light-tight tin marked clearly
+     with the Flight number and the word 'EXPOSED' and returned to Bracknell
+     for development at the earliest opportunity.
+     
+3.   Any unexposed film may be returned to storage in the film fridge in a
+     light- and moisture-proof container.  This should be marked with an
+     estimate of the length of unexposed film remaining.  This may be
+     estimated for example from the final frame counter reading and assuming
+     approximately 15 frames per metre of film with a wastage of about 0.5
+     metre at the beginning of the film.
+
+
+                                        -4-
+
+
+                                                                  APPENDIX 40
+                                                                 19 April 1988
+
+1.   The holographic laser itself is potentially hazardous.  Only authorized
+     and trained personnel may book out the key and operate the system, and
+     operation should be in accordance with the guidelines given in MRF Admin.
+     Instruction No 3/83.
+
+2.   In normal operation there should be no need for any person to be inside
+     the hazard zone defined in the above Instruction when the laser is
+     powered up.  During pre-flight checks, it is the responsibility of the
+     operator in the van to check via the intercom with the person outside
+     that he is in a safe position before any firing of the laser takes place.
+
+3.   If for any reason it is necessary for the person outside to work in the
+     region between the maxipod and minipod, he should ensure that he is
+     wearing the amber safety goggles and that he does not view the direct
+     beam as it emerges from the maxipod.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        -5-
+
+                                       
+                                                                  APPENDIX 40
+                                                                19 April 1988
+                                           Annex A
+
+Loading the F95 Holographic Camera Magazine
+
+1.   This should be done in the darkroom under a DARK-RED safelight.
+
+2.   New films are stored in the fridge in the Physics lab.  These are
+     currently 10 metres in length, and a full new film should be used for
+     each experimental flight.
+
+3.   In the future film may be obtained on 30 metre rolls.  In this case it
+     may be acceptable to load partly-used films provided that a minimum of
+     about 10 metres is available.  Approximately 15 frames are obtained per
+     metre of film.
+
+4.   There are two holography film magazines normally stored in the darkroom
+     cupboard.  They are clearly labelled as such as they have had some metal
+     machined away to accommodate the thicker base material of the holographic
+     film.  Ordinary F95 magazines should NOT be used with holographic film
+     due to the possibility of the film jamming.
+
+5.   The loading sequence is as follows:
+
+     a)   Remove the external cover plate, if fitted.
+     b)   Remove the magazine cover by means of the knurled screw.
+     c)   Open the film backing plate by means of squeezing together the two
+          silver levers on the side of the magazine. 
+     d)   Place the film with its metal core onto the feed spool.
+     e)   Feed the film around the guide rollers and backing plate as shown in
+          the diagram.
+     f)   Mount an empty metal core on the take-up spool and attach the film
+          underneath one of its spring plates.
+     g)   Close the film backing plate, ensuring that the film sprocket holes
+          are aligned with the sprocket teeth and that the film edge is
+          parallel to the edge of the take-up spool core.
+     h)   Take up any slack by manually turning the take-up spool.
+     i)   Refit the magazine cover.  Turn the screw with four red dots in a
+          clockwise direction as indicated by the arrow to ensure that the
+          film is feeding correctly, but take care not to waste unnecessary
+          amounts of film.
+     j)   Lightly scratch the flight number and/or date on the film.
+     k)   With the normal room light on ensure that the film has its emulsion
+          (purple) side facing outwards.  The backing side of the film will
+          appear red or orange.
+     l)   Refit the external cover plate while the magazine is being carried
+          out to the aircraft.
+
+
+
+
+
+
+
+                                        -6-
+
+                                                                       

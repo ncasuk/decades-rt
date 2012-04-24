@@ -1,0 +1,59 @@
+
+                                                                 APPENDIX 36
+                                                             31 October 1991
+                         DATA LOGGER (National Power)
+
+Circuit Breakers Required
+
+Forward Bulkhead:-   Main Distribution Panel
+                     a.  200V JB11 SUPPLY
+Rear Cargo Hold:-    JB11B
+                     a.  5A fuse `DATA LOGGER'
+
+Pre-Flight
+
+1.   Charge two batteries overnight (one as a spare).
+2.   Fit one of the charged batteries.
+3.   Turn key to SET.
+4.   To set up recording press:-
+     `channel number', `0', `0', `enter', `law', `9', `enter', `channel
+     monitor'. 
+5.   To set up time press `time', then enter the day, hours and minutes,
+     `enter'.
+6.   To set logging period set `00 00' with `log key'.
+7.   Turn key to OFF.
+8.   Put tape in and close lid.
+9.   Turn key to SET.
+10.  Wait for tape to wind forward and find the window.
+11.  Turn key to RUN to start recording.
+12.  Turn key to OFF for take-off.
+
+In-Flight
+
+1.   Turn key to RUN to start recording.
+2.   Tapes last approximately 1« hours, only one side of the tape is used.
+     Changing the tape:-
+            i) Change the tape before it reaches the end.
+           ii) Only use new tapes, ie. wrapped in cellophane.
+          iii) Change tape at appropriate moments, eg. before take-off, when
+               hydrogen has to be off.
+           iv) Turn key to OFF when tape is stationary, unload tape and load
+               new as above.
+
+NOTE:  Pre-flight tape will be zero values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        -1-
+
+                                                                       

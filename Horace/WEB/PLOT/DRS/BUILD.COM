@@ -1,0 +1,1 @@
+$@sys$manager:java$setup$set def SYS$SYSDEVICE:[HORACE.WEB.PLOT.DRS]$copy [-.plot]horconn.class *.*$copy [-.choices]paralist*.class *.*$javac drsapp.java$!jar cvf0 drs.jar *.class  !  Doesn't seem to work with wildcards ?$zip -0 [-]drs.jar *.class$exit 

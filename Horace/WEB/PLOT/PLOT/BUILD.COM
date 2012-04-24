@@ -1,0 +1,1 @@
+$@sys$manager:java$setup$!copy [-.drs]horconn.java *.*$javac plotapp.java$javac readdata.java$!jar cvf0 Plot.jar *.class  !  Doesn't seem to work with wildcards ?$zip -0 [-]Plot.jar *.class$exit 

@@ -1,0 +1,336 @@
+<HTML>
+<HEAD>
+<TITLE>Plot</TITLE>
+</HEAD>
+<BODY text=#FFFFFF bgcolor=#0C2174 onLoad=checktime();>
+<script>
+hashh=location.hash;
+middlebit="";
+plottype="";
+maxpara=40;
+height=maxpara*30+30;
+parameters="";
+paras="";
+defpara="";
+units="";
+names="";
+colours="";
+symbols="";
+zooms="";
+starttime="";
+stoptime="";
+cols=["White","Black","Red","Green","Blue","Cyan","Orange","Magenta",
+"Pink","Yellow","Gray"];
+nam=new Array();
+pni=0;
+w1=null;
+hgt=150;
+
+plots=new Array();
+plots[0]=new plot("xy plot","mxplot","515,520",
+"X,Y1,Y2,Y3,Y4,Y5,Y6","-1,-1,-1,-1,-1,-1","1,2,3,4,5,6");
+plots[1]=new plot("yx plot","yplot","578,520",
+"Y,X1,X2,X3,X4,X5,X6","1,1,1,1,1,1","1,2,3,4,5,6");
+plots[2]=new
+plot("Tephigram","tephigram","576,521,529",
+"Press,T1,T2,T3,T4,T5,T6"
+,"1,1,1,1,1,1","1,2,4,5,6,7");
+plots[3]=new plot("Hodograph","hodograph","571,570","Angle,Speed",
+"2","2");
+plots[4]=new plot("Track Plot","map","606,605","Long,Lat",
+"-1","2");
+plots[5]=new plot("Text","table",
+"546,574,530,575,523,591,572,607,608,527,525,609,544,573,535,534,547,533,590"+
+",532,531,528,552,538,539,540,561,560,567,568,569,541,542,543,563,564,"+
+"558,559,557",
+" , , , , , , , , , , , , , , , , , , , ,"+
+" , , , , , , , , , , , , , , , , , , , ",
+"-1","0");
+
+diffplot(0);
+writepage();
+qadf=setInterval("differenttimes();",1000);
+
+function checktime(){
+  a=hashh.length;
+  if(a==18){
+    document.form1.select2.selectedIndex=0;
+    document.form1.starttime.value=hashh.substring(1,9);
+    document.form1.stoptime.value=hashh.substring(10,18);
+  }
+
+
+}
+
+function plot(name,ptype,pars,parans,syms,cls){
+  this.name=name;
+  this.ptype=ptype;
+  this.paras=pars;
+  this.parans=parans;
+  this.syms=syms;
+  this.cols=cls;
+}
+
+
+function savePlot(index){
+ if(index>=6){
+  setCookie("PL"+index+"_name",plots[index].name,365);
+//  alert("save PL"+index+"_name =  "+plots[index].name);
+  setCookie("PL"+index+"_ptype",plots[index].ptype,365);
+//  alert("save PL"+index+"_ptype =  "+plots[index].ptype);
+  setCookie("PL"+index+"_paras",plots[index].paras,365);
+//  alert("save PL"+index+"_paras =  "+plots[index].paras);
+  setCookie("PL"+index+"_parans",plots[index].parans,365);
+  setCookie("PL"+index+"_syms",plots[index].syms,365);
+  setCookie("PL"+index+"_cols",plots[index].cols,365);
+ }
+}
+
+function loadPlot(index){
+  ans=false;
+  q=new plot();
+  q.name=getCookie("PL"+index+"_name");
+//alert("load PL"+index+"_name = "+q.name);
+  if(q.name!=null){
+    q.ptype=getCookie("PL"+index+"_ptype");
+//alert("load PL"+index+"_ptype = "+q.ptype);
+    q.paras=getCookie("PL"+index+"_paras");
+//alert("load PL"+index+"_paras = "+q.paras);
+    q.parans=getCookie("PL"+index+"_parans");
+    q.syms=getCookie("PL"+index+"_syms");
+    q.cols=getCookie("PL"+index+"_cols");
+    q.maxes=getCookie("PL"+index+"_maxes");
+    ix=pindexof(q.name);
+    plots[ix]=q;
+    savePlot(ix);
+    ans=true;
+  }
+  return ans;
+}
+
+function pindexof(name){
+  ix=plots.length;
+    for(var i=0;i<plots.length;i++){
+      if(plots[i].name==name)ix=i;
+    }
+  return ix;
+} 
+
+
+
+   function setCookie(name, value, length){
+     var argumentList  = setCookie.arguments;
+     var argumentCount = setCookie.arguments.length;
+     var cookieString  = name + "=" + escape(value);
+     var factor = 24 * 60 * 60 * 1000;
+     var xDate = new Date();
+     if (argumentCount > 2){
+       xDate.setTime(xDate.getTime() + factor * argumentList[2]);
+       cookieString += ";EXPIRES="+xDate.toGMTString();
+//       alert(xDate);
+       }
+     if (argumentCount > 3){
+       cookieString += ((argumentList[3] == true) ? ";SECURE" : "");}
+     document.cookie = cookieString;}
+
+/* The getCookie function returns the value of the cookie specified by
+   'name' or null if the cookie does not exist. */
+
+   function getCookie(name){
+     var searchString = name + "=";
+     var searchLength = searchString.length;
+     var cookieLength = document.cookie.length;
+     var position     = 0;
+     var endString, pointer;
+     while (position < cookieLength){
+       pointer = position + searchLength;
+       if (document.cookie.substring(position, pointer) == searchString){
+         endString = document.cookie.indexOf (";", pointer);
+         if (endString == -1){endString = cookieLength}
+         return unescape(document.cookie.substring(pointer, endString))}
+       position = document.cookie.indexOf(" ", position) + 1;
+       if (position == 0){break}}
+   return null}
+
+/* The function deleteCookie deletes the cookie specified by 'name' by
+   setting the current date to the current date/time. */
+
+   function deleteCookie(name){
+     var expires = new Date();
+     expires.setTime (expires.getTime() - 1);
+     document.cookie = name + "='empty'; expires=" + expires.toGMTString()}
+
+
+function writeout(){
+var browse=navigator.appName;
+factor=10;
+if (browse=="Netscape"){factor=13;}
+w1=window.open("","_blank",
+ "location=no,status=no,menubar=yes,width=455,height=550,resizable=yes,scrollbars=yes");
+w1.document.open();
+w1.document.writeln("<HTML>");
+w1.document.writeln("<BODY bgcolor=#FFFFFF text=#0C2174 link=#000000><CENTER>");
+if((plottype=="mxplot")&&(parameters.substring(0,4)=="515,")){
+  w1.document.writeln("<A HREF=");
+  w1.document.write('"javascript:window.open(');
+  w1.document.write("'plot.html#'+document.applets[0].gettimes());void(0);");
+  w1.document.writeln('">New plot, same times</A><br>');
+}
+w1.document.write("<APPLET CODE='plotapp.class' ARCHIVE='Plot.jar'");
+w1.document.writeln(" WIDTH=600 HEIGHT="+hgt+" MAYSCRIPT>");
+w1.document.writeln("<param name='plottype' value='"+plottype+"'>");
+w1.document.writeln("<param name='parameters' value='"+parameters+"'>");
+w1.document.writeln("<param name='start' value='"+starttime+"'>");
+w1.document.writeln("<param name='stop' value='"+stoptime+"'>");
+w1.document.writeln("<param name='names' value='"+names+"'>");
+w1.document.writeln("<param name='units' value='"+units+"'>");
+w1.document.writeln("<param name='symbols' value='"+symbols+"'>");
+w1.document.writeln("<param name='colours' value='"+colours+"'>");
+w1.document.writeln("<param name='port' value='1500'>");
+w1.document.writeln("<param name='printfactor' value='"+factor+"'>");
+w1.document.writeln("<param name='normalfactor' value='14'>");
+w1.document.writeln("</APPLET>");
+w1.document.writeln("<br>");
+w1.document.writeln("<form name=form1>");
+w1.document.writeln("<input type=hidden name=zm>");
+w1.document.writeln("</form>");
+w1.document.writeln("</BODY>");
+w1.document.writeln("</HTML>");
+w1.document.close();
+}
+function showparas(){
+  zooms="";
+  pni=document.applets[1].getNumpara();
+  parameters=document.applets[1].getparas();
+  names=document.applets[1].getnames();
+  units=document.applets[1].getunits();
+  colours=document.applets[1].getcolours();
+  symbols=document.applets[1].getsymbols();
+  starttime=document.form1.starttime.value;
+  stoptime=document.form1.stoptime.value;
+  nam=new Array();
+  for(var i=0;i<pni;i++){
+    nam[i]=document.applets[1].getWholename(i);
+  }
+  plottype=plots[document.form1.select1.selectedIndex].ptype;
+  hgt=800;
+  if(plottype=="table"){
+    hgt=150+pni*30;
+  }
+  writeout();
+}
+
+function differentplot(){
+  
+  i=document.form1.select1.selectedIndex;    
+  document.form1.plotname.value=plots[i].name;
+  diffplot(i);
+  q=true;
+  if(plots[i].ptype=="table")q=false;
+  document.applets[1].reset(paras,defpara,colours,symbols,q);
+}
+
+
+function differenttimes(){
+  i=(document.form1.select2.selectedIndex)*300;
+  if(i>0){
+    document.form1.stoptime.value="now";
+    if(i>3600){
+          document.form1.starttime.value="start";
+    }else{
+          ts=document.applets[0].getTime(i);
+          document.form1.starttime.value=ts;
+    }
+  }
+}
+
+function stimes(){
+  document.form1.select2.selectedIndex=0;
+}
+
+function diffplot(i){
+
+  defpara=plots[i].paras;
+  paras=plots[i].parans;
+  colours=plots[i].cols;
+  symbols=plots[i].syms;
+}
+
+function splot(){
+
+ name=document.form1.plotname.value;
+ ptype=plots[document.form1.select1.selectedIndex].ptype;
+ var pni=document.applets[1].getNumpara();
+ paras=document.applets[1].getparas();
+ parans=plots[document.form1.select1.selectedIndex].parans;
+ syms=document.applets[1].getsymbols();
+ cls=document.applets[1].getcolours();
+ q=new plot(name,ptype,paras,parans,syms,cls);
+ ix=pindexof(name); 
+ plots[ix]=q;
+ savePlot(ix)
+ op=new Option(name,"",false,true);
+ document.form1.select1.options[ix]=op;
+  
+}
+
+function writepage(){
+
+document.writeln('<center>');
+//document.writeln('<H1>Choose Horace Plot</H1>');
+
+document.write("<APPLET CODE='plotapp.class' ARCHIVE='Plot.jar'");
+document.writeln(" WIDTH=500 HEIGHT=100 MAYSCRIPT>");
+document.writeln("<param name='plottype' value='table'>");
+document.writeln("<param name='parameters' value=''>");
+document.writeln("<param name='normalfactor' value='10'>");
+document.writeln("</APPLET>");
+
+document.writeln('<form name="form1">');
+document.writeln('<select name="select1" onChange="differentplot();">');
+  for(var i=0;i<plots.length;i++){
+     document.writeln("<option>"+plots[i].name);
+  }
+document.writeln('</select>');
+document.writeln('<INPUT TYPE="button" Value="Plot" onClick="showparas();">');
+document.write('From:');
+document.write('<INPUT TYPE="text" size="8" name="starttime"');
+document.writeln(' value="start" onFocus="stimes();" >');
+document.write(' To:');
+document.write('<INPUT TYPE="text" size="8" name="stoptime"');
+document.writeln(' value="now" onFocus="stimes();" >');
+document.writeln(' <SELECT name="select2" onChange="differenttimes();">');
+  document.write("<option>--");
+  for(var i=5;i<=60;i+=5){
+     document.write("<option");
+     if(i==30)document.write(" selected");
+     document.writeln(">last "+i+" mins");
+  }
+  document.write("<option>All");
+document.writeln('</select><p>');
+document.writeln('<br><INPUT TYPE="button" Value="Save" ');
+document.writeln('onClick="splot();"> plot parameters as ');
+document.writeln('<INPUT TYPE="text" name="plotname" Value="'+plots[0].name+'">');
+document.write('<APPLET CODE="choices.class" ARCHIVE="choices.jar"');
+document.writeln(' WIDTH=550 HEIGHT='+height+'>');
+document.writeln('<PARAM NAME="names" VALUE="'+paras+'">');
+document.writeln('<PARAM NAME="paras" VALUE="'+defpara+'">');
+document.writeln('<PARAM NAME="colours" VALUE="'+colours+'">');
+document.writeln('<PARAM NAME="symbols" VALUE="'+symbols+'">');
+document.writeln('</APPLET><p>');
+document.writeln('</form>');
+document.writeln('</CENTER>');
+for(var i=0;i<40;i++){
+  document.writeln('<br>');
+}
+document.writeln('</BODY>');
+document.writeln('</HTML>');
+i=plots.length;
+while(loadPlot(i)){
+  op=new Option(plots[i].name,"",false,false);
+  document.form1.select1.options[i]=op;
+  i++;
+}
+plottype="table";
+}
+</SCRIPT>

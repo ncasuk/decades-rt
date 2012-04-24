@@ -1,0 +1,175 @@
+
+                                                                APPENDIX 15
+                                                                22 August 1989
+                          GASP PROBE AND ALLEVIATOR
+
+Circuit Breakers Required
+
+1.   Cargo hold foward bulkhead - MRF Main Distribution Panel.
+
+     a)   28v DC      -  JB3A
+
+     b)   115/200v AC -  JB3A  A0
+
+2.   Forward Fuselage - Starboard Side - JB3A
+
+     a)   28v DC      -  Alleviator
+
+     b)   115v AC 10  -  Particulate sampling.
+
+Principles of Operation
+
+The GASP probe extends into the airstream outside the aircraft boundary layer. 
+With a TAS of 195 kts ie 100 ms-1 it decelerates this air to 10 ms-1.  A
+secondary sample pipe protrudes into the slow speed airstream and the
+alleviator pump is used to draw air isokinetically into the alleviator sample
+volume.
+
+At altitudes below 10,000 ft the aircraft may be depressurised.  Air can be
+continuously drawn through the alleviator and respective particulate
+instruments use their own sample pumps to draw air from the alleviator into
+their sample volumes.  However with the aircraft at high altitude the sampled
+air has to be brought up to the cabin pressure before this can be done.  The
+bladder/bag inside the alleviator is allowed to fill with cabin air. 
+Equilibrium is eventually reached with the air in the sample volume at cabin
+pressure.
+
+The GASP capping control lever is below the boom compartment.  The alleviator
+actuator, pump and solenoid valves are operated by toggle switches on the
+alleviator control box.
+
+Pre-Flight
+
+1.   Open GASP capping and check sample ports clear of obstructions.
+
+2.   Check pipework, operation of actuator, solenoid valves, hand-valves and
+     sample pump.
+
+3.   Obtain sample (see below) and check operation of associated particulate
+     sampling instruments.  (See relevant appendices).
+
+4.   Switch pump and solenoid valves off.  Close actuator and cap GASP probe.
+
+
+
+
+
+                                        -1-
+
+
+                                                                APPENDIX 15
+                                                                22 August 1989
+In-Flight
+
+1.   Obtain permission to open GASP capping.
+
+2.  Obtaining sample air - in both the presurised and de-pressurised cases
+     that follow, we start from the point where the GASP probe has been
+     un-capped, the control box has power but all other switches are in the
+     off position.  The hand-valve on the exhaust side of the pump should be
+     fully open.  The second hand-valve, downstream of the flow calibrated
+     airspeed indicator (ASI), is used to control the flow rate through the
+     system ie maintain isokinetic sampling.
+
+3.   OBTAINING A PRESSURISED SAMPLE
+                                               To flush previous sample out of
+                                               the alleviator.
+     a.   (i)  ACTUATOR SHUT
+          (ii) PURGE ON
+               PUMP ON
+                                               The sample volume is exhausted
+                                               and the bladder fills the 
+                                               evacuated space.
+
+          (iii) THE PRESSURE IN THE ALLEVIATOR  Monitor the pressure gauge.
+               FALLS SLOWLY AT FIRST THEN
+               STARTS TO FALL RAPIDLY.  AT
+               THIS POINT SWITCH THE PUMP OFF.
+
+          (iv) LEAVE PURGE ON.
+                                                To take a sample from the
+                                                atmosphere.
+
+     b.   (i)  ACTUATOR OPEN
+          (ii) VENT ON
+          (iii) PUMP ON - RECORD TIME           Air is now drawn out of the 
+               ADJUST HAND VALVE TO GIVE ASI    bladder, which collapses.  At
+               READING OF 60 KTS.               the same time outside air is
+                                                drawn isokinetically into the
+                                                other end of the alleviator.
+
+          (iv) WAIT TWO MINUTES                 Available sample volume filled
+                                                with outside air.
+          (v)  PUMP OFF - RECORD TIME.
+                                                To pressurise the sample.
+     c.   (i)  ACTUATOR SHUT
+          (ii) PURGE OFF                        Sample volume isolated.
+          (iii) VENT OFF                        Cabin air is allowed to fill
+                                                the bladder which thus
+                                                compresses the sample until
+                                                equilibrium is reached.
+
+          (iv) WAIT UNTIL ALLEVIATOR            Use the pressure gauge as
+               PRESSURE STOPS RISING            indication that sample is at
+                                                cabin pressure.
+                                        -2-
+
+
+                                                                APPENDIX 15
+                                                                22 August 1989
+
+          (v)  PARTICULATE INSTRUMENTS          If pressure in alleviator
+               MAY NOW DRAW AIR FROM            falls below cabin whilst
+               SAMPLE VOLUME                    sampling from it, the
+                                                contents are exhausted.  A new
+                                                sample should be taken. 
+
+                                                Repeat a-c as required.
+
+4.   OBTAINING A SAMPLE WHEN THE AIRCRAFT IS DE-PRESSURISED
+
+     a.   (i)  ACTUATOR OPEN
+          (ii) PUMP ON
+          (iii) PURGE ON
+          (iv) VENT ON
+          (v)  ADJUST HAND VALVE TO GIVE
+               ASI READING OF 60 KTS.
+
+          (vi) SAMPLE ON                        Bladder is permanently
+                                                collapsed.  Outside air is
+                                                continuously drawn through the
+                                                alleviator.  Cabin, alleviator
+                                                and atmospheric pressure are
+                                                all equal.  Particulate
+                                                instruments may sample
+                                                continuously.
+
+5.   When sampling complete.  Switch pump and solenoid valves off.  Close
+     actuator and cap GASP probe.  Break circuit breakers on JB3A.
+
+Problems
+1.   The alleviator pump can overheat if over-worked and an occasional check
+     should be made of its temperature.  This problem may be obviated by
+     switching the pump off when not absolutely required.
+
+2.   If the aircraft is to be pressurised it would be useful if a cabin
+     altitude of not less than 2000 ft were set.  This ensures the alleviator
+     sample pressure stays within the pressure gauge calibration.
+
+3.   It should be noted that the GASP probe has been optimised for a free
+     stream velocity ie true airspeed of 100 ms-1.  Large deviations from this
+     can lead to errors in size distribution and particle concentrations.
+
+4.   Splitting of the alleviator bag/bladder can occur.  The system will not
+     be able to bring the sample volume up to cabin pressure.  If this happens
+     rectification will not be possible in-flight, so the system should be
+     declared unserviceable and shut down.
+
+5.   The solenoid valves can be subject to sticking.  Light tapping on the
+     valve housing may release them otherwise the system should be declared
+     unserviceable and shut down.  Dirt can also cause these valves not to
+     seat properly - spares for overhauling these items are held by MRF.
+
+                                        -3-
+
+                                                                      

@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<TITLE>DRS realtime plot</TITLE>
+</HEAD>
+<BODY>
+<script Language="Javascript">
+var NSorIE5 = (navigator.appName == "Netscape");
+var VERSION = parseInt(navigator.appVersion);
+var mywin;
+var title='\n';
+if(VERSION > 4){
+NSorIE5=true;}
+
+function myError(msg, url, lno) {
+  return true;
+}
+
+function printit(){  
+if (NSorIE5) {    
+  window.print() ;  
+} else {
+  window.onerror=myError;
+  WebBrowser1.ExecWB(6, 1);//Use a 1 vs. a 2 for a prompting dialog box
+  window.onerror=null;
+}
+}
+
+function maketextwindow(){
+    if(mywin==null){
+    mywin=window.open("","Text",
+     "location=no,status=yes,resizable=yes");
+    mywin.document.open();
+    mywin.document.writeln("<HTML><HEAD>");
+    mywin.document.writeln("</HEAD><BODY>");
+    mywin.document.writeln("<form name=form1>");
+    mywin.document.write('<input type="button" ');
+    mywin.document.write('onClick="document.form1.disp.value=');
+    mywin.document.write("window.opener.title;");
+    mywin.document.writeln('" value="clear">');
+    mywin.document.writeln("<textarea wrap=OFF name=disp cols=65 rows=25>");
+    mywin.document.writeln("</textarea></form>");
+    mywin.document.writeln("</BODY></HTML>");
+    mywin.document.close();
+    }else{
+    closetextwindow();
+    } 
+}
+
+function writetexttitle(s){
+    title=s+'\n';
+    writetextwindow(s);
+}
+
+function writetextwindow(s){
+  if(mywin!=null){
+      if(!mywin.closed){
+  window.onerror=myError;
+           mywin.document.form1.disp.value+=s+'\n';
+  window.onerror=null;
+      }else{
+         closetextwindow();
+      }
+  }
+}
+
+function cleartextwindow(){
+alert(title);
+  if(mywin!=null)mywin.document.form1.disp.value=title;
+}
+
+function closetextwindow(){
+  mywin.close();
+  mywin=null;
+}
+  
+
+</script>
+<APPLET CODE="drsapp.class" archive="drs.jar" 
+WIDTH=670 HEIGHT=600 MAYSCRIPT></APPLET>
+<OBJECT ID="WebBrowser1" WIDTH=0 
+HEIGHT=0 CLASSID="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2"></OBJECT>
+<form name=drs>
+<input type=hidden name=data value="">
+</form>
+</BODY>
+</HTML>

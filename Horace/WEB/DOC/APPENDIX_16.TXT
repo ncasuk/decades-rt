@@ -1,0 +1,234 @@
+
+                                                                APPENDIX 16
+                                                                22 August 1989
+
+                      POLLAK CONDENSATION NUCLEI COUNTER
+                  (Samples via alleviator - see Appendix 15)
+
+Circuit breakers required
+
+1.   Cargo hold forward bulkhead - MRF Main Distribution Panel.
+
+     a.   28v DC      - JB3A
+
+     b.   115/200v AC - JB3A  0
+
+2.   Forward fuselage, starboard side - Junction Box 3A
+
+     a.   28v DC      - Pollak
+
+     b.   115V AC 10  - Particulate Sampling.
+
+Power
+
+1.   Pollak Electronics Box
+
+     a.   Power 
+
+2.   Pollak Control Box
+
+     a.   Power - 115v
+
+     b.   Power - 28v
+
+Principles of Operation
+
+Concentrations of condensation nuclei are inferred by causing condensation on
+the nuclei.  The instrument consists of a "fog tube" with a porous lining
+which has been soaked in distilled water.  The fog tube is mounted vertically
+with a light source at the top and photocell at the bottom.  Sampled air is
+drawn into the fog tube where it is subjected to an overpressure by pumping in
+filtered air.  This is followed by rapid expansion and hence adiabatic cooling
+causing vapour to condense on the nuclei and thus the formation of droplets. 
+The light passing down the tube is attenuated by the fog and the reduction in
+output of the photocell is a measure of the concentration of nuclei.
+
+Watering
+
+a.   The Pollak counter porous lining requires saturating after approximately
+     300 measurements or after a week if it has not been used.  A record of
+     soaking and usage will be kept in the Aircraft Manager's Office.  The
+     Aircraft Manager will arrange with workshops for the removal of the
+     centre section at a suitable time.
+
+b.   The distilled water etc are kept in the Instruments Lab.
+
+
+                                        -1-
+
+
+                                                                APPENDIX 16
+                                                                22 August 1989
+
+c.   Mount the column upright in the large retort stand (best done on the
+     floor) and block the large opening at the bottom end and also the smaller
+     side port (about «" up from the bottom end).
+
+d.   Fill the column with distilled water and leave it for an hour or so.  If
+     the water level falls through seepage past the bungs, top up as required. 
+     A longer soaking may be required if the instrument has not been used for
+     several weeks.
+
+e.   Tip the water out (do not re-use) and remove the bungs.  Shake the column
+     to get all excess drops out of the valve ports etc in the centre of the
+     column.
+
+f.   Stand the column on some clean absorbent paper (paper towel, blotting
+     paper) and leave to drain for about 5 minutes.
+
+g.   During this time, go out to the aircraft and clean both top and bottom
+     cover plates with a lens tissue and alcohol.
+
+h.   Also renew filter in holder mounted behind the Pollak and report any
+     damage to replaced filter.
+
+i.   Return column to workshops for refitting.
+
+Pre-Flight Checks
+
+1.   Switch on and allow time for lamp to stabilise.
+
+2.   Work through Operator Pre-Flight Tasks and complete check list.
+
+3.   The following should be noted when checking lamp and feedback
+     electronics:
+
+     a.   Ensure on AUTO meter reads -1.000 ñ 10% (adjust lamp bias pot if
+          necessary).
+
+     b.   Press CAL TEST, meter should read -1.000 ñ 1%.
+
+     c.   Press LAMP BIAS, meter should read < - 1.200.
+
+     d.   Switch to MEMORY, record drift after first few seconds.  Switch back
+          to AUTO.
+
+
+
+
+
+
+
+
+
+
+                                        -2-
+
+
+                                                                APPENDIX 16
+                                                                22 August 1989
+4.   Typical readings are as follows:-
+
+     a.   On the ground at Farnborough                    -.300 to -.900
+
+     b.   In polluted boundary layer                      -.200 to -.500
+
+     c.   Behind cold front and in maritime air mass      -.900 to -.990
+
+     d.   Warm sector and in continental air mass         -.400 to -.900
+
+     e.   Close to obvious industrial sources             -.050 to -.200
+
+
+5.   Ensure rotary switch on CONTROL BOX is in STOP position.  Switch
+     instrument off for power changeover and take off.
+
+In Flight Operation
+
+1.   Switch on and allow time for lamp to stabilise.
+
+2.   Obtain air sample via ALLEVIATOR system.  (see Appendix 15)
+
+3.   Switch POLLAK to SAMPLE for about 20 seconds then to COMPRESS - note time
+     on log.
+
+4.   Wait 1 minute then move on two switch positions from COMPRESS to EXPAND
+     at the same  time move the POLLAK ELECTRONICS BOX switch from AUTO to
+     MEMORY - note minimum reading on log.
+
+5.   Move switch back to AUTO - meter should return to -1.000.
+
+6.   Repeat 2 - 5 as required.
+
+7.   The meter reading may be converted to a nucleus concentration using the
+     tables provided.
+
+8.   When sampling complete, ensure rotary switch on CONTROL BOX is in STOP
+     position.  Switch power off and break circuit breakers on JB3A.
+
+After Flight
+
+1.   Annotate SOAK/USAGE log in Aircraft Manager's Office.
+
+2.   Advise Aircraft Manager of instrument's status.
+
+Problems
+
+a.   Sample pressure outside limits - presure switch may need adjustment.
+b.   Leaks - system will cycle between COMPRESS and HOLD - abort measurement.
+c.   Optics dirty - on switching back to AUTO meter does not return to -1.000-
+     adjust LAMP BIAS to restore level.
+
+
+
+                                        -3-
+
+
+                                                                APPENDIX 16
+                                                                22 August 1989          
+                   Pollak Counter Operator Pre-Flight Tasks
+
+Flight No:-
+
+Date     :-
+
+Operator :-
+
+                                                                              
+
+NB             Enter the time of completion of each task
+
+               This check list must be handed to the Aircraft Scientist before
+               Take Off
+
+
+No                                 Task                              Time     
+
+1         Date of last soaking of counter
+
+2         Operator log loaded on aircraft
+
+3         Packet of 0.45 æm filters loaded on aircraft
+
+4         Check integrity of airline connection to sample
+          port
+
+5         Check sample pump is operational
+
+6         Check filter is intact and clean and filter
+          retaining plate is in position
+
+7         Check lamp output is normal and maintained by
+          feedback
+
+8         Check working pressure held to within 2mm Hg over
+          one minute
+
+9         Check expansion achieved and surface CN
+          concentration normal
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        -4-
+
+                                                                      

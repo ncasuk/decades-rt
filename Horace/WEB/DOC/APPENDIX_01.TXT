@@ -1,0 +1,341 @@
+Switch on Procedure                                              APPENDIX 1
+                                                            4th November 1993
+
+1.   On Van 230V Power Control Panel switch INPUT to ON
+     Switch OUTPUT ON.
+     After ~10 secs 230V Power will become available.
+
+2. Switch Monitors as required from Video Distribution Panel (H408) and  Video
+Switching Panel (H500)
+
+3.   Check Red light illuminated on keyboard
+
+4.   When the DRS is Initialised proceed with the Pre-Flight checks of
+     relevant parameters.
+
+5.   Check Event Markers increment on the DRS.
+
+     Located:  a)   Aircraft Scientist's Position - overhead
+               b)   Navigator's Position - below bench
+               c)   Air Sampling Pipe Position
+               d)   Manual Hygrometer Position
+               e)   Air Sampling Boom Position
+               f)   Van Forward Compartment (4)
+               g)   Van Rear Compartment (2)
+               h)   Navaid Position
+               i)   Drop Sonde Control Panel (if uncovered).
+
+6.   Type DATA to start recording, before Taxying.
+
+IN FLIGHT:
+
+1.   Monitor VDU to ensure GMT and Event are incrementing.
+
+2.   Check parameters as required.
+
+AFTER LANDING:
+
+1. When aircraft stationary, but before power changeover, type HOLD to stop DRS
+sending data to HORACE.
+
+                     INITIALISING THE MICRO PROCESSOR DRS
+
+THIS MUST BE CARRIED OUT AT THE START OF A FLIGHT OR IN A SITUATION WHERE THE
+SYSTEM HAS BEEN RESET DURING A FLIGHT.
+
+All commands and replies should be followed by (return).
+
+When you are asked to reply YES or NO, if the answer you type is not YES it
+will assume it to be NO.
+
+Any instructions to 'INFORM ELECTRONICS' are obviously for when the aircraft
+is on the ground.  In the air you must just keep restarting, if you are
+unsuccessful, return to base is the only answer. It is not always necessary to
+reset the DRS itself.(Indeed once the DRS has been initialised this should be
+regarded as a last resort.) If the serial parameters are concerned it is now
+possible to reset the SIMON interface (see Appendix A for more details).  
+
+1.   PRESS the RESET button on the left hand side of the keyboard a * should
+appear in the top left hand corner of the screen.
+If not press the RESET button again.
+If nothing happens and ALL ELSE FAILS pull the CB for the DRS on the 28V panel
+Remake it and press the RESET button on the keyboard again.
+2.   Type G8000 (return) This starts the DRS program
+
+     TEST                These should be in RED GREEN BLUE & WHITE
+     TEST                It indicates that all the colours are working
+     TEST                If any of them are missing - INFORM ELECTRONICS!
+(In flight the DRS will still record.  However, messages in the defective
+colour will not appear in any other.  Press RESET and try again.)
+
+DORIS MEMORY ALL OK!     All the memory used for writing to has been written
+                         to and read from successfully
+
+If the memory check fails then the following message appears:
+
+DORIS MEMORY FAILED!!    Indicates that part of the memory cannot be written
+INFORM ELECTRONICS       to so inform Electronics!
+*                        You may try initialisation from STEP 1
+
+INITIALISE INSTRUMENTS   Indicates all necessary instruments are initialised,
+                         such as A/Ds, EVENT reset to 0 etc.
+The following message may appear:
+
+**SERIAL FAILED**        The SERIAL board is either not fitted or not 
+                         responding properly.
+                         The SERIAL Micro transmits MCR, IN CLOUD TEMP PROBE,
+                         INS, OMEGA, FLUORESCENCE WATER VAPOUR SENSOR, TOTAL
+                         WATER CONTENT and BBR data to the DRS.  If these are
+                         needed on the flight, Electronics should be informed
+                         that the SERIAL has failed! Reset the SIMON interface 
+                         and try re-initialising from STEP 1.
+
+
+ISS CODE = nnnn          These numbers must be identical and correspond to the
+DBF CODE = nnnn          value given by the ELECTRONICS Section.  (Note these
+                         values are in Hex.)
+
+3.   IC CODE = 2   
+
+4.   FLIGHT NO (Annn):   Type in the flight number including the letter.  This
+                         will appear in the top left hand corner of the
+                         screen.  Certain checks for validity are carried out. 
+                         If the checks fail 'INVALID INPUT' will be given and
+                         you will be asked FLIGHT NO again.
+ARE YOU SURE (YES/NO):   This is an opportunity to correct the number you have
+                         just typed in.     
+
+5.   DATE (DD:MM:YY):    Type in the DATE in the form requested.  This will
+                         appear below the Flight Number.  Certain checks for
+                         validity are carried out.  If the check fails
+                         'INVALID INPUT' will be given and you will be asked
+                         DATE again.
+ARE YOU SURE (YES/NO):   This is an opportunity to correct the number you have
+                         just typed in.
+
+6.   GMT (HH:MM:SS):     Type in GMT in the form requested.  Certain checks
+                         for validity are carried out.  (If the checks fail
+                         'INVALID INPUT' will be given and you will be asked
+                         DATE again.)  The clock will be initialised with this
+                         time when you type (return).  The GMT will appear in
+                         the centre of the screen.  The Event Mark and its GMT
+                         will appear below it.  
+
+If the GMT display does not start updating after a 2 second delay you must
+repeat the initialisation procedure from STEP 1.
+
+ARE YOU SURE (YES/NO):   This is an opportunity to correct the GMT you have
+                         just set up. 
+The HELP command is then executed to give you a list of all the commands
+available for use.
+
+The Event Marks around the aircraft may be used at this stage and will
+increment on the Flight Leader Display.
+
+
+A SUMMARY OF THE FACILITIES AVAILABLE ON THE DATA RECORDING SYSTEM (ie (DORIS)
+
+NOTES ON SELECT RATES
+
+When you give the Para Number you require, a message appears in the form
+     SAMPLE RATE= nn CR or NEW RATE (nn) =
+
+This gives you the chance to reduce the sample rate at which the data will be
+displayed.
+
+If you type (RETURN) the rate will remain as the rate at which the parameter
+is sampled for recording.
+
+If you wish to reduce the rate the number you type will become the rate at
+which you sample the data for plotting (the record rate remains the same).
+
+This new sample rate must be a power of 2 (ie. 1 2 4 8 16 32 or 64).
+
+NOTES ON PLOTTING
+
+Graphs only represent the 8 last significant bits of the data.
+
+The Y axis is the DECIMAL value of the last 8 bits of the data.
+
+The X axis is marked with the number of seconds from the start of the plot and
+annotated with:
+
+     The value (all 12 bits) of the first point plotted in HEX & DECIMAL
+     The GMT at the start of the plot
+     The Parameter Number and name
+     The Flight Number
+     The mean of all the data plotted on the graph in HEX & DECIMAL
+
+Typing 'H' at any time stops the plot and returns you to the DRS: prompt.
+
+RECORDING COMMANDS
+
+DATA - Start sending Data to HORACE
+
+If it is the first time that DATA has been issued for the flight, you are
+given the opportunity to correct the time before recording commences. 
+"DATA ON" will appear at the top of the screen to indicate data is being sent
+to HORACE.  While in this mode the keyboard will be slower to respond to your
+input.
+
+HOLD - Suspend Sending Data To HORACE
+
+This stops sending data to HORACE (thus stopping any data from being
+recorded). "DATA OFF" will appear at the top of the screen.
+
+To resume recording 'DATA' must be entered again.
+
+KILL - Closes down the system completely
+
+This is a software RESET.  If you wish to continue using the DRS, the
+initialisation procedure must be carried out again.
+
+WIPE - Clears the screen and puts the DRS: prompt at the top of the screen.
+
+TIME - Change the GMT (this can only be done if DATA has not yet been issued).
+
+DATA DISPLAY COMMANDS
+
+DUMP - Display data in numerical form.
+
+The para data is displayed in numerical form 8 data values per line (except
+paras 501-506 which are displayed 5 to a line).  The para number is displayed
+at the bottom of the screen.
+
+You are asked for the para number and then given a chance to change the select
+rate.
+
+You are then asked whether the data should be displayed in HEX or DEC.  The
+display will continue until an 'H' is typed.
+
+BITS - Binary display of the 12 bits in a data word.
+
+This displays a given parameter in a form which shows how each bit of the data
+is changing.
+
+The display is in 2 colours:
+
+     GREEN indicates the bit is a ZERO in that data word
+     RED indicates the bit is a ONE.
+
+The display is continuous, clearing the screen when it is necessary.  You are
+asked Para Number and given a chance to change the select rate.  The MSB is
+bit 11 in this display.  Typing 'H' at any time stops the display and returns
+to the DRS: prompt.  The X axis is marked with the number of seconds from the
+start of the plot and is annotated with GMT at start of the plot, para number
+and name and flight no.
+
+PLOT - Continuous plot of 1 parameter.
+
+This plots 1 parameter against time on an X/Y graph and will clear the screen
+automatically when the screen is full.
+
+You are asked for Para Number and then given a chance to change the select
+rate.  Typing 'H' at any time stops the plot and returns you to the DRS:
+prompt.  See NOTES ON PLOTTING for details of the graph.
+                               
+GRAF - Plots a screen full of 1 parameter then waits for a prompt.
+
+This plots 1 parameter against time but when it has filled the screen it waits
+for you to tell it to clear the screen and continue the plotting.  You are
+asked for Para Number and given a chance to change the select rate.  Pressing
+the SPACE bar continues the plot.  Typing 'H' stops the plot and returns you
+to the DRS: prompt.  See NOTES ON PLOTTING for the details of the graph.
+
+TWOP - Continuously plots 2 parameters on the same graph.
+
+This plots 2 parameters (one in GREEN the other in RED) against time and will
+clear the screen automatically when the screen is full.  You are asked for
+Para Number and select rate required for both Paras.  The select rate chosen
+for the graph will be the smaller of the two requested.  Pressing the SPACE
+bar continues the plot.  Typing 'H' stops the plot and returns you to the
+DRS: prompt. 
+
+CHEK - Carry out plots on a list of parameters one at a time.
+
+You are asked which parameter in the list to start from.  The parameters are
+listed on the Flight Leaders' pre/in-flight Check List log.
+
+A plot is given of each parameter in turn, you are told which parameter is to
+be plotted and are given the opportunity to change the sample rate.  The plot
+will stop after each screen full and wait for your instruction.  You may give
+your instruction at any time during the plot, not only when the screen is
+full.
+
+The instructions which are available are:
+
+     A SPACE will continue with another screen full of the same parameter
+     
+     Typing '1' will go on to the next parameter in the list
+
+     Typing '-' will go back to the previous parameter
+     
+     Typing 'H' wll bring you back to the DRS: prompt
+
+See NOTES ON PLOTTING for the details of the graphs plotted.
+
+BCDS - Carry out a dump on a list of parameters one at a time.
+
+You are asked which parameter to start from in the list (again the parameters
+are listed on the Flight Leaders' pre/in-flight Check List log).  The data is
+displayed in DUMP form with some parameters in HEX others in DEC.  The
+parameter number and name are displayed at the bottom of the screen.  
+
+The display will continue until one of the following occurs:
+     Typing '1' will go on to the next parameter in the list
+
+     Typing '-' will go back to the previous parameter
+
+     Typing 'H' will bring you back to the DRS: prompt.
+                               
+MCR6 - Display the same slot for each of the 6 MCR parameters.
+You are asked which slot to select (1 to 5).
+The display consists of 6 numbers across the screen for each second:  
+The first 4 are in DECIMAL as these are the data channels (501-504)
+The last 2 are in HEX as these are the housekeeping channels (505-506).
+Typing 'H' stops the display and returns you to the DRS: prompt.
+
+HELP
+
+Displays a list of currently available DRS programs and a brief description of
+each.
+
+Error Messages
+
+INVALID RATE             - the chosen sample rate must divide exactly into the
+                           recorded sample rate
+                           ie. for 32Hz, chosen rate can be 1, 2, 4, 8 or 16
+INVALID PAGE NUMBER      - the page number must be 1, 2 or 3
+INVALID PARA NUMBER      } either the number was entered incorrectly
+INVALID NUMBER           } or the parameter is not recorded this flight
+INVALID PLOTRATE         - the plotrate must be between 1 & 9 seconds
+INVALID SLOT NUMBER      - the slot number must be between 1 & 5
+INVALID CHOICE           - the selection must be 0 or 1
+If any other error messages are displayed, inform the Electronics Section.
+
+Appendix A                SIMON reset button
+
+SIMON (the serial data interface box) has been furnished with a reset button.
+It can be found on the side of SIMON next to the RV monitor. Thus if there is a
+problem that causes a loss of serial data the SIMON interface can be reset
+without having to reset the DRS (which was the case in the past) and without
+the loss of data that this would involve.
+
+Appendix B
+                                 DRS PROGRAMS
+
+BCDS & CHEK    - check lists outputs
+BITS           - plots the binary bit pattern for 1 parameter
+DATA           - start data transmission
+HOLD           - suspend data transmission
+DUMP           - numeric dump of data, in hex or decimal, for 1 parameter
+GRAF           - plots 1 parameter, pausing at the end of the screen
+HELP           - displays this page
+TIME           - update the GMT (only if DATA OFF)
+MCR6           - numeric dump of data from same slot for all channels
+PLOT           - plots 1 parameter continuously
+TWOP           - plots two parameters continuously
+WIPE           - clears the screen
+KILL           - return to monitor (ie. RESET)
+                               
+

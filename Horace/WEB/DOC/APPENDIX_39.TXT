@@ -1,0 +1,462 @@
+
+                                                                 APPENDIX 39
+                                                                 30 March 1984
+                                       
+   OPERATING INSTRUCTIONS FOR THE 2D KNOLLENBERG OPTICAL ARRAY/FSSP PROBES
+
+1.   Introduction
+
+The 2D Knollenberg/FSSP equipment consists of:-
+
+1.1  Cloud droplet probe, OAP-2D-C (25-800æm diam)
+1.2  Precipitation probe, OAP-2D-P (200-6400æm diam)
+1.3  FSSP probe (0.5-47æm diam)
+1.4  Data formatter
+1.5  CRT monitor
+1.6  Data acquisition system (DAS)
+1.7  Tape Recorders (2)
+Items 1.1 to 1.3 are situated on the port maxipod.
+Items 1.4 to 1.7 are in the 2D Knollenberg cabinet at the rear of the cargo
+hold.
+
+The 2D Knollenberg Cloud and Precipitation Probes generate two-dimensional
+images of cloud and precipitation particles which are recorded on magnetic
+tape.  The output from either probe may be displayed on the CRT monitor.
+
+The system works by taking `snapshots' using a line of photo diodes, and is
+optimised if the aircraft flies a distance R between successive snapshots,
+where R is the effective centre to centre separation of the photo diodes. 
+Ideally, the snapshot rate would be linked automatically to the aircraft's
+true airspeed, but this is not possible.
+
+The Forward Scattering Spectrometer Probe (FSSP) sizes particles in four
+ranges from0.5 to 47æm (diam).  Particles are sized by measuring the amount of
+light scattered into the collecting optics aperture during particle
+interactions through a focussed laser beam.  The system resolves particles
+into fifteen equally spaced sizes at velocities of 20 to 125 m sec-1.
+
+The FSSP also has available outputs of Total Strobes, Activity, Reference
+Voltage and Particle Transit Time.  The Reference Voltage is a measure of the
+laser output and the Transit Time is an average of the time taken for
+particles to cross the laser beam.
+
+The Data Acquisition System is designed to accept two 2D probes (in our case
+precipitation and cloud) and two 1D probes designated A and B.  The A slot is
+used by the FSSP and the B slot for extra data from the FSSP and also to
+record holographic and liquid water content information.
+
+Other modifications to the DAS include the fitting of controls for the
+holographic system and the addition of two panel meters, one for liquid water
+content (derived from the Johnson Williams) and the other for the FSSP
+Reference Voltage/Particle Transit Time.
+
+With reference to the Holographic Disdrometer operating instructions it is
+possible to expose holograms, advance film and mark frame number from the DAS.
+A red light adjacent to the expose hologram button shows that the laser key
+switch is on.
+                                        -1-
+
+
+                                                                 APPENDIX 39
+                                                                 30 March 1984 
+Normally the aircraft is requested to fly at, and the 2D system is set for, a
+true airspeed of 100m/s.  Sometimes this speed is not possible and the system
+has to be set for a different speed.
+
+2.   Safety
+
+The laser in each 2D sensor is regarded as potentially hazardous.  Only
+personnel authorised by Head of Facilities Section may book out the keys and
+operate the 2D Knollenberg system.  Operation is to be strictly in accordance
+with the current safety procedures.
+
+2.   Before Leaving Building
+
+Collect and book out keys from Aircraft Managers' office; collect sufficient
+blank tapes (with Write-Enable rings), 2D Knollenberg log forms, laser safety
+goggles (blue) and calibration gear for the FSSP.
+
+4.   Circuit Breakers Required
+     
+     Co-pilot's MRF DC Circuit Breaker Panel - MRF MAIN & ESS DC BUS - MRF
+     POWER CONTROL
+
+     Co-pilot's Upper Circuit Breaker Panel - MAIN AC BUS - MRF POWER (PHASES
+     A, B, & C)
+
+     Pilot's Upper Circuit Breaker Panel - LH. RH. & ESS AC BUS - MRF POWER
+     (PHASES A, B & C)
+
+     MRF Main Distribution Panel
+          a.   28V DC - Junction Box Power Supplies - JB 6
+          b.   115V AC - Junction Box Power Supplies - JB 6
+     Junction Box No 6
+          a.   28V DC - 2D Knollenberg Control
+          b.   115V AC - 2DC Probe
+          c.           - 2DP Probe
+          d.           - PMS Equip
+          e.           - FSSP
+
+5.   Pre-Flight
+
+5.1  Switch on       a.  Tape recorders
+                     b.  Data Formatter
+                     c.  CRT Monitor
+                     d.  Data Acquisition System (DAS)
+
+5.2  Set in correct date, and GMT to next nearest whole minute.  When the DRS
+     reaches 59 seconds, depress START (SYNC) button until clock starts.  The
+     clock will now be in sync with the DRS clock.  NB.  If the DRS is not in
+     use the DAS clock may be started with the START button to the right of
+     the panel meters.  Clock synchronisation will need to be repeated
+     following power transfer.
+
+                                        -2-
+
+
+                                                                 APPENDIX 39
+                                                                 30 March 1984
+5.3  Pre-Flight Calibration and Testing
+     
+     Arrange with Aircraft Supervisor for a safety raiser to be positioned
+     under maxipod.  If it is necessary to move the safety raiser ensure that
+     generous clearance is maintained bearing in mind that the aircraft rocks
+     in the wind and settles during re-fuelling.
+
+     Check DAS Settings (2D)
+
+     a.   ALL/SUB                  set to SUB (ALL is a house-keeping guide)
+     b.   CRT DISPLAY               "   " IMAGES/SPECTRA as required
+     c.   RUN/HOLD                  "   " RUN (HOLD freezes memory)
+     d.   SET TAS/TEST              "   " TEST
+     e.   Thumbwheel switches set to  DATA RATE     DISPLAY    PROBE RANGE
+                                          3         A 0 3        0     0
+                                                                 A     B
+
+                                   This causes clock frequency to be displayed
+                                   as SELECTED WORD
+     f.   SELECTED WORD will read 0100
+     g.   2D RATE                  set to 3 (for max data recording rate)
+
+5.4  Load tape (with WR/EN ring)
+5.5  Press LOAD - LOAD - ON LINE
+5.6  Press RECORD and check tape steps through (recording house-keeping
+     information), then REWIND.
+5.7
+     a.   Set display to EXPAND, PROBE A (CLOUD) selected
+     b.   Switch on laser key switch (in accordance with current safety
+          procedures).
+     c.   Wearing the laser safety goggles flick a thin piece of
+          non-reflecting wire through the laser beam on the probe for about
+          30 seconds.
+     d.   Inspect the display, ensure that all diodes are lit/shadowed ie. no
+          continuous horizontal lines through wire shadow, and that the
+          shadows extend across all 32 diodes.
+
+5.8  Select PROBE B (PRECIP) and repeat b) to d).
+5.9  After test switch off the probes and put SET TAS/TEST switch to SET TAS.
+
+Check DAS settings (FSSP)
+
+     a.   ALL/SUB                  Set to         SUB
+     b.   CRT DISPLAY               "  "          SPECTRA
+     c.   SAMPLE/HOLD               "  "          SAMPLE
+     d.   SET TAS/TEST              "  "          SET TAS
+     e.   THUMBWHEEL SWITCHES set to:-
+                              DATA RATE      DISPLAY       PROBE RANGE
+                                  3          C 0 3           0     0 
+                                                             A     B
+     f.   FSSP display settings (these are all the switches to the right of
+          the images/spectra switch).  None of these switches affect the data
+          on the tape.  
+                                        -3-
+
+
+                                                                 APPENDIX 39
+                                                                 30 March 1984
+NOMINAL SETTINGS
+
+PROBE                A
+SECONDS/RESET        10
+SAMPLE/HOLD          SAMPLE
+AUTO/MANUAL          AUTO
+TOTAL                x 10 (CHANNEL 0)
+CALIBRATE/SPECTRA    SPECTRA
+VERTICAL             99 (PARTICLE TOTAL FOR CHANNELS 0-15)
+
+With the calibrate/spectra switch on calibrate, the size and position of the
+display can be altered using the two small rotary buttons marked V and H.
+
+5.10 FSSP CALIBRATION
+
+An FSSP calibration should ideally be performed before flight, being in some
+respects more of an instrument check than a calibration.  On low level flights
+the lens gets dirty and affects the equipment calibration.
+
+In such cases a calibration should be performed before and after the flight.
+
+a.   Switch on FSSP as for flight at least 15 minutes before the calibration
+     is started, observe that the laser has fired and that the reference
+     voltage is steady (a small drift is expected, see f iii) below).
+
+b.   Clamp droplet generator rig onto probe, plug into droplet generator
+     electronics box and turn on.  (NB.  The droplet generator will completely
+     blot out the LORAN signals to the NAVAID system.  Liaise with NAVAID
+     operator before switching on).
+
+c.   Turn water on for a fast flow and let water run through until no air
+     bubbles can be seen in the pipe, then set water value to 50.
+
+d.   There should be a mist visible at the droplet generator (unless wind is
+     strong). 
+
+e.   Turn on vacuum pump.
+
+f.   i)   The spectrum shape should be       with a peak around channel 6 on
+          range 0.
+    ii)   The transit time should be approx 30 and will be displayed on the
+          panel meter if range 0, 1 or 2 is selected. 
+   iii)   The reference voltage should be approximately 8 volts and is
+          displayed on the panel meter if range 3 is selected. 
+
+g.   If all the conditions of para f) have been met, record ranges 0 and 1 for
+     4/5 minutes and then ranges 2 and 3 for a few minutes if time allows;
+     dismantle and put away all test equipment; otherwise equipment is
+     possibly faulty and expert advice should be sought and the Aircraft
+     Scientist informed.
+
+h.   Record on log sheet the present weather ie. SE 10KTS LIGHT RAIN.
+                     
+                                        -4-
+
+
+                                                                 APPENDIX 39
+                                                                 30 March 1984
+i.   Remove calibration tape.
+
+Individual channel counts may be inspected using the DISPLAY thumbwheel
+switches as follows:-
+
+          C    CHANNEL No 3
+
+To hold the display put the SAMPLE/HOLD switch to HOLD and the AUTO/MANUAL
+switch to MANUAL.
+
+When decreasing the seconds to reset time, set in the new time, select MANUAL
+on the AUTO/MANUAL switch and press the MANUAL button.
+
+Housekeeping data ie. Activity, Total Strobes, Johnson Williams, Transit
+time/Reference Voltage, Holography Time and Frame Count may be viewed by
+selecting probe B and are shown on the CRT display in the above order
+(channels 1-6).
+
+5.11 Holography
+
+If it is intended to expose holograms from the DAS during the sortie check
+before flight that the Expose Hologram and Advance Film buttons function
+correctly.
+
+6.   In-Flight
+6.1  Set in correct data and GMT; restart in sync with DRS clock.
+6.2  When required switch on laser beams using key switches.
+6.3  Set following DAS switches as required:-
+
+     a.   2D PROBE            set to A or B, as required (controls Monitor
+                              only)
+                              A is CLOUD probe
+                              B is PRECIPITATION probe
+
+     b.   ALL/EXPAND          set to either, as required.
+                              ALL displays 4 areas of 160 slices each.
+                              EXPAND displays any one area (A, B, C or D, as
+                              selected on thumb-wheel switch below) as 2 areas
+                              of 80 slices each.
+
+     c.   DATA RATE           set to 3, or see para 6.7 for non-standard
+                              airspeed.
+
+     d.   SELECTED WORD       set to 8000 ñ20, or see para 6.7 for
+                              non-standard airspeed.
+
+     e.   RECORD or STOP      Ensure both recorders in record mode.  Recording
+                              may be stopped (eg. if no activity is observed)
+                              or restarted at any time.  Enter details on the
+                              log sheet.
+
+     f.   Data rate is set as required but if the 2D probes are to be used the
+          data must be > 3.
+                                        - -5-
+
+
+                                                                 APPENDIX 39
+                                                                 30 March 1984 
+6.4  Information for 2D Log Sheets
+
+Include the following occurrences where applicable.
+
+a.   2D s overloaded and/or condensation suspected.
+b.   2D images are crystals or drops.
+c.   2D data mainly in cloud probe or in precip probe as well.
+d.   Note occurrence if spectra clearly exceed FSSP CH 15 and carefully note
+     range changes.
+e.   Some LWC values from the J-W would be useful.
+
+6.5  Tape Changing
+
+     6.5.1     When end of tape automatically initiates rewind
+               (and recording continues on the other recorder)
+
+     a.   Press ON LINE (to switch off-line)
+     b.   Press REWIND
+     c.   When rewind is complete remove tape and ensure identified (note in
+          box)
+     d.   Fit new tape (with WR/EN ring)
+
+     6.5.2     When tape is to be changed before end
+
+     a.   Press STOP on DAS (to complete writing current data block and write
+          EOF mark)
+     b.   Press ON LINE on Tape Deck (to switch off-line)
+     c.   Press REWIND
+     d.   When rewinding stops press REWIND again
+     e.   When rewind is complete remove tape and ensure identified (note in
+          box)
+     f.   Fit new tape (with WR/EN ring)
+
+6.6  Interpretation of CRT display
+
+Data display and recording is initiated by the detection of a particle; when
+the aircraft is flying through cloud/precipitation free air the display and
+tape will be static apart from the recording of `slow' data.  Thick cloud or
+heavy precipitation will cause frequent changes of display and tape
+incrementing.
+
+Full vertical scale for each slice is 800æm for the Cloud Probe and 6400æm for
+the Precipitation Probe.  The smallest detectable particle size is 25æm
+(cloud) or 200æm (Precipitation), but in each case representation of size is
+not very accurate.
+
+If the aircraft is flying at the true airspeed appropriate to the selected
+word (see para 6.7), a spherical particle will be represented as a circular
+image.  Higher speed will result in lateral compression of the image and vice
+versa.
+
+
+                                        -6-
+
+
+                                                                 APPENDIX 39
+                                                                 30 March 1984 
+On the FSSP display the following multipliers will give the radius in microns
+for a channel:
+
+     R0 x 1.5; R1 x 1.0; R2 x 0.5; R3 x 0.25; ie. CH 6 R0 is 9æm.
+
+6.7  Non-standard true airspeed
+
+It is preferable to fly at a true airspeed of 100 m/s with a data rate of > 3
+and selected word of 8000, but on occasions this will not be possible. 
+Optimum operation will be obtained at a true airspeed of V m/s if the selected
+word is adjusted:-
+
+          SELECTED WORD - 80 x V  (DATA RATE 3)
+
+          SELECTED WORD - 40 x V  (DATA RATE 4)
+
+Examples:-
+
+          TRUE AIRSPEED                 SELECTED WORD 
+
+          Knot       m/s           Data rate 3   Data rate 4
+          146         75              6000           3000
+          194        100              8000           4000
+          243        125                             5000
+          291        150                             6000
+
+At true airspeed of 125 m/s or more, data rate 4 is to be used otherwise data
+will be lost.
+
+6.8  Change of selected word
+
+STOP recording during a change of SELECTED WORD and/or DATA RATE; try to
+achieve SELECTED WORD within 0.25% of that required.  Changes of selected
+word/data rate should be kept to a minimum.  Log all changes.  The Aircraft
+Scientist is responsible for informing the 2D operator of the TAS to be flown
+and for keeping a log of TAS (from the Navigator's TAS display).
+
+6.9  Event Marking
+
+If desired the MINUTESor SECONDS SET buttons may be used as event markers.
+
+6.10 Faults
+
+a.   Icing on probes - although both 2D probes have heaters for de-icing, ice
+     can build up in adverse conditions; this may cause a constantly changing
+     display and continuous tape incrementing; the presence of ice on the
+     precipitation probe can be confirmed by visual inspection from a forward
+     window.  Switch off affected probe(s) until ice has cleared.
+
+b.   Condensation on optics - this sometimes occurs following descent into a
+     moist layer with the same symptoms as icing.  Switch off affected probe
+     for a few minutes to allow condensation to clear.
+                                        -7-
+
+
+                                                                 APPENDIX 39
+                                                                 30 March 1984
+6.11 Holography
+
+Note that to expose hologram from the DAS the REMOTE/MANUAL switch must be in
+the REMOTE position on the Holography Control Unit.
+
+7.   Pre-Landing
+
+Switch off the laser beams.  Confirm `OFF' to Flight Leader's pre-landing
+checks.
+
+8.   Switching Off
+
+8.1  Before landing switch off the probe(s) and remove key(s).
+
+8.2  Rewind and remove tape.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        -8-
+
+                                                                        

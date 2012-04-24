@@ -1,0 +1,57 @@
+
+                                                                APPENDIX 31
+                                                                29 August 1989
+                                SONDE HANDLER
+
+Pre-flight
+
+1.   Ensure stores below are on board:
+
+     (a)  Sufficient hygristors for quantity of sondes (of same batch), plus
+     25% (or 5) spare
+     (b)  Tin opener quantity 2
+     (c)  Hygristor insertion tool
+     (d)  Pair long nose pliers
+     (e)  Sondes checked against check list and arranged in launch order in
+     sonde stowage
+     (f)  Requisite number of frangible sondes (usually 3)
+     (g)  Bottle of Electrolube with eye dropper
+     (h)  Check list
+
+2.   Before take-off on actual mission
+
+     (a)  Connect all retractor leads.
+
+3.   Before first run insert hygristors in the first five sondes and place
+     thermistor into position level with hygristor.  Note hygristor Batch No.
+
+4.   Before handing sonde to ejector check and tick on check list:-
+
+     (a)  Sonde number
+     (b)  Retractor connected and lead not fouling opening
+     (c)  Hygristor fitted
+     (d)  Thermistor correctly placed
+     (e)  Remove paper from clothes peg and place a drop of Electrolube on
+     contacts with eye dropper.
+
+5.   When sonde is in ejector collect arming pin from ejector operator and
+     tick on check sheet.  Be ready to hand pin back if necessary if sonde has
+     to be removed from ejector.
+
+6.   When sonde launched place a hygristor in next vacant sonde ie. keeping
+     five sondes ready at all times.  For the entensive sonde leg it may be
+     better to arm all 11 sondes with hygristors before leg starts.
+
+7.   On completion of sonde dropping phase:
+
+     (a)  Remove any hygristors that may be fitted to any remaining sondes
+     (b)  Disconnect retractor leads
+     (c)  Ensure paper in clothes peg switches
+     (d)  Replace covers on sonde stowage.
+
+
+
+
+
+
+                                        -1-                           

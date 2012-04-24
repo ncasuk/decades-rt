@@ -1,0 +1,463 @@
+                                                               APPENDIX 25
+                                                               24 JANUARY 1989
+                          TOTAL WATER CONTENT METER
+
+Circuit Breakers Required
+
+1.   In the INS Bay 
+          JB1        28 Volts DC  Lyman Alpha
+          JB1        200 Volts AC Phases A, B, C Lyman Alpha.
+2.   Front of Van
+          JB4A       28 Volts DC TWC
+ 
+Principles of Operation
+
+Air is sampled isokinetically at approximately 7 litres per second.  The
+sampled air passes through heater elements and stainless steel mesh screens
+which raise its temperature to about 90°C.  Any water/ice particles are very
+quickly evaporated.  The heated air passes a Lyman alpha hygrometer before
+being exhausted from the instrument.  The hygrometer measures the water vapour
+content of the sampled air.  A thermistor, placed at the hygrometer measures
+the sample air temperature.  Because water vapour strongly absorbs hydrogen
+Lyman alpha radiation, a source tube and an ionisation chamber detector
+provide a very fast, sensitive measure of the total water content.
+
+The probe is mounted in the PORT pico-pod position.  The POWER and INTERFACE
+UNIT (PIU) is mounted on a shelf in the INS BAY to the PORT of the solarimeter
+interface unit.
+
+The CONTROL PANEL is situated in the front of the VAN.  Monitoring of the data
+during flight or ground-check may be accomplished using the DRS.
+
+Control Panel
+
+a)   SOURCE CURRENT - This rotary switch selects the bias current applied to
+     the source tube and can be thought of as the U.V. attenuator (larger
+     currents produce stronger U.V. flux).  Normally this should remain at
+     0.5mA.  Only if the detector voltage (parameter 70) nears full-scale
+     (4095 bits) should this be increased.  There are 2 operational conditions
+     under which this can occur.  Firstly, in extremely moist air (>20 g/kg -
+     tropical) when very little U.V. reaches the detector due to strong
+     absorption and secondly if the magnesium fluoride windows on the
+     source/detector have degraded to such an extent that the U.V. flux is
+     appreciably attenuated.  This degradation is a very slow process taking
+     weeks or months to detect.
+
+     Changing the SOURCE CURRENT can be an aid in assessing whether the probe
+     is responding, since changing the current should cause a change in
+     detector signal.  This action need not and should not be performed more
+     than once per flight.
+
+b)   SOURCE ON INDICATOR - is switched with the Source On switch which applies
+     power to the source tube.  Power to the source tube is inhibited until
+     the source tube hydride pellet is at a pre-determined temperature
+     indicated by the SOURCE READY INDICATOR.
+
+                                     -1-
+
+
+                                                               APPENDIX 25
+                                                               24 JANUARY 1989
+
+c)   SOURCE READY INDICATOR - only lit when the source tube hydride pellet is 
+     between two fixed temperatures.
+                                                                 
+d)   EVAP. HEATERS ONLY INDICATOR - indicates when Evap. Heaters switch is in
+     up position - 2 Evap. Heaters ON.
+
+e)   LYMAN ALPHA ON INDICATOR - when lit shows that power has been selected ON
+     to the probe.
+
+f)   EVAP. HEATERS ONLY SWITCH - when the switch is in the down position
+     subject to the WEIGHT-OFF-WHEELS SWITCH, power is applied to 1 Evap.
+     Heater only.
+     
+     If the switch is selected up, subject to the WEIGHT-OFF-WHEELS SWITCH
+     power is applied to both Evap. Heaters and the lamp illuminates.
+
+     Under normal conditions this switch should be UP - 2 heaters operative.
+
+     The sample temp should be between 55 and 95C.  If >95C switch Evap.
+     Heater 2 off ie. switch down.  If <55C switch Evap Heater 2 on - switch
+     up.
+
+g)   SOURCE ON SWITCH - may be switched on when the READY indicator (see (c)
+     above) is lit.  This switch causes power to be applied to the source tube
+     which results in U.V. emission.  This switch has no effect until the
+     SOURCE READY INDICATOR is lit.
+
+h)   LYMAN ALPHA ON SWITCH - controls the power, via relays, to the Power and
+     Interface Unit and to the probe.
+
+     In-flight, turning this switch on causes a relay to apply power to the
+     evaporator heaters and to the nose cone heater.  To prevent possible
+     damage on the ground, due to the lack of ventilation, this relay is
+     inhibited by the WEIGHT-0FF-WHEELS-SWITCH associated with the MRF
+     ANTICING BUS.  For this reason, before the ground checks, ensure that the
+     ANTICING SWITCH has not been overridden by the key-switch on the MRF
+     ANTICING PANEL, below the MAIN RELAY PANEL, forward of the VOSPER.
+
+     When the LYMAN ALPHA is switched on, the Source tube heater should start
+     to heat up.  The steady rise in temperature may be examined on the RTD or
+     DRS displays.  Once the temperature has reached a pre-determined
+     (hard-wired) temperature of 113oC in between 3 and 10 minutes, the READY
+     INDICATOR should light.  This indicates that the SOURCE tube is ready and
+     the SOURCE ON switch may be turned on.
+
+
+
+
+
+
+                                       
+                                       
+                                     -2-
+
+
+                                                               APPENDIX 25
+                                                               24 JANUARY 1989
+
+i)   CONDITION INDICATOR - primarily draws the operators attention should any
+     of the monitored parameters exceed pre-determined limits or that the data
+     acquisition micro- has stopped.
+
+     Turning the probe on with the LYMAN ALPHA ON switch applies power to the
+     data acquisition system in the PIU.  The software in the microcomputer
+     replies by flashing the CONDITION indicator ON/OFF 5 times.  This is only
+     to inform the operator that the micro- has started correctly and has not
+     'hung-up' for some reason.
+
+     During normal operation this indicator should be OFF.  If it should 
+     light, either the data acquisition micro- has stopped or data from one or
+     more of the channels monitored by the data acquisition system have
+     exceeded their normal envelope.  To facilitate the fault diagnosis a
+     STATUS WORD is sent back to the DRS.  This STATUS WORD may be inspected
+     on the DRS to pin down the cause of the problem.
+
+     The STATUS WORD is a 12-bit number, the lowest 8 bits being related to a
+     particular channel (bit 0 - parameter 70, bit 1 - parameter 71 etc.).  If
+     the data from a particular channel has exceeded its normal envelope then
+     the bit related to the channel in the STATUS WORD will not be set,
+     ie. = 0.  Conversely, if the data is within the normal envelope the
+     associated bit will be set, ie. =1.
+
+j)   T.W. P.I.U. OVERHEAT LAMP - indicates the temperature in the T.W.
+     electronics box is >80C.  Switch off at once and inform the Aircrew.
+
+Pre-flight
+
+1.   Visually inspect the probe for damage or obstruction in the inlet and
+     exhaust ports.  DO NOT POKE ANYTHING DOWN EITHER PORT.
+2.   Check 0.5mA is selected on the Source Current Rotary Switch, and Press to
+     Test all lamps.  Check Evap. Heaters only set UP - 2 heaters operative.
+3.   Monitor Parameter 74 Source Temp.
+4.   Switch Lyman Alpha to ON (Indicator will light).
+     Condition Indicator will flash on/off 5 times and then remain ON.
+     Source Temp Para 74 will increase to approx 114C and will take 3-10
+     minutes depending on outside air temperature.
+     Source Ready will light when operating temperature is reached.
+5.   Switch Source On Switch to ON
+     Monitor Para 70 between 200 and 2000 DRS bits.
+     The Condition Indicator lamp will remain lit as the Evap. Heaters will
+     not be operating and the nose and sample temperature will be below
+     limits.
+6.   Switch Source on to OFF
+7.   Switch Lyman Alpha on to OFF
+
+
+
+
+
+                                     -3-
+
+
+                                                               APPENDIX 25
+                                                               24 JANUARY 1989
+
+In-flight (As soon as possible after T/O)
+
+IF AT ANY TIME THE TOTAL WATER PIU OVERHEAT LAMP LIGHT IT INDICATES A
+TEMP >80°C IN THE ELECTRONICS BOX SWITCH OFF IMMEDIATELY
+
+1.   Monitor Parameters 74, 72, 71, Source Temp, Sample Temp, Nose Temp.
+2.   Check Evap. Heaters only set to down - 1 heater only
+3.   Switch Lyman Alpha to ON (Indicator will light)
+     Condition Indicator will flash on/off 5 times and then remain ON.
+     Source Temp para 74 will increase to approx 114oC when the source ready
+     lamp lights.
+4.   Switch source on switch to ON.
+     Condition Indicator light should go out.  If the Condition Indicator lamp
+     lights the Status Word will show which bit/parameter has gone outside its
+     limits.
+ 
+Parameter            Bit           Min            Max            Units
+
+70   Detector        20         -5 (0)          33 (4094)        g/kg
+71   Nose Temp.      21         41 (2000)      110 (3460)          C
+72   Sample Temp.    22         50 (640)       115 (1860)          C
+73   Ambient Temp.   23         16 (2400)       70 (3200)          C
+74   Source Temp.    24        105 (2160)      120 (2470)          C
+75   Evap 1 Current  25        0.3 (2110)      6.6 (3280)          A
+76   Evap 2 Current  26        0.3 (2110)      6.6 (3280)          A
+77   Source Current  27        0.4 (1)         1.0 (1230)         mA
+ 
+5.   Flight Leader should note the parameter and conditions outside limits.
+
+BEFORE LANDING
+
+When outside air temperature is warmer than -15C
+
+1.   Switch Source on to OFF
+2.   Switch Lyman Alpha on to OFF
+
+Post Flight
+
+1.   Examine exterior probe for damage.
+2.   Using a torch look into the inlet and exhaust ports.
+
+DO NOT POKE ANYTHING INTO THE INLET OR EXHAUST PORTS
+
+DO NOT SPRAY THE PROBE OR PORTS.
+
+
+
+
+
+
+
+                                       
+                                     -4-
+
+
+                                                               APPENDIX 25
+                                                               24 JANUARY 1989           
+Status Word & Fault Conditions
+
+STATUS WORD
+
+The STATUS WORD consists of a 12-bit word.  The LOWEST 8 bits relate to the 8
+Lyman Alpha parameters received by SIMON.
+
+Bit 0, the rightmost bit, relates to parameter 70, bit 1, relates to parameter
+71 and so on.  Bits 8 to 12 have no meaning and will always be set (=1).
+
+The normal state is all bits set (=1).  If any of the parameters stray beyond
+a pre-defined envelope, defined in Appendix I, the related bit will NOT be set
+(=0).
+
+It must be assumed in the following paragraphs that the monitoring circuitry
+in the PIU is operating correctly and that any fault is caused by the
+parameter itself and not the monitoring circuitry.
+
+ACTION REQUIRED IF THE CONDITION INDICATOR LIGHTS
+
+CONDITION INDICATOR LIGHTS AND ALL THE BITS ARE SET (=1)
+
+It is likely that the micro has hung-up.  Confirmation of this can be found by
+looking at the LYMAN ALPHA parameters which will all show full-scale values
+because SIMON will insert 4095 decimal into the DRS.
+To restart the micro-, switch the probe OFF by breaking the LYMAN ALPHA ON
+switch.  After about 2 seconds make the LYMAN ALPHA ON switch.  The micro-
+should reply by flashing the CONDITION indicator ON/Off 5 times.  It will then
+remain ON until the source tube has once again reached its operating
+temperature and the detector signal falls below 4095 bits.  Once the READY
+indicator has lit, the SOURCE TUBE should come on automatically if it is
+already switched on.  The probe should now operate as normal and the CONDITION
+indicator should go out.  If the micro- cannot be started, switch the system
+OFF and note in the flight log.
+Experience so far shows that the micro- has NEVER hung-up.
+
+CONDITION INDICATOR LIGHTS AND ONE OR MORE BITS ARE NOT SET (-0)
+
+Each parameter and associated STATUS WORD bit is now examined for likely
+causes of a fault condition.
+If the value returned by the PIU for any parameter strays beyond the envelope
+defined in Appendix I, the associated bit will become unset (=0) and the
+CONDITION indicator will light.
+
+70 DETECTOR - bit 0
+
+If the DETECTOR returns a value of 4095 decimal, bit 0 will be unset in the
+STATUS WORD.  This indicates that too little or no U.V. is reaching the
+detector.
+
+
+
+                                       
+                                     -5-
+
+
+                                                                   APPENDIX 25
+                                                               24 JANUARY 1989   
+
+POSSIBLE CAUSES
+
+1.   The source tube is switched OFF.
+2.   There is a high water content being sampled.
+3.   The source/detector windows have degraded.
+4.   The source tube, detector tube or associated circuitry have failed.
+ACTION
+
+Check the position of the switches and the condition of the other parameters. 
+If all appears normal, try increasing the SOURCE CURRENT in steps of 0.1 mA. 
+This has the effect of increasing the U.V. flux from the source tube and the
+detector should start to 'see' the increased flux.  Note down any change in
+SOURCE current.
+If there is no change in the DETECTOR signal when the SOURCE TUBE current is
+at 1.0 mA, there must be some fault somewhere in the system and it should be
+shut down.
+
+71 NOSE TEMPERATURE - bit 1
+
+This bit will be unset if the NOSE TEMPERATURE strays outside the defined
+limits.
+POSSIBLE CAUSES
+1.   The NOSE heater is inhibited by the WEIGHT-OFF-WHEELS SWITCH, ie. the
+     aircraft is on the ground.
+2.   The heater has failed for some reason, for instance the thermal fuse has
+     blown in the NOSECONE (120oC).
+3.   The ambient air temperature is unusually cold or warm.
+ACTION
+ON THE GROUND
+If the aircraft is on the ground and the NOSE TEMPERATURE is high (greater
+than 30oC) and possibly rising, switch the probe off immediately and
+investigate whether the ANTICE INHIBIT SWITCH has been overridden.  Allow at
+least 20 minutes for the probe to cool before re-applying power, if there is
+any doubt.
+IN THE AIR
+If the NOSE TEMPERATURE on the RTD display indicates a temperature less than
+30oC but it is still fluctuating, it probably means that the ambient air
+temperature is very cold and the controller to the nose heater cannot
+compensate.  Under these conditions monitor the NOSE TEMPERATURE closely and
+it should warm up when the outside air temperature rises.
+
+If the indicated NOSE TEMPERATURE is greater than 90oC but less than 115oC it
+is likely that the outside air temperature is very warm and the nose heater
+controller cannot compensate.  Monitor this parameter closely and it should
+cool down when the ambient air temperature falls.
+
+If the indicated NOSE TEMPERATURE is greater than 115oC, switch the probe off. 
+Check the outside air temperature.  If it is unusually warm, wait until it
+cools down and then try switching the probe on in the usual manner.  Monitor
+the NOSE TEMPERATURE closely for a while.
+
+                                       
+                                     -6-
+
+
+                                                               APPENDIX 25
+                                                               24 JANUARY 1989
+
+72 SAMPLE TEMPERATURE - bit 2
+This bit will be unset if the SAMPLE TEMPERATURE exceeds the envelope defined
+in Appendix I.
+POSSIBLE CAUSES
+1.   On the ground, the EVAPORATOR HEATERS are inhibited by the
+     WEIGHT-OFF-WHEELS switch.
+2.   The aircraft is flying at an unusually high angle-of-attack.
+3.   Both evaporator heaters have failed, ie. both their fuses have blown.
+4.   The inlet port has become blocked or partially blocked by ice or foreign
+     body.
+ACTION
+If the SAMPLE TEMPERATURE exceeds 115oC switch off EVAP. HEATER 2 if selected
+otherwise switch the probe OFF since damage to the SOURCE/DETECTOR TUBES may
+result.
+If the aircraft is on the ground then normally the WEIGHT-OFF-WHEELS switch
+inhibits the EVAPORATOR HEATERS which results in the SAMPLE TEMPERATURE being
+at the outside ambient temperature.
+If the cause of the problem is that the aircraft is flying at a high
+angle-of-attack, associated with high SAMPLE TEMPERATURES, it is unusual for
+this attitude to last for long periods during an experimental part of a
+flight.  The probe may be switched on again once the manoeuvre has been
+completed.  Monitor the SAMPLE TEMPERATURE closely for a while to be certain
+the envelope for this parameter is not still exceeded.  If the SAMPLE
+TEMPERATURE is less than 50oC switch the Evap. Heaters only switch to up - to
+bring in the second heater as well.  Check Evaporator Currents.  If <0.1A
+switch probe off.
+If there is an obstruction to the inlet port then the EVAPORATOR CURRENTS will
+fall to a low value of about 0.2-0.3 A.  Ice is unlikely to obstruct the inlet
+port if the NOSECONE HEATER is functioning correctly and should be cleared
+quickly.  Any substantial foreign body is unlikely to be cleared and the probe
+should be switched off.
+73 AMBIENT TEMPERATURE - bit 3
+The AMBIENT TEMPERATURE sensor is used for diagnosis purposes.  It should not
+be confused with the outside ambient temperature.  It consists of a thermistor
+which may be placed anywhere inside the probe to monitor the temperature at
+selected points.  No action need be taken if this bit is set except a note
+made of its occurrence.
+74 SOURCE TEMPERATURE - bit 4
+This bit will be unset if the SOURCE TEMPERATURE exceeds the limits.
+The SOURCE TEMPERATURE is a finely controlled parameter since large
+fluctuations effect the U.V. flux from the source tube.  The temperature
+normally fluctuates about a mean temperature ñ 0.1oC.  If the temperature
+exceeds 120oC the supply to the SOURCE HEATER is inhibited electronically to
+avoid damage to the heater.  At this point the SOURCE TEMPERATURE will fall
+below 120oC and then start to rise again in a continuous cycle over about 5oC.
+POSSIBLE CAUSES
+1.   The SOURCE TUBE is being heated up from cold.
+2.   The heater controller has malfunctioned.
+3.   The TWC Meter has been switched off and then switched on again too soon.
+     ie. <1 min.
+
+
+                                     -7-
+
+
+                                                               APPENDIX 25
+                                                               24 JANUARY 1989
+
+ACTION
+If the source heater is being heated up from cold, no action is required.
+If cause 3) applies.  Switch off for at least 1 min.
+If the SOURCE TEMPERATURE continuously fluctuates beyond the envelope defined
+in Appendix I it is likely that the heater controller has lost control and the
+probe should be switched off.
+
+75 and 76 EVAPORATOR CURRENTS - bits 5 and 6
+The associated bit will be unset if the value returned by the PIU exceeds the
+limits.  Bit 76 will be permanently set if Evap. Heater 2 is OFF.
+With 2 Evaporators on the front heater (para 75) takes more current than the
+second heater (Para 76) as the air reaching the second heater will have been
+pre-heated.
+POSSIBLE CAUSES
+1.   One or both heaters have failed.
+2.   Short-circuiting of the heater supply.
+ACTION
+ON THE GROUND
+If the aircraft is on the ground and the EVAPORATOR CURRENTS are low (less
+than 0.1 A), no action is required.
+If the aircraft is on the ground and the EVAPORATOR CURRENTS are high (greater
+than 0.1 A), switch the probe off immediately and investigate whether the
+ANTICE INHIBIT SWITCH has been overridden.
+IN THE AIR
+Switch the probe off.
+
+77 SOURCE CURRENT - bit 7
+This bit will be unset if the value returned by the PIU exceeds the limits.
+The currents are selected in discrete steps by the SOURCE CURRENT rotary
+switch on the CONTROL PANEL.
+POSSIBLE CAUSES
+1.   The SOURCE is switched off
+2.   Failure of the supply to the SOURCE TUBE
+3.   SOURCE TUBE failure.
+4.   Loss of control of the SOURCE CURRENT
+
+ACTION
+Check the position of the switches.
+Monitor the SOURCE CURRENT and if it is greater than 1.0 mA switch the probe
+off immediately.  If it is less than 0.4 mA try changing the selected current
+on the CONTROL PANEL.  A delay of up to 10 seconds can occur before the
+selected current becomes switched in, since the selector switch causes a LEDEX
+switch in the PIU to search for the selected position.  A LEDEX switch only
+operates in one direction so it may have to turn almost a complete revolution
+before the selected position is found.
+During this searching process the DETECTOR signal may swing wildly.  This is a
+good sign, since it means that SOURCE and DETECTOR tubes have not failed.
+If this attempt fails it should be assumed that the power supply or the SOURCE
+TUBE have failed.  Shut the system down in the normal fashion.
+
+
+
+                                        -8-
+
+                                                                      
