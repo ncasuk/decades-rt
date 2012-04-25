@@ -9,24 +9,22 @@ class DecadesDataProtocols():
    
    def __init__(self):
       dirList=os.listdir(self.location)
-      for protocol_description in dirList:
-         self.protocols[protocol_description[0:-4]] = []
-         protocolReader = csv.DictReader(open(os.path.join(self.location,protocol_description), 'rb'))
+      for protocol_name in dirList:
+         self.protocols[protocol_name[0:-4]] = [] #[0:-4] strips the '.csv. off the end
+         protocolReader = csv.DictReader(open(os.path.join(self.location,protocol_name), 'rb'))
          for row in protocolReader:
-            self.protocols[protocol_description[0:-4]].append(row)
+            self.protocols[protocol_name[0:-4]].append(row)
 
-   def create_table(self, protocol_description):
+   def available(self):
+      return self.protocols.keys()
+
+   def create_table(self, protocol_name, cursor, prefix='test_'):
       #returns a suitable (Postgres)SQL CREATE TABLE command for a named protocol
-      s = 'CREATE TABLE %s (' % protocol_description
-      for field in self.protocols[protocol_description]:
+      s = 'CREATE TABLE %s (' % prefix + protocol_name
+      for field in self.protocols[protocol_name]:
          #created postgres field spec. Strips leading $ from field name as it won't work
          s = s + " ".join([field['field'].lstrip('$'),self.field_types_map[field['type']],','])
 
       s = s.rstrip(',') + ")"
-      return s
-         
-         
-
-ddp = DecadesDataProtocols()
-print ddp.create_table('GINDAT01')
-      
+      cursor.execute(s)
+      return cursor.connection.commit()
