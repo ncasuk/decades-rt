@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 ############################################################################
 
-# Simple UDP Multicast Client example
-# Kyle Robertson
-# A Few Screws Loose, LLC
-# http://www.afslgames.com
-# ra1n@gmx.net
-# MulticastClient.py
+# Simple UDP Multicast Client for DECADES
+# Dan Walker`
+# NCAS
 
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor
@@ -20,6 +17,7 @@ conn = psycopg2.connect (host = "localhost",
 
 
 class MulticastServerUDP(DatagramProtocol):
+    
     def startProtocol(self):
         print 'Started Listening'
         # Join a specific multicast group, which is the IP we will respond to
@@ -44,6 +42,9 @@ class MulticastServerUDP(DatagramProtocol):
       if data[0] == '$PRTAFT01': 
          cursor.execute('INSERT INTO ' + data[0][1:].lower() + ' (crio_ident, length_of_data, time_utc, crio_temp, pressure_altitude, indicated_airspeed, radio_altitude, nevzorov_lwc_flag, nevzorov_twc_flag, deiced_temperature_flag, weight_on_wheels_flag, heimann_flag) VALUES (\'' + data[0][1:] + '\','+','.join(data[1:12]) + ')')
    
+      if data[0] == 'AERACK01':
+         print(len(data))
+         
       conn.commit();
    
       #print data[0]
