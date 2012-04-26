@@ -9,7 +9,7 @@ from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor
 from twisted.application.internet import MulticastServer
 import psycopg2, csv
-import protocol-class
+from decades import DecadesDataProtocols
 
 conn = psycopg2.connect (host = "localhost",
                            user = "inflight",
@@ -21,9 +21,9 @@ class MulticastServerUDP(DatagramProtocol):
     dataProtocols = DecadesDataProtocols() 
     cursor = conn.cursor()
     def startProtocol(self):
-        print 'Creating tables'
-        for proto in dataProtocols.available():
-            dataProtocols.create_table(proto,
+        for proto in self.dataProtocols.available():
+            print 'Creating table %s' % proto
+            print(self.dataProtocols.create_table(proto, self.cursor))
         
         print 'Started Listening'
         # Join a specific multicast group, which is the IP we will respond to
@@ -35,9 +35,10 @@ class MulticastServerUDP(DatagramProtocol):
       #data = datagram.split(',')
       data = csv.reader([datagram]).next()
       if data[0] == '$AERACK01':
-         print(repr(data))
-         
-      conn.commit();
+         squirrel = 'INSERT INTO test_%s (%s)' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), ', '.join(self.dataProtocols.fields(data[0][1:])))
+         print len(data), len(self.dataProtocols.fields(data[0][1:]))
+         print(self.cursor.mogrify(squirrel + ' VALUES (' + ('%s, ' * len(data)) +')', data))
+         #conn.commit();
    
       #print data[0]
 
