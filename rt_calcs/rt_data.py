@@ -66,12 +66,12 @@ class rt_data(object):
  
     def getdata_fromdatabase(self,name,selection):
         """ Dummy routine to read one parameter from database"""
-        print 'Get '+name,selection,' from database'
+        print 'SELECT ' + name + ' FROM scratchdata WHERE id '+selection
         return np.array(self.database,dtype='float')
             
     def getbunchofdata_fromdatabase(self,names,selection):
         """ Dummy routine to read several parameters from database"""
-        print 'Get ',names,selection,' from database'
+        print 'SELECT ' + ', '.join(names) + ' FROM scratchdata WHERE id '+selection
         ans={}
         for name in names:
             ans[name]=np.array(self.database,dtype='float')
