@@ -4,19 +4,19 @@ import rt_data
 class derived(rt_data.rt_data):
     """ A collection of the processing routines for realtime in flight data """
     def pressure_height_feet(self,data):
-        rvsm_alt=self.getdata('rvsm_alt',data)
+        rvsm_alt=self.getdata('PRTAFT01.pressure_alt',data)
         return rvsm_alt*4
     def pressure_height_kft(self,data):
         feet=self.getdata('pressure_height_feet',data) 
         return feet/1000.0
-    def pressure_height_meters(self,data):
+    def pressure_height_m(self,data):
         feet=self.getdata('pressure_height_feet',data) 
         return feet*0.3048
     def static_pressure(self,data):
         feet=self.getdata('pressure_height_feet',data)
         return 1013.25*(1-6.87535e-6*feet)**5.2561
     def indicated_air_speed(self,data):
-        rvsm_ias=self.getdata('rvsm_ias',data)
+        rvsm_ias=self.getdata('PRTAFT01.ind_air_speed',data)
         return rvsm_ias/32*0.514444
     def pitot_static_pressure(self,data):
         spr=self.getdata('static_pressure',data)
@@ -36,33 +36,33 @@ class derived(rt_data.rt_data):
         rmach[ind]=rmach[ind]**0.5
         return rmach
     def s9_static_pressure(self,data):
-        raw=self.getdata('s9_press',data)
+        raw=self.getdata('CORCON01.s9_press',data)
         #c=self.cals['CAL221']
         c=self.getdata('CAL221',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_pitot_static(self,data):
         c=self.cals['CAL215']
-        raw=self.getdata('tp_p0_s10',data)
+        raw=self.getdata('CORCON01.tp_p0_s10',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_attack_diff(self,data):
         c=self.cals['CAL216']
-        raw=self.getdata('tp_up_down',data)
+        raw=self.getdata('CORCON01.tp_up_down',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_sideslip_diff(self,data):
         c=self.cals['CAL217']
-        raw=self.getdata('tp_left_right',data)
+        raw=self.getdata('CORCON01.tp_left_right',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_attack_check(self,data):
         c=self.cals['CAL218']
-        raw=self.getdata('tp_top_s10',data)
+        raw=self.getdata('CORCON01.tp_top_s10',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_sideslip_check(self,data):
         c=self.cals['CAL219']
-        raw=self.getdata('tp_right_s10',data)
+        raw=self.getdata('CORCON01.tp_right_s10',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def deiced_indicated_air_temp_c(self,data):
         c=self.cals['CAL010']
-        raw=self.getdata('di_temp',data)
+        raw=self.getdata('CORCON01.di_temp',data)
         sig_reg=self.getdata('sig_register',data)
         ans=c[0]+c[1]*raw+c[2]*raw**2
         di=np.where(np.array(sig_reg,dtype='i2') & int('00100000',2))
@@ -76,7 +76,7 @@ class derived(rt_data.rt_data):
         tatdi_K=self.getdata('deiced_true_air_temp_k',data)
         return tatdi_K-273.16
     def nondeiced_indicated_air_temp_c(self,data):
-        raw=self.getdata('ndi_temp',data)
+        raw=self.getdata('CORCON01.ndi_temp',data)
         c=self.cals['CAL023']
         return c[0]+c[1]*raw+c[2]*raw**2
     def nondeiced_true_air_temp_k(self,data):
@@ -89,7 +89,7 @@ class derived(rt_data.rt_data):
     def true_air_speed(self,data): 
         spr=self.getdata('static_pressure',data)
         tatdi_K=self.getdata('deiced_true_air_temp_k',data)
-        ias=self.getdata('raw_ias',data) 
+        ias=self.getdata('indicated_air_speed',data) 
         tas=np.zeros(len(ias))
         good=np.where((spr>0.0) & (tatdi_K>0.0))
         tas[good]=self.cals['CAL004'][0]*(ias[good]*((1013.25/spr[good])*(tatdi_K[good]/288.15))**0.5)
@@ -170,9 +170,9 @@ class derived(rt_data.rt_data):
         
     def dew_point(self,data):
         """Dew point (deg C) from General Eastern Hygrometer"""
-        raw=self.getdata('ge_dew',data)
+        raw=self.getdata('CORCON01.ge_dew',data)
         c=self.cals['CAL058']
-        hycc=self.getdata('ge_cont',data)
+        hycc=self.getdata('CORCON01.ge_cont',data)
         cc=np.where((hycc>18076) | (hycc<15451)) # not sure what to do with this info ( control lost )
         return raw*c[1]+c[0]
 
@@ -244,16 +244,17 @@ class derived(rt_data.rt_data):
     def jw_liquid_water_content(self,data):
         """Johnson Williams liquid water (g m-3)"""
         c=self.cals['CAL042']
-        raw=self.getdata('jw_lwc',data)
+        raw=self.getdata('CORCON01.jw_lwc',data)
         tas=self.getdata('true_air_speed',data)
         jw=c[1]*raw+c[0]
         lwc=np.zeros(len(raw))
         ind=np.where(tas!=0)
         lwc[ind]=jw[ind]*77.2/tas[ind]
         return lwc
-    
-"""
-C TWC   - total water content (g kg-1)
+
+
+    def total_water_content(self,data):    
+        """ TWC   - total water content (g kg-1)
       IF (IV12(74,1).NE.4095) THEN
         TDRS=FLOAT(IV12(72,1))                     
         RTSAMPC=CAL(72,1)+TDRS*CAL(72,2)+TDRS**2*CAL(72,3)
@@ -273,109 +274,32 @@ C TWC   - total water content (g kg-1)
       ELSE 
         RTWC=0.0                                 !Test for fitted and working
       ENDIF
-      DERIVE(ISEC,60)=RTWC
-C RHGT  - Radar height (ft)
-      CALL MEANPARAMNOFS(37,RV)
-      RV=RV*0.25                                 !Radar height (ft)
-      DERIVE(ISEC,63)=RV
-C INU X velocity (m s-1 +ve northish)
-      JTEMP(2)=JVAL(163,3)
-      JTEMP(1)=JVAL(163,4)
-      RVX=ITEMP/2.**18*12*25.4/1000.             !INU X velocity (m s-1)
-C INU Y velocity (m s-1 +ve westish)
-      JTEMP(2)=JVAL(163,5)
-      JTEMP(1)=JVAL(163,6)
-      RVY=ITEMP/2.**18*12*25.4/1000.             !INU Y velocity (m s-1)
-C VZ    - INU vertical velocity (m s-1 +ve up)
-      JTEMP(2)=JVAL(163,7)
-      JTEMP(1)=JVAL(163,8)
-      RVZ=ITEMP/2.**18*12*25.4/1000.             !INU vertical velocity (m s-1)
-      DERIVE(ISEC,45)=RVZ
-C ROLL  - INU roll (-180 to +180 deg stbd roll is +ve)
-      RROLL=JVAL(163,10)/2.**15*180.             !INU roll (deg)
-      DERIVE(ISEC,48)=RROLL
-C PTCH  - INU pitch (-90 to +90 nose up is +ve)
-      RPTCH=JVAL(163,11)/2.**15*180.             !INU pitch (deg)
-      DERIVE(ISEC,49)=RPTCH
-C IHDG  - INU azimuth (0 to 360 deg clockwise from above is +ve)
-      RIHDG=JVAL(163,12)/2.**15*180.             !INU azimuth (deg)
-      IF(RIHDG.LT.0.) RIHDG=RIHDG+360.
-      DERIVE(ISEC,50)=RIHDG
-C Platform azimuth and wander angle
-      RPAZI=JVAL(163,9)/2.**15*180.
-      IF(RPAZI.LT.0.) RPAZI=RPAZI+360.
-      RWA=RPAZI-RIHDG
-C VN    - INU north velocity (m s-1 +ve north)
-      RVN=COSD(RWA)*RVX-SIND(RWA)*RVY            !INU north velocity (m s-1)
-      DERIVE(ISEC,46)=RVN
-C VE    - INU east velocity (m s-1 +ve east)
-      RVE=-SIND(RWA)*RVX-COSD(RWA)*RVY           !INU east velocity (m s-1)
-      DERIVE(ISEC,47)=RVE
-C PITR  - INU pitch rate (deg s-1)
-      RPITR=JVAL(163,31)/2.**13*180.             !INU pitch rate (deg s-1)
-      DERIVE(ISEC,53)=RPITR
-C YAWR  - INU yaw rate (deg s-1)
-      RYAWR=JVAL(163,32)/2.**13*180.             !INU yaw rate (deg s-1)
-      DERIVE(ISEC,54)=RYAWR 
-C IGS   - INU ground speed (m s-1)
-      RIGS=SQRT(RVN**2+RVE**2)                   !INU ground speed (m s-1)
-      DERIVE(ISEC,51)=RIGS
-C IDA   - INU drift angle (deg)
-      RIDA=0.0
-      IF(RVN.NE.0.OR.RVE.NE.0) THEN
-        R=ATAN2D(RVE,RVN)
-        IF(R.LT.0) R=R+360.
-        RIDA=R-RIHDG                             !INU drift angle (deg)
-        IF(RIDA.LT.-180.0) RIDA=RIDA+360.0
-      END IF
-      DERIVE(ISEC,52)=RIDA
-C ILAT  - INU latitude (deg)
-      JTEMP(2)=JVAL(163,21)
-      JTEMP(1)=JVAL(163,22)
-      RCNEXZ=ITEMP/2.**30
-      RILAT=0.                                   !INU latitude (deg)
-      IF(RCNEXZ.GE.-1.AND.RCNEXZ.LE.1.) RILAT=ASIND(RCNEXZ)
-      DERIVE(ISEC,93)=RILAT
-C ILNG  - INU longitude (deg)
-      JTEMP(2)=JVAL(163,23)
-      JTEMP(1)=JVAL(163,24)
-      RILNG=ITEMP*180./2.**31                    !INU longitude (deg)
-      DERIVE(ISEC,94)=RILNG
+      DERIVE(ISEC,60)=RTWC"""
+        P0=1013.25
+        P1=self.getdata('static_pressure',data)
+        cT=self.cals['CAL072']
+        cS=self.cals['CAL070']
+        Traw=self.getdata('.twc_temp',data)     # Which cRIO ?
+        Sraw=self.getdata('.twc_det',data)
+        T2=cT[0]+Traw*cT[1]+Traw**2*cT[2]+Traw**3*cT[3]+Traw**4*cT[4]+Traw**5*cT[5]
+        F=0.93  # Ratio of internal/external pressures
+        P2=F*P1
+        KO2=0.304+0.351*P2/P0
+        Kv=427.0
+        uO2=0.2095
+        oxycor=(KO2*uO2*P1)/Kv
+        S=Sraw*cS[1]+cS[0]
+        vp=T2*S-oxycor
+        vmr=vp/(P2-vp)
+        mmr=622.0*vmr
+        return mmr
+        
+    def radar_height(self,data):
+        """Radar height (ft)"""
+        return self.getdata('PRTAFT01.rad_alt',data)/4.0
 
-      RTA=TAND(RAOA)
-      RTS=TAND(RAOSS)
-      RSR=SIND(DERIVE(ISEC,156))
-      RCR=COSD(DERIVE(ISEC,156))
-      RSP=SIND(DERIVE(ISEC,157))
-      RCP=COSD(DERIVE(ISEC,157))
-      RSH=SIND(DERIVE(ISEC,158))
-      RCH=COSD(DERIVE(ISEC,158))
-      RV1=RTA*RCR-RTS*RSR
-      RV2=RCP+RSP*RV1
-      RV3=RTA*RSR+RTS*RCR
-      RV4=RCP*DERIVE(ISEC,164)*3.14159/180.0
-      RV5=RSP*DERIVE(ISEC,163)*3.14159/180.0
-      RIP=15.49                                  !Vanes to INU distance (m)
-C V     - Northwards wind component (m s-1)
-      RV=DERIVE(ISEC,153)-RTASD*(RSH*RV3+RCH*RV2)-RIP*(RSH*RV4+RCH*RV5) !N wind (m s-1)
-      DERIVE(ISEC,55)=RV
-C U     - Eastwards wind component (m s-1)
-      RU=DERIVE(ISEC,154)+RTASD*(RCH*RV3-RSH*RV2)+RIP*(RCH*RV4-RSH*RV5) !E wind (m s-1)
-      DERIVE(ISEC,56)=RU
-C W     - Vertical wind component (m s-1)
-      RW=-DERIVE(ISEC,155)+RCP*(RTAS*(RV1-TAND(DERIVE(ISEC,157)))
-     &  +RIP*DERIVE(ISEC,163)*3.14159/180.0)!V wind(m s-1)
-      DERIVE(ISEC,57)=RW
-C IWS   - INU derived wind speed (m s-1)
-      RIWS=SQRT(RU**2+RV**2)                     !INU wind speed (m s-1)
-      DERIVE(ISEC,58)=RIWS
-C IWA   - INU derived wind angle (deg)
-      IF(RU.EQ.0.0.AND.RV.EQ.0.0)  THEN
-        RIWA=0.0
-      ELSE
-        RIWA=ATAN2D(RU,RV)+180.0       
-      ENDIF
-      DERIVE(ISEC,59)=RIWA
+    def vertical_vorticity(self,data):
+        """
 ! VERVORT - vertical vorticity
 ! Planetary vorticity 2*omega*sin(lat) omega=2pi/24hrs
 ! (2*2*pi/24*60*60)*sin(lat) = pi*sin(lat)/4*60*60
@@ -391,35 +315,90 @@ C IWA   - INU derived wind angle (deg)
       ROLDU=RU
       ROLDV=RV
       DERIVE(ISEC,168)=RVV
+"""
+        return None
+        
+    def upper_pyranometer_clear_flux(self,data):
+        c=self.cals['CAL081']
+        return (self.getdata('UPPBBR01.radiometer_1_sig',data)-self.getdata('UPPBBR01.radiometer_1_zero',data))*c
+    def upper_pyranometer_red_flux(self,data):
+        c=self.cals['CAL082']
+        return (self.getdata('UPPBBR01.radiometer_2_sig',data)-self.getdata('UPPBBR01.radiometer_2_zero',data))*c
+    def upper_pyrgeometer_flux(self,data):
+        c=self.cals['CAL083']
+        return (self.getdata('UPPBBR01.radiometer_3_sig',data)-self.getdata('UPPBBR01.radiometer_3_zero',data))*c
 
-C UCLR  - Upper pyranometer (clear) radiance (W m-2)
-      RUCLR=(IVAL(81,1)-IVAL(84,1))*CAL(81,2)    !Up pyr clr rad (W m-2)
-      DERIVE(ISEC,26)=RUCLR
-C URED  - Upper pyranometer (red)   radiance (W m-2)
-      RURED=(IVAL(82,1)-IVAL(85,1))*CAL(82,2)    !Up pyr red rad (W m-2)
-      DERIVE(ISEC,27)=RURED
-C UIR   - Upper pyrgeometer         radiance (W m-2)
-      RT=IVAL(89,1)*CAL(89,2)+CAL(89,1)
-      RS=(IVAL(83,1)-IVAL(86,1))*CAL(83,2)
-      RUIR=5.899E-8*(RT+273.16)**4+RS            !Up prg rad (W m-2)
-      DERIVE(ISEC,28)=RUIR
-C LCLR  - Lower pyranometer (clear) radiance (W m-2)
-      RLCLR=(IVAL(91,1)-IVAL(94,1))*CAL(91,2)    !Lo pyr clr rad (W m-2)
-      DERIVE(ISEC,29)=RLCLR
-C LRED  - Lower pyranometer (red)   radiance (W m-2)
-      RLRED=(IVAL(92,1)-IVAL(95,1))*CAL(92,2)    !Lo pyr red rad (W m-2)
-      DERIVE(ISEC,30)=RLRED
-C LIR   - Lower pyrgeometer         radiance (W m-2)
-      RT=IVAL(99,1)*CAL(99,2)+CAL(99,1)
-      RS=(IVAL(93,1)-IVAL(96,1))*CAL(93,2)
-      RLIR=5.899E-8*(RT+273.16)**4+RS            !Lo prg rad (W m-2)
-      DERIVE(ISEC,31)=RLIR
-C SZEN  - solar position, roughly every 120s     !Degrees
-      IF(MOD(ISEC,40).EQ.1) CALL ALB_CALC(ISEC,SAZI,SZEN)
-      RSZEN=SZEN
-      DERIVE(ISEC,40)=RSZEN
-      RSAZI=SAZI
-      DERIVE(ISEC,41)=RSAZI
+    def lower_pyranometer_clear_flux(self,data):
+        c=self.cals['CAL091']
+        return (self.getdata('LOWBBR01.radiometer_1_sig',data)-self.getdata('LOWBBR01.radiometer_1_zero',data))*c
+    def lower_pyranometer_red_flux(self,data):
+        c=self.cals['CAL092']
+        return (self.getdata('LOWBBR01.radiometer_2_sig',data)-self.getdata('LOWBBR01.radiometer_2_zero',data))*c
+    def lower_pyrgeometer_flux(self,data):
+        c=self.cals['CAL093']
+        return (self.getdata('LOWBBR01.radiometer_3_sig',data)-self.getdata('LOWBBR01.radiometer_3_zero',data))*c
+
+    def gin_latitude(self,data):
+        return self.getdata('PRTAFT01.gin_lat',data)
+    def gin_longitude(self,data):
+        return self.getdata('PRTAFT01.gin_long',data)
+    def gin_altitude(self,data):
+        return self.getdata('PRTAFT01.gin_alt',data)
+    def gin_n_velocity(self,data):
+        return self.getdata('PRTAFT01.gin_north_vel',data)
+    def gin_e_velocity(self,data):
+        return self.getdata('PRTAFT01.gin_east_vel',data)
+    def gin_d_velocity(self,data):
+        return self.getdata('PRTAFT01.gin_down_vel',data)
+    def gin_roll(self,data):
+        return self.getdata('PRTAFT01.gin_roll',data)
+    def gin_pitch(self,data):
+        return self.getdata('PRTAFT01.gin_pitch',data)
+    def gin_heading(self,data):
+        return self.getdata('PRTAFT01.gin_heading',data)
+    def gin_track_angle(self,data):
+        return self.getdata('PRTAFT01.gin_track',data)
+    def gin_speed(self,data):
+        return self.getdata('PRTAFT01.gin_speed',data)
+    def gin_rate_about_long(self,data):
+        return self.getdata('PRTAFT01.gin_roll_rate',data)
+    def gin_rate_about_trans(self,data):
+        return self.getdata('PRTAFT01.gin_pitch_rate',data)
+    def gin_rate_about_down(self,data):
+        return self.getdata('PRTAFT01.gin_heading_rate',data)
+    def gin_acc_long(self,data):
+        return self.getdata('PRTAFT01.gin_accel_fwd',data)
+    def gin_acc_trans(self,data):
+        return self.getdata('PRTAFT01.gin_accel_strbrd',data)
+    def gin_acc_down(self,data):
+        return self.getdata('PRTAFT01.gin_accel_dwn',data)
+
+    def solar_zenith(self,data):
+        Decl=self.cals['Solar_declination'] # radians
+        Tcorr=self.cals['Equation_of_time'] # degrees
+        Latrad=np.deg2rad(self.getdata('gin_latitude',data))  # radians
+        Londeg=self.getdata('gin_longitude',data) # degrees
+        Timedeg=self.getdata('Time',data)/240.0  # 86400 secs = 24 hrs = 360 degrees
+        Angrad=np.deg2rad((Timedeg+Tcorr+180.+Londeg) % 360)  #  radians
+        # CALCULATE SOLAR ZENITH ANGLE
+        Zen=np.rad2deg(np.arccos(np.sin(Decl)*np.sin(Latrad)+np.cos(Decl)*np.cos(Latrad)*np.cos(Angrad)))
+        return Zen
+
+    def solar_azimuth(self,data):
+        Decl=self.cals['Solar_declination'] # radians
+        Tcorr=self.cals['Equation_of_time'] # degrees
+        Latrad=np.deg2rad(self.getdata('gin_latitude',data))  # radians
+        Londeg=self.getdata('gin_longitude',data) # degrees
+        Timedeg=self.getdata('Time',data)/240.0  #  86400 secs = 24 hrs = 360 degrees
+        Angrad=np.deg2rad((Timedeg+Tcorr+180.+Londeg) % 360)  #  radians
+        # CALCULATE SOLAR AZIMUTH ANGLE
+        Azim=180.+np.rad2deg(np.arctan2((np.cos(Decl)*np.sin(Angrad)),
+                                        (np.cos(Decl)*np.cos(Angrad)*np.sin(Latrad) - np.sin(Decl)*np.cos(Latrad))
+                            )          )
+        return Azim
+    
+"""
+
 C Upper pyranometer corrections
       RCORR=1.0
       IF (RIGS.GT.1000.0) THEN
