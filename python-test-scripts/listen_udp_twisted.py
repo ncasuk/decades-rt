@@ -2,7 +2,7 @@
 ############################################################################
 
 # Simple UDP Multicast Client for DECADES
-# Dan Walker`
+# Dan Walker
 # NCAS
 
 from twisted.internet.protocol import DatagramProtocol
@@ -37,8 +37,14 @@ class MulticastServerUDP(DatagramProtocol):
       if data[0] == '$AERACK01':
          squirrel = 'INSERT INTO test_%s (%s)' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), ', '.join(self.dataProtocols.fields(data[0][1:])))
          print len(data), len(self.dataProtocols.fields(data[0][1:]))
-         print(self.cursor.mogrify(squirrel + ' VALUES (' + ('%s, ' * len(data)) +')', data))
-         #conn.commit();
+         processed= []
+         for each in data:
+            if each == '':
+               processed.append(None)
+            else:
+               processed.append(each)
+         print(self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed))
+         conn.commit();
    
       #print data[0]
 
