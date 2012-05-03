@@ -11,15 +11,13 @@ from twisted.application.internet import MulticastServer
 import psycopg2, csv
 from decades import DecadesDataProtocols
 
-conn = psycopg2.connect (host = "localhost",
-                           user = "inflight",
-                           password = "wibble",
-                           database = "inflightdata")
-
 
 class MulticastServerUDP(DatagramProtocol):
     dataProtocols = DecadesDataProtocols() 
-    cursor = conn.cursor()
+    def __init__(self, conn):
+        self.conn = conn
+        self.cursor = self.conn.cursor()
+
     def startProtocol(self):
         for proto in self.dataProtocols.available():
             print 'Creating table %s' % proto
@@ -43,8 +41,8 @@ class MulticastServerUDP(DatagramProtocol):
                processed.append(None)
             else:
                processed.append(each)
-         print(self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed))
-         conn.commit();
+         self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed)
+         self.conn.commit();
    
       #print data[0]
 
@@ -53,6 +51,15 @@ class MulticastServerUDP(DatagramProtocol):
 # sufficient:
 #reactor.listenMulticast(8005, MulticastServerUDP()).join('224.0.0.1')
 
-# Listen for multicast on 224.0.0.1:8005
-reactor.listenMulticast(50001, MulticastServerUDP())
-reactor.run()
+def main():# Listen for multicast on 224.0.0.1:8005
+   conn = psycopg2.connect (host = "localhost",
+                           user = "inflight",
+                           password = "wibble",
+                           database = "inflightdata")
+
+   reactor.listenMulticast(50001, MulticastServerUDP(conn))
+   reactor.run()
+
+if __name__ == '__main__':
+    main() #run if this file is called directly, but not if imported
+
