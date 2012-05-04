@@ -15,9 +15,12 @@ class derived(rt_data.rt_data):
     def static_pressure(self,data):
         feet=self.getdata('pressure_height_feet',data)
         return 1013.25*(1-6.87535e-6*feet)**5.2561
+    def indicated_air_speed_knts(self,data):
+        rvsm_ias=self.getdata('PRTAFT01.ind_air_speed',data) 
+        return rvsm_ias/32
     def indicated_air_speed(self,data):
-        rvsm_ias=self.getdata('PRTAFT01.ind_air_speed',data)
-        return rvsm_ias/32*0.514444
+        ias=self.getdata('indicated_air_speed_knts',data) 
+        return ias*0.514444 # m s-1 ( should it be knots ? )
     def pitot_static_pressure(self,data):
         spr=self.getdata('static_pressure',data)
         ias=self.getdata('indicated_air_speed',data)
@@ -86,20 +89,24 @@ class derived(rt_data.rt_data):
     def nondeiced_true_air_temp_c(self,data):
         tatndi_K=self.getdata('nondeiced_true_air_temp_k',data)
         return tatndi_K-273.16
-    def true_air_speed(self,data): 
+    def true_air_speed_ms(self,data): 
         spr=self.getdata('static_pressure',data)
         tatdi_K=self.getdata('deiced_true_air_temp_k',data)
         ias=self.getdata('indicated_air_speed',data) 
         tas=np.zeros(len(ias))
         good=np.where((spr>0.0) & (tatdi_K>0.0))
         tas[good]=self.cals['CAL004'][0]*(ias[good]*((1013.25/spr[good])*(tatdi_K[good]/288.15))**0.5)
-        return tas*1.944
+        return tas
+        
+    def true_air_speed(self,data):
+        tas=self.getdata('true_air_speed_ms',data) 
+        return tas*1.944 # knots (how strange )
+
     def angle_of_attack(self,data):
         mach=self.getdata('mach_no',data)
         tpad=self.getdata('turb_probe_attack_diff',data)
         psp=self.getdata('pitot_static_pressure',data)
-        #c=self.cals['CALAOA']
-        c=[3.35361E-01,2.78277E-01,-5.73689E-01,-6.1619E-02,-5.2595E-02,1.0300E-01,1.0776E+0,-0.4126E+0]
+        c=self.cals['CALAOA']
         AOA=np.empty(len(mach))
         AOA[:]=6.0
         A0 = c[0]+mach*(c[1]+mach*c[2])
@@ -114,8 +121,7 @@ class derived(rt_data.rt_data):
         mach=self.getdata('mach_no',data)
         tpsd=self.getdata('turb_probe_sideslip_diff',data)
         psp=self.getdata('pitot_static_pressure',data)
-        #c=self.cals['CALAOSS']
-        c=[-2.1887E-02,0.0000E-00,0.0000E0,5.7967E-02,-1.7229E-02,0.0000E0,0.9505E+0,0.0050E+0]
+        c=self.cals['CALAOSS']
         AOSS=np.zeros(len(mach))
         B0 = c[0]+mach*(c[1]+mach*c[2])
         B1 = c[3]+mach*(c[4]+mach*c[5])
@@ -137,19 +143,18 @@ class derived(rt_data.rt_data):
         # Apply corrections to measured differential pressure
         RTPSP = TP0+(DCPA+DCPB)*PSP
         return RTPSP
+
     def turb_probe_tas(self,data):
         AMACH=self.getdata('mach_no',data)
         SPR=self.getdata('static_pressure',data)
         RTPSP=self.getdata('turb_probe_cor_pitot_static',data)
         TTDI=self.getdata('deiced_true_air_temp_k',data)
-        #c=self.cals['CALTAS']
-        c=[0.9984E0]
+        c=self.cals['CALTAS']
         R=np.zeros(len(SPR))
         ind=np.where((SPR>0) & (RTPSP>0))
         R[ind]=5.0*((1.0+RTPSP[ind]/SPR[ind])**(2.0/7.0)-1.0)
         ind=np.where(R>0)
         AMACH[ind]=(R[ind]**0.5)         #!Mach No
-        return AMACH
         return c[0] * 340.294 * AMACH * (TTDI/288.15)**0.5
         
     def potential_temperature(self,data):
@@ -294,6 +299,15 @@ class derived(rt_data.rt_data):
         mmr=622.0*vmr
         return mmr
         
+    def dew_point_total_water(self,data):
+        #TWCDP - Dewpoint from Total Water Content  (deg C)
+        spr=self.getdata('static_pressure',data)
+        twc_mmr=self.getdata('total_water_content',data)
+        DP=np.zeroes(len(spr))
+        ind=np.where(twc_mmr*spr>0)
+        DP[ind]=5.42E3 / LOG(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
+        return DP
+        
     def radar_height(self,data):
         """Radar height (ft)"""
         return self.getdata('PRTAFT01.rad_alt',data)/4.0
@@ -319,11 +333,13 @@ class derived(rt_data.rt_data):
         return None
         
     def upper_pyranometer_clear_flux(self,data):
-        c=self.cals['CAL081']
-        return (self.getdata('UPPBBR01.radiometer_1_sig',data)-self.getdata('UPPBBR01.radiometer_1_zero',data))*c
+        c=self.cals['CAL081'] 
+        corr=self.getdata('pyranometer_correction',data)
+        return (self.getdata('UPPBBR01.radiometer_1_sig',data)-self.getdata('UPPBBR01.radiometer_1_zero',data))*c*corr
     def upper_pyranometer_red_flux(self,data):
         c=self.cals['CAL082']
-        return (self.getdata('UPPBBR01.radiometer_2_sig',data)-self.getdata('UPPBBR01.radiometer_2_zero',data))*c
+        corr=self.getdata('pyranometer_correction',data)
+        return (self.getdata('UPPBBR01.radiometer_2_sig',data)-self.getdata('UPPBBR01.radiometer_2_zero',data))*c*corr
     def upper_pyrgeometer_flux(self,data):
         c=self.cals['CAL083']
         return (self.getdata('UPPBBR01.radiometer_3_sig',data)-self.getdata('UPPBBR01.radiometer_3_zero',data))*c
@@ -373,9 +389,38 @@ class derived(rt_data.rt_data):
     def gin_acc_down(self,data):
         return self.getdata('PRTAFT01.gin_accel_dwn',data)
 
-    def solar_zenith(self,data):
-        Decl=self.cals['Solar_declination'] # radians
-        Tcorr=self.cals['Equation_of_time'] # degrees
+    """
+        Calculation of Equation of Tome and Solar declination per second..
+    
+    def angle_from_solstice(self,data):
+        # Calculate angle from the solstice for equation of time and declination, per second is it necessary ?
+        import datetime
+        Dfrac=self.getdata('Time',data)/86400.0  
+        D = datetime.datetime.now().timetuple().tm_yday - 1 +Dfrac  
+        W=360.0/365.24 # Orbital velocity degrees per day
+        # tilt 23.44 deg = 0.4091 rad
+        tilt=np.deg2rad(23.44) # obliquity (tilt) of the Earth's axis in degrees
+        A=W*(D+10)    # Add approximate days from Solstice to Jan 1 ( 10 ) 
+        # 2 is the number of days from January 1 to the date of the Earth's perihelion
+        # Earth's orbital eccentricity, 0.0167
+        # B=A+(360/np.pi)*0.0167*np.sin(np.deg2rad(W*(D-2))) simplifies to..
+        B=np.deg2rad(A+1.914*np.sin(np.deg2rad(W*(D-2)))) # 
+        return B 
+
+    def equation_of_time(self,data):
+        # Calculate equation of time per second ...
+        B=self.getdata('angle_from_solstice',data)
+        C=(A-np.rad2deg(np.arctan(np.tan(B)/np.cos(tilt))))/180.0
+        return (720*(C-np.around(C)))/4.0 # Convert from minutes(time) to degrees(angle) 4 degrees per minute
+        
+    def solar_declination(self,data):
+        # Calculate equation of time per second ...
+        B=self.getdata('angle_from_solstice',data)
+        return -np.arcsin(np.sin(tilt)*np.cos(B)) # In radians """
+
+    def solar_zenith_angle(self,data):
+        Decl=self.getdata('Solar_declination',data) # radians
+        Tcorr=self.getdata('Equation_of_time',data) # degrees
         Latrad=np.deg2rad(self.getdata('gin_latitude',data))  # radians
         Londeg=self.getdata('gin_longitude',data) # degrees
         Timedeg=self.getdata('Time',data)/240.0  # 86400 secs = 24 hrs = 360 degrees
@@ -384,9 +429,9 @@ class derived(rt_data.rt_data):
         Zen=np.rad2deg(np.arccos(np.sin(Decl)*np.sin(Latrad)+np.cos(Decl)*np.cos(Latrad)*np.cos(Angrad)))
         return Zen
 
-    def solar_azimuth(self,data):
-        Decl=self.cals['Solar_declination'] # radians
-        Tcorr=self.cals['Equation_of_time'] # degrees
+    def solar_azimuth_angle(self,data):
+        Decl=self.getdata('Solar_declination',data) # radians
+        Tcorr=self.getdata('Equation_of_time',data) # degrees
         Latrad=np.deg2rad(self.getdata('gin_latitude',data))  # radians
         Londeg=self.getdata('gin_longitude',data) # degrees
         Timedeg=self.getdata('Time',data)/240.0  #  86400 secs = 24 hrs = 360 degrees
@@ -396,135 +441,240 @@ class derived(rt_data.rt_data):
                                         (np.cos(Decl)*np.cos(Angrad)*np.sin(Latrad) - np.sin(Decl)*np.cos(Latrad))
                             )          )
         return Azim
-    
-"""
 
-C Upper pyranometer corrections
-      RCORR=1.0
-      IF (RIGS.GT.1000.0) THEN
-C BBR corrections only done when INS fitted
-        RSHDG=RIHDG-SAZI                         !!!Get quadrants right ?
-        R=SIND(SZEN)*SIND(RSHDG)*SIND(RROLL) -
-     -  COSD(RSHDG)*SIND(RPTCH)*COSD(RROLL)*SIND(SZEN) +
-     -  COSD(SZEN)*COSD(RPTCH)*SIND(RROLL)
-        IF(R.NE.0.) RCORR=COSD(SZEN)/R
-      END IF
-      DERIVE(ISEC,26)=DERIVE(ISEC,26)*RCORR      !Clear
-      DERIVE(ISEC,27)=DERIVE(ISEC,27)*RCORR      !Red
-C SALB  - solar albedo
-      RSALB=0.0
-      IF(RUCLR.NE.0.0) RSALB=RLCLR/RUCLR
-      DERIVE(ISEC,68)=RSALB                      !Lower clear/upper clear
-C NALB  - nIR albedo
-      RNALB=0.0
-      IF(RURED.NE.0.0) RNALB=RLRED/RURED
-      DERIVE(ISEC,69)=RNALB                      !Lower red/upper red
-C LVIS  - lower visible 
-      RLVIS=RLCLR-RLRED
-      DERIVE(ISEC,71)=RLVIS                      !Lower clear-lower red
-C UVIS  - upper visible
-      RUVIS=RUCLR-RURED
-      DERIVE(ISEC,72)=RUVIS                      !Upper clear-upper red
-C VALB  - visible albedo
-      RVALB=0.0                 
-      IF(RUVIS.NE.0.0) RVALB=RLVIS/RUVIS
-      DERIVE(ISEC,70)=RVALB                      !Lclear-Lred/Uclear-Ured
-C NETIR - net ir
-      RNETIR=RLIR-RUIR
-      DERIVE(ISEC,73)=RNETIR                     !Lower IR-Upper IR
-C UNIRS - upper nir/solar
-      RUNIRS=0.0
-      IF(RUCLR.NE.0.0) RUNIRS=RURED/RUCLR
-      DERIVE(ISEC,74)=RUNIRS                     !Upper red/Upper clear
-C LNIRS - lower nir/solar
-      RLNIRS=0.0
-      IF(RLCLR.NE.0.0) RLNIRS=RLRED/RLCLR
-      DERIVE(ISEC,75)=RLNIRS                     !Lower red/Lower clear 
-C FLDP  - dewpt from fluorescence water vapour sensor (C)
-!      SPECIAL(ISEC,7)=0  
-!      IF (BTEST(IVAL(139,1),3)) THEN
-!        SPECIAL(ISEC,7)=1
-!      ELSE
-        RV=(IVAL(230,9)/10.0) - 273.16           !FWVS dewpoint (C)
-!      ENDIF      
-      DERIVE(ISEC,61)=RV        
-C FVP   - Fluorescence derived Vapour pressure (mb)
-      RV=0.
-      RF=1000.0/(RV+273.16)
-      RFVP=10.0**(8.42926609-(1.82717843+(0.07120871*RF))*RF) !Vap press (mb)
-C FMAD  - FWVS derived moist air density (kg m-3)
-      RFMAD=0.0
-      IF(RTATDI.NE.0) RFMAD=0.34838*(RSPR-0.378*RFVP)/RTATDI 
-C FSHUM - FWVS derived specific humidity (g kg-1)
-      RFSHUM=0.0
-      IF(RSPR.NE.0..OR.RFVP.NE.0.) THEN
-        RFSHUM=622.0*RFVP/(RSPR-0.378*RFVP)      !Spec humidity (g kg-1)
-      END IF
-C FHMR  - FWVS derived humidity mixing ratio (g m-3)
-      RFHMR=RFSHUM*RFMAD                         !FWVS Hum mix ratio (g kg-1)
-      DERIVE(ISEC,35)=RFHMR
-C TWCDP - Dewpoint from Total Water Content  (deg C)
-      RTWCDP=0.0
-      IF((RSPR*RTWC).GT.0.0)THEN
-        RTWCDP=5.42E3 / LOG(1.57366E12/(RSPR*RTWC)) !(K)
-        RTWCDP=RTWCDP-273.16                     !Dewpoint (C) 
-      ENDIF
-      DERIVE(ISEC,79)=RTWCDP
-C 10MWS - 10m NEUTRAL STABILITY WINDS (m s-1)
-      RIWS=DERIVE(ISEC,58)                       !INS wind speed (m s-1)
-      RHGT=DERIVE(ISEC,66)                       !Pressure height (m)
-      R10MWS=0.0
-      IF(RIWS.GT.0.AND.RHGT.GT.1.0) THEN
-        VK=0.40                                  !Von Karman's constant
-        EPS=0.005                                !Required fit
-        USTAR=0.3                                !Surface friction velocity m/s
+    def gin_northwards_wind_component(self,data):
+        TAS=self.getdata('true_air_speed_ms',data)
+        head=np.deg2rad(self.getdata('gin_heading',data)-self.cals['ginhead_corr'])
+        north=self.getdata('gin_n_velocity',data)
+        pitch=np.deg2rad(self.getdata('gin_pitch',data))
+        return north-TAS*np.cos(head)/np.cos(pitch)
+        
+    def gin_eastwards_wind_component(self,data):
+        TAS=self.getdata('true_air_speed_ms',data)
+        head=np.deg2rad(self.getdata('gin_heading',data)-self.cals['ginhead_corr'])
+        east=self.getdata('gin_e_velocity',data)
+        pitch=np.deg2rad(self.getdata('gin_pitch',data))
+        return east-TAS*np.sin(head)/np.cos(pitch)
+        
+    def gin_wind_angle(self,data):
+        north=self.getdata('gin_northwards_wind_component',data)
+        east=self.getdata('gin_eastwards_wind_component',data)
+        return np.rad2deg(np.arctan2(-east,-north)) % 360
+        
+    def gin_wind_speed(self,data): # m/s
+        north=self.getdata('gin_northwards_wind_component',data)
+        east=self.getdata('gin_eastwards_wind_component',data)
+        return (north*north+east*east)**0.5
+ 
+    def n_wind(self,data):
+        TAS=self.getdata('turb_probe_tas',data)
+        head=np.deg2rad(self.getdata('gin_heading',data))
+        north=self.getdata('gin_n_velocity',data)
+        AOA=np.deg2rad(self.getdata('angle_of_attack',data))
+        AOSS=np.deg2rad(self.getdata('angle_of_sideslip',data))
+        roll=np.deg2rad(self.getdata('gin_roll',data))
+        pitch=np.deg2rad(self.getdata('gin_pitch',data))
+        grad=np.deg2rad(self.getdata('gin_rate_about_down',data))
+        grat=np.deg2rad(self.getdata('gin_rate_about_trans',data))
+        RTA=np.tan(AOA)
+        RTS=np.tan(AOSS)
+        RSR=np.sin(roll)
+        RCR=np.cos(roll)
+        RSP=np.sin(pitch)
+        RCP=np.cos(pitch)
+        RSH=np.sin(head)
+        RCH=np.cos(head)
+        RV1=RTA*RCR-RTS*RSR
+        RV2=RCP+RSP*RV1
+        RV3=RTA*RSR+RTS*RCR
+        RV4=RCP*grad
+        RV5=RSP*grat
+        RIP=15.49                                  #Vanes to INU distance (m)
+        # V     - Northwards wind component (m s-1)
+        RV=north-TAS*(RSH*RV3+RCH*RV2)-RIP*(RSH*RV4+RCH*RV5) #N wind (m s-1)        
+        return RV
+        
+    def e_wind(self,data):
+        TAS=self.getdata('turb_probe_tas',data)
+        head=np.deg2rad(self.getdata('gin_heading',data))
+        east=self.getdata('gin_e_velocity',data)
+        AOA=np.deg2rad(self.getdata('angle_of_attack',data))
+        AOSS=np.deg2rad(self.getdata('angle_of_sideslip',data))
+        roll=np.deg2rad(self.getdata('gin_roll',data))
+        pitch=np.deg2rad(self.getdata('gin_pitch',data))
+        grad=np.deg2rad(self.getdata('gin_rate_about_down',data))
+        grat=np.deg2rad(self.getdata('gin_rate_about_trans',data))
+        RTA=np.tan(AOA)
+        RTS=np.tan(AOSS)
+        RSR=np.sin(roll)
+        RCR=np.cos(roll)
+        RSP=np.sin(pitch)
+        RCP=np.cos(pitch)
+        RSH=np.sin(head)
+        RCH=np.cos(head)
+        RV1=RTA*RCR-RTS*RSR
+        RV2=RCP+RSP*RV1
+        RV3=RTA*RSR+RTS*RCR
+        RV4=RCP*grad
+        RV5=RSP*grat
+        RIP=15.49                                  #Vanes to INU distance (m)
+        # U     - Eastwards wind component (m s-1)
+        RU=east+TAS*(RCH*RV3-RSH*RV2)+RIP*(RCH*RV4-RSH*RV5) #E wind (m s-1)
+        return RU
+
+    def v_wind(self,data):
+        TAS=self.getdata('turb_probe_tas',data)
+        down=self.getdata('gin_d_velocity',data)
+        AOA=np.deg2rad(self.getdata('angle_of_attack',data))
+        AOSS=np.deg2rad(self.getdata('angle_of_sideslip',data))
+        roll=np.deg2rad(self.getdata('gin_roll',data))
+        pitch=np.deg2rad(self.getdata('gin_pitch',data))
+        grat=np.deg2rad(self.getdata('gin_rate_about_trans',data))
+        RTA=np.tan(AOA)
+        RCR=np.cos(roll)
+        RTS=np.tan(AOSS)
+        RSR=np.sin(roll)
+        RTP=np.tan(pitch)
+        RV1=RTA*RCR-RTS*RSR
+        RIP=15.49                                  #Vanes to INU distance (m)
+        RCP=np.cos(pitch)
+        RW=-down+RCP*(TAS*(RV1-RTP)+RIP*grat)  # V wind(m s-1)
+        return RW
+
+    def wind_angle(self,data):
+        north=self.getdata('n_wind',data)
+        east=self.getdata('e_wind',data)
+        return np.rad2deg(np.arctan2(-east,-north)) % 360
+        
+    def wind_speed(self,data): # m/s
+        north=self.getdata('n_wind',data)
+        east=self.getdata('e_wind',data)
+        return (north*north+east*east)**0.5
+ 
+    def pyranometer_correction(self,data):
+        #Upper pyranometer corrections
+        SZEN=np.deg2rad(self.getdata('solar_zenith_angle',data))          
+        SAZI=np.deg2rad(self.getdata('solar_azimuth_angle',data))
+        head=np.deg2rad(self.getdata('gin_heading',data))
+        SHDG=head-SAZI                         #!!!Get quadrants right ?
+        ROLL=np.deg2rad(self.getdata('gin_roll',data))
+        PTCH=np.deg2rad(self.getdata('gin_pitch',data))
+        R=(np.sin(SZEN)*np.sin(SHDG)*np.sin(ROLL) -
+           np.cos(SHDG)*np.sin(PTCH)*np.cos(ROLL)*np.sin(SZEN) +
+           np.cos(SZEN)*np.cos(PTCH)*np.sin(ROLL))
+        CORR=np.cos(SZEN)/R
+        return corr
+
+
+    def solar_albedo(self,data):
+        low=self.getdata('lower_pyranometer_clear_flux',data)
+        upp=self.getdata('upper_pyranometer_clear_flux',data)
+        return low/upp
+
+    def near_infrared_albedo(self,data):
+        low=self.getdata('lower_pyranometer_red_flux',data)
+        upp=self.getdata('upper_pyranometer_red_flux',data)
+        return low/upp
+
+    def lower_visible_flux(self,data):
+        clr=self.getdata('lower_pyranometer_clear_flux',data)
+        red=self.getdata('lower_pyranometer_red_flux',data)
+        return clr-red
+
+    def upper_visible_flux(self,data):
+        clr=self.getdata('upper_pyranometer_clear_flux',data)
+        red=self.getdata('upper_pyranometer_red_flux',data)
+        return clr-red
+
+    def visible_albedo(self,data):
+        low=self.getdata('lower_visible_flux',data)
+        upp=self.getdata('upper_visible_flux',data)
+        return low/upp
+
+    def net_infra_red_flux(self,data):
+        low=self.getdata('lower_pyrgeometer_flux',data)
+        upp=self.getdata('upper_pyrgeometer_flux',data)
+        return low-upp
+
+    def upper_near_infra_red_fraction(self,data):
+        red=self.getdata('upper_pyranometer_red_flux',data)
+        clr=self.getdata('upper_pyranometer_clear_flux',data)
+        return red/clr
+
+    def lower_near_infra_red_fraction(self,data):
+        red=self.getdata('lower_pyranometer_red_flux',data)
+        clr=self.getdata('lower_pyranometer_clear_flux',data)
+        return red/clr
+
+
+    def ten_m_wind_speed(self,data):
+        """ 10MWS - 10m NEUTRAL STABILITY WINDS (m s-1)
+            This is iterative so maybe a bad idea !"""
+        ws=self.getdata('wind_speed',data)
+        phgt=self.getdata('pressure_height_m',data)
+        tenmws=np.zeros(len(ws))
+        i1=np.where((phgt>1)&(ws>0))
+        VK=0.40                                  #Von Karman's constant
+        EPS=0.005                                #Required fit
+        USTAR=np.zero(len(ws))
+        USTAR[i1]=0.3                             #Surface friction velocity m/s
         US=0.0
-        N=0                                      !Iteration count
-        DO WHILE(ABS(USTAR-US).GT.EPS.AND.N.LT.30)
-          US=USTAR
-          N=N+1
-          Z0=0.3905E-4/USTAR+1.604E-3*USTAR*USTAR-0.017465E-2 !Pierson model
-          USTAR=VK*RIWS/ALOG(RHGT/Z0)
-        END DO
-        IF(RHGT.NE.0..AND.VK.NE.0.) 
-     -      R10MWS=RIWS+USTAR*ALOG(10.0/RHGT)/VK
-      END IF
-      DERIVE(ISEC,98)=R10MWS                     !10m neutral stab wind spd m/s
-C Refractive index n / Refractivity (N)
-C N=(77.6/RTAtDI)*(RSPR+(4810*RVP/RTATDI))
-C N=(n-1)*1E6
-      R_TATDI=RTATDI
-      IF(R_TATDI.EQ.0.) R_TATDI=1.0 
-      REFRACT=(77.6/R_TATDI)*(RSPR+(4810*RVP/R_TATDI))
-      IF(REFRACT.EQ.0.)THEN
-        REF_INDEX=1
-      ELSE
-        REF_INDEX=(REFRACT/1000000.0)+1
-      END IF         
-      RREFR=REF_INDEX
-      DERIVE(ISEC,14)=RREFR
-      RREFRM=REFRACT
-      DERIVE(ISEC,77)=RREFRM
-C LCLVL - Lifting condensation level (in metres)
-      RLCLVL=RPHGT+((RTATDI-(RDEW+273.16))*125.0)
-      DERIVE(ISEC,34)=RLCLVL
-C Theta W , from a 3rd order least squares fit with theta E
-      DERIVE(ISEC,143)=-917.7114+RPOTE*10.119819-
-     &    RPOTE*RPOTE*2.89312109e-02+RPOTE*RPOTE*RPOTE*2.83998353e-5
-C CABP  - Cabin pressure (mb)
-      R=FLOAT(IVAL(14,1))
-      RV=CAL(14,3)*R**2+CAL(14,2)*R+CAL(14,1)    !Cabin pressure (mb)
-      DERIVE(ISEC,107)=RV
-C CABT  - Cabin temperature (C)
-      R=FLOAT(IVAL(207,1))
-      RV=CAL(207,1)+CAL(207,2)*R                 !Cabin temperature (C)
-      DERIVE(ISEC,39)=RV
-C HEIM  - Heimann surface temperature (deg C)
-      CALL MEANPARAM(141,R)
-      RHEIM=CAL(141,1)+CAL(141,2)*R              !Heimann value
-      SPECIAL(ISEC,6)=0
-      IF(BTEST(IVAL(27,1),0)) SPECIAL(ISEC,6)=1  !calibrate
-      DERIVE(ISEC,25)=RHEIM
+        MAXIT=30                                 #Max iterations
+        for i in range(MAXIT):
+            ind=np.where(USTAR>US)               
+            US=USTAR
+            Z0=0.3905E-4/USTAR[ind]+1.604E-3*USTAR[ind]*USTAR[ind]-0.017465E-2 #Pierson model
+            USTAR[ind]=VK*wa[ind]/np.log(phgt[ind]/Z0)
+        tenmws[i1]=ws[i1]+USTAR[i1]*np.log(10.0/phgt[i1])/VK
+        return tenmws
+    
+    
+    def refractivity(self,data):
+        tatdi=self.getdata('deiced_true_air_temp_k',data)
+        tatdi[tatdi==0]=1.0
+        spr=self.getdata('static_pressure',data)
+        vp=self.getdata('vapour_pressure',data)
+        N=((77.6/tatdi)*(spr+(4810*vp/tatdi)))
+        return N
+
+    def refractive_index(self,data):
+        ri=(self.getdata('refractivity',data))/1e6+1
+        ri[ri==0]=1.0
+        return ri
+  
+    def lifting_condenstation_level(self,data):
+        phgt=self.getdata('pressure_height_m',data)  
+        tatdi=self.getdata('deiced_true_air_temp_k',data)  
+        dp=self.getdata('dew_point',data)+273.16
+        return phgt+((tatdi-dp)*125.0)  
+ 
+    def theta_w(self,data):
+        """Theta W , from a 3rd order least squares fit with theta E"""
+        pote=self.getdata('potential_temperature',data)   
+        return -917.7114+pote*10.119819-pote*pote*2.89312109e-02+pote*pote*pote*2.83998353e-5
+
+    def cabin_pressure(self,data):
+        """Cabin pressure (mb)"""
+        c=self.cals['CAL014']
+        raw=self.getdata('CORCON01.cabin_p',data)
+        return c[2]*raw**2+c[1]*raw+c[0]
+
+    def cabin_temperature(self,data):
+        """Cabin pressure (mb)"""
+        c=self.cals['CAL207']
+        raw=self.getdata('CORCON01.cabin_t',data)
+        return c[1]*raw+c[0]
+
+    def heimann_surface_temp(self,data):
+        """HEIM  - Heimann surface temperature (deg C)"""
+        raw=self.getdata('CORCON01.heim_t',data)
+        c=self.cals['CAL141']
+        return c[0]+c[1]*raw
+       
+    def corrected_surface_temp(self,data):
+        heim=self.getdata('heimann_surface_temp',data)
+        """
+        What should we do - this is the fortran CODE...
 C ST    - Corrected Surface Temperature   (deg C)
       INDEX=NINT((RHEIM+22.0)*10.0 +3.0)         !Index into lookup table
       RST=99.9                                   !Flagged 
@@ -536,81 +686,134 @@ C ST    - Corrected Surface Temperature   (deg C)
             ENDIF
          ENDIF
       ENDIF
-      DERIVE(ISEC,78)=RST                        !Corr. surface temp (C)
-C Nevzorov
-      RNVL=0.0
-      RNVT=0.0
-      CALL MEANPARAM(208,RL)
-      RL=CAL(208,1)+CAL(208,2)*RL
-      IF(RTAS.GT.0..AND.CAL(208,3).NE.0.) 
-     -    RNVL=RL**2/RTAS/2589/CAL(208,3)
-      CALL MEANPARAM(211,RT)
-      RT=CAL(211,1)+CAL(211,2)*RT
-      IF(RTAS.GT.0..AND.CAL(211,3).NE.0.) 
-     -     RNVT=RT**2/RTAS/2589/CAL(211,3)
-      DERIVE(ISEC,148)=RNVL                      !Nevzorov liquid water g/m3
-      DERIVE(ISEC,149)=RNVT                      !Nevzorov total water g/m3
-C Nephelometer parameters
-      DERIVE(ISEC,108)=CAL(175,1)+CAL(175,2)*IVAL(175,1) !Neph pressure
-      DERIVE(ISEC,109)=CAL(176,1)+CAL(176,2)*IVAL(176,1) !Neph temperature
-      RV=CAL(177,1)+CAL(177,2)*IVAL(177,1)
-      DERIVE(ISEC,110)=10**((RV/CAL(177,4))-CAL(177,3))-CAL(177,5) !Blue sp
-      RV=CAL(178,1)+CAL(178,2)*IVAL(178,1)
-      DERIVE(ISEC,111)=10**((RV/CAL(178,4))-CAL(178,3))-CAL(178,5) !Green sp
-      RV=CAL(179,1)+CAL(179,2)*IVAL(179,1)
-      DERIVE(ISEC,112)=10**((RV/CAL(179,4))-CAL(179,3))-CAL(179,5) !Red sp
-      RV=CAL(180,1)+CAL(180,2)*IVAL(180,1)
-      DERIVE(ISEC,113)=10**((RV/CAL(180,4))-CAL(180,3))-CAL(180,5) !Blue bsp
-      RV=CAL(182,1)+CAL(182,2)*IVAL(182,1)
-      DERIVE(ISEC,114)=10**((RV/CAL(182,4))-CAL(182,3))-CAL(182,5) !Green bsp
-      RV=CAL(181,1)+CAL(181,2)*IVAL(181,1)
-      DERIVE(ISEC,115)=10**((RV/CAL(181,4))-CAL(181,3))-CAL(181,5) !Red bsp
-      DERIVE(ISEC,110)=DERIVE(ISEC,110)*1E6 !Scale by 10**6 in order to plot
-      DERIVE(ISEC,111)=DERIVE(ISEC,111)*1E6
-      DERIVE(ISEC,112)=DERIVE(ISEC,112)*1E6
-      DERIVE(ISEC,113)=DERIVE(ISEC,113)*1E6
-      DERIVE(ISEC,114)=DERIVE(ISEC,114)*1E6
-      DERIVE(ISEC,115)=DERIVE(ISEC,115)*1E6
-      DERIVE(ISEC,116)=CAL(183,1)+CAL(183,2)*IVAL(183,1) !Neph humidity   
-      DERIVE(ISEC,117)=CAL(184,1)+CAL(184,2)*IVAL(184,1) !Neph status     
-C PSAP parameters
-      DERIVE(ISEC,42)=CAL(185,1)+CAL(185,2)*IVAL(185,1) !Lin abs coeff
-      DERIVE(ISEC,43)=CAL(186,1)+CAL(186,2)*IVAL(186,1) !Log abs coeff
-      DERIVE(ISEC,44)=CAL(187,1)+CAL(187,2)*IVAL(187,1) !Filter transmittance
-C Teco 49 Ozone
-      R1=CAL(100,1)+CAL(100,2)*IVAL(100,1)       !Ozone signal
-      R2=CAL(106,1)+CAL(106,2)*IVAL(106,1)       !Ozone pressure
-      R3=CAL(113,1)+CAL(113,2)*IVAL(113,1)       !Ozone temperature
-      IF(R2.NE.0.) ROZMR=R1*(1013.0/R2)*(R3/273.16)
-      DERIVE(ISEC,62)=ROZMR                      !Ozone mixing ratio ppb  
-C TECO NOx
-      DERIVE(ISEC,145)=CAL(203,1)+CAL(203,2)*IVAL(203,1) !TECO NO ppb
-      DERIVE(ISEC,146)=CAL(204,1)+CAL(204,2)*IVAL(204,1) !TECO NO2 ppb
-      DERIVE(ISEC,147)=CAL(205,1)+CAL(205,2)*IVAL(205,1) !TECO NOx ppb
-C TECO SO2
-      DERIVE(ISEC,99)=CAL(214,1)+CAL(214,2)*IVAL(214,1) !TECO SO2 ppb
-C CO mixing ratio
-      CONOW=CAL(154,1)+CAL(154,2)*IVAL(154,1) !CO m/r
-      CO(I_CO)=CONOW
-      I_CO=I_CO+1
-      IF(I_CON.LT.10)I_CON=I_CON+1
-      IF(I_CO.GT.10)THEN
-        I_CO=1
-      ENDIF
-      COTOTAL=0
-      DO I=1,I_CON 
-        COTOTAL=COTOTAL+CO(I)
-      ENDDO
-      DERIVE(ISEC,76)=COTOTAL/REAL(I_CON)
-C NOXY parameters
-      DERIVE(ISEC,118)=((CAL(199,1)+CAL(199,2)*IVAL(199,1))*0.4)-0.05 !NOXY NO
-      DERIVE(ISEC,119)=(CAL(200,1)+CAL(200,2)*IVAL(200,1))*1.0 !NOXY NO2
-      DERIVE(ISEC,120)=(CAL(201,1)+CAL(201,2)*IVAL(201,1))*2.0 !NOXY NOY1
-      DERIVE(ISEC,121)=(CAL(202,1)+CAL(202,2)*IVAL(202,1))*2.0 !NOXY NOY2
-C HCHO  - Formaldehyde mixing ratio
-      DERIVE(ISEC,80)=CAL(150,1)+CAL(150,2)*IVAL(150,1) !HCHO m/r
-C H2O2  - Peroxide mixing ratio
-      DERIVE(ISEC,101)=CAL(152,1)+CAL(152,2)*IVAL(152,1) !H2O2 m/r
-C ORGP  - Organic peroxide mixing ratio
-      DERIVE(ISEC,102)=CAL(151,1)+CAL(151,2)*IVAL(151,1) !Org H2O2 m/r
-"""
+      DERIVE(ISEC,78)=RST                        !Corr. surface temp (C)"""
+        return heim
+
+    def nevzorov_liquid_water(self,data):
+        icol=self.getdata('CORCON01.nv_lwc_icol',data)    
+        vcol=self.getdata('CORCON01.nv_lwc_vref',data)    
+        iref=self.getdata('CORCON01.nv_lwc_icol',data)    
+        vref=self.getdata('CORCON01.nv_lwc_vref',data)
+        tas=self.getdata('true_air_speed_ms',data)
+        c=self.cals['CAL208']   
+        power=(icol-iref)*(vcol-vref)
+        nvlwc=power/tas/2589/c
+        """IF(TAS.GT.0..AND.CAL(208,3).NE.0.) 
+                NVLWC=RL**2/TAS/2589/CAL(208,3)"""
+        return nvlwc
+        
+    def nevzorov_toal_water(self,data):
+        icol=self.getdata('CORCON01.nv_twc_icol',data)    
+        vcol=self.getdata('CORCON01.nv_twc_vref',data)    
+        iref=self.getdata('CORCON01.nv_twc_icol',data)    
+        vref=self.getdata('CORCON01.nv_twc_vref',data)
+        tas=self.getdata('true_air_speed_ms',data)
+        c=self.cals['CAL211']
+        power=(icol-iref)*(vcol-vref)
+        nvtwc=power/tas/2589/c
+        """IF(TAS.GT.0..AND.CAL(211,3).NE.0.) 
+                NVTWC=RT**2/TAS/2589/CAL(208,3)"""
+        return nvtwc
+        
+    def neph_pressure(self,data):
+        raw=self.getdata('AERACK01.csv:neph_pressure',data)
+        c=self.cals['CAL175']
+        return c[0]+c[1]*raw 
+
+    def neph_temperature(self,data):
+        raw=self.getdata('AERACK01.csv:neph_temperature',data)
+        c=self.cals['CAL176']
+        return c[0]+c[1]*raw 
+
+    def neph_blue_sp(self,data):
+        raw=self.getdata('AERACK01.csv:neph_total_blue',data)
+        c=self.cals['CAL177']
+        rv=c[0]+c[1]*raw
+        return (10**((rv/c[3])-c[2])-c[4])*1E6
+
+    def neph_green_sp(self,data):
+        raw=self.getdata('AERACK01.csv:neph_total_green',data)
+        c=self.cals['CAL178']
+        rv=c[0]+c[1]*raw
+        return (10**((rv/c[3])-c[2])-c[4])*1E6
+
+    def neph_red_sp(self,data):
+        raw=self.getdata('AERACK01.csv:neph_total_red',data)
+        c=self.cals['CAL179']
+        rv=c[0]+c[1]*raw
+        return (10**((rv/c[3])-c[2])-c[4])*1E6
+
+    def neph_blue_bsp(self,data):
+        raw=self.getdata('AERACK01.csv:neph_backscatter_blue',data)
+        c=self.cals['CAL180']
+        rv=c[0]+c[1]*raw
+        return (10**((rv/c[3])-c[2])-c[4])*1E6
+
+    def neph_green_bsp(self,data):
+        raw=self.getdata('AERACK01.csv:neph_backscatter_green',data)
+        c=self.cals['CAL181']
+        rv=c[0]+c[1]*raw
+        return (10**((rv/c[3])-c[2])-c[4])*1E6
+
+    def neph_red_bsp(self,data):
+        raw=self.getdata('AERACK01.csv:neph_backscatter_red',data)
+        c=self.cals['CAL182']
+        rv=c[0]+c[1]*raw
+        return (10**((rv/c[3])-c[2])-c[4])*1E6
+
+    def neph_pressure(self,data):
+        raw=self.getdata('AERACK01.csv:neph_humidity',data)
+        c=self.cals['CAL183']
+        return c[0]+c[1]*raw 
+
+    def neph_humidity(self,data):
+        raw=self.getdata('AERACK01.csv:neph_status',data)
+        c=self.cals['CAL184']
+        return c[0]+c[1]*raw 
+
+    def psap_lin_abs_coeff(self,data):
+        raw=self.getdata('AERACK01.csv:psap_lin',data)
+        c=self.cals['CAL185']
+        return c[0]+c[1]*raw 
+
+    def psap_log_abs_coeff(self,data):
+        raw=self.getdata('AERACK01.csv:psap_log',data)
+        c=self.cals['CAL186']
+        return c[0]+c[1]*raw 
+
+    def psap_transmittance(self,data):
+        raw=self.getdata('AERACK01.csv:psap_transmission',data)
+        c=self.cals['CAL187']
+        return c[0]+c[1]*raw 
+
+    def teco_ozone_mixing_ratio(self,data):
+        raw=self.getdata('CHEM:teco_ozone',data)  # What raw signal ?
+        c=self.cals['CAL100']
+        return c[0]+c[1]*raw 
+        
+    def aqd_no(self,data):
+        raw=self.getdata('CHEM:aqdno',data)  # What raw signal ?
+        c=self.cals['CAL203']
+        return c[0]+c[1]*raw 
+
+    def aqd_no2(self,data):
+        raw=self.getdata('CHEM:aqdno2',data)  # What raw signal ?
+        c=self.cals['CAL204']
+        return c[0]+c[1]*raw 
+
+    def aqd_nox(self,data):
+        raw=self.getdata('CHEM:aqdnox',data)  # What raw signal ?
+        c=self.cals['CAL205']
+        return c[0]+c[1]*raw 
+
+    def teco_so2(self,data):
+        raw=self.getdata('CHEM:teco_so2',data)  # What raw signal ?
+        c=self.cals['CAL214']
+        return c[0]+c[1]*raw 
+        
+    def co_mixing_ratio(self,data):
+        raw=self.getdata('CHEM:co',data)  # What raw signal ?
+        c=self.cals['CAL154']
+        return c[0]+c[1]*raw 
+        
+        

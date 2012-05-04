@@ -79,6 +79,27 @@ class rt_data(object):
             ans[name]=np.array(self.database,dtype='float')
         return ans
                     
+    def constants_not_in_file(self):
+        # Calculate equation of time and declination, as if constant for this day
+        import datetime
+        D = datetime.datetime.now().timetuple().tm_yday - 1
+        W=360.0/365.24 # Orbital velocity degrees per day
+        # tilt 23.44 deg = 0.4091 rad
+        tilt=np.deg2rad(23.44) # obliquity (tilt) of the Earth's axis in degrees
+        A=W*(D+10)    # Add approximate days from Solstice to Jan 1 ( 10 ) 
+        # 2 is the number of days from January 1 to the date of the Earth's perihelion
+        # Earth's orbital eccentricity, 0.0167
+        # B=A+(360/np.pi)*0.0167*np.sin(np.deg2rad(W*(D-2))) simplifies to..
+        B=np.deg2rad(A+1.914*np.sin(np.deg2rad(W*(D-2)))) # 
+        C=(A-np.rad2deg(np.arctan(np.tan(B)/np.cos(tilt))))/180.0
+        self.cals['Equation_of_time']=(720*(C-np.around(C)))/4.0 # Convert from minutes(time) to degrees(angle) 4 degrees per minute
+        self.cals['Solar_declination']=-np.arcsin(np.sin(tilt)*np.cos(B)) # In radians
+        self.cals['ginhead_corr']=0.45
+        self.cals['CALAOSS']=[-2.1887E-02,0.0000E-00,0.0000E0,5.7967E-02,-1.7229E-02,0.0000E0,0.9505E+0,0.0050E+0]
+        self.cals['CALAOA']=[3.35361E-01,2.78277E-01,-5.73689E-01,-6.1619E-02,-5.2595E-02,1.0300E-01,1.0776E+0,-0.4126E+0]
+        self.cals['CALTAS']=[0.9984E0]
+        return
+
     def read_cal_const(self,filename):
         """ Reads in the constants file
             All calibrations must be named in 6 characters starting CAL
@@ -86,17 +107,7 @@ class rt_data(object):
             Followed by n comma seperated constants and an optional comment."""
         f=open(filename)
         self.cals={}
-        # Calculater equation of time and declination, as if constant for this day
-        import datetime
-        D = datetime.datetime.now().timetuple().tm_yday - 1
-        W=360.0/365.24
-        # tilt 23.44 deg = 0.4091 rad
-        tilt=0.4091
-        A=W*(D+10)
-        B=np.deg2rad(A+1.914*np.sin(np.deg2rad(W*(D-2)))) # B=A+(360/np.pi)*0.0167*np.sin(np.deg2rad(W*(D-2))) 
-        C=(A-np.rad2deg(np.arctan(np.tan(B)/np.cos(tilt))))/180.0
-        self.cals['Equation_of_time']=(720*(C-np.around(C)))/4.0 # Convert from minutes(time) to degrees(angle) 4 degrees per minute
-        self.cals['Solar_declination']=-np.arcsin(np.sin(tilt*np.cos(B))) # In radians
+        self.constants_not_in_file()
         for line in f:
             if line.startswith('CAL'):
                 ncal=int(line[7])
