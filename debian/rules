@@ -21,12 +21,12 @@ install-stamp: build-stamp
 	dh_installdirs
 
 	# Add here commands to install the package into debian/tmp.
-	cp decades-listener.tac debian/twisted-decades-listener/etc/
-	cp debian/init.d debian/twisted-decades-listener/etc/init.d/twisted-decades-listener
-	cp debian/default debian/twisted-decades-listener/etc/default/twisted-decades-listener
-	cp debian/copyright debian/twisted-decades-listener/usr/share/doc/twisted-decades-listener/
-	cp debian/README.Debian debian/twisted-decades-listener/usr/share/doc/twisted-decades-listener/
-	touch debian/twisted-decades-listener/usr/share/twisted-decades-listener/package-installed
+	cp decades-listener.tac debian/decades-listener/etc/
+	cp debian/init.d debian/decades-listener/etc/init.d/decades-listener
+	cp debian/default debian/decades-listener/etc/default/decades-listener
+	cp debian/copyright debian/decades-listener/usr/share/doc/decades-listener/
+	cp debian/README.Debian debian/decades-listener/usr/share/doc/decades-listener/
+	touch debian/decades-listener/usr/share/decades-listener/package-installed
 	touch install-stamp
 
 binary-arch: build install

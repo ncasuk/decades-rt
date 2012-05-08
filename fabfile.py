@@ -150,10 +150,12 @@ def install_requirements():
     
 def create_deb():
    env.release = time.strftime('%Y%m%d%H%M%S')
-   local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(release)s.tar.gz pylib' % env)
+   local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(release)s.orig.tar.gz pylib' % env)
    local('mkdir %(prj_name)s-%(release)s' % env)
+   local('cp -rp debian %(prj_name)s-%(release)s/' % env)
    with lcd('%(prj_name)s-%(release)s' % env):
-      local('dh_make -s -f ../%(prj_name)s-%(release)s.tar.gz' % env)
+      local('debuild -us -uc' % env)
+   
    
 def symlink_current_release():
     "Symlink our current release"

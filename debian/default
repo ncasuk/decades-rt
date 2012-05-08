@@ -1,5 +1,5 @@
-pidfile=/var/run/twisted-decades-listener.pid
-rundir=/var/lib/twisted-decades-listener/
+pidfile=/var/run/decades-listener.pid
+rundir=/var/lib/decades-listener/
 file=/etc/decades-listener.tac
-logfile=/var/log/twisted-decades-listener.log
+logfile=/var/log/decades-listener.log
  

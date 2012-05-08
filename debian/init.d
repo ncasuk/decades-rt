@@ -2,19 +2,23 @@
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-pidfile=/var/run/twisted-decades-listener.pid rundir=/var/lib/twisted-decades-listener/ file=/etc/decades-listener.tac logfile=/var/log/twisted-decades-listener.log
+pidfile=/var/run/twisted-decades-listener.pid rundir=/home/eardkdw/ file=/home/eardkdw/decades-listener.tac logfile=/var/log/twisted-decades-listener.log
 
 [ -r /etc/default/twisted-decades-listener ] && . /etc/default/twisted-decades-listener
 
 test -x /usr/bin/twistd || exit 0
 test -r $file || exit 0
-test -r /usr/share/twisted-decades-listener/package-installed || exit 0
+#test -r /usr/share/twisted-decades-listener/package-installed || exit 0
 
 
 case "$1" in
     start)
         echo -n "Starting twisted-decades-listener: twistd"
-        start-stop-daemon --start --quiet --exec /usr/bin/twistd --                           --pidfile=$pidfile                           --rundir=$rundir                           --file=$file                           --logfile=$logfile
+        start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
+               --pidfile=$pidfile \
+               --rundir=$rundir \
+               --logfile=$logfile \
+               --python=$file
         echo "."	
     ;;
 

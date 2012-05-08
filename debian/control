@@ -1,4 +1,4 @@
-Source: twisted-decades-listener
+Source: decades-listener
 Section: net
 Priority: extra
 Maintainer: Dan Walker <D.K.D.Walker@leeds.ac.uk>
@@ -6,9 +6,9 @@ Build-Depends-Indep: debhelper, python (>= 2.6.5-7)
 Standards-Version: 3.8.4
 XS-Python-Version: current
 
-Package: twisted-decades-listener
+Package: decades-listener
 Architecture: all
-Depends: ${python:Depends}, python-twisted-core
+Depends: ${python:Depends}, python-core
 XB-Python-Version: ${python:Versions}
 Description: A Twisted-based server for decades-listener
  Automatically created by tap2deb
