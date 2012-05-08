@@ -1,4 +1,4 @@
 #!/bin/sh
-update-rc.d twisted-decades-listener defaults >/dev/null
-invoke-rc.d twisted-decades-listener start
+update-rc.d decades-listener defaults >/dev/null
+invoke-rc.d decades-listener start
 #DEBHELPER#

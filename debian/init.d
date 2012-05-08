@@ -2,18 +2,18 @@
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-pidfile=/var/run/twisted-decades-listener.pid rundir=/home/eardkdw/ file=/home/eardkdw/decades-listener.tac logfile=/var/log/twisted-decades-listener.log
+pidfile=/var/run/decades-listener.pid rundir=/home/eardkdw/ file=/home/eardkdw/decades-listener.tac logfile=/var/log/decades-listener.log
 
-[ -r /etc/default/twisted-decades-listener ] && . /etc/default/twisted-decades-listener
+[ -r /etc/default/decades-listener ] && . /etc/default/decades-listener
 
 test -x /usr/bin/twistd || exit 0
 test -r $file || exit 0
-#test -r /usr/share/twisted-decades-listener/package-installed || exit 0
+#test -r /usr/share/decades-listener/package-installed || exit 0
 
 
 case "$1" in
     start)
-        echo -n "Starting twisted-decades-listener: twistd"
+        echo -n "Starting decades-listener: twistd"
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$pidfile \
                --rundir=$rundir \
@@ -23,7 +23,7 @@ case "$1" in
     ;;
 
     stop)
-        echo -n "Stopping twisted-decades-listener: twistd"
+        echo -n "Stopping decades-listener: twistd"
         start-stop-daemon --stop --quiet              --pidfile $pidfile
         echo "."	
     ;;
@@ -38,7 +38,7 @@ case "$1" in
     ;;
 
     *)
-        echo "Usage: /etc/init.d/twisted-decades-listener {start|stop|restart|force-reload}" >&2
+        echo "Usage: /etc/init.d/decades-listener {start|stop|restart|force-reload}" >&2
         exit 1
     ;;
 esac

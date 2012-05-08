@@ -1,3 +1,3 @@
-/etc/init.d/twisted-decades-listener
-/etc/default/twisted-decades-listener
+/etc/init.d/decades-listener
+/etc/default/decades-listener
 /etc/decades-listener.tac
