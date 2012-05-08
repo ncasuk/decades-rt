@@ -24,7 +24,7 @@ def getDecadesService():
                            password = "wibble",
                            database = "inflightdata")
 
-    return internet.listenMulticast(50001, MulticastServerUDP(conn))
+    return internet.MulticastServer(50001, MulticastServerUDP(conn))
 
 # this is the core part of any tac file, the creation of the root-level
 # application object
