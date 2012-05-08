@@ -1,0 +1,3 @@
+#!/bin/sh
+invoke-rc.d twisted-decades-listener stop
+#DEBHELPER#
