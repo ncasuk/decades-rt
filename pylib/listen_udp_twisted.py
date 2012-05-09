@@ -21,7 +21,7 @@ class MulticastServerUDP(DatagramProtocol):
     def startProtocol(self):
         for proto in self.dataProtocols.available():
             print 'Creating table %s' % proto
-            print(self.dataProtocols.create_table(proto, self.cursor))
+            print(self.dataProtocols.create_table(proto, self.cursor, self.dataProtocols.protocol_versions[proto] + '_'))
         
         print 'Started Listening'
         # Join a specific multicast group, which is the IP we will respond to

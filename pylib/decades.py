@@ -5,16 +5,18 @@ import os, csv
 class DecadesDataProtocols():
    location = "/opt/decades/"
    protocols = {} #Dictionary of protocols
+   protocol_versions = {} #Dictionary of protocol:version pairs. Version is mtime at present
    field_types_map = {'boolean':'boolean', 'signed_int':'integer', 'single_float':'real', 'double_float':'real', 'text':'varchar', 'unsigned_int':'int'} # maps CSV protocol file "types" to PostgreSQL field types (postgreSQL does not have unsigned values
    
    def __init__(self):
       dirList=os.listdir(self.location)
-      for protocol_name in dirList:
-         print protocol_name
-         self.protocols[protocol_name[0:-4]] = [] #[0:-4] strips the '.csv. off the end
-         protocolReader = csv.DictReader(open(os.path.join(self.location,protocol_name), 'rb'))
+      for protocol_file_name in dirList:
+         self.protocols[protocol_file_name[0:-4]] = [] #[0:-4] strips the '.csv. off the end
+         full_path = os.path.join(self.location,protocol_file_name)
+         self.protocol_versions[protocol_file_name[0:-4]] = os.stat(full_path) 
+         protocolReader = csv.DictReader(open(full_path, 'rb'))
          for row in protocolReader:
-            self.protocols[protocol_name[0:-4]].append(row)
+            self.protocols[protocol_file_name[0:-4]].append(row)
 
    def available(self):
       return self.protocols.keys()

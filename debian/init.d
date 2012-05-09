@@ -2,7 +2,7 @@
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-pidfile=/var/run/decades-listener.pid rundir=/home/eardkdw/ file=/home/eardkdw/decades-listener.tac logfile=/var/log/decades-listener.log
+pidfile=/var/run/decades-listener.pid rundir=/opt/decades/pylib/ file=/etc/decades-listener/decades-listener.tac logfile=/var/log/decades-listener.log
 
 [ -r /etc/default/decades-listener ] && . /etc/default/decades-listener
 

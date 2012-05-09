@@ -152,10 +152,12 @@ def create_deb():
    env.release = time.strftime('%Y%m%d%H%M%S')
    local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(release)s.orig.tar.gz pylib' % env)
    local('mkdir %(prj_name)s-%(release)s' % env)
+   local('git checkout-index --prefix=%(prj_name)s-%(release)s/ -a' % env)
    local('dch --changelog debian/changelog --newversion %(release)s "new package created"' % env)
    local('cp -rp debian %(prj_name)s-%(release)s/' % env)
    with lcd('%(prj_name)s-%(release)s' % env):
       local('debuild -us -uc' % env)
+   local('rm -rf %(prj_name)s-%(release)s.orig.tar.gz %(prj_name)s-%(release)s' % env )
    
    
 def symlink_current_release():

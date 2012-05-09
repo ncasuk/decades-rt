@@ -1,5 +1,5 @@
 pidfile=/var/run/decades-listener.pid
 rundir=/var/lib/decades-listener/
-file=/etc/decades-listener.tac
+file=/etc/decades-listener/decades-listener.tac
 logfile=/var/log/decades-listener.log
  
