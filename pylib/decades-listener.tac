@@ -9,7 +9,8 @@ The important part of this, the part that makes it a .tac file, is
 the final root-level section, which sets up the object called 'application'
 which twistd will look for
 """
-
+import sys
+sys.path.append("/opt/decades/pylib") #add deploy python dir to Python path
 import os, psycopg2
 from twisted.application import service, internet
 from twisted.web import static, server
