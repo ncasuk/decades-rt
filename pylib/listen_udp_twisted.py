@@ -33,7 +33,7 @@ class MulticastServerUDP(DatagramProtocol):
       #data = datagram.split(',')
       data = csv.reader([datagram]).next()
       if data[0] == '$AERACK01':
-         squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), self.dataProtocols.protocol_version[data[0][1:]], ', '.join(self.dataProtocols.fields(data[0][1:])))
+         squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0][1:]], ', '.join(self.dataProtocols.fields(data[0][1:])))
          print len(data), len(self.dataProtocols.fields(data[0][1:]))
          processed= []
          for each in data:
