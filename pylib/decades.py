@@ -30,8 +30,15 @@ class DecadesDataProtocols():
          s = s + " ".join([field['field'].lstrip('$'),self.field_types_map[field['type']],','])
 
       s = s.rstrip(',') + ")"
-      cursor.execute(s)
-      return cursor.connection.commit()
+      #check if table exists (can't use IF NOT EXISTS until postgres 9.1)
+      cur.execute("select exists(select * from information_schema.tables where table_name=%s)", (protocol_name + suffix,))
+      if cur.fetchone()[0]:
+         #exists
+         return True
+      else:
+         #doesn't exist, create table
+         cursor.execute(s)
+         return cursor.connection.commit()
 
    def fields(self, protocol_name):
       #returns a List of field names
