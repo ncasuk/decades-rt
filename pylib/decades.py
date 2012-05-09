@@ -14,7 +14,7 @@ class DecadesDataProtocols():
          protocol_file_name = os.path.basename(proto_path_name)
          self.protocols[protocol_file_name[0:-4]] = [] #[0:-4] strips the '.csv. off the end
          full_path = os.path.join(self.location,protocol_file_name)
-         self.protocol_versions[protocol_file_name[0:-4]] = os.stat(full_path).st_mtime
+         self.protocol_versions[protocol_file_name[0:-4]] = str(os.stat(full_path).st_mtime)
          protocolReader = csv.DictReader(open(full_path, 'rb'))
          for row in protocolReader:
             self.protocols[protocol_file_name[0:-4]].append(row)
