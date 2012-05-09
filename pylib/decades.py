@@ -31,7 +31,7 @@ class DecadesDataProtocols():
 
       s = s.rstrip(',') + ")"
       #check if table exists (can't use IF NOT EXISTS until postgres 9.1)
-      cursor.execute("select exists(select * from information_schema.tables where table_name=%s)", (protocol_name + suffix,))
+      cursor.execute("select exists(select * from information_schema.tables where table_name='%s')", (protocol_name + suffix,))
       if cursor.fetchone()[0]:
          #exists
          return True
