@@ -1,4 +1,5 @@
 etc/init.d
+etc/decades-listener/decades-listener.tac
 etc/default
 var/lib/decades-listener
 usr/share/doc/decades-listener

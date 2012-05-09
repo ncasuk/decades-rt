@@ -21,7 +21,7 @@ install-stamp: build-stamp
 	dh_installdirs
 
 	# Add here commands to install the package into debian/tmp.
-	cp decades-listener.tac debian/decades-listener/etc/
+	cp pylib/decades-listener.tac debian/decades-listener/etc/decades-listener
 	cp debian/init.d debian/decades-listener/etc/init.d/decades-listener
 	cp debian/default debian/decades-listener/etc/default/decades-listener
 	cp debian/copyright debian/decades-listener/usr/share/doc/decades-listener/
