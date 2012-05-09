@@ -54,7 +54,8 @@ def main():# Listen for multicast on 224.0.0.1:8005
    conn = psycopg2.connect (host = "localhost",
                            user = "inflight",
                            password = "wibble",
-                           database = "inflightdata")
+                           database = "inflightdata",
+                           autocommit = True)
 
    reactor.listenMulticast(50001, MulticastServerUDP(conn))
    reactor.run()
