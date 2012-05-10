@@ -1,8 +1,17 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:          decades-listener
+# Required-Start:    $syslog
+# Required-Stop:     $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start decades-listener at boot time
+# Description:       Enable service provided by decades-listener.
+### END INIT INFO
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-pidfile=/var/run/decades-listener.pid rundir=/opt/decades/pylib/ file=/etc/decades-listener/decades-listener.tac logfile=/var/log/decades-listener.log
+pidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pylib/ file=/etc/decades-listener/decades-listener.tac logfile=/var/log/decades-listener.log
 
 [ -r /etc/default/decades-listener ] && . /etc/default/decades-listener
 

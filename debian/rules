@@ -26,7 +26,7 @@ install-stamp: build-stamp
 	cp debian/default debian/decades-listener/etc/default/decades-listener
 	cp debian/copyright debian/decades-listener/usr/share/doc/decades-listener/
 	cp debian/README.Debian debian/decades-listener/usr/share/doc/decades-listener/
-	cp -rp pylib debian/decades-listener/opt/decades/
+	cp -rp pylib debian/decades-listener/usr/local/lib/decades/
 	touch debian/decades-listener/usr/share/decades-listener/package-installed
 	touch install-stamp
 

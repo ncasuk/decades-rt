@@ -4,4 +4,4 @@ etc/default
 var/lib/decades-listener
 usr/share/doc/decades-listener
 usr/share/decades-listener
-opt/decades
+usr/local/lib/decades

@@ -8,7 +8,6 @@ XS-Python-Version: current
 
 Package: decades-listener
 Architecture: all
-Depends: ${python:Depends}, python-twisted-core
+Depends: ${python:Depends}, python, python-twisted-core, python-psycopg2
 XB-Python-Version: ${python:Versions}
-Description: A Twisted-based server for decades-listener
- Automatically created by tap2deb
+Description: Twisted-based server for decades-listener
