@@ -60,7 +60,7 @@ def main():# Listen for multicast on 224.0.0.1:8005
                            password = "wibble",
                            database = "inflightdata"
                            )
-   conn.autocommit = True
+   conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
    reactor.listenMulticast(50001, MulticastServerUDP(conn))
    reactor.run()
 
