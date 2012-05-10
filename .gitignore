@@ -2,3 +2,9 @@
 .*.swp
 #ignore compiled python files
 *.pyc
+#ignore DEB packaging files
+*.deb
+*.dsc
+*.build
+*.changes
+*.tar.gz
