@@ -32,15 +32,20 @@ class MulticastServerUDP(DatagramProtocol):
       #data = datagram.split(',')
       data = csv.reader([datagram]).next()
       squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0][1:]], ', '.join(self.dataProtocols.fields(data[0][1:])))
-      print len(data), len(self.dataProtocols.fields(data[0][1:]))
+      #print data[0][1:], len(data), len(self.dataProtocols.fields(data[0][1:]))
       processed= []
       for each in data:
          if each == '':
             processed.append(None)
          else:
             processed.append(each)
-      self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed)
-      self.conn.commit();
+      if len(data)==len(self.dataProtocols.fields(data[0][1:])):
+         self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed)
+         print "Insert into %s successful" % data[0][1:]
+      else:
+         print 
+         print "ERROR: Insert into %s failed, mismatched number of fields" % data[0][1:]
+      #self.conn.commit();
   
       #print data[0]
 
