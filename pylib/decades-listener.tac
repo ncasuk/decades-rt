@@ -1,5 +1,5 @@
 # You can run this .tac file directly with:
-#    twistd -ny service.tac
+#    twistd -ny decades-listener.tac
 
 """
 This is a .tac file which starts a UDP multicast listener and listens
@@ -24,6 +24,7 @@ def getDecadesService():
                            user = "inflight",
                            password = "wibble",
                            database = "inflightdata")
+    conn.autocommit = True #turn off transactions so the incoming INSERTS do not interfere with each other
 
     return internet.MulticastServer(50001, MulticastServerUDP(conn))
 
