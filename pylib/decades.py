@@ -29,14 +29,16 @@ class DecadesDataProtocols():
          #created postgres field spec. Strips leading $ from field name as it won't work
          s = s + " ".join([field['field'].lstrip('$'),self.field_types_map[field['type']],','])
 
-      s = s.rstrip(',') + ")"
+      so = s.rstrip(',') + ")"
       #check if table exists (can't use IF NOT EXISTS until postgres 9.1)
       cursor.execute("select exists(select * from information_schema.tables where table_name=%s)", (protocol_name.lower() + suffix,))
       if cursor.fetchone()[0]:
          #exists
+         print 'Table %s exists' % (protocol_name.lower() + suffix,)
          return True
       else:
          #doesn't exist, create table
+         print 'Creating table %s' % (protocol_name.lower() + suffix,)
          cursor.execute(s)
          return cursor.connection.commit()
 

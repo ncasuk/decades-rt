@@ -1,0 +1,20 @@
+Listening to the UDP multicast port using socat:
+
+socat UDP4-RECV:50001,ip-add-membership=225.0.0.0:eth0 -
+
+Suggested .ssh/config stanza:
+Host septic
+Hostname 192.171.146.62
+DynamicForward 12590
+LocalForward 15111 localhost:15111
+Port 2222
+
+The LocalForward line sets up the TCP channel for the below.
+
+Forwarding UDP:50001 to tcp:15111 (e.g. so it can be forwarded over ssh) (run on server, e.g. septic)
+socat tcp4-listen:15111 UDP4-RECV:50001,ip-add-membership=225.0.0.0:eth0
+
+connecting tcp:15111  to be available to a listener on UDP:50001 (run on local machine)
+socat -T15 udp4-sendto:localhost:50001,reuseaddr tcp:localhost:15111
+
+The combination of the ssh tunnel and the Socat commands makes the UDP inputting to septic appear locally. You can then run listen_udp_twisted.py directly to test the code.

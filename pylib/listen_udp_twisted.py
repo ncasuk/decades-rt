@@ -20,7 +20,6 @@ class MulticastServerUDP(DatagramProtocol):
 
     def startProtocol(self):
         for proto in self.dataProtocols.available():
-            print 'Creating table %s' % proto
             print(self.dataProtocols.create_table(proto, self.cursor, '_' + self.dataProtocols.protocol_versions[proto]))
         
         print 'Started Listening'
@@ -54,9 +53,9 @@ def main():# Listen for multicast on 224.0.0.1:8005
    conn = psycopg2.connect (host = "localhost",
                            user = "inflight",
                            password = "wibble",
-                           database = "inflightdata",
-                           autocommit = True)
-
+                           database = "inflightdata"
+                           )
+   conn.autocommit = True
    reactor.listenMulticast(50001, MulticastServerUDP(conn))
    reactor.run()
 
