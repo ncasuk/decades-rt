@@ -11,7 +11,7 @@ which twistd will look for
 """
 import sys
 sys.path.append("/usr/local/lib/decades/pylib") #add deploy python dir to Python path
-import os, psycopg2
+import os, psycopg2, psycopg2.extensions
 from twisted.application import service, internet
 from twisted.web import static, server
 from listen_udp_twisted import MulticastServerUDP

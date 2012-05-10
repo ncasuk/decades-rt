@@ -8,7 +8,7 @@
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor
 from twisted.application.internet import MulticastServer
-import psycopg2, csv
+import psycopg2, csv, psycopg2.extensions
 from decades import DecadesDataProtocols
 
 
