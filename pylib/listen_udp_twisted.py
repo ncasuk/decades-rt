@@ -15,12 +15,15 @@ from decades import DecadesDataProtocols
 class MulticastServerUDP(DatagramProtocol):
     dataProtocols = DecadesDataProtocols() 
     def __init__(self, conn):
+        '''Takes a database connection, and creates a cursor'''
         self.conn = conn
         self.cursor = self.conn.cursor()
 
     def startProtocol(self):
+        '''Creates tables as required, starts the listener'''
         for proto in self.dataProtocols.available():
             print(self.dataProtocols.create_table(proto, self.cursor, '_' + self.dataProtocols.protocol_versions[proto]))
+        self.dataProtocols.create_view()
         
         print 'Started Listening'
         # Join a specific multicast group, which is the IP we will respond to
@@ -28,8 +31,7 @@ class MulticastServerUDP(DatagramProtocol):
          
 
     def datagramReceived(self, datagram, address):
-      #print repr(address) + ' : ' + repr(datagram)
-      #data = datagram.split(',')
+      '''reads an incoming UDP datagram, splits it up, INSERTs into database'''
       data = csv.reader([datagram]).next()
       squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0][1:]], ', '.join(self.dataProtocols.fields(data[0][1:])))
       #print data[0][1:], len(data), len(self.dataProtocols.fields(data[0][1:]))
@@ -55,6 +57,8 @@ class MulticastServerUDP(DatagramProtocol):
 #reactor.listenMulticast(8005, MulticastServerUDP()).join('224.0.0.1')
 
 def main():# Listen for multicast on 224.0.0.1:8005
+   '''This function is only called if this file is executed directly
+      rather than via twistd and the TAC control file'''
    conn = psycopg2.connect (host = "localhost",
                            user = "inflight",
                            password = "wibble",
