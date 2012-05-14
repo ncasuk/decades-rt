@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #Class to read CSV protocol descriptions and present them to Python
 import os, glob, csv
+from twisted.python import log 
 
 class DecadesDataProtocols():
    location = "/opt/decades/dataformats/"
@@ -36,15 +37,15 @@ class DecadesDataProtocols():
       cursor.execute("select exists(select * from information_schema.tables where table_name=%s)", (protocol_name.lower() + suffix,))
       if cursor.fetchone()[0]:
          #exists
-         print 'Table %s exists' % (protocol_name.lower() + suffix,)
+         log.msg('Table %s exists' % (protocol_name.lower() + suffix,))
          return True
       else:
          #doesn't exist, create table
-         print 'Creating table %s' % (protocol_name.lower() + suffix,)
+         log.msg('Creating table %s' % (protocol_name.lower() + suffix,))
          cursor.execute(s)
          return cursor.connection.commit()
 
-   def create_view(self):
+   def create_view(self, cursor):
       '''creates a SQL VIEW (pseudo-table) of all the data from the 
       protocol files. uses LEFT JOIN so data can be missing and it
       will still work (should have NULL for missing data)'''
@@ -62,8 +63,9 @@ class DecadesDataProtocols():
       join_clause = table_list[0][1] + ' '
       for table in table_list[1:]: #joins all to the first table
          join_clause = join_clause + " ".join([' LEFT JOIN',table[1],'ON (',table_list[0][1]+'.utc_time=',table[1] + '.utc_time)'])
-
-      print squirrel + join_clause
+      
+      cursor.execute('DROP VIEW IF EXISTS scratchdata')
+      return cursor.execute(squirrel + join_clause)
    
 
    def fields(self, protocol_name):
