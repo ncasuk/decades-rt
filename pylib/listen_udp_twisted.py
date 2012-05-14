@@ -24,10 +24,8 @@ class MulticastServerUDP(DatagramProtocol):
         '''Creates tables as required, starts the listener'''
         for proto in self.dataProtocols.available():
             self.dataProtocols.create_table(proto, self.cursor, '_' + self.dataProtocols.protocol_versions[proto])
-        if self.dataProtocols.create_view(self.cursor):
-            log.msg('CREATE VIEW successful')
-        else:
-            log.err('Failed to CREATE VIEW')
+        log.msg('CREATE VIEW')
+        self.dataProtocols.create_view(self.cursor)
         
         log.msg('Started Listening')
         # Join a specific multicast group, which is the IP we will respond to

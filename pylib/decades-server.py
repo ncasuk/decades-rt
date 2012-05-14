@@ -14,16 +14,19 @@ import time
 import math
 from datetime import datetime, timedelta
 import struct
+from rt_calcs import rt_derive
 
 conn = psycopg2.connect (host = "localhost",
                            user = "inflight",
                            password = "wibble",
-                           database = "inflightdata_test")
+                           database = "inflightdata")
+conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
 #from decades_file import DecadesFile
 
 #logfile
-log.startLogging(file('/var/log/decades-server/' + 'decades_' + datetime.now().strftime('%Y-%m-%d_%H:%M:%S') + '.log', 'w'))
+#log.startLogging(file('/var/log/decades-server/' + 'decades_' + datetime.now().strftime('%Y-%m-%d_%H:%M:%S') + '.log', 'w'))
+log.startLogging(stdout)
 
 #class to handle Decades events
 class DecadesProtocol(basic.LineReceiver):
@@ -53,18 +56,9 @@ class DecadesProtocol(basic.LineReceiver):
          #self.der.append([self.time_seconds_past_midnight(),274.1 + (5 * math.sin(self.time_seconds_past_midnight()))])
          #send integer: current max time-index
          self.sendLine(struct.pack(">i",self.derindex))
-         #old pre DB data
-         '''msg = [self.derindex, len(self.der[para[1]:])]
-         for i in range(para[1], para[1] + len(self.der[para[1]:])):
-            self.sendLine(struct.pack(">f",self.der[i][0]))
-            msg.append(self.der[i][0])
-
-         for i in range(para[1], para[1] + len(self.der[para[1]:])):
-            self.sendLine(struct.pack(">f",self.der[i][1]))
-            msg.append(self.der[i][1])'''
-
+         
          #look-up table
-         parano = {515: "time_from_midnight", 520: "deiced_true_airtemp"}
+         parano = {515: "AERACK01.utc_time", 520: "UPPBBR01.radiometer_1_temp"}
        
          paralist = []
          for paracode in para[4:]:
@@ -75,10 +69,13 @@ class DecadesProtocol(basic.LineReceiver):
 
          if para[2] == -1:
             #it wants all up to latest data point
-            self.cursor.execute('SELECT ' + ', '.join(paralist) + ' FROM scratchdata WHERE id > %s ',(para[1],))
+            log.msg(self.cursor.mogrify('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id > %s ',(para[1],)))
+            self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id > %s ',(para[1],))
+            #returndata = rt_derive.derive_data_alt(paralist, '> %i' % para[1])
          else:
             #in this case there is a specific range it wants
-            self.cursor.execute('SELECT ' + ', '.join(paralist) + ' FROM scratchdata WHERE id BETWEEN %s AND %s',(para[1],para[2]))
+            self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id BETWEEN %s AND %s',(para[1],para[2]))
+            #returndata = rt_derive.derive_data_alt(paralist, 'BETWEEN %i AND %i' % (para[1],para[2]))
         
          log.msg(self.cursor.query) 
          returndata = self.cursor.fetchall()
