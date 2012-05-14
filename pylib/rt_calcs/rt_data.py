@@ -10,7 +10,7 @@ class rt_data(object):
             if d not in dir(rt_data):
                 der.append(d)
         self.derived=der   # list of derivations, empty unless subclassed
-        self.database=database #python Cursor class
+        self.database=database
         self.read_cal_const(calfile)
         
     def derive_data(self,names,selection,rawdata=None):
@@ -68,17 +68,15 @@ class rt_data(object):
  
     def getdata_fromdatabase(self,name,selection):
         """ Dummy routine to read one parameter from database"""
-        fieldname_part = 'SELECT "%s"' % name #needs to be quoted as contains a dot (.)
-        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s',(selection, ))
-        return np.array(self.database.fetchall(),dtype='float')
+        print 'SELECT ' + name + ' FROM scratchdata WHERE id '+selection
+        return np.array(self.database,dtype='float')
             
     def getbunchofdata_fromdatabase(self,names,selection):
         """ Dummy routine to read several parameters from database"""
-        fieldname_part = 'SELECT "%s"' % '", "'.join(names) #needs to be quoted as contains a dot (.)
-        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s',(selection, ))
+        print 'SELECT ' + ', '.join(names) + ' FROM scratchdata WHERE id '+selection
         ans={}
         for name in names:
-            ans[name]=np.array(self.database.fetchall(),dtype='float')
+            ans[name]=np.array(self.database,dtype='float')
         return ans
                     
     def constants_not_in_file(self):
