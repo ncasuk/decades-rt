@@ -53,6 +53,8 @@ C              $LINK H_CONVERT_GPS,GPS1_SUBS
 C
       INTEGER*2 IMESS(106)
       CHARACTER CFLTNO*4,CDATE*9,CTIME*8
+      LOGICAL ISTATUS
+      INTEGER ISTAT,IMESSNUM 
 C
       WRITE(6,15) ' '
       WRITE(6,15) 'H_CONVERT_GPS - creates XR5 GPS message files '//
@@ -98,6 +100,8 @@ C to open or failed to open the specified file. (User entered CTRL/Z or
 C command file input ended)
 C
       CHARACTER  CREPLY*80
+      INTEGER IOS,ISTAT
+      LOGICAL ISTATUS,ITEXISTS
       ISTATUS = .TRUE.
       ITEXISTS = .FALSE.      
       DO WHILE(.NOT. ITEXISTS)

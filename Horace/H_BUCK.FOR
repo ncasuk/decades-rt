@@ -1,7 +1,8 @@
+
       PROGRAM H_BUCK
        
       REAL*4 BUCKVAL
-      INTEGER*4 DLUN
+      INTEGER*4 DLUN,ICOUNT
       CHARACTER BUCKLINE*132
       COMMON /BUCKCOM/BUCKVAL(20)
 
@@ -15,16 +16,22 @@
        INTEGER*2 JOSB(4)
       END STRUCTURE
 
-      RECORD / SOCKET / JC,JCF
-      
-!      CALL OPENSOCKET(JC,151,170,96,124,2030)
-!      CALL OPENSOCKET(JCF,151,170,96,124,2000)
-      print *,'opening sockets'
-      CALL OPENSOCKET(JC,192,168,101,149,2030)
-!      CALL OPENSOCKET(JCF,192,168,101,149,2000)
-      print *,'opened sockets'
+      RECORD / SOCKET / BUCK,BUCKF,BUCKFC
 
-      DO WHILE(.TRUE.) 
+      COMMON /CHANS/BUCK,BUCKF,BUCKFC
+      
+!      CALL OPENSOCKET(BUCK,151,170,96,124,2030)
+!      CALL OPENSOCKET(BUCKF,151,170,96,124,2000)
+      print *,'opening sockets'
+      CALL OPENSOCKET(BUCK,192,168,101,149,2031)
+!      CALL OPENSOCKET(BUCKFC,192,168,101,149,2000)
+      CALL OPENSOCKET(BUCKF,192,168,101,149,2001)
+      print *,'opened sockets'
+      CALL writesocket(BUCKF,CHAR(10)//CHAR(13))
+      CALL writesocket(BUCKF,CHAR(10)//CHAR(13))
+      CALL writesocket(BUCKF,'*@=A'//CHAR(10)//CHAR(13))
+      print *,'set up flow for polling'
+      DO ICOUNT=1,10 
       DO I=1,132
         BUCKLINE(I:I)=CHAR(32)
       ENDDO
@@ -32,33 +39,39 @@
       I=1 
       I1=1     
       IX=1     
-      CALL readsocket(JC,1,%REF(CONE))
+      CALL readsocket(BUCK,1,%REF(CONE))
       DO WHILE((ICHAR(CONE).EQ.13).OR.(ICHAR(CONE).EQ.10)) 
-      CALL readsocket(JC,1,%REF(CONE))
+      CALL readsocket(BUCK,1,%REF(CONE))
       ENDDO
-      DO WHILE((ICHAR(CONE).NE.13).AND.(ICHAR(CONE).NE.10)) 
-        CALL readsocket(JC,1,%REF(CONE))
+      DO WHILE((ICHAR(CONE).NE.13).AND.(ICHAR(CONE).NE.10))
+!        print *,ICHAR(CONE)
+        CALL readsocket(BUCK,1,%REF(CONE))
         BUCKLINE(I:I)=CONE
-        IF(((ICHAR(CONE).EQ.44).OR.(ICHAR(CONE).EQ.10) 
-     &       .OR.(ICHAR(CONE).EQ.13)).AND.(IX.LT.10))THEN
-          read(BUCKLINE(I1:I-1),'(F10.0)') FX
-          BUCKVAL(IX)=FX 
-          IX=IX+1
-          I1=I+1
-        ENDIF    
+!        IF(((ICHAR(CONE).EQ.44).OR.(ICHAR(CONE).EQ.10) 
+!     &       .OR.(ICHAR(CONE).EQ.13)).AND.(IX.LT.10))THEN
+!          read(BUCKLINE(I1:I-1),'(F10.0)') FX
+!          BUCKVAL(IX)=FX 
+!          IX=IX+1
+!          I1=I+1
+!        ENDIF    
         I=I+1
       ENDDO
       I1=I
       BUCKLINE(I-1:I-1)=CHAR(44)     
       CONE=CHAR(0)
-!      CALL readsocket(JCF,1,%REF(CONE))
+!      CALL writesocket(BUCKF,'A'//CHAR(10)//CHAR(13))
+!      CALL readsocket(BUCKF,1,%REF(CONE))
 !      DO WHILE((ICHAR(CONE).EQ.13).OR.(ICHAR(CONE).EQ.10)) 
-!      CALL readsocket(JCF,1,%REF(CONE))
+!      CALL readsocket(BUCKF,1,%REF(CONE))
 !      ENDDO
-!      DO WHILE((ICHAR(CONE).NE.13).AND.(ICHAR(CONE).NE.10))
-!        CALL readsocket(JCF,1,%REF(CONE))
-!        BUCKLINE(I:I)=CONE
-!        IF(ICHAR(CONE).EQ.32)BUCKLINE(I:I)=CHAR(44)
+!      CALL writesocket(BUCKF,'*@=@'//CHAR(10)//CHAR(13))
+      print *,'poll flow'
+      CALL writesocket(BUCKF,'A'//CHAR(10)//CHAR(13))
+      DO WHILE((ICHAR(CONE).NE.13).AND.(ICHAR(CONE).NE.10)
+     &.AND.(ICHAR(CONE).NE.96)) 
+        CALL readsocket(BUCKF,1,%REF(CONE))
+        BUCKLINE(I:I)=CONE
+        IF(ICHAR(CONE).EQ.32)BUCKLINE(I:I)=CHAR(44)
 !        IF(((ICHAR(CONE).EQ.32).OR.(ICHAR(CONE).EQ.10) 
 !     &      .OR.(ICHAR(CONE).EQ.13)).AND.(IX.LT.15))THEN
 !          read(BUCKLINE(I1:I-1),'(F10.0)') FX
@@ -66,12 +79,13 @@
 !          IX=IX+1
 !          I1=I+1
 !        ENDIF    
-!        I=I+1
-!      ENDDO
-!       BUCKLINE(I-1:I-1)=CHAR(32)     
+        I=I+1
+      ENDDO
+!      CALL writesocket(BUCKF,'*@=A'//CHAR(10)//CHAR(13))
+       BUCKLINE(I-1:I-1)=CHAR(32)     
        CALL WRITE_BUCK(DLUN,BUCKLINE)
       ENDDO
-!      CALL BUCK_STOPS(DLUN)
+      CALL BUCK_STOPS(DLUN)
       END
 ! --------------------------------------------------------------------------
 !*******************************************************************************
@@ -91,12 +105,12 @@
       IF(CSYSSTS.NE.'Unavailable') THEN
         CALL LIB$GET_LUN(DLUN)
         OPEN(UNIT=DLUN,FILE='[HORACE]BUKDAT.DAT',STATUS='NEW',       
-     &      IOSTAT=ISTAT)
+     &      IOSTAT=ISTAT,recl=140)
         IF(ISTAT.NE.0) THEN               !If create failed
           CALL LIB$FREE_LUN(DLUN)   !Release LUN
           DLUN=1000                 !Show stream free
-	ELSE
-	  print *,'[HORACE]BUKDAT.DAT open',DLUN 
+         ELSE
+          print *,'[HORACE]BUKDAT.DAT open',DLUN 
          CALL GET_LOGICAL('FLIGHT_NUMBER',CFLTNO)
          CALL BUCKMSG(DLUN,CFLTNO)   
         ENDIF
@@ -141,6 +155,7 @@
       DATA LAST_CFLTNO/'xxxx'/
       SAVE LAST_CFLTNO
       
+      print *,buckline
       CALL GET_DISK_STATUS(CSYSSTS,COPTSTS)
       CALL GET_LOGICAL('FLIGHT_NUMBER',CFLTNO)
       IF(CFLTNO.NE.LAST_CFLTNO)THEN
@@ -288,7 +303,7 @@
 !
 ! Assign the device
 ! 
-      ISTAT=SYS$ASSIGN('TCPIP$DEVICE:',JCHAN,,)
+      ISTAT=SYS$ASSIGN('TCPIP$DEVICE:',JCHAN.channel,,)
       IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
 !
 !  Create the socket
@@ -333,21 +348,64 @@
 !
 ! Read some data
 !
+!      print *,'readsocket'
       IFUNC=IO$_READVBLK
       ISTAT=SYS$QIOW(%VAL(jchan.EVNF),%VAL(JCHAN.channel), 
      &       %VAL(IFUNC),jchan.JOSB,,,   
      &       IREF,%VAL(ILCIN),,,,)
       IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
       IF(.NOT.jchan.JOSB(1)) CALL BUCK_STOPS
+!      print *,IREF
       RETURN
       END
 
+C*******************************************************************************
+      SUBROUTINE writesocket(JCHAN,COUT)
+!
+      IMPLICIT  NONE
+      INTEGER*4 ILCOUT
+      CHARACTER COUT*(*)
+      INCLUDE   'SYS$LIBRARY:TCPIP$INETDEF.FOR'
+      INCLUDE   '($IODEF)'
+      INCLUDE   '($SYSSRVNAM)'
+      INTEGER*4 IFUNC,ISTAT
+      STRUCTURE /socket/
+       INTEGER*2 CHANNEL
+       INTEGER*4  EVNF
+       INTEGER*2 JOSB(4)
+      END STRUCTURE
+      RECORD/SOCKET/JCHAN
+!
+! Write some data
+!
+!      print *,'writesocket ',cout
+      ILCOUT=LEN(COUT)
+      IFUNC=IO$_WRITEVBLK
+      ISTAT=SYS$QIOW(%VAL(jchan.EVNF),%VAL(JCHAN.channel), 
+     &       %VAL(IFUNC),jchan.JOSB,,,   
+     & %REF(COUT),
+     &%VAL(ILCOUT),,,,)
+      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
+      IF(.NOT.jchan.JOSB(1)) CALL BUCK_STOPS
+      RETURN
+      END
+C*******************************************************************************
 !
       SUBROUTINE BUCK_STOPS(DLUN)
        INTEGER*4 DLUN
-       CALL CLOSE_BUCK(DLUN)
-!       CALL CLOSESOCKET(JC)
-!       CALL CLOSESOCKET(JCF)
+
+      STRUCTURE /socket/
+       INTEGER*2 CHANNEL
+       INTEGER*4  EVNF
+       INTEGER*2 JOSB(4)
+      END STRUCTURE
+
+      RECORD / SOCKET / BUCK,BUCKF,BUCKFC
+      COMMON /CHANS/BUCK,BUCKF,BUCKFC
+        CALL CLOSE_BUCK(DLUN)
+       CALL CLOSESOCKET(BUCK)
+       CALL CLOSESOCKET(BUCKF)
+!       CALL CLOSESOCKET(BUCKFC)
        CALL EXIT
       RETURN
       END

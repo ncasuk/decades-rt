@@ -1,181 +1,416 @@
       PROGRAM H_FWVS
-C
-C Supplies a datastream to the FWVS through the port defined by FWVS_CHAN
-C (normally port 1 on the HORSEFLY terminal server), using 9600 baud, no 
-C parity, 1 stop bit, no handshaking.
-C
-C Datastream comprises the following 40 character block, starting with
-C an S and ending with a Z, sent once every 3 seconds:
-C
-C                Parameter     Resolution/Units
-C   S sp 
-C   xxxx sp      TAS           .1 m/s
-C   xxxx sp      Pressure      1 mb
-C   xxxx sp      True air temp .1 K
-C   xxxx sp      GE dewpoint   .1 K
-C   xxxx sp      TWC dewpoint  .1 K
-C   xxxx sp      Altitude      1 m                           Pressure height
-C   xxxxxx sp    DRS time      hhmmss
-C   Z
-C
-C Any value is set to zero if there is no valid data available.  If the 
-C program can't open the output channel, it sends a message to the log file 
-C and keeps trying until it can.  Note that TAS and TAT are not available on
-C the ground.
-C
-C Build with:
-C 
-C  $ FORT H_FWVS
-C  $ LINK H_FWVS,H_COMMON/OPT
-C
-C    where H_COMMON.OPT contains the line SYS$LIBRARY:H_COMMON/SHAREABLE
-C
-C V1.00  18/06/02  W.D.N.JACKSON
-C
-      IMPLICIT NONE
-      INTEGER*4 IOS,IM,ITAS,ITAT,ILAT,ILNG,IPRS,IALT,ISEC,IMIN,ISECS,
-     &    IHRS,IPTR
-      LOGICAL*4 LOPEN,LERROR
-      INCLUDE 'HCOM_DEF.FOR'
-      CHARACTER CLINE*40,CTEMPL*40
+       
+      REAL*4 FWVSVAL
+      INTEGER*4 IC,ISTS,IFWVS
+      INTEGER*2 JVAL(16)
+      CHARACTER FWVSLINE*64
+      COMMON /FWVSCOM/FWVSVAL(20)
 
-      CTEMPL='S 0000 0000 0000 0000 0000 0000 000000 Z'
-      LERROR=.FALSE.
-      OPEN(UNIT=10,FILE='FWVS_CHAN',STATUS='OLD',
-     -    IOSTAT=IOS,CARRIAGECONTROL='NONE')
-      IM=0
-      IF(IOS.EQ.0) THEN
-        CALL LOG_MESS('FWVS_CHAN is now open')
-        LOPEN=.TRUE.
-      ELSE
-        CALL LOG_MESS('Unable to open FWVS_CHAN')
-        LERROR=.TRUE.
-        LOPEN=.FALSE.
-      END IF
-C
-      DO WHILE(.TRUE.)
-        IF(LOPEN) THEN
-          CLINE=CTEMPL
-          IPTR=STATUS(2)
-          IF(STATUS(33).EQ.1.AND.IPTR.NE.0) THEN
-            IF((RVN(IPTR)**2+RVE(IPTR)**2).GT.25.*25.) THEN !If > 50 kts
-              ITAS=NINT(RTAS(IPTR)*10./1.944) !True airspeed in .1 m/s
-              WRITE(CLINE(3:6),'(I4.4)',IOSTAT=IOS) ITAS
-              ITAT=NINT(RTATDI(IPTR)*10.) !Deiced TAT in K
-              WRITE(CLINE(13:16),'(I4.4)',IOSTAT=IOS) ITAT
-            END IF
-            IPRS=NINT(RSPR(IPTR))      !Static pressure in mb
-            WRITE(CLINE(8:11),'(I4.4)',IOSTAT=IOS) IPRS
-!            IF(STATUS(35).EQ.1) THEN   !If GPS is valid
-!              ILAT=NINT(RGLAT(IPTR)*10)  
-!              IF(ILAT.GE.0) THEN
-!                WRITE(CLINE(18:21),'(I4.4)',IOSTAT=IOS) ILAT
-!              ELSE
-!                WRITE(CLINE(18:21),'(I4.3)',IOSTAT=IOS) ILAT
-!              END IF
-!              ILNG=NINT((RGLNG(IPTR))*10.)
-!              IF(ILNG.LT.0) ILNG=ILNG+3600
-!              WRITE(CLINE(23:26),'(I4.4)',IOSTAT=IOS) ILNG
-!            END IF
-!
-            WRITE(CLINE(18:21),'(I4.4)',IOSTAT=IOS)
-     -          NINT((RDEW(IPTR)+273.16)*10)
-            WRITE(CLINE(23:26),'(I4.4)',IOSTAT=IOS)
-     -          NINT((RTWCDP(IPTR)+273.16)*10)
-!
-            IALT=NINT(RPHGT(IPTR))     !Pressure height in m
-            WRITE(CLINE(28:31),'(I4.4)',IOSTAT=IOS) IALT
-            ISECS=NINT(RSECS(IPTR))
-            IHRS=ISECS/3600
-            IMIN=MOD(ISECS/60,60)
-            ISEC=MOD(MOD(ISECS,3600),60)
-            WRITE(CLINE(33:38),'(3I2.2)',IOSTAT=IOS) IHRS,IMIN,ISEC
-          END IF
-          WRITE(10,'(A)',IOSTAT=IOS) CHAR(0)//CLINE
-          IF(IOS.NE.0) THEN
-            IF(.NOT.LERROR) CALL LOG_MESS
-     -          ('Unable to write to FWVS_CHAN')
-            CALL ST_MESS('Unable to write to FWVS')
-            CLOSE(10,IOSTAT=IOS)
-            LERROR=.TRUE.
-            LOPEN=.FALSE.
-            IM=0
-          ELSE
-            IM=IM+1
-            IF(IM.EQ.1) THEN
-              CALL LOG_MESS('Sending data to FWVS')
-              CALL ST_MESS('Sending data to FWVS')
-              LERROR=.FALSE.
-            END IF
-          END IF
-          DO WHILE(IPTR.EQ.STATUS(2))  !Wait for next derivation to come in
-            CALL LIB$WAIT(0.2)
-          END DO
-        ELSE
-          DO WHILE(.NOT.LOPEN)
-            CALL LIB$WAIT(60.0)
-            OPEN(UNIT=10,FILE='FWVS_CHAN',STATUS='OLD',
-     -          IOSTAT=IOS,CARRIAGECONTROL='NONE')
-            IF(IOS.EQ.0) LOPEN=.TRUE.
-          END DO
-        END IF
-      END DO
-10    FORMAT(A,I3.3,A,I5.5,A,A)
-      END   
-********************************************************************************
-      SUBROUTINE LOG_MESS(MESSAGE)
-C
-C Writes message to log file consisting of program name, date, time and message.
-C
-      IMPLICIT NONE
-      CHARACTER*(*) MESSAGE
-      CHARACTER CDAT*9,CTIM*10
-      CALL DATE1(CDAT)
-      CALL TIME(CTIM)
-      TYPE *,'H_FWVS '//CDAT//' '//CTIM//MESSAGE
-      RETURN
-      END
-********************************************************************************
-      SUBROUTINE    ST_MESS(MESSAGE)
-C
-C Write message to the logical H_FWVS_STAT in the group logical name
-C table.  GRPNAM and SYSNAM privileges are required.
-C
-      IMPLICIT      NONE
-      INTEGER*4     ISTAT
-      CHARACTER*(*) MESSAGE
-      INCLUDE       '($SYSSRVNAM)'
-      INCLUDE       '($LNMDEF)'
-      INCLUDE       '($PSLDEF)'
+      INTEGER*4 I,I1,IX
 
-      STRUCTURE /LIST/
-        INTEGER*2 BUFFER_LEN
-        INTEGER*2 CODE/LNM$_STRING/
-        INTEGER*4 BUFFER_LOC
-        INTEGER*4 RET_LEN/0/
-        INTEGER*4 END_MARK/0/
+      STRUCTURE /socket/
+       INTEGER*2 CHANNEL
+       INTEGER*4  EVNF
+       INTEGER*2 JOSB(4)
       END STRUCTURE
 
-      RECORD /LIST/ TLIST
-      TLIST.BUFFER_LEN=LEN(MESSAGE)
-      TLIST.BUFFER_LOC=%LOC(MESSAGE)
-      ISTAT=SYS$CRELNM(,'LNM$GROUP','H_FWVS_STAT',PSL$C_SUPER,TLIST)
+      RECORD / SOCKET / FWVS
+
+      COMMON /CHANS/FWVS
+      INCLUDE   'HCOM_DEF.FOR'
+      INCLUDE   'DRS_GDEF.FOR'
+      DATA      IFWVS /230/            !FWVS parameter number
+
+      print *,'***  H_FWVS  ***'
+      
+      print *,'opening sockets'
+!      CALL OPENSOCKET(FWVS,151,170,96,6,6340)
+!      CALL OPENSOCKET(FWVS,151.170.96,124,6340)
+      CALL OPENSOCKET(FWVS,192,168,101,165,6340)
+      print *,'opened sockets'
+      DO WHILE(.TRUE.)
+      I=1 
+      I1=1     
+      IX=1 
+      IC=ICURTIM
+      DO WHILE(IC.EQ.ICURTIM)
+        CALL LIB$WAIT(0.05)
+      ENDDO
+!      CALL LIB$WAIT(1.0)
+      IC=ICURTIM
+      
+      DO I=1,16
+        JDRSBLK(JISSBLK(IFWVS+1)/2+I)=JVAL(I)
+      ENDDO    
+      CALL writesocket(FWVS,'F')
+      CALL readsocket(FWVS,64,%REF(FWVSLINE))
+!      print *,FWVSLINE
+      READ(FWVSLINE,'(16Z4.4)',IOSTAT=ISTS) JVAL
+      IF(ISTS.EQ.0) THEN
+        DO I=1,16
+          JDRSBLK(JISSBLK(IFWVS+1)/2+I)=JVAL(I)
+        ENDDO    
+      ENDIF
+      ENDDO
+!      CALL FWVS_STOPS(DLUN)
+      END
+! --------------------------------------------------------------------------
+!*******************************************************************************
+
+      
+
+!************************************************************************
+
+      SUBROUTINE OPEN_FWVS(DLUN)
+      CHARACTER*12 CSYSSTS,COPTSTS
+      CHARACTER*132 CFLTNO
+      INTEGER*4 ISTAT,DLUN
+
+      CALL GET_DISK_STATUS(CSYSSTS,COPTSTS)
+      DLUN=1000
+      print *,'OPEN_FWVS'
+      IF(CSYSSTS.NE.'Unavailable') THEN
+        CALL LIB$GET_LUN(DLUN)
+        OPEN(UNIT=DLUN,FILE='[HORACE]BUKDAT.DAT',STATUS='NEW',       
+     &      IOSTAT=ISTAT,recl=140)
+        IF(ISTAT.NE.0) THEN               !If create failed
+          CALL LIB$FREE_LUN(DLUN)   !Release LUN
+          DLUN=1000                 !Show stream free
+         ELSE
+          print *,'[HORACE]BUKDAT.DAT open',DLUN 
+         CALL GET_LOGICAL('FLIGHT_NUMBER',CFLTNO)
+         CALL FWVSMSG(DLUN,CFLTNO)   
+        ENDIF
+      ENDIF
+      RETURN
+      END
+
+!*****************************************************************************
+      SUBROUTINE FWVSMSG(DLUN,CLINE)
+
+      CHARACTER CLINE*132
+      INTEGER*4 IMESS(33),DLUN
+      INTEGER*4 J1,J2,JJHRS,JJMIN,JJSEC,IDTIM
+
+      INTEGER*2 NFDATA(2048,2),NPLOC(512),NPFREQ(512),STATUS(256), 
+     &         SPECIAL(12800,10)
+      REAL*4    DERIVE(12800,196)
+      COMMON    /HCOM/ NFDATA,NPLOC,NPFREQ,STATUS,DERIVE,SPECIAL
+      VOLATILE /HCOM/
+
+      IF(STATUS(33).EQ.1) THEN     !If have good DRS data check times
+            J1=NFDATA(10,STATUS(1))    !Decode DRS time into secs past midnight
+            J2=NFDATA(11,STATUS(1))
+            JJHRS=IBITS(J1,8,4)*10+IBITS(J1,4,4)
+            JJMIN=IBITS(J1,0,4)*10+IBITS(J2,8,4)
+            JJSEC=IBITS(J2,4,4)*10+IBITS(J2,0,4)
+            IDTIM=JJHRS*3600+JJMIN*60+JJSEC !DRS seconds past midnight
+            IMESS(33)=IDTIM
+      ENDIF
+      WRITE(DLUN,'(I6.6,X,A)')IDTIM,CLINE
+!      WRITE(DLUN,'(I6.6,A1,A)')IDTIM,',',TRIM(CLINE)
+      RETURN
+      END
+!************************************************************************
+
+
+      SUBROUTINE CLOSE_FWVS(DLUN)
+        INTEGER*4 DLUN
+        IF(DLUN.NE.1000)CLOSE(DLUN)
+        print *,'CLOSE_FWVS'
       RETURN
       END
 !*******************************************************************************
-      SUBROUTINE DATE1(CDATE)
-!
-! Replaces the DATE Fortran instrinsic and allows programs to compile without
-! Y2000 warnings.  Returns date as DD-MMM-YY.
-!
-      IMPLICIT  NONE
-      INTEGER*4 IVAL(8)
-      CHARACTER CMON*3(12),CDATE*9,CDATE1*8
-      DATA      CMON /'JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG',
-     &    'SEP','OCT','NOV','DEC'/
 
-      CALL DATE_AND_TIME(CDATE1,,,IVAL)
-      WRITE(CDATE,'(A)') CDATE1(7:8)//'-'//CMON(IVAL(2))//'-'//
-     &    CDATE1(3:4)
+      SUBROUTINE GET_DISK_STATUS(CSYSSTS,COPTSTS)
+!
+! Reads the group logical names OPTI_STATUS and SYST_STATUS
+!
+! V1.00            W.D.N.JACKSON
+! V1.01  10/08/92  W.D.N.JACKSON
+!        Now also read SYST_STATUS
+!
+      IMPLICIT NONE
+      INTEGER*4 ISTAT,NAMLEN
+      CHARACTER*(*) CSYSSTS,COPTSTS
+      CHARACTER*20 LOGNAME
+      INTEGER*4 ILIST(4)
+      INTEGER*2 JLIST(8)
+      EQUIVALENCE (ILIST,JLIST)
+      INCLUDE '($SYSSRVNAM)'
+      INCLUDE '($LNMDEF)'
+
+      CSYSSTS=' '
+      COPTSTS=' '
+      JLIST(1)=20
+      JLIST(2)=LNM$_STRING
+      ILIST(2)=%LOC(LOGNAME)
+      ILIST(3)=%LOC(NAMLEN)
+      ILIST(4)=0
+      ISTAT=SYS$TRNLNM(,'LNM$GROUP','SYST_STATUS',,ILIST)
+      IF(ISTAT) CSYSSTS=LOGNAME(1:MAX(NAMLEN,1))
+      ISTAT=SYS$TRNLNM(,'LNM$GROUP','OPTI_STATUS',,ILIST)
+      IF(ISTAT) COPTSTS=LOGNAME(1:MAX(NAMLEN,1))
+      RETURN
+10    FORMAT(3I)
+      END
+!*******************************************************************************
+!*******************************************************************************
+      SUBROUTINE GET_LOGICAL(CLOGICAL,CRESULT)
+!
+! Translate the logical name specified by CLOGICAL and returns the result in
+! CRESULT.  Returns with blank if not found.  Searches all logical name tables
+! and returns the first (lowest) definition found.
+!
+      IMPLICIT    NONE
+      CHARACTER   CLOGICAL*(*),CRESULT*(*)
+      INTEGER*4   ILIST(4),NAMLEN
+      INTEGER*2   JLIST(8)
+      EQUIVALENCE (ILIST,JLIST)
+      INCLUDE     '($LNMDEF)'
+!
+      CRESULT=' '                      !Will contain the translation 
+      JLIST(1)=LEN(CRESULT)            !Length of string space
+      JLIST(2)=LNM$_STRING             !Required function
+      ILIST(2)=%LOC(CRESULT)           !String location
+      ILIST(3)=%LOC(NAMLEN)            !Will have string length
+      ILIST(4)=0                       !End of list
+      CALL SYS$TRNLNM(,'LNM$DCL_LOGICAL',CLOGICAL,,ILIST)
       RETURN
       END
+
+!*****************************************************************************
+ 
+        FUNCTION htons( port )
+        INTEGER*2 port,HTONS
+ 
+!       ** swap the two bytes of 'port' around
+ 
+        htons=0
+        call mvbits(port,0,8,htons,8)
+        htons=htons.AND.'FF00'X
+        call mvbits(port,8,8,htons,0)
+ 
+        END
+ 
+!*******************************************************************************
+      SUBROUTINE opensocket(jchan,a,b,c,d,port)
+
+      IMPLICIT  NONE
+      INCLUDE   'SYS$LIBRARY:TCPIP$INETDEF.FOR'
+      INCLUDE   '($IODEF)'
+      INCLUDE   '($SYSSRVNAM)'
+      INCLUDE   '(lib$routines)'
+      STRUCTURE /socket/
+
+       INTEGER*2 CHANNEL
+       INTEGER*4  EVNF
+       INTEGER*2 JOSB(4)
+
+      END STRUCTURE
+      RECORD /SOCKET/ jchan
+      INTEGER*2 SCKPARM(2),port
+      INTEGER*4   a, b, c, d,f,IFUNC,ISTAT
+      INTEGER*2   htons
+      RECORD / sockaddrin / remote_host
+      STRUCTURE / struct_il2 /
+          INTEGER*4 il2_length
+          INTEGER*4 il2_address       ! address
+      END STRUCTURE
+      RECORD /struct_il2/ rhst_adrs
+      ISTAT = lib$get_ef( jchan.EVNF )
+      IF (.NOT. ISTAT) CALL lib$stop( %VAL( ISTAT ) )
+      IF (jchan.EVNF .EQ. -1) CALL lib$stop( %VAL( 0 ) )
+      rhst_adrs.il2_length  = sizeof( remote_host )
+      rhst_adrs.il2_address = %LOC( remote_host )
+      remote_host.SIN$W_FAMILY = TCPIP$C_AF_INET    ! INET family
+ 
+!      PRINT *, 'Server address = ', a, '.', b, '.', c, '.', d
+!      PRINT *, 'Server port    = ', port
+!       ** sin$l_adr needs to store an IP address of form a.b.c.d
+!       ** in the byte order d:c:b:a
+        
+      call mvbits(d,0,8,f,24)
+      call mvbits(c,0,8,f,16)
+      call mvbits(b,0,8,f,8)
+      call mvbits(a,0,8,f,0)
+      remote_host.sin$l_addr = f
+      remote_host.sin$w_port = htons( port )
+ 
+!      PRINT *, 'Server host address as an integer = ',      &
+!                   remote_host.sin$l_addr
+!      PRINT *, 'Server port in network format     = ',      &
+!                   remote_host.sin$w_port
+!
+! Assign the device
+! 
+      ISTAT=SYS$ASSIGN('TCPIP$DEVICE:',JCHAN.channel,,)
+      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
+!
+!  Create the socket
+!
+      IFUNC=IO$_SETMODE
+      SCKPARM(1)=TCPIP$C_TCP
+      SCKPARM(2)=INET_PROTYP$C_STREAM
+      ISTAT=SYS$QIOW(%VAL(jchan.EVNF),%VAL(JCHAN.channel), 
+     &   %VAL(IFUNC),jchan.JOSB,,,   
+     &   SCKPARM,,,,,)
+      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
+      IF(.NOT.jchan.JOSB(1)) CALL LIB$STOP(%VAL(jchan.JOSB(1)))
+!
+!  Connect to specified host and port number
+!
+      IFUNC=IO$_ACCESS
+      ISTAT=SYS$QIOW(%VAL(jchan.EVNF),%VAL(JCHAN.channel), 
+     &   %VAL(IFUNC),jchan.JOSB,,,   
+     &   ,,%REF(rhst_adrs),,,)
+      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
+      IF(.NOT.jchan.JOSB(1)) CALL LIB$STOP(%VAL(jchan.JOSB(1)))
+      RETURN
+      END
+!*******************************************************************************
+      SUBROUTINE readsocket(JCHAN,ILCIN,IREF)
+!
+      IMPLICIT  NONE
+
+      INCLUDE   'SYS$LIBRARY:TCPIP$INETDEF.FOR'
+      INCLUDE   '($IODEF)'
+      INCLUDE   '($SYSSRVNAM)'
+      INTEGER*4 ILCIN,IREF
+      INTEGER*4 IFUNC,ISTAT
+      STRUCTURE /socket/
+
+       INTEGER*2 CHANNEL
+       INTEGER*4  EVNF
+       INTEGER*2 JOSB(4)
+
+      END STRUCTURE
+      RECORD/SOCKET/JCHAN
+!
+! Read some data
+!
+!      print *,'readsocket'
+      IFUNC=IO$_READVBLK
+      ISTAT=SYS$QIOW(%VAL(jchan.EVNF),%VAL(JCHAN.channel), 
+     &       %VAL(IFUNC),jchan.JOSB,,,   
+     &       IREF,%VAL(ILCIN),,,,)
+      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
+      IF(.NOT.jchan.JOSB(1)) CALL FWVS_STOPS
+!      print *,IREF
+      RETURN
+      END
+
+C*******************************************************************************
+      SUBROUTINE writesocket(JCHAN,COUT)
+!
+      IMPLICIT  NONE
+      INTEGER*4 ILCOUT
+      CHARACTER COUT*(*)
+      INCLUDE   'SYS$LIBRARY:TCPIP$INETDEF.FOR'
+      INCLUDE   '($IODEF)'
+      INCLUDE   '($SYSSRVNAM)'
+      INTEGER*4 IFUNC,ISTAT
+      STRUCTURE /socket/
+       INTEGER*2 CHANNEL
+       INTEGER*4  EVNF
+       INTEGER*2 JOSB(4)
+      END STRUCTURE
+      RECORD/SOCKET/JCHAN
+!
+! Write some data
+!
+!      print *,'writesocket ',cout
+      ILCOUT=LEN(COUT)
+      IFUNC=IO$_WRITEVBLK
+      ISTAT=SYS$QIOW(%VAL(jchan.EVNF),%VAL(JCHAN.channel), 
+     &       %VAL(IFUNC),jchan.JOSB,,,   
+     & %REF(COUT),
+     &%VAL(ILCOUT),,,,)
+      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
+      IF(.NOT.jchan.JOSB(1)) CALL FWVS_STOPS
+      RETURN
+      END
+C*******************************************************************************
+!
+      SUBROUTINE FWVS_STOPS(DLUN)
+       INTEGER*4 DLUN
+
+      STRUCTURE /socket/
+       INTEGER*2 CHANNEL
+       INTEGER*4  EVNF
+       INTEGER*2 JOSB(4)
+      END STRUCTURE
+
+      RECORD / SOCKET / FWVS
+      COMMON /CHANS/FWVS
+        CALL CLOSE_FWVS(DLUN)
+       CALL CLOSESOCKET(FWVS)
+       CALL EXIT
+      RETURN
+      END
+     
+
+!*******************************************************************************
+!*******************************************************************************
+      SUBROUTINE closesocket(JCHAN)
+
+      IMPLICIT  NONE
+      INCLUDE   'SYS$LIBRARY:TCPIP$INETDEF.FOR'
+      INCLUDE   '($IODEF)'
+      INCLUDE   '($SYSSRVNAM)'
+      INCLUDE '(lib$routines)'
+      INTEGER*4 ISTAT,IFUNC
+      STRUCTURE /socket/
+
+       INTEGER*2 CHANNEL
+       INTEGER*4  EVNF
+       INTEGER*2 JOSB(4)
+
+      END STRUCTURE
+      RECORD/SOCKET/JCHAN
+!
+! Shutdown the socket
+!
+      IFUNC=IO$_DEACCESS.OR.IO$M_SHUTDOWN
+      ISTAT=SYS$QIOW(%VAL(jchan.EVNF),%VAL(JCHAN.channel), 
+     &  %VAL(IFUNC),jchan.JOSB,,,   
+     &  ,,,%VAL(TCPIP$C_DSC_ALL),,)
+!      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
+!      IF(.NOT.JOSB(1)) CALL LIB$STOP(%VAL(JOSB(1)))
+
+! Close the socket
+
+      IFUNC=IO$_DEACCESS
+      ISTAT=SYS$QIOW(%VAL(jchan.EVNF),%VAL(JCHAN.channel), 
+     & %VAL(IFUNC),jchan.JOSB,,,
+     & ,,,,,)
+!      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
+!      IF(.NOT.jchan.JOSB(1)) CALL LIB$STOP(%VAL(jchan.JOSB(1)))
+
+! Deassign the device
+
+      ISTAT=SYS$DASSGN(%VAL(JCHAN.channel))
+      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
+!
+!       ** free the event flag
+ 
+      ISTAT = lib$free_ef( %REF( jchan.EVNF ) )
+      IF (.NOT. ISTAT) CALL lib$stop( %VAL(ISTAT ) )
+!       ** free the event flag
+ 
+ 
+!       -------------------------------------------------------
+!       ** Inform user that program ran to completion:
+ 
+!       ** if yo
+!       ** under the debugger to see where it calls lib$stop()
+ 
+ 
+      PRINT *, 'Socket closed and exiting'
+!      CALL EXIT
+      RETURN
+      END
+!*******************************************************************************
+! --------------------------------------------------------------------------
+      
+

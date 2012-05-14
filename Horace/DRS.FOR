@@ -81,8 +81,16 @@
 ! $ FORT DRS
 ! $ LINK DRS,DRS_SUBS/LIB,DRS_COM/OPT,H_COMMON/OPT
 !
+! V1.00            Nick Jackson
+! V1.01  16/06/03  Nick Jackson
+!        Now handles ARINC-429 label specification using DRS_ARINC.DAT.
+!        Now starts logging at boot time if within 1 hour of last running.
+! V1.02  02/06/05  Nick Jackson
+!        Now checks TCPIP is running before starting NTP.
+!
       IMPLICIT  NONE
       INTEGER*4 ISTS
+      INTEGER*2 JDUM
       CHARACTER CVAL*4
       INCLUDE   'DRS_LDEF.FOR'
       INCLUDE   'DRS_GDEF.FOR'
@@ -119,7 +127,7 @@
       END IF
       CALL WATCHDOG                    !Start the 1s watchdog
       CALL ETH_AST                     !Start first and continuing input reads
-      CALL BLOCK_TIMER                 !Start block timing
+      CALL BLOCK_TIMER(JDUM)           !Start block timing
       CALL WAIT_COMMANDS               !Wait for any output packets or DRS cmds
       END
 !*******************************************************************************
@@ -203,15 +211,17 @@
 ! JDRSTAT - 600 word DRS status array
 !
       IMPLICIT  NONE
-      INTEGER*4 I,IDLU,IFRQ(512),IINILEN(32),IADDR,
+      INTEGER*4 I,IDLU,IFRQ(512),IINILEN(32),IADDR,IA,
      &    ITEMP(3,64),IPS,IPTR,II,IJ,IOS,IRSPORT(32),
      &    IRSLOOK(8,32),IRSFREQ(8,32),IRS,IRTMP(3,8),IISSSIZ,IPARCNT,
      &    IXMCNT(32),ICNFSIZ,ICNFCNT,IPRTLEN(6,32),IPARTS(32),J,IW,IC,
      &    IP,LAN,IXMTOT,IBBRSIG(8),IBBRZER(8),IB,IBBRFRQ
       INTEGER*2 JINIPKT(131,32),JLOOKUP(742,6,32),
-     &    JISSBLK(2048),JLSTOFF,JDRSTAT(600)
+     &    JISSBLK(2048),JLSTOFF,JDRSTAT(600),JTEMP(3)
       CHARACTER CEADD(32)*17,CNAME(32)*6,CLINE*80,CARDTYP*3,CNAM(512)*4,
      &    CPARA*3,CPORTAD*3,CDLUADD(32)*6,CDLUNAM(32)*6
+      BYTE BTEMP(6)
+      EQUIVALENCE (BTEMP,JTEMP)
       DATA IBBRSIG /81,82,83,224,91,92,93,227/
       DATA IBBRZER /84,85,86,225,94,95,96,228/
       DATA IBBRFRQ /2/
@@ -282,6 +292,7 @@
               END IF
               CALL STR$ELEMENT(CPORTAD,4,' ',CLINE)
               READ(CPORTAD,'(BN,Z)') ITEMP(1,IPS) !Port address
+              CALL ARINC_LABEL(CNAME(I),ITEMP(1,IPS)) !Check for ARINC label
               CALL STR$ELEMENT(CPARA,5,' ',CLINE)
               READ(CPARA,'(BN,I)') ITEMP(2,IPS) !Parameter number
               ITEMP(3,IPS)=IFRQ(ITEMP(2,IPS)) !Parameter frequency
@@ -317,7 +328,10 @@
             TYPE *,'More than 32 DLUs specified in DRS_CONFIG.DAT'
             CALL EXIT
           END IF
-          CALL STRING_ADDR(CEADD(I),%REF(CDLUADD(IDLU)),II)
+          CALL STRING_ADDR(CEADD(I),JTEMP,II)
+          DO IA=1,6
+            CDLUADD(IDLU)(IA:IA)=CHAR(BTEMP(IA))
+          END DO
           CDLUNAM(IDLU)=CNAME(I)
         END IF
 ! Handle RS232 ports
@@ -352,7 +366,8 @@
           JINIPKT(3,IDLU)=IRSPORT(IDLU)
           IPTR=4
           DO II=1,IPS
-            JINIPKT(IPTR,IDLU)=ITEMP(1,II)
+            CALL MVBITS(ITEMP(1,II),0,16,JINIPKT(IPTR,IDLU),0)
+!            JINIPKT(IPTR,IDLU)=ITEMP(1,II).AND.'FFFF'X
             JINIPKT(IPTR+1,IDLU)=ITEMP(3,II)
             IPTR=IPTR+2
             JDRSTAT(ITEMP(2,II))=IDLU+256*ITEMP(3,II)
@@ -557,7 +572,8 @@
 ! Reads and processes all ethernet packets received.
 ! 
       IMPLICIT  NONE
-      INTEGER*4 IFNCT,ISTAT,IOSB(2),I,ISRC,IERR
+      INTEGER*4 IFNCT,ISTAT,IOSB(2),I,ISRC,IERR,
+     &    LIB$CVT_FROM_INTERNAL_TIME
       INTEGER*2 JPKT(750),JPTYPE,JTIMTYP,JMBX(757),JTMP
       CHARACTER CHEADER*14,CSOURCE*6
       INCLUDE   '($SYSSRVNAM)'
@@ -566,6 +582,7 @@
       INCLUDE   '($XMDEF)'
       INCLUDE   'DRS_GDEF.FOR'
       INCLUDE   'DRS_LDEF.FOR'
+      INCLUDE   '($LIBDTDEF)'
       EQUIVALENCE (IOSB,JOSB)
       EQUIVALENCE (JMBX,CHEADER)
       EXTERNAL  ETH_AST
@@ -576,6 +593,10 @@
         CALL SWAP_ENDS16(JTIMTYP,1)
         GOTO 10 
       END IF
+!
+! Update latest time count as seconds in year
+!
+      I=LIB$CVT_FROM_INTERNAL_TIME(LIB$K_SECOND_OF_YEAR,ISECOFY,)
 !
 ! Check for errors
 !
@@ -785,7 +806,7 @@
         CALL STR$UPCASE(CTMPFNO,CTMPFNO)      
         IF(CTMPFNO(2:4).GE.'000'.AND.CTMPFNO(2:4).LE.'999') THEN
           CFLTNUM=CTMPFNO
-          CALL PUT_CHARSTR(%REF(CFLTNUM),JDRSTAT(546))
+          CALL PUT_CHARSTR(CFLTNUM,JDRSTAT(546))
           CALL SET_FN_LOG(CFLTNUM)     !Define FLIGHT_NUMBER logical name
         END IF
         ICHGFNO=0
@@ -1250,10 +1271,11 @@
 ! Initializes variables on startup
 !
       IMPLICIT  NONE
-      INTEGER*4 I
+      INTEGER*4 I,LIB$CVT_FROM_INTERNAL_TIME,ISOY,INOHOLD
       CHARACTER CVAL*4
       INCLUDE   'DRS_GDEF.FOR'
       INCLUDE   'DRS_LDEF.FOR'
+      INCLUDE   '($LIBDTDEF)'
 
       DO I=1,32
         CSRCLST(I)=' '
@@ -1294,12 +1316,19 @@
 ! leave them unchanged in DRS_COM so that after an abort the program will
 ! restart recording without any operator intervention.
 !
+      INOHOLD=0      
       CALL GET_LOGICAL('DRS_RESTART',CVAL)
-      IF(CVAL.EQ.' ') THEN
+      IF(CVAL.NE.' ') INOHOLD=1     
+      CALL GET_LOGICAL('DRS_STARTUP',CVAL)
+      IF(CVAL.NE.' ') THEN
+        I=LIB$CVT_FROM_INTERNAL_TIME(LIB$K_SECOND_OF_YEAR,ISOY,)
+        IF(ISOY-ISECOFY.LT.3600) INOHOLD=1
+      END IF
+      IF(INOHOLD.EQ.0) THEN
         IDATHLD=1
         IEVENT=0
         CFLTNUM=' '              
-        CALL PUT_CHARSTR(%REF('    '),JDRSTAT(546))
+        CALL PUT_CHARSTR('    ',JDRSTAT(546))
       END IF
       CALL SET_FN_LOG(CFLTNUM)
       CALL ZERO_COUNTERS
@@ -1416,9 +1445,8 @@
 ! Note that all slippage information is currently ignored
 !
       IMPLICIT  NONE
-      INTEGER*4 IHRS,IMIN,ISEC,I,ISTAT,IOS,ILSTTIM,IDIFF,LAN
+      INTEGER*4 IHRS,IMIN,ISEC,I,ISTAT,IOS,ILSTTIM,IDIFF,LAN,IBLK
       LOGICAL*4 LBLKOPN
-      INTEGER*2 JBLK
       CHARACTER CTIM*6,CLINE*80,CMODE*3
       INCLUDE   'DRS_LDEF.FOR'
       INCLUDE   'DRS_GDEF.FOR'
@@ -1521,10 +1549,10 @@
           END IF
           ISTAT=SYS$SETEF(%VAL(84))      !Set EF to tell H_DRS_LOG
           IF(MOD(IBLKCNT,600).EQ.10) THEN
-            JBLK=JZEXT(JDATBLK(8))+4096*JZEXT(JDATBLK(7))
+            IBLK=JZEXT(JDATBLK(8))+4096*JZEXT(JDATBLK(7))
             CLINE=' '
             WRITE(CLINE,'(A,I6,A,I6)',IOSTAT=IOS) 'Blocks sent:',
-     &          IBLKCNT,'  Latest block:',JBLK
+     &          IBLKCNT,'  Latest block:',IBLK
             CALL LOG_MESS(CLINE(1:LAN(CLINE)))
           END IF
 !          type *,ctimtyp,iblktim,iblkcnt,imtot,secnds(0.0)
@@ -1576,9 +1604,11 @@
       RETURN
       END
 !*******************************************************************************
-      SUBROUTINE PUT_CHARSTR(JSTRING,JWORD)
-      INTEGER*2 JSTRING,JWORD
-      JWORD=JSTRING
+      SUBROUTINE PUT_CHARSTR(CSTRING,JWORD)
+      INTEGER*2 JWORD
+      CHARACTER CSTRING*4
+      CALL MVBITS(ICHAR(CSTRING(1:1)),0,8,JWORD,0)
+      CALL MVBITS(ICHAR(CSTRING(2:2)),0,8,JWORD,8)
       RETURN
       END
 !*******************************************************************************
@@ -1680,11 +1710,12 @@
 ! consistent measure of the difference.
 !
       INTEGER*8  IHTIM,IATIM,ITEMP,IMINVAL,IMIN,ILSTMIN
-      INTEGER*4  ISTAT,IOS,ISPM,IOFFSET,INTP,LIB$SPAWN
-      INTEGER*4  SYS$GETTIM,SYS$SETIME,SYS$BINTIM,IC
+      INTEGER*4  ISTAT,IOS,ISPM,IOFFSET,INTP,LIB$SPAWN,IMNT
+      INTEGER*4  SYS$GETTIM,SYS$SETIME,SYS$BINTIM,IC,LIB$GETDVI
       INTEGER*2  JPKT(750),JDATE(3),JSPM(2)
       CHARACTER  CMON(12)*3,CTIME*23,CDIFF*12,CVAL*4
       EQUIVALENCE (ISPM,JSPM)
+      INCLUDE    '($DVIDEF)'
       DATA CMON /'JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP',
      &    'OCT','NOV','DEC'/
       DATA IOFFSET /0/                 !100ns time correction based on tests
@@ -1749,13 +1780,16 @@
           IF(INTP.EQ.0) THEN
             CALL GET_LOGICAL('DRS_NTPSTART',CVAL) 
             IF(CVAL.NE.' ') THEN       !If NTP startup required
-              ISTAT=LIB$SPAWN(,'SYS$STARTUP:TCPIP$NTP_STARTUP.COM',,
-     &          1+2+4+8,,,,,,,,)     !Spawn with no wait
-              IF(.NOT.ISTAT) THEN
-                CALL LOG_MESS('NTP spawn failed')
-              ELSE
-                INTP=1
-                CALL LOG_MESS('NTP service started')
+              ISTAT=LIB$GETDVI(DVI$_MNT,,'_BG0:',IMNT,,) !Check TCPIP started
+              IF(ISTAT.EQ.1.AND.IMNT.EQ.1) THEN
+                ISTAT=LIB$SPAWN(,'SYS$STARTUP:TCPIP$NTP_STARTUP.COM',,
+     &            1+2+4+8,,,,,,,,)     !Spawn with no wait
+                IF(.NOT.ISTAT) THEN
+                  CALL LOG_MESS('NTP spawn failed')
+                ELSE
+                  INTP=1
+                  CALL LOG_MESS('NTP service started')
+                END IF
               END IF
             ELSE
               INTP=1                   !Don't try again
@@ -1891,5 +1925,46 @@
       ISTAT=SYS$SETIMR(,ICHGTIM,BLOCK_PROCESS,%VAL(101),) !Set AST in 1s
       CTIMTYP='H'
       IBLKTIM=IBLKTIM+1
+      RETURN
+      END
+!*******************************************************************************
+      SUBROUTINE ARINC_LABEL(CDLU,IADDR)
+!
+! For ARINC DLU ports loads the upper byte of the port address with the 
+! required ARINC 429 message label.  Message labels are stored in DRS_ARINC.DAT
+! for each ARINC port.  Note that ARINC ports always have addresses of C2, D2
+! or E2.  Note also that ARINC labels are specified in octal.
+!
+! CDLU is the DLU name and IADDR is the the port address which when passed to
+! this program contains the eight bit port address as read from the DRS_CONFIG
+! file.
+!
+! If the specified DLU and port have entries in DRS_ARINC then bits 8-15 of
+! IADDR are modified, else the routine returns with no change.
+!
+      INTEGER*4 IADDR,IOS,IPORTAD,ILABEL
+      CHARACTER CDLU*6,CLINE*80,CLABEL*3,CPORTAD*3
+!
+      IF(IADDR.NE.'C2'X.AND.IADDR.NE.'D2'X.AND.IADDR.NE.'E2'X) RETURN
+      OPEN(12,FILE='HORACE:DRS_ARINC.DAT',STATUS='OLD',READONLY)
+      READ(12,'(A)',IOSTAT=IOS) CLINE
+      DO WHILE(IOS.EQ.0)
+        IF(CLINE(1:6).EQ.CDLU) THEN
+          CALL STR_COMPRESS(CLINE)
+          CALL STR$ELEMENT(CPORTAD,1,' ',CLINE)
+          READ(CPORTAD,'(BN,Z)') IPORTAD
+          IF(IPORTAD.EQ.IADDR) THEN
+            CALL STR$ELEMENT(CLABEL,2,' ',CLINE)
+            READ(CLABEL,'(BN,O)') ILABEL
+            CALL MVBITS(ILABEL,0,8,IADDR,8)
+! possible bit order reversal
+!            DO I=0,7
+!              CALL MVBITS(ILABEL,I,1,IADDR,15-I)
+!            END DO
+          END IF
+        END IF
+        READ(12,'(A)',IOSTAT=IOS) CLINE
+      END DO
+      CLOSE(12)
       RETURN
       END

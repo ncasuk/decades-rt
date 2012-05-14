@@ -18,34 +18,9 @@ C     SYS$LIBRARY:H_COMMON/SHAREABLE
 C
 C V1.00  01/01/89  W.D.N.JACKSON
 C
-C V1.01  05/10/90  W.D.N.JACKSON
-C        H_SETIME routine added to align the HORACE time with the DRS time,
-C        provided they are somewhere like close.  Also keeps an up to date
-C        record of the time of the last event mark change in STATUS(14) and
-C        (15).
-C
 C V1.02  17/10/90  W.D.N.JACKSON
 C        Now calls DRS_BLK_SIZ to autocompute the record length to be used in
 C        the DRSDAT.DAT files, and stores the value in STATUS(6).
-C
-C V1.03  16/01/91  W.D.N.JACKSON
-C        Now gives more explicit messages when read errors occur on the DRV-11
-C
-C V1.04  23/01/91  W.D.N.JACKSON
-C        Temporary? changes to try to diagnose DR11 timeout problems:
-C        a.  DR11 timeout period now 3s
-C        b.  More timed messages when waiting for STATUS A and STATUS B
-C        c.  Once timeout has occurred explicitly read the DR11 CSR for a second
-C            and also try to explicitly read a block of data.
-C
-C V1.05  18/02/91  W.D.N.JACKSON
-C        Code to carry out (b) above is now commented out since it could cause
-C        big log files in some circumstances.  The 3s timeout setting appears
-C        to have fixed the timeout problem since implemented.
-C
-C V1.06  24/05/91  W.D.N.JACKSON
-C        Bugs fixed in the algorithms for determining data block size.
-C        Now gives valid status message when processing data properly.
 C
 C V1.07  17/02/92  W.D.N.JACKSON
 C        Now notes time that good data are received in STATUS(27&28)
@@ -55,49 +30,28 @@ C        Now maintains STATUS(33) with 1 if there is valid data in NFDATA, else
 C        0.  Valid means actual DRS data has been received within the last 3s.
 C        Now stores latest flight number and date.
 C
-C V1.09  01/04/93  W.D.N.JACKSON
-C        Rewritten to give faster synchronization, better error handling, and
-C        clearer code.
-C
-C V1.10  22/11/94  W.D.N.JACKSON
-C        Now sets the three DRV11 function bits to the contents of STATUS(46),
-C        whenever the DRV11 is read.  Also incorrect listing of block size
-C        in log file in bytes changed to words.
-C
-C V1.11  22/12/00  W.D.N.JACKSON
-C        Now has option of taking data directly from the new DRS process.
-C
+C V1.13  01/09/04  W.D.N.JACKSON
+C        Now indicates correct status if DRS restarts during logging. All code
+C        for old C-130 DRS removed.
+C 
       IMPLICIT  NONE
-      INTEGER*4 ISTAT,IBLKS,IFNCT,ILSTA,ISTSA,ILOOPS,IDUMMY,IBUFC,
-     &    IBUFL,IBLKSTS,ICHAN,IMLEN,IOS,I,ISTS,IMASK,TIMINT(2)
+      INTEGER*4 ISTAT,IBLKS,IBUFC,IBUFL,IBLKSTS,IOS,I,ISTS,IMASK,
+     -    TIMINT(2)
       REAL*4    RTIME1,RTIMDIF,RLSTTIM
-      LOGICAL*4 LSYNC
-      INTEGER*2 IOSB(4,2)
+      LOGICAL*4 LWAITING,LTIMO
       INTEGER*2 LASTEVM /-1/, LST5 /0/, LST6 /0/ ,LST9
-      CHARACTER CMESS*256,CTYPE*3
+      CHARACTER CMESS*256
       INCLUDE   'HCOM_DEF.FOR'
-      INCLUDE   '($IODEF)'
       INCLUDE   '($SSDEF)'
       INCLUDE   '($SYSSRVNAM)'
 C
-C The XA handler is use to read data from the DRV11 16 bit parallel 
-C interface which is connected to the DRS data stream.  Details of this 
-C interface and its registers can be found in the DRV11 handbook.
-C 
 C Note the following:
 C 
-C 1. The DRS only sends data to HORACE when it is in DATA mode, although the
-C    1 Hz pulses come all the time the DRS is switched on.
+C 1. The DRS only sends data to HORACE when it is in DATA mode.
 C 
-C 2. The DRS data consists of 2048 16 bit words in 0.2s bursts every 1s.
+C 2. The DRS data consists of 2048 16 bit words every 1s.
 C 
-C 3. HORACE also uses a 1Hz signal, with 1:1 mark:space, from the DRS.  This 
-C    is connected to the STATUS A line of the DRV11 and is available as bit
-C    11 of word 3 of the I/O status block which is filled at the completion
-C    of each QIO read.  The 0.2s data bursts start at the same time as the 
-C    DRS 1Hz signal goes low.
-C 
-C 4. The first 10 DRS data blocks after the DRS starts recording to tape are 
+C 3. The first 10 DRS data blocks after the DRS starts recording are 
 C    identical and contain the Instrument Sampling Sequence (ISS).
 C
 C The flags are used as follows:
@@ -114,39 +68,11 @@ C  Flag  75        Set by H_DRS_SIM or H_DRS_LOG when a new DRS data block
 C                  is in global common, but not an ISS block.  Used and
 C                  cleared by H_DISC.
 C
-C The program operates continuously as follows:
-C
-C 1. Wait for STATUS A to go from low to high, checking every 0.2 s
-C
-C 2. Wait for STATUS A to go high, checking every 0.1s
-C
-C 3. Issue first read request for 2048 words, but don't wait for completion,
-C    there is no timeout on this read.
-C
-C 4. Issue second read request for 2048 words, but don't wait for completion,
-C    there is no timeout on this read.
-C
-C 5. Wait for first request to complete, using SYNCH to wait for event flag
-C    to set.
-C
-C 6. Process first data, do timeout and validity checks, and set events flags
-C    for other processes.
-C
-C 7. Issue third read request.
-C
-C 8. Wait for second request to complete.
-C
-C 9. Process second data.
-C
-C 10. Repeat 4, 5 and 6 indefinitely, but using 3s timeout.
-C
-C If the logical H_DRS_LOG_TYPE is defined as NEW will take data from the new
-C DRS process.  The DRS process puts the data directly into the NFDATA array
+C H_DRS_LOG takes data from the new DRS process. The DRS process puts the data 
+C directly into the NFDATA array
 C using STATUS(62) as a pointer.  It then sets common event flag 84 to indicate
 C that there is a new block of data available.  Also uses CEF 85 internally to
-C operated a 2s read timeout.  Note that when operating with the new DRS 
-C H_DRS_LOG is not able to set the DRV-11 output bits (used for Satcom
-C signalling).
+C operated a 2s read timeout.
 C
 C Start by associating a name with a common event flag cluster.  This
 C cluster is common to all processes with the same UIC group number.
@@ -154,114 +80,44 @@ C Assign common event flag cluster, starting at EF 64
 C
       CALL LOG_MESS('H_DRS_LOG starting') !Send message to log file
       CALL ST_MESS('Starting')            !Send message to logical name
-      CALL GET_LOGICAL('H_DRS_LOG_TYPE',CTYPE)
-      IF(CTYPE.EQ.'NEW') THEN
-        CALL LOG_MESS('Taking data from new DRS') !Send message to log file
-      ELSE
-        CTYPE='OLD'
-        CALL LOG_MESS('Taking data from old DRS') !Send message to log file
-      END IF
+      CALL LOG_MESS('Taking data from new DRS') !Send message to log file
       ISTAT=SYS$ASCEFC(%VAL(64),'H_CEF_CLUSTER',,) !Associate with CEF cluster
       IF(ISTAT.NE.SS$_NORMAL) CALL LIB$SIGNAL(%VAL(ISTAT))
-      IF(CTYPE.EQ.'OLD') THEN
-        ISTAT=SYS$ASSIGN('JCA0:',ICHAN,,) !Assign channel to DRV11
-        IF(ISTAT.NE.SS$_NORMAL) CALL LIB$SIGNAL(%VAL(ISTAT))
-        IBLKS=-1                           
-      ELSE
-        ISTAT=SYS$BINTIM('0000 00:00:02.00',TIMINT) !Conv 2s to 64 bit delta time
-        IMASK=0                        !Form mask for required event flags
-        IMASK=IBSET(IMASK,84-64)       !EF 76 will be set by user
-        IMASK=IBSET(IMASK,85-64)       !EF 77 will be set by 1s timer
-        STATUS(62)=1
-        ISTAT=SYS$CLREF(%VAL(84))
-        IBLKS=0                        !No blocks recvd
-        IBUFC=1                        !Swinging buffer counter 1 or 2
-      END IF
+      ISTAT=SYS$BINTIM('0000 00:00:02.00',TIMINT) !Conv 2s to 64 bit delta time
+      IMASK=0                          !Form mask for required event flags
+      IMASK=IBSET(IMASK,84-64)         !EF 76 will be set by user
+      IMASK=IBSET(IMASK,85-64)         !EF 77 will be set by 1s timer
+      STATUS(62)=1
+      ISTAT=SYS$CLREF(%VAL(84))
+      IBLKS=0                          !No blocks recvd
+      IBUFC=1                          !Swinging buffer counter 1 or 2
       CALL DRS_BLK_SIZ('GET')          !Read in DRSBLK_SIZ.DAT file
       STATUS(27)=0                     !Time last data received
       STATUS(28)=0                     !Time last data received
       STATUS(46)=0                     !DRV11 function bits (0-7)
-      LSYNC=.TRUE.                     !Need to sync to DRS
+      LWAITING=.TRUE.                  !Waiting for valid data block
       CFDAT=' '                        !Latest flight date
       CFNUM=' '                        !Latest flight number
       DO WHILE(.TRUE.)                 !Loop continuously
-        IF(LSYNC.AND.CTYPE.EQ.'OLD') THEN !Need to synchronize reads
-          STATUS(33)=0                 !Show data is old/invalid
-          IF(IBLKS.NE.0) CALL LOG_MESS('Synchronizing with DRS') !To log file
-          CALL ST_MESS('Synchronizing with DRS')  !To logical name
-          ISTAT=SYS$CANCEL(%VAL(ICHAN))!Cancel any outstanding I/O 
-          IF(ISTAT.NE.SS$_NORMAL) CALL LIB$SIGNAL(%VAL(ISTAT))
-          IFNCT=IO$_READVBLK.OR.IO$M_SETFNCT !Read function
-          ISTAT=SYS$QIOW(,%VAL(ICHAN),%VAL(IFNCT),IOSB(1,1),,, !Get CSR value
-     -        IDUMMY,%VAL(0),,%VAL(STATUS(46)),,)      
-          IF(IOSB(1,1).NE.SS$_DRVERR.AND.IOSB(1,1).NE.SS$_NORMAL)
-     -        CALL LIB$SIGNAL(%VAL(IOSB(1,1)))
-          ILSTA=1                      !Initialize loop variable
-          ISTSA=IBITS(IOSB(3,1),11,1)  !Get value of STATUS A
-          ILOOPS=0
-          DO WHILE(.NOT.(ISTSA.EQ.1.AND.ILSTA.EQ.0)) !Wait for 0 to 1 transition
-            ILSTA=ISTSA                !Save latest value
-            IF(ILOOPS.EQ.6) THEN       !If wait more than 1 s then 1 Hz missing
-              CALL LOG_MESS('No 1 Hz pulses from DRS') !To log file
-              CALL ST_MESS('No 1 Hz pulses from DRS')  !To logical name
-            END IF
-            CALL LIB$WAIT(0.2)         !Try 5 times a second
-            ISTAT=SYS$QIOW(,%VAL(ICHAN),%VAL(IFNCT),IOSB(1,1),,, !Get CSR value
-     -        IDUMMY,%VAL(0),,%VAL(STATUS(46)),,)      
-            IF(ISTAT.NE.SS$_NORMAL) CALL LIB$SIGNAL(%VAL(ISTAT))
-            IF(IOSB(1,1).NE.SS$_DRVERR.AND.IOSB(1,1).NE.SS$_NORMAL)
-     -          CALL LIB$SIGNAL(%VAL(IOSB(1,1)))
-            ISTSA=IBITS(IOSB(3,1),11,1) !Get value of STATUS A
-            ILOOPS=ILOOPS+1
-          END DO
-          IF(IBLKS.NE.0) CALL LOG_MESS
-     -        ('DRS 1 Hz present - waiting for DRS data') !To log file
-          CALL ST_MESS('DRS 1 Hz present - waiting for DRS data') !Logical name
-          ISTAT=SYS$QIO(%VAL(1),%VAL(ICHAN),%VAL(IFNCT), !Set up 1st read
-     -      IOSB(1,1),,,NFDATA(1,1),%VAL(4096),,%VAL(STATUS(46)),,) !No timeout
-          IF(ISTAT.NE.SS$_NORMAL) CALL LIB$SIGNAL(%VAL(ISTAT))
-          ISTAT=SYS$QIO(%VAL(2),%VAL(ICHAN),%VAL(IFNCT), !Set up 2nd read
-     -      IOSB(1,2),,,NFDATA(1,2),%VAL(4096),,%VAL(STATUS(46)),,) !No timeout
-          IF(ISTAT.NE.SS$_NORMAL) CALL LIB$SIGNAL(%VAL(ISTAT))
-          IFNCT=IO$_READVBLK.OR.IO$M_TIMED.OR.IO$M_SETFNCT 
-     -                                 !Add timeout to future read functions
-          IBLKS=0                      !No blocks recvd since achieving sync
-          IBUFC=1                      !Swinging buffer counter 1 or 2
-        END IF                         !End of synchronization code
         IBUFL=IBUFC                    !Swap last and current buffer pointers
         IBUFC=3-IBUFC
-        IF(CTYPE.EQ.'OLD') THEN
-          ISTAT=SYS$SYNCH(%VAL(IBUFL),IOSB(1,IBUFL)) !Wait for earlier read to end
-          IF(ISTAT.NE.SS$_NORMAL) CALL LIB$SIGNAL(%VAL(ISTAT))
-        ELSE
-          ISTAT=SYS$SETIMR(%VAL(85),TIMINT,,,) !Wait up to two seconds
-          ISTAT=SYS$WFLOR(%VAL(64),%VAL(IMASK)) !Wait for EF 84 or 85 to set
-          ISTAT=SYS$CLREF(%VAL(84))    !Clear EF 84
-          IOSB(1,IBUFL)=SS$_NORMAL
-          IF(SYS$READEF(%VAL(85),ISTAT).EQ.SS$_WASSET) 
-     -        IOSB(1,IBUFL)=IOSB(1,IBUFL)+1
-          ISTAT=SYS$CANTIM(,)          !Clear any outstanding timer request
-          STATUS(62)=3-STATUS(62)      !Point next input to new buffer
-        END IF
+        ISTAT=SYS$SETIMR(%VAL(85),TIMINT,,,) !Wait up to two seconds
+        ISTAT=SYS$WFLOR(%VAL(64),%VAL(IMASK)) !Wait for EF 84 or 85 to set
+        ISTAT=SYS$CLREF(%VAL(84))      !Clear EF 84
+        LTIMO=.FALSE.                  !Assume not a timeout
+        IF(SYS$READEF(%VAL(85),ISTAT).EQ.SS$_WASSET) LTIMO=.TRUE.
+        ISTAT=SYS$CANTIM(,)            !Clear any outstanding timer request
+        STATUS(62)=3-STATUS(62)        !Point next input to new buffer
         RTIME1=SECNDS(0.0)
         IF(IBLKS.EQ.0) RLSTTIM=RTIME1  !Special case
         RTIMDIF=RTIME1-RLSTTIM         !Time since last read completed
         RLSTTIM=RTIME1                 !Save for next time
-        IF(IOSB(1,IBUFL).NE.SS$_NORMAL) THEN  !Catch timeouts and read errors
-          IF(.NOT.LSYNC) THEN
-            IF(CTYPE.EQ.'OLD') THEN
-              CALL LOGMESS(NFDATA(1,IBUFC),IBLKS)
-              CALL ST_MESS('NOT receiving DRS data')
-              ISTAT=SYS$GETMSG(%VAL(IOSB(1,IBUFL)),IMLEN,CMESS,%VAL(1),)
-              IF(IMLEN.GT.0) CALL LOG_MESS(CMESS(1:MIN(IMLEN,130)))
-              WRITE (6,1005,IOSTAT=IOS) IOSB(1,IBUFL),IOSB(2,IBUFL),
-     -            IOSB(3,IBUFL),RTIMDIF
-            ELSE
-              CALL LOG_MESS('DRS data reception timeout')
-              CALL ST_MESS('NOT receiving DRS data')
-              STATUS(33)=0             !Show data is old/invalid
-            END IF             
-            LSYNC=.TRUE.
+        IF(LTIMO) THEN                 !Catch timeouts
+          IF(.NOT.LWAITING) THEN
+            CALL LOG_MESS('DRS data reception timeout')
+            CALL ST_MESS('NOT receiving DRS data')
+            LWAITING=.TRUE.
+            STATUS(33)=0               !Show data is old/invalid
           END IF
         ELSE
           CALL CHECK_BLK(NFDATA(1,IBUFL),IBLKSTS)
@@ -269,37 +125,30 @@ C
             CALL LOGMESS(NFDATA(1,IBUFC),IBLKS)
             CALL ST_MESS('NOT receiving DRS data')
             CALL LOG_MESS('Invalid DRS block')
+            LWAITING=.TRUE.
+            STATUS(33)=0
             WRITE(6,1000) (NFDATA(I,IBUFL),I=1,8),' Words 1 to 8'
             WRITE(6,1000) (NFDATA(I,IBUFL),I=9,16),' Words 9 to 16'
-            WRITE(6,1000) (NFDATA(I,IBUFC),I=2041,2048),
-     _          ' Words 2041 to 2048, prev block'
-            WRITE (6,1005,IOSTAT=IOS) IOSB(1,IBUFL),IOSB(2,IBUFL),
-     -          IOSB(3,IBUFL),RTIMDIF
-            LSYNC=.TRUE.
           ELSE                         !Have good DRS or ISS block
             IF(RTIMDIF.GT.1.2) THEN
               WRITE(CMESS,1001,IOSTAT=IOS) RTIMDIF
               CALL LOG_MESS('Block read difference of '//CMESS(1:5)
      -            //' s')
             END IF
-            IF(CTYPE.EQ.'OLD') THEN
-              ISTAT=SYS$QIO(%VAL(IBUFL),%VAL(ICHAN),%VAL(IFNCT), !Set up next read
-     -            IOSB(1,IBUFL),,,NFDATA(1,IBUFL),%VAL(4096),%VAL(3),
-     -            %VAL(STATUS(46)),,) !3s timeout
-              IF(ISTAT.NE.SS$_NORMAL) CALL LIB$SIGNAL(%VAL(ISTAT))
-            END IF
             STATUS(1)=IBUFL            !Update buffer pointer
             IF(IBLKSTS.EQ.1) THEN      !If ISS block
-              IF(LSYNC) CALL LOG_MESS
+              IF(LWAITING) CALL LOG_MESS
      -            ('Valid ISS block received from DRS')
-              LSYNC=.FALSE.
+              LWAITING=.FALSE.
+              STATUS(33)=0
               CALL DRS_BLK_SIZ('ISS')  !Calculate recording block size
               ISTAT=SYS$SETEF(%VAL(66))!Tell H_DRS_GET
             ELSE                       !Good DRS data block
-              IF(LSYNC) CALL LOG_MESS
+              IF(LWAITING) CALL LOG_MESS
      -            ('Valid data block received from DRS')
-              LSYNC=.FALSE.
-              IF(CTYPE.EQ.'OLD') CALL H_SETIME(NFDATA(1,STATUS(1))) !Set system time if appropriate
+              IF(STATUS(33).EQ.0) CALL ST_MESS('Receiving DRS data')
+              LWAITING=.FALSE.
+              STATUS(33)=1             !Show that data in NFDATA is valid
               IF(LASTEVM.NE.NFDATA(13,STATUS(1))) THEN !Event mark change
                 STATUS(14)=NFDATA(10,STATUS(1)) !Store DRS HHM time
                 STATUS(15)=NFDATA(11,STATUS(1)) !Store DRS MSS time
@@ -309,7 +158,6 @@ C
               ISTAT=SYS$SETEF(%VAL(64))!Tell H_DERIVE
               ISTAT=SYS$SETEF(%VAL(65))!Tell H_OPTIC
               ISTAT=SYS$SETEF(%VAL(75))!Tell H_DISC
-              STATUS(33)=1             !Show that data in NFDATA is valid
               ISTS=STATUS(1)
               IF(NFDATA(5,ISTS).NE.LST5.OR.NFDATA(6,ISTS).NE.LST6.OR.
      -            NFDATA(9,ISTS).NE.LST9.OR.CFNUM.EQ.' '.OR.CFDAT
@@ -322,7 +170,6 @@ C
             END IF
             CALL STR_TIME(STATUS(27))  !Store latest time
             IBLKS=IBLKS+1              !Bump block count
-            IF(IBLKS.EQ.1) CALL ST_MESS('Receiving DRS data')
             IF(MOD(IBLKS,600).EQ.1) CALL LOGMESS(NFDATA(1,IBUFL),IBLKS)
           END IF
         END IF
@@ -379,82 +226,6 @@ C
       ISTAT=SYS$CRELNM(,'LNM$GROUP','H_DRS_LOG_STAT',PSL$C_SUPER,TLIST)
       IF(.NOT.ISTAT) CALL LIB$SIGNAL(%VAL(ISTAT))
       RETURN
-      END
-********************************************************************************
-C
-C ROUTINE          H_SETIME SUBROUTINE FORTVAX
-C
-C PURPOSE          Aligns HORACE time with DRS time
-C
-C DESCRIPTION      Sets the HORACE system clock if the DRS time, passed in
-C                  ISPM as seconds past midnight, is within a certain time
-C                  (1 hour 15 minutes is being used initially) of the
-C                  HORACE clock, in this way small drifts in the HORACE
-C                  system clock are  routinely corrected using the
-C                  accurate times entered by the flight leader to the DRS. 
-C                  If the difference is more than 1 hour 15 minutes it is
-C                  assumed that an invalid or zero time has been entered
-C                  to the DRS and HORACE is not adjusted - 1 hour 15
-C                  minutes should cover the drift in the HORACE clock
-C                  which is currently 3 minutes a day, and also allow
-C                  correction of times entered in BST rather than GMT.
-C                  
-C                  This routine is designed to be called by H_DRS_LOG,
-C                  when it starts.  Note that as well as adjusting the
-C                  system time, any entries queued on the system timer
-C                  queue are also time adjusted.  For this reason it is
-C                  not advisable to automatically set the time when the
-C                  other HORACE jobs have started, and this routine only
-C                  does any work the first time H_DRS_LOG receives a valid
-C                  DRS block (not ISS) after starting.
-C                  
-C                  Note that OPER and LOG_IO privileges are required to
-C                  change the system time.
-C
-C VERSION          1.00  28-08-90  W.D.N.JACKSON
-C
-C ARGUMENTS        NDATA    I*2  IN   Array holding 1 block of DRS data
-C
-C CHANGES          
-C
-C*******************************************************************************
-      SUBROUTINE H_SETIME(NDATA)
-CDEC$ IDENT 'V1.00'
-C
-      IMPLICIT NONE
-      INTEGER*4 J1,J2,JHRS,JMIN,JSEC,ISPM,ISTAT,IHSPM,IH,IM,IS,ICHECKED
-      INCLUDE '($LIBDTDEF)'
-      INTEGER*4 NTIME(2),SYS$SETIME,SYS$BINTIM,
-     &    LIB$CVT_FROM_INTERNAL_TIME
-      INTEGER*2 NDATA(2048)
-      CHARACTER CH*2,CM*2,CS*2,CTIM*24
-      DATA ICHECKED /0/
-
-      IF(ICHECKED.EQ.1) RETURN         !Only process once
-      J1=JZEXT(NDATA(10))              !Get hours and mins
-      J2=JZEXT(NDATA(11))              !Get mins and secs
-      JHRS=IBITS(J1,8,4)*10+IBITS(J1,4,4) !Compute hours
-      JMIN=IBITS(J1,0,4)*10+IBITS(J2,8,4) !Compute minute
-      JSEC=IBITS(J2,4,4)*10+IBITS(J2,0,4) !Compute seconds
-      ISPM=JHRS*3600+JMIN*60+JSEC      !Compute full time
-      ISTAT=LIB$CVT_FROM_INTERNAL_TIME(LIB$K_SECOND_OF_DAY,IHSPM,) !Get HORACE
-                                       ! seconds past midnight
-      IHSPM=IHSPM-1                    !Convert to 0 to 86399
-      IF(IABS(IHSPM-ISPM).LT.4500) THEN !If less than 1 hr 15 mins difference
-        IH=ISPM/3600                   !Form DRS time into VMS time string
-        IM=(ISPM-IH*3600)/60
-        IS=ISPM-IH*3600-IM*60
-        WRITE(CH,10) IH
-        WRITE(CM,10) IM
-        WRITE(CS,10) IS
-        CTIM='-- '//CH//':'//CM//':'//CS//'.00'
-        ISTAT=SYS$BINTIM(CTIM,NTIME)   !Convert to internal time format
-        CALL LOG_MESS('HORACE time synched to DRS at '//CTIM(4:11))
-        ISTAT=SYS$SETIME(NTIME)        !Set the system time 
-      END IF
-      ICHECKED=1
-      RETURN
-10    FORMAT(I2.2)
       END
 ********************************************************************************
       SUBROUTINE DRS_BLK_SIZ(CMODE)

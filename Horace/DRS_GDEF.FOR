@@ -34,6 +34,7 @@
      &          IBLKCNT,               !Block no of next DRS block to be output
      &          IDATHLD,               !1 if DRS data is on hold, else 0
      &          IEVENT,                !Event mark
+     &          ISECOFY,               !Second of year of last packet
      &          ICURTIM,               !Time of current DRS block
      &          ITSTDRS,               !1 to get response from DRS program
      &          IDLUSTS(33),          !!.GT.0 if DLU sending packets, else .LE.0
@@ -62,7 +63,7 @@
      &          ICHGFNO,IDLUSRT,IDLUCNT,IISSSIZ,IBLKCNT,IMESERR,
      &          IISSNUM,IPARCNT,INXTEVM,IDATHLD,ITSTDRS,IDLUSTS,
      &          ICHGDAT,ITIMSTS,IGETSIZ,ICNFSIZ,ICNFCNT,IDLUSEQ,
-     &          IEVENT ,IGETPRT,IDLUSLP,ICURTIM,
+     &          IEVENT ,IGETPRT,IDLUSLP,ICURTIM,ISECOFY,
      &          JGETPKT,JSNDPKT,JTIMPKT,JDATBLK,JISSBLK,JDRSBLK,
      &          CSRCLST,CGETPKT,CSNDPKT,CTIMPKT,CFLTNUM,CNEWFNO,CDLUNAM,
      &          CDLUADD

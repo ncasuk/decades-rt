@@ -59,7 +59,7 @@ C
           CLINE=CTEMPL
           IPTR=STATUS(2)
           IF(STATUS(33).EQ.1.AND.IPTR.NE.0) THEN
-            IF((RVN(IPTR)**2+RVE(IPTR)**2).GT.25.*25.) THEN !If > 50 kts
+            IF((RGINNV(IPTR)**2+RGINEV(IPTR)**2).GT.25.*25.) THEN !If > 50 kts
               ITAS=NINT(RTAS(IPTR)*10./1.944) !True airspeed in .1 m/s
               WRITE(CLINE(3:6),'(I4.4)',IOSTAT=IOS) ITAS
               ITAT=NINT(RTATDI(IPTR)*10.) !Deiced TAT in K

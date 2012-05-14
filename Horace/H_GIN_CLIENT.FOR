@@ -19,16 +19,17 @@ C       ** include useful system definitions
         INCLUDE '($syssrvnam)'
         INCLUDE '($iodef)'
         INCLUDE 'sys$library:tcpip$inetdef.for'
- 
+        INCLUDE '($CVTDEF)'
  
 C       ** declare variables
         INTEGER*4   buflen
-        INTEGER*4	status
-        INTEGER*4   a, b, c, d, e
+        INTEGER*4   status
+        INTEGER*4   a, b, c, d, e,f
         INTEGER*4   flags
         INTEGER*4   efn     ! ** event flag number for SYS$QIO
-        INTEGER*4 packet_no
+        INTEGER*4 packet_no,ISTAT,I
  
+
         INTEGER*2   port
         INTEGER*2   channel
         INTEGER*2   sck_parm(2)
@@ -41,6 +42,10 @@ C       ** it as an array of 16-bit values
  
         CHARACTER*512 buf / 'Hello There' /
         BYTE GRPMESS(512)
+        BYTE latbyte(8),lonbyte(8)
+
+        REAL*8 latdbl,londbl
+        REAL*8 latdbl1,londbl1
         CHARACTER grp_start*4
         INTEGER*2 grp_ID,byte_count
  
@@ -56,7 +61,9 @@ C       ** it as an array of 16-bit values
 C       ** function declarations
  
         INTEGER*2   htons
- 
+        EQUIVALENCE(latbyte,latdbl)
+        EQUIVALENCE(lonbyte,londbl)
+     
  
 C ---------------------------------------------------------------
  
@@ -85,20 +92,20 @@ C        GOTO 110    ! skip prompting user for IP server details during testing
         TYPE *, 'use comma "," not . to separate IP address parts'
         TYPE *, 'E.g.   "151,170,108,35,5602"  for 151.170.108.35 5602'
  
-        READ (5,501) a, b, c, d, port
+!        READ (5,501) a, b, c, d, port
  501    FORMAT( I, I, I, I, I )
-        GOTO 120
+!        GOTO 120
  
  
  110    CONTINUE    ! can ignore compile-time warnings about this line
  
 C       ** hard-code IP address of server host during testing (a.b.c.d)
-        a = 16
-        b = 37
-        c = 144
-        d = 139
+        a = 192
+        b = 168
+        c = 102
+        d = 21
  
-        port = 4747
+        port = 5602
  
  120    CONTINUE
  
@@ -107,11 +114,19 @@ C       ** hard-code IP address of server host during testing (a.b.c.d)
  
 C       ** sin$l_adr needs to store an IP address of form a.b.c.d
 C       ** in the byte order d:c:b:a
+
+        
+        call mvbits(d,0,8,f,24)
+        call mvbits(c,0,8,f,16)
+        call mvbits(b,0,8,f,8)
+        call mvbits(a,0,8,f,0)
+        remote_host.sin$l_addr = f
+        
  
-        remote_host.sin$l_addr = (d * 256 * 256 * 256) +
-     &                           (c * 256 * 256) +
-     &                           (b * 256) +
-     &                           (a)
+!        remote_host.sin$l_addr = (d * 256 * 256 * 256) + 
+!     &                           (c * 256 * 256) +
+!     &                           (b * 256) +
+!     &                           (a)
  
         remote_host.sin$w_port = htons( port )
  
@@ -127,8 +142,8 @@ C       ** assign a channel to the TCPIP device
         print *, 'Assigning a channel to the TCPIP device'
  
 C       ** the string 'tcpip$device' is passed by descriptor by default
- 
-        status = sys$assign( 'tcpip$device', channel, ,  )
+
+        status = sys$assign( 'TCPIP$DEVICE:', channel, ,  )
         IF (.NOT. status) CALL lib$stop( %VAL( status ) )
  
  
@@ -137,8 +152,8 @@ C       ** Create the socket
  
         PRINT *, 'Creating the socket'
  
-        status = sys$qiow( %VAL( efn ),		    ! Event flag
-     &                     %VAL( channel ),	    ! Channel number
+        status = sys$qiow( %VAL( efn ),         ! Event flag
+     &                     %VAL( channel ),     ! Channel number
      &                     %VAL( IO$_SETMODE ), ! I/O function
      &                     %REF( iosb ),        ! I/O status block
      &                     ,                    ! AST rtn address
@@ -159,8 +174,8 @@ C       ** Connect to specified host and port number
  
         PRINT *, 'Connecting to specified host and port number'
  
-        status = sys$qiow( %VAL( efn ),		    ! Event flag
-     &                     %VAL( channel ),	    ! Channel number
+        status = sys$qiow( %VAL( efn ),         ! Event flag
+     &                     %VAL( channel ),     ! Channel number
      &                     %VAL( IO$_ACCESS ),  ! I/O function
      &                     %REF( iosb ),        ! I/O status block
      &                     ,                    ! AST rtn address
@@ -171,8 +186,11 @@ C       ** Connect to specified host and port number
      &                     ,                    ! p4
      &                     ,                    ! p5
      &                     )                    ! p6
+        if (STATUS) print *,'It is Connected'
+        print *,'status=',status
         IF (.NOT. status) CALL lib$stop( %VAL( status ) )
         status = iosb(1)
+        if (STATUS) print *,'It really is Connected'
         IF (.NOT. status) CALL lib$stop( %VAL( status ) )
  
  
@@ -192,8 +210,10 @@ C       ** Get message to send to server
 
 C       -------------------
 C       ** Read packets
+        OPEN(UNIT=123,FILE='GINDAT.DAT',STATUS='NEW',IOSTAT=ISTAT,
+     &      ACCESS='SEQUENTIAL',FORM='UNFORMATTED')
 
-        DO packet_no=1,20
+        DO packet_no=1,100
  
         PRINT *, 'Reading from socket '
  
@@ -247,8 +267,8 @@ C       ** Read packets
         status = iosb(1)
         IF (.NOT. status) CALL lib$stop( %VAL( status ) )
         print *,'Read byte count ',byte_count
-        status = sys$qiow( %VAL( efn ),		       ! Event flag
-     &                     %VAL( channel ),	       ! Channel number
+        status = sys$qiow( %VAL( efn ),           ! Event flag
+     &                     %VAL( channel ),       ! Channel number
      &                     %VAL( IO$_READVBLK ),  ! I/O function
      &                     %REF( iosb ),           ! I/O status block
      &                     ,                       ! AST rtn address
@@ -260,13 +280,24 @@ C       ** Read packets
      &                     ,                       ! p5
      &                     )                       ! p6
 
-       
+       WRITE(123)grp_ID,byte_count,(grpmess(I),I=1,byte_count)
+       DO I=1,8
+         Latbyte(I)=grpmess(I+26)
+         Lonbyte(I)=grpmess(I+34)
+       ENDDO
+       CALL CVT$FTOF(latdbl,%VAL(CVT$K__BIG_ENDIAN_IEEE_T),
+     &               latdbl1,%VAL(CVT$K_VAX_D))
+       print *,latdbl,latdbl1
+       CALL CVT$FTOF(londbl,%VAL(CVT$K_IEEE_T),
+     &               londbl1,%VAL(CVT$K_VAX_D))
+       print *,londbl,londbl1
         IF (.NOT. status) CALL lib$stop( %VAL( status ) )
         status = iosb(1)
         IF (.NOT. status) CALL lib$stop( %VAL( status ) )
  
         print *,'Read packet'
         ENDDO
+        CLOSE(123)
 
 !        IF (buf .EQ. 'exit') GOTO 400
 !        GOTO 300
@@ -352,16 +383,44 @@ C --------------------------------------------------------------------------
  
 C       ** swap the two bytes of 'port' around
  
-        low = IMOD( port, 256 )
-        high = port / 256
- 
-        print *,'High=',high,' Low=',low
-        call mvbits(low,0,8,htons,8)
-        print *,'Htons=',htons
+        htons=0
+        call mvbits(port,0,8,htons,8)
         htons=htons.AND.'FF00'X
-        print *,'Htons=',htons
-        htons = htons +high
-C        htons = (256*low) + high
+        call mvbits(port,8,8,htons,0)
  
         END
  
+********************************************************************************
+      SUBROUTINE GET_DISK_STATUS(CSYSSTS,COPTSTS)
+C
+C Reads the group logical names OPTI_STATUS and SYST_STATUS
+C
+C V1.00            W.D.N.JACKSON
+C V1.01  10/08/92  W.D.N.JACKSON
+C        Now also read SYST_STATUS
+C
+      IMPLICIT NONE
+      INTEGER*4 ISTAT,NAMLEN
+      CHARACTER*(*) CSYSSTS,COPTSTS
+      CHARACTER*20 LOGNAME
+      INTEGER*4 ILIST(4)
+      INTEGER*2 JLIST(8)
+      EQUIVALENCE (ILIST,JLIST)
+      INCLUDE '($SYSSRVNAM)'
+      INCLUDE '($LNMDEF)'
+
+      CSYSSTS=' '
+      COPTSTS=' '
+      JLIST(1)=20
+      JLIST(2)=LNM$_STRING
+      ILIST(2)=%LOC(LOGNAME)
+      ILIST(3)=%LOC(NAMLEN)
+      ILIST(4)=0
+      ISTAT=SYS$TRNLNM(,'LNM$GROUP','SYST_STATUS',,ILIST)
+      IF(ISTAT) CSYSSTS=LOGNAME(1:MAX(NAMLEN,1))
+      ISTAT=SYS$TRNLNM(,'LNM$GROUP','OPTI_STATUS',,ILIST)
+      IF(ISTAT) COPTSTS=LOGNAME(1:MAX(NAMLEN,1))
+      RETURN
+10    FORMAT(3I)
+      END
+C*******************************************************************************

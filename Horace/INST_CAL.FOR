@@ -59,10 +59,12 @@ C                  1.03 30/05/02  Now uses 16 bit DRS data and handles general
 C                                 new DRS analogue channels using 999 (WDNJ)
 C                  1.04 04/10/02  Calibration of multiple analogue channels 
 C                                 added using 997 (WDNJ)
+C                  1.05 07/02/03  Bug fixed so correctly outputs coeffs to
+C                                 files when using 997 (WDNJ)
 C
 C*******************************************************************************
       PROGRAM INST_CAL
-CDEC$ IDENT 'V1.04'
+CDEC$ IDENT 'V1.05'
       IMPLICIT  NONE
       INTEGER*4 IPARA(32),INVAL(32),IORD(32),IPASS,IOS,INEXT,IL,I,JOS,
      -    IPAR,IPCNT,IPLST(50),ISTAT,STR$ELEMENT,LAN,IPERIOD
@@ -551,9 +553,11 @@ C
         CALL POLY_FIT(6,IORD(IP),NP,RINDEP(1,IQ),RDEPEND(1,IQ), !Do fit
      -      RCOEFS(1,IQ),RCORR(IQ))
         WRITE(20,'(//X,I3,2X,A)',IOSTAT=IOS)I,CSNAME(I)//'  '//CFNAME(I)
-        CALL POLY_FIT(20,IORD(IP),NP,RINDEP,RDEPEND,RCOEFS,RCORR)
+        CALL POLY_FIT(20,IORD(IP),NP,RINDEP(1,IQ),RDEPEND(1,IQ), !Do fit
+     -      RCOEFS(1,IQ),RCORR(IQ))
         WRITE(21,'(//X,I3,2X,A)',IOSTAT=IOS)I,CSNAME(I)//'  '//CFNAME(I)
-        CALL POLY_FIT(21,IORD(IP),NP,RINDEP,RDEPEND,RCOEFS,RCORR)
+        CALL POLY_FIT(21,IORD(IP),NP,RINDEP(1,IQ),RDEPEND(1,IQ), !Do fit
+     -      RCOEFS(1,IQ),RCORR(IQ))
       END DO
 C
 C Write coefficients and return

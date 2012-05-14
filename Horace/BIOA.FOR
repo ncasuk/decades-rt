@@ -103,7 +103,7 @@ C extended in fairly large steps.  When the file is closed all allocated but
 C unused space is trunated.
 C
       SUBROUTINE BIO_CREATE(lun,filnam,ireclb)
-      integer lun,ireclb
+      integer lun,ireclb,rmsblk_create
 C
       CHARACTER*(*) filnam
       EXTERNAL RMSBLK_CREATE
@@ -135,7 +135,7 @@ C Standard FORTRAN OPEN statement is used for simplicity and clarity, using
 C the USEROPEN feature to open the file with block IO enabled.
 C
       SUBROUTINE BIO_OPEN(lun,filnam,ireclb)
-      integer lun,ireclb
+      integer lun,ireclb,rmsblk_open
 C
       CHARACTER*(*) filnam
       EXTERNAL RMSBLK_OPEN
@@ -410,7 +410,7 @@ C
       JSTAT=SYS$CONNECT(RABNAM)                  !Connect to it
       IF(JSTAT.NE.RMS$_NORMAL) CALL LIB$STOP(%VAL(JSTAT))
       RMSBLK_OPEN=JSTAT
-      RETURN
+      RETURN 
       END
 *******************************************************************************
       SUBROUTINE RMSBLK_READ(RABNAM,ibuff,ibytes)

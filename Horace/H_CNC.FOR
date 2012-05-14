@@ -29,6 +29,9 @@
 !    klmn - CNC count decodes as (k+.1l+.01m)*10**n
 !
 ! V1.00  26/09/02  W.D.N.JACKSON
+! V1.01  23/05/05  W.D.N.JACKSON
+!        Now puts latest value into DRS block immediately it is opened in 
+!        case the block is closed before a new value is obtained.
 !
       IMPLICIT  NONE
       INTEGER*4 ISTS,IC,IW,IFUNC
@@ -38,6 +41,7 @@
       INCLUDE   '($SSDEF)'
       INCLUDE   '($IODEF)'
       INCLUDE   '($SYSSRVNAM)'
+      DATA      JVAL /'FFFF'X/
 
       CALL LOG_MESS('H_CNC starting') !Send message to log file
 !
@@ -52,8 +56,9 @@
       IC=ICURTIM
       DO WHILE(.TRUE.)
         DO WHILE(IC.EQ.ICURTIM)
-          CALL LIB$WAIT(0.1)
+          CALL LIB$WAIT(0.05)
         END DO
+        JDRSBLK(JISSBLK(50+1)/2+1)=JVAL !Use latest value to start with
         IC=ICURTIM
         CLINE=' '
         IFUNC=IO$_WRITEVBLK
