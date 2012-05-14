@@ -59,7 +59,7 @@ C
       JJSEC=IBITS(J2,4,4)*10+IBITS(J2,0,4) !DRS seconds
       JTIME=3600*JJHRS+60*JJMIN+JJSEC
       cstatj(6:9)=cfloat(REAL(JTIME))     !Time
-      cstatj(10:13)=cfloat(derive(jstat2,50))  !IHDG
+      cstatj(10:13)=cfloat(derive(jstat2,158))  !GINHDG
       cstatj(14:17)=cfloat(derive(jstat2,64))  !SPR
       cstatj(18:21)=crfloat(derive(jstat2,67),1)  !PHGTF
       cstatj(22:25)=cfloat(derive(jstat2,5))   !TAS
@@ -67,8 +67,8 @@ C
       cstatj(30:33)=crfloat(derive(jstat2,17),2)  !DEW
       cstatj(34:37)=cfloat(derive(jstat2,58))  !IWS
       cstatj(38:41)=cfloat(derive(jstat2,59))  !IWA
-      cstatj(42:45)=crfloat(derive(jstat2,93),1)  !ILAT
-      cstatj(46:49)=crfloat(derive(jstat2,94),1)  !ILONG
+      cstatj(42:45)=crfloat(derive(jstat2,150),1)  !GINLAT
+      cstatj(46:49)=crfloat(derive(jstat2,151),1)  !GINLONG
 !      cstatj(50:53)=cfloat(derive(jstat2,1))   !FLNO
       cstatj(50:53)=cfno
        c=readsocket(256)
@@ -92,7 +92,12 @@ C
          if((itime2.GT.-1).AND.(itime2.LE.jstat2))ito=itime2
          inum=(ito-itime)+1
          call writesocket(cstatj)
-         call writeint(jnow)
+         if(jnow.GE.0)THEN
+           call writeshort(0)
+         else
+           call writeshort(-1)
+         endif
+         call writeshort(jnow)
          call writeint(inum)
          do i=1,nn
            do ii=itime,ito
@@ -193,8 +198,8 @@ C
          call writesocket(cbutt)
          IF(c(6:6).NE.'B')THEN
            write(cevents(ii)(i2:i2+30),'(a)')
-     &         cone(jtime,derive(jstat2,50),derive(jstat2,67)
-     &         ,derive(jstat2,93),derive(jstat2,94))
+     &         cone(jtime,derive(jstat2,158),derive(jstat2,67)! GINHDG
+     &         ,derive(jstat2,150),derive(jstat2,151)) !GINLAT, GINLONG
            CALL savevents(cfno,cevents,nevents,ievents)
          ENDIF 
        ENDIF
@@ -541,7 +546,16 @@ C          call writesocket('<META HTTP-EQUIV="Refresh" CONTENT="1">')
             call writesocket('</TR>'//char(10)//char(13))
           enddo
           call writesocket('</table>'//char(10)//char(13))
-          call writesocket('</body></html>'//char(10)//char(13))
+          call writesocket('<a name="bottom">')
+          call writesocket('&nbsp</a>'//char(10)//char(13))
+          call writesocket('</body>'//char(10)//char(13))
+          call writesocket('<script language="javascript">')
+          call writesocket(char(10)//char(13))
+          call writesocket('window.location.href="#bottom"')
+          call writesocket(char(10)//char(13))
+          call writesocket('</script>')
+          call writesocket(char(10)//char(13))
+          call writesocket('</html>'//char(10)//char(13))
         RETURN
        END
 C*******************************************************************************

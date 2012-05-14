@@ -1,91 +1,70 @@
 C      PROGRAM H_JAVAMAP
 C
-C     Loops to check the aircraft position every 3 seconds.  
+C     Loops to check the aircraft position every 6 seconds.  
 C     If it is outside the MAP bounds call CLINE.FOR to 
 C     recreate MAP.
 C
 C
 C
-      PROGRAM H_JAVAMAP
-
       implicit none
-      REAL*4 range(4),olat,olon,dlat,dlon
+      REAL*4 range(4),range2(4),olat,olon,dlat,dlon
       integer*4 stat2,I
-      logical notchange
+      logical change
       INCLUDE 'HCOM_DEF.FOR'
 
       stat2=status(2)
-      do while(stat2.lt.1.or.stat2.gt.2)
+      do while(stat2.lt.1)
         call lib$wait(3.0)
         stat2=status(2)
       enddo
-      range(1)=derive(stat2,94)
-      range(2)=derive(stat2,93)
-      range(3)=derive(stat2,94)
-      range(4)=derive(stat2,93)
-      olon=range(1)
-      olat=range(2)
-      DO I=stat2,1,-1
-          dlon=olon-derive(I,94)
-          dlat=olat-derive(I,93)
+      change=.TRUE.
+      range(1)=derive(stat2,151)-15
+      range(2)=derive(stat2,150)-15
+      range(3)=derive(stat2,151)+15
+      range(4)=derive(stat2,150)+15
+      DO WHILE(.TRUE.)
+      stat2=status(2)
+      range2(1)=derive(stat2,151)
+      range2(2)=derive(stat2,150)
+      range2(3)=derive(stat2,151)
+      range2(4)=derive(stat2,150)
+      olon=derive(stat2,151)
+      olat=derive(stat2,150)
+      I=stat2
+      DO WHILE(I.GE.1)
+          dlon=olon-derive(I,151)
+          dlat=olat-derive(I,150)
         if(((dlat.LT.0.2).AND.(dlat.GT.-0.2)).AND.
      &     (((dlon.LT.0.2).AND.(dlon.GT.-0.2)).OR.
-     &     ((dlon.GT.179.8).AND.(dlon.LT.180.2)).OR.
-     &     ((dlon.GT.179.8).AND.(dlon.LT.180.2)).OR.
      &     ((dlon.GT.359.8).AND.(dlon.LT.360.2)).OR.
      &     ((dlon.LT.-359.8).AND.(dlon.GT.-360.2))))THEN
-          olon=derive(I,94)
-          olat=derive(I,93)
-          if(range(1).GT.derive(I,94))range(1)=derive(I,94)
-          if(range(2).GT.derive(I,93))range(2)=derive(I,93)
-          if(range(3).LT.derive(I,94))range(3)=derive(I,94)
-          if(range(4).LT.derive(I,93))range(4)=derive(I,93)
-        ENDIF
+          olon=derive(I,151)
+          olat=derive(I,150)
+          if(range2(1).GT.derive(I,151))range2(1)=derive(I,151)
+          if(range2(2).GT.derive(I,150))range2(2)=derive(I,150)
+          if(range2(3).LT.derive(I,151))range2(3)=derive(I,151)
+          if(range2(4).LT.derive(I,150))range2(4)=derive(I,150)
+        ELSE
+          I=1
+        ENDIF          
+      I=I-1
       ENDDO
-      DO WHILE(.true.)
-      range(1)=range(1)-15.0
-      range(2)=range(2)-15.0
-      range(3)=range(3)+15.0
-      range(4)=range(4)+15.0
-!      print *,range
-      CALL cline(range)
-      notchange=.TRUE.
-      I=status(2)
-      olon=derive(I,94)
-      olat=derive(I,93)
-      DO WHILE(notchange)
-        I=status(2)
-        dlat=olat-derive(I,94)
-        dlon=olon-derive(I,93)
-        if(((dlat.LT.0.2).AND.(dlat.GT.-0.2)).AND.
-     &     (((dlon.LT.0.2).AND.(dlon.GT.-0.2)).OR.
-     &     ((dlon.GT.179.8).AND.(dlon.LT.180.2)).OR.
-     &     ((dlon.GT.179.8).AND.(dlon.LT.180.2)).OR.
-     &     ((dlon.GT.359.8).AND.(dlon.LT.360.2)).OR.
-     &     ((dlon.LT.-359.8).AND.(dlon.GT.-360.2))))THEN
-          olat=derive(I,94)
-          olon=derive(I,93)
-          if(range(1).GT.derive(I,94))THEN
-            range(1)=derive(I,94)
-            notchange=.FALSE.
-          ENDIF
-          if(range(2).GT.derive(I,93))THEN
-            range(2)=derive(I,93)
-            notchange=.FALSE.
-          ENDIF
-          if(range(3).LT.derive(I,94))THEN
-            range(3)=derive(I,94)
-            notchange=.FALSE.
-          ENDIF
-          if(range(4).LT.derive(I,93))THEN
-            range(4)=derive(I,93)
-            notchange=.FALSE.
-          ENDIF
-        ENDIF
-        IF(notchange)CALL LIB$WAIT(3.0)
-      ENDDO
+      IF((range2(1).LT.range(1)).OR. 
+     &    (range2(2).LT.range(2)).OR. 
+     &    (range2(3).GT.range(3)).OR. 
+     &    (range2(4).GT.range(4))) THEN
+         range(1)=range2(1)-15
+         range(2)=range2(2)-15
+         range(3)=range2(3)+15
+         range(4)=range2(4)+15
+         change=.TRUE.
+      ENDIF 
+      IF(change)CALL cline(range)
+      change=.FALSE.
+      CALL LIB$WAIT(6.0)
       ENDDO
       END  
+
 C*************************************************
 C      SUBROUTINE CLINE(RANGE)
 C

@@ -1,6 +1,6 @@
-      PROGRAM FLASH1
+      PROGRAM FWVS1
 C
-C Sends the character A to the satcom flasher indicator via the RS232 port
+C Sends the character F to the satcom flasher indicator via the RS232 port
 C with the logical name FLASH_CHAN, whenever the H_SATCOM program sets bit 0
 C in STATUS(46).
 C
@@ -14,9 +14,13 @@ C
 C V1.00  02/02/02  W.D.N.JACKSON
 C
       IMPLICIT NONE
-      INTEGER*4 IOS
+      INTEGER*4 IOS,I
       INCLUDE 'HCOM_DEF.FOR'
-
-      OPEN(UNIT=10,FILE='FLASH_CHAN',STATUS='OLD',IOSTAT=IOS)
-          WRITE(10,'(A)',IOSTAT=IOS) CHAR(0)//'A'
+      DO I=1,100
+      OPEN(UNIT=10,FILE='FWVS_CHAN',STATUS='OLD',IOSTAT=IOS)
+          WRITE(10,'(A)',IOSTAT=IOS) CHAR(0)//'FFFFFFFFFFF'//
+     &'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'//
+     &'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
+      CALL LIB$WAIT(0.5)
+      ENDDO
       END   

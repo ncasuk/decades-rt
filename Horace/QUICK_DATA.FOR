@@ -28,10 +28,14 @@
 !                     Processing end time (hh:mm:ss)
 !                     The name of the required output file
 !                     Required parameter numbers, one on each line and
-!                      terminated with a -1
+!                      terminated with a -1.  Alternatively a file containing
+!                      a list of parameters, possibly with -1 at the end, can
+!                      be entered.
 !
-! CHANGES          
-!
+! CHANGES          V1.01 09/12/04 W.D.N.JACKSON
+!                        Parameter read now works on FLOODS and HORACE          
+!                  V1.02 12/07/05 W.D.N.JACKSON
+!                        Now accepts parameter list files
 ********************************************************************************
       PROGRAM QUICK_DATA
 !
@@ -39,9 +43,11 @@
 !              $ LINK QUICK_DATA,H_COMMON/OPT
 !              $ RUN QUICK_DATA
 !
+      IMPLICIT NONE
       INTEGER*4 ISRTTIM,IENDTIM,IOS,IOS1,IOS2,IOS3,IPC,IPARA,IP(196),
-     &    IHRS,IMIN,ISEC,IC,I,IPTR,II
+     &    IHRS,IMIN,ISEC,IC,I,IPTR,II,IL,ILL
       CHARACTER CLINE*80,CREPLY*80,CPARA(196)*80,CWDAT*9,CWTIM*8
+      LOGICAL*4 LEXISTS
       INCLUDE 'HCOM_DEF.FOR'
 
       WRITE(6,'(A)') ' '
@@ -60,8 +66,9 @@
           READ(CLINE(1:2),'(I2.2)',IOSTAT=IOS1) IHRS
           READ(CLINE(4:5),'(I2.2)',IOSTAT=IOS2) IMIN
           READ(CLINE(7:8),'(I2.2)',IOSTAT=IOS3) ISEC
+C      36 hours to allow flights through 24Z
           IF(IOS1.EQ.0.AND.IOS2.EQ.0.AND.IOS3.EQ.0.AND.
-     -        IHRS.GE.0.AND.IHRS.LE.23.AND.IMIN.GE.0.AND.IMIN.LE.59.AND.
+     -        IHRS.GE.0.AND.IHRS.LE.36.AND.IMIN.GE.0.AND.IMIN.LE.59.AND.
      -        ISEC.GE.0.AND.ISEC.LE.59) ISRTTIM=IHRS*3600+IMIN*60+ISEC
         END IF
       END DO
@@ -76,7 +83,7 @@
           READ(CLINE(4:5),'(I2.2)',IOSTAT=IOS2) IMIN
           READ(CLINE(7:8),'(I2.2)',IOSTAT=IOS3) ISEC
           IF(IOS1.EQ.0.AND.IOS2.EQ.0.AND.IOS3.EQ.0.AND.
-     -        IHRS.GE.0.AND.IHRS.LE.23.AND.IMIN.GE.0.AND.IMIN.LE.59.AND.
+     -        IHRS.GE.0.AND.IHRS.LE.36.AND.IMIN.GE.0.AND.IMIN.LE.59.AND.
      -        ISEC.GE.0.AND.ISEC.LE.59) IENDTIM=IHRS*3600+IMIN*60+ISEC
         END IF
       END DO
@@ -99,20 +106,52 @@
 !      
       IPC=0
       DO WHILE(CREPLY.NE.'-1')
-        WRITE(6,'(A)') '$HORACE parameter number (-1 to end list): '
-        READ(5,'(A)',IOSTAT=IOS) CREPLY
+        WRITE(6,'(A)') 
+     -      '$HORACE parameter number or file (-1 to end list): '
+        READ(5,'(Q,A)',IOSTAT=IOS) IL,CREPLY
         IF(IOS.EQ.-1) CALL EXIT
-        READ(CREPLY,'(I)',IOSTAT=IOS) IPARA
-        IF(IPARA.GE.512+1.AND.IPARA.LE.512+196) THEN
-          IPC=IPC+1
-          IP(IPC)=IPARA-512
+        INQUIRE(FILE=CREPLY,EXIST=LEXISTS)
+        IF(LEXISTS) THEN
+          OPEN(10,FILE=CREPLY,STATUS='OLD',READONLY)
+          READ(10,'(Q,A)',IOSTAT=IOS) IL,CREPLY
+          DO WHILE(IOS.EQ.0.AND.CREPLY.NE.'-1')
+            IF(CREPLY(1:1).NE.'!') THEN
+              ILL=0
+              DO WHILE(CREPLY(ILL+1:ILL+1).EQ.' '.AND.ILL.LT.IL)
+                ILL=ILL+1
+              END DO
+              DO WHILE(ILL.LT.IL.AND.CREPLY(ILL+1:ILL+1).GE.'0'.AND.
+     -            CREPLY(ILL+1:ILL+1).LE.'9') 
+                ILL=ILL+1
+              END DO
+              READ(CREPLY(1:ILL),'(I)',IOSTAT=IOS) IPARA
+              IF(IPARA.GE.512+1.AND.IPARA.LE.512+196) THEN
+                IPC=IPC+1
+                IP(IPC)=IPARA-512
+              ELSE
+                WRITE(6,'(A)') ' Illegal parameter'
+              END IF
+            END IF
+            READ(10,'(Q,A)',IOSTAT=IOS) IL,CREPLY
+          END DO
+          CLOSE(10)
         ELSE
-          IF(IPARA.NE.-1) WRITE(6,'(A)') ' Illegal parameter'
+          READ(CREPLY(1:IL),'(I)',IOSTAT=IOS) IPARA
+          IF(IOS.EQ.-1) CALL EXIT
+          IF(IPARA.GE.512+1.AND.IPARA.LE.512+196) THEN
+            IPC=IPC+1
+            IP(IPC)=IPARA-512
+          ELSE
+            IF(IPARA.NE.-1) WRITE(6,'(A)') ' Illegal parameter'
+          END IF
         END IF
       END DO
 !
 ! Write headers
 !
+      DO I=1,196
+        CPARA(I)=' '
+      END DO
       OPEN(21,FILE='PARANO.TXT',STATUS='OLD',READONLY)
       READ(21,'(A)',IOSTAT=IOS) CLINE
       DO WHILE(IOS.EQ.0)
@@ -129,6 +168,11 @@
 ! Search for start of data
 !
       IPTR=STATUS(2)
+      IF(IPTR.EQ.0) THEN
+        WRITE(6,*) 'Invalid data pointer to global data'
+        CLOSE(20)
+        CALL EXIT
+      END IF
       IC=0
       DO WHILE(RSECS(IPTR).GT.ISRTTIM.AND.RSECS(IPTR).NE.0.0.
      &    AND.IC.LT.STATUS(3))

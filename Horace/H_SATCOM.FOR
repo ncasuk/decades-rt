@@ -202,7 +202,14 @@
 !        Option via bit 0, STATUS(54) to set GPS position.
 ! V1.07  07/11/00  W.D.N.Jackson
 !        Strips header from messages received by email.  Sends with sc 67.
-!
+!        16/03/06  J Crawford
+!        lines 516 & 517 edited for 5 min position reports
+!        08/02/08  J Crawford
+!        lines 516 & 517 edited for 30min position reports for transit
+!        15/02/08  J Crawford
+!        lines 516 & 517 edited for 5 min position reports
+
+
       IMPLICIT  NONE
       BYTE      BBUFF(15000)
       CHARACTER CLINE*80,CDISP(23)*80,CBUFF(50)*80,CSLINE*80,CFILE*80,
@@ -513,8 +520,8 @@
         ITIME=NINT(SECNDS(0.0))
         ITDIF=ITIME-ILSTPOS
         IF(ITDIF.LT.-20000) ITDIF=ITDIF+24*3600 !Midnight crossing
-        IF((ITIME/900.NE.ILSTPOS/900)
-     &      .AND.(ITDIF.GT.300.OR.ISNDPOS.EQ.-1)
+        IF((ITIME/300.NE.ILSTPOS/300)
+     &      .AND.(ITDIF.GT.200.OR.ISNDPOS.EQ.-1)
      &      .AND.ISNDPOS.LE.0) ISNDPOS=1
         IF(ISNDPOS.EQ.2.AND.SECNDS(RLSTPOS).GT.900.) ISNDPOS=1
 !
@@ -581,9 +588,11 @@
 !
 ! Strip trailing blanks, which are found at the end of messages sent by email
 !
-              DO WHILE(CBUFF(IL).EQ.' '.AND.IL.GT.IS)
-                IL=IL-1
-              END DO
+              IF(IL.LE.50) THEN
+                DO WHILE(CBUFF(IL).EQ.' '.AND.IL.GT.IS)
+                  IL=IL-1
+                END DO
+              END IF
 !
 ! If received message is for the flight leader, then write it out to a file
 ! SAT_INP_nnnnn.DAT, and also to the log.  Update SAT_INP_STS.DAT with a new
@@ -800,7 +809,7 @@
                 ELSE IF(CBUFF(IS)(2:2).EQ.'D') THEN !Conditional forcing
                   CALL LOG_MESS
      &                ('Conditional forcing request - '//CBUFF(IS)(4:4))
-                  DO I=1,IL
+                  DO I=1,MIN(IL,50)
                     WRITE(6,'(X,A)',IOSTAT=IOS)CBUFF(I)(1:LAN(CBUFF(I)))
                   END DO
                   IF(CBUFF(IS)(4:4).EQ.'0') THEN !Clear all forcing
@@ -829,7 +838,7 @@
                 ELSE IF(CBUFF(IS)(2:2).EQ.'E') THEN !Force position report
                   CALL LOG_MESS
      &                ('Immediate position report request')
-                  DO I=1,IL
+                  DO I=1,MIN(IL,50)
                     WRITE(6,'(X,A)',IOSTAT=IOS)CBUFF(I)(1:LAN(CBUFF(I)))
                   END DO
                   ISNDPOS=1
@@ -842,7 +851,7 @@
 !
                   CALL LOG_MESS
      &                ('Status report request - '//CBUFF(IS)(4:4))
-                  DO I=1,IL
+                  DO I=1,MIN(IL,50)
                     WRITE(6,'(X,A)',IOSTAT=IOS)CBUFF(I)(1:LAN(CBUFF(I)))
                   END DO
                   READ(CBUFF(IS)(4:4),'(I1)',IOSTAT=IOS) ISTS
@@ -885,7 +894,7 @@
 !
                   CALL LOG_MESS
      &                ('Transmission mode request - '//CBUFF(IS)(4:4))
-                  DO I=1,IL
+                  DO I=1,MIN(IL,50)
                     WRITE(6,'(X,A)',IOSTAT=IOS)CBUFF(I)(1:LAN(CBUFF(I)))
                   END DO
                   IF(CBUFF(IS)(4:4).EQ.'E') CMODE='EMAIL'
@@ -900,7 +909,7 @@
 !
                   CALL LOG_MESS
      &                ('Position report request - '//CBUFF(IS)(4:4))
-                  DO I=1,IL
+                  DO I=1,MIN(IL,50)
                     WRITE(6,'(X,A)',IOSTAT=IOS)CBUFF(I)(1:LAN(CBUFF(I)))
                   END DO
                   IF(CBUFF(IS)(4:4).EQ.'B') CPOSN='DATA'

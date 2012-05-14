@@ -68,12 +68,14 @@ class rt_data(object):
  
     def getdata_fromdatabase(self,name,selection):
         """ Dummy routine to read one parameter from database"""
-        self.database.execute('SELECT %s FROM scratchdata WHERE id %s',(name, selection))
+        fieldname_part = 'SELECT "%s"' % name #needs to be quoted as contains a dot (.)
+        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s',(selection, ))
         return np.array(self.database.fetchall(),dtype='float')
             
     def getbunchofdata_fromdatabase(self,names,selection):
         """ Dummy routine to read several parameters from database"""
-        self.database.execute('SELECT %s FROM scratchdata WHERE id %s',(names,selection))
+        fieldname_part = 'SELECT "%s"' % '", "'.join(names) #needs to be quoted as contains a dot (.)
+        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s',(selection, ))
         ans={}
         for name in names:
             ans[name]=np.array(self.database.fetchall(),dtype='float')

@@ -116,7 +116,7 @@
         IF(CLINE(1:1).EQ.'!') THEN
         ELSE IF(CLINE.NE.' ') THEN
           CALL STR$UPCASE(CLINE1,CLINE)
-          CALL STR_COMPRESS(CLINE1,CLINE1)
+          CALL STR_COMPRESS(CLINE1)
           CALL STR$ELEMENT(CEADD,0,' ',CLINE1)
           CALL STR$ELEMENT(CNAME,1,' ',CLINE1)
           CALL STRING_ADDR(CEADD,JSOURCE,ISTS1)
@@ -1064,6 +1064,9 @@
 ! Checks that the information in the DRS_CONFIG.DAT file are correctly 
 ! specified.  Returns 1 if no problems, else 0.
 !
+! 02/08/04  WDNJ  Valid port address for M type boards reduced from C0 to A0
+! to allow TWC to work on aft port DLU.
+!
       IMPLICIT  NONE
       INTEGER*4 IOS,IL,LAN,IC,I,ISTS,IFREQ(512),ISS,ICNT,IP,IL1
       CHARACTER CLINE*80,CLINE1*80,CLIN*80
@@ -1090,7 +1093,7 @@
         ELSE IF(CLINE.NE.' ') THEN
           IL1=IL1+1
           CALL STR$UPCASE(CLINE1,CLINE)
-          CALL STR_COMPRESS(CLINE1,CLINE1)
+          CALL STR_COMPRESS(CLINE1)
 !
           CALL STR$ELEMENT(CDLU,0,' ',CLINE1)
           IC=0
@@ -1182,8 +1185,9 @@
      &      (CTYP.EQ.'A'.AND.(IC.LT.'10'X.OR.IC.GT.'7F'X)).OR.
      &      (CTYP.EQ.'S'.AND.(IC/2.LT.65.OR.IC/2.GT.76)).OR.
      &      (CTYP.EQ.'D'.AND.(IC.NE.'8A'X.AND.IC.NE.'9A'X.AND.
-     &      IC.NE.'C0'X.AND.IC.NE.'D0'X.AND.IC.NE.'E0'X)).OR.
-     &      (CTYP.EQ.'M'.AND.(IC.LT.'C0'X.OR.IC.GT.'EF'X))) THEN
+     &      IC.NE.'C0'X.AND.IC.NE.'D0'X.AND.IC.NE.'E0'X.AND.
+     &      IC.NE.'A0'X)).OR.
+     &      (CTYP.EQ.'M'.AND.(IC.LT.'A0'X.OR.IC.GT.'EF'X))) THEN
             WRITE(CLIN,'(A,I3,A)') 
      &          'LINE ',IL,' - Invalid port address'
             CALL STR_COMPRESS(CLIN)
@@ -1423,7 +1427,7 @@
         IF(CLINE(1:1).EQ.'!') THEN
         ELSE IF(CLINE.NE.' ') THEN
           CALL STR$UPCASE(CLINE,CLINE)
-          CALL STR_COMPRESS(CLINE,CLINE)
+          CALL STR_COMPRESS(CLINE)
           CALL STR$ELEMENT(CDLUN,0,' ',CLINE)
           CALL STR$ELEMENT(CCARD,1,' ',CLINE)
           CALL STR$ELEMENT(CCTYP,2,' ',CLINE)

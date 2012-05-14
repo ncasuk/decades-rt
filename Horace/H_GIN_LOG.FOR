@@ -10,43 +10,45 @@ C       ** include useful system definitions
         INCLUDE '($CVTDEF)'
         INCLUDE 'HCOM_DEF.FOR'
 C       ** declare variables
-        INTEGER*4 I,IDSTS1
+        INTEGER*4 I
         INTEGER*4 J1,J2,JJHRS,JJMIN,JJSEC,IDTIM,OLDTIME
         INTEGER*2   checksum
         BYTE GRPMESS(132)
-        BYTE bytval(8,8)
-
-        REAL*8 DBLVAL(8)
-        REAL*4 LAT,LON,ALT
+        BYTE byt8val(8,8)
+        REAL*8 GINDVAL
+        BYTE byt4val(4,11)
+        REAL*4 GINFVAL
+        COMMON /GINCOM/GINDVAL(8),GINFVAL(11)
         CHARACTER grp_start*4
         INTEGER*2 grp_ID,byte_count
         INTEGER*2 sgrpmess(66)
 
-        EQUIVALENCE(bytval,dblval)
-	EQUIVALENCE(sgrpmess,grpmess)
+        EQUIVALENCE(byt8val(1,1),GINDVAL(1))
+        EQUIVALENCE(byt4val(1,1),GINFVAL(1))
+        EQUIVALENCE(sgrpmess,grpmess)
 C       ** function declarations
  
 C ---------------------------------------------------------------
  
-!        CALL opensocket(192,168,102,21,5602)
-        CALL opensocket(151,170,96,124,5602)
+        CALL opensocket(192,168,102,21,5602)
+!        CALL opensocket(151,170,96,124,5602)
 !       Open data file
 !
         OLDTIME=-9999
         DO WHILE(.TRUE.)
-          CALL readsocket(4,%R
-EF(grp_start))
+          CALL readsocket(4,%REF(grp_start))
+          IF(grp_start.NE.'$GRP')CALL closesocket()
           CALL readsocket(2,%REF(grp_ID))
 !          print *,'Read Group ID ',grp_ID
           CALL readsocket(2,%REF(byte_count))
+          IF(byte_count.GT.132)CALL closesocket()
 !          print *,'Read byte count ',byte_count
           CALL readsocket(byte_count,%REF(grpmess))
 ! Calculate CHECKSUM
          checksum=0
-         checksum=(checksum+21063).AND.'FFFF'X   ! GR as integer  Add GRP$ group start to checksum 
-         checksum=(checksum+9296).AND.'FFFF'X    ! P$ as integer
-         checksum=(checksum+grp_ID).AND.'FFFF'X  ! Add grou
-p ID to checksum
+         checksum=(checksum+18212).AND.'FFFF'X   ! $G as integer  Add $GRP group start to checksum 
+         checksum=(checksum+20562).AND.'FFFF'X    ! RP as integer
+         checksum=(checksum+grp_ID).AND.'FFFF'X  ! Add group ID to checksum
          checksum=(checksum+byte_count).AND.'FFFF'X  ! Add byte count to checksum
          DO I=1,byte_count/2
            checksum=(checksum+sgrpmess(I)).AND.'FFFF'X   !Add rest of message to checksum
@@ -54,43 +56,40 @@ p ID to checksum
 ! Only if CHECKSUM=0 do any more processing
          IF(checksum.EQ.0)THEN
            IDTIM=-1
-           IF(STATUS(33).EQ.1) THEN     !If have good DRS data check times
+           !IF(STATUS(33).EQ.1) THEN     !If have good DRS data check times
              J1=NFDATA(10,STATUS(1))    !Decode DRS time into secs past midnight
-             J2=NFDATA(11,ST
-ATUS(1))
+             J2=NFDATA(11,STATUS(1))
              JJHRS=IBITS(J1,8,4)*10+IBITS(J1,4,4)
              JJMIN=IBITS(J1,0,4)*10+IBITS(J2,8,4)
              JJSEC=IBITS(J2,4,4)*10+IBITS(J2,0,4)
              IDTIM=JJHRS*3600+JJMIN*60+JJSEC !DRS seconds past midnight
-           ENDIF
+           !ENDIF
 	   CALL WRITE_GIN(GRP_ID,GRPMESS)
            IF((IDTIM.GE.(OLDTIME+1)).OR.(IDTIM.LT.OLDTIME))THEN
            DO I=1,8
-             bytval(I,1)=grpmess(I+26)
-             bytval(I,2)=grpmess(I+34)
-             bytval(I,3)=grpmess(I+42)
-!             bytval(I,4)=gr
-pmess(I)
+             byt8val(I,1)=grpmess(I+26)
+             byt8val(I,2)=grpmess(I+34)
+             byt8val(I,3)=grpmess(I+42)
+             byt8val(I,4)=grpmess(I+62)
+             byt8val(I,5)=grpmess(I+70)
+             byt8val(I,6)=grpmess(I+78)
+             byt8val(I,7)=grpmess(I+86)
            ENDDO
-           CALL CVT$FTOF(dblval(1),%VAL(CVT$K_IEEE_T),
-     &               lat,%VAL(CVT$K_VAX_F),)
-           CALL CVT$FTOF(dblval(2),%VAL(CVT$K_IEEE_T),
-     &               lon,%VAL(CVT$K_VAX_F),)
-           CALL CVT$FTOF(dblval(3),%VAL(CVT$K_IEEE_T),
-     &               alt,%VAL(CVT$K_VAX_F),)
-!           CALL CVT$FTOF(dblval(4),%VAL(CVT$K_IEEE_T),
-!     &               newtime,%VAL(CVT$K_VAX_F),)
+           DO I=1,4
+             byt4val(I,1)=grpmess(I+50)
+             byt4val(I,2)=grpmess(I+54)
+             byt4val(I,3)=grpmess(I+58)
+             byt4val(I,4)=grpmess(I+94)
+             byt4val(I,5)=grpmess(I+98)
+             byt4val(I,6)=grpmess(I+102)
+             byt4val(I,7)=grpmess(I+106)
+             byt4val(I,8)=grpmess(I+110)
+             byt4val(I,9)=grpmess(I+114)
+             byt4val(I,10)=grpmess(I+118)
+             byt4val(I,11)=grpmess(I+122)
+!             byt8val(I,4)=grpmess(I)
+           ENDDO
              OLDTIME=IDTIM
-             IDSTS1=STATUS(2)
-             if(MOD(IDT
-IM,300).EQ.0)print *,
-     &  '%H_GIN_LOG Running DRS time=',
-     &  IDTIM,'Lat=',lat,'Lon=',lon
-             IF(IDSTS1.GT.0.AND.IDSTS1.LE.12800) THEN
-               RGINLAT(IDSTS1)=LAT
-               RGINLON(IDSTS1)=LON
-               RGINALT(IDSTS1)=ALT
-             ENDIF
            ENDIF
 	 ELSE
 	   print *,'Problem with Check Sum = ',checksum
@@ -101,8 +100,7 @@ IM,300).EQ.0)print *,
 C --------------------------------------------------------------------------
  
         INTEGER*2 FUNCTION htons( port )
-        I
-NTEGER*2 port
+        INTEGER*2 port
  
 C       ** swap the two bytes of 'port' around
  
@@ -123,8 +121,7 @@ C       ** swap the two bytes of 'port' around
 
 
 ********************************************************************************
-   
-   SUBROUTINE GET_DISK_STATUS(CSYSSTS,COPTSTS)
+      SUBROUTINE GET_DISK_STATUS(CSYSSTS,COPTSTS)
 C
 C Reads the group logical names OPTI_STATUS and SYST_STATUS
 C
@@ -144,8 +141,7 @@ C
 
       CSYSSTS=' '
       COPTSTS=' '
-      JLIST(
-1)=20
+      JLIST(1)=20
       JLIST(2)=LNM$_STRING
       ILIST(2)=%LOC(LOGNAME)
       ILIST(3)=%LOC(NAMLEN)
@@ -158,8 +154,7 @@ C
 10    FORMAT(3I)
       END
 C*******************************************************************************
-!*********************************************************************
-**********
+!*******************************************************************************
       SUBROUTINE GET_LOGICAL(CLOGICAL,CRESULT)
 !
 ! Translate the logical name specified by CLOGICAL and returns the result in
@@ -173,8 +168,7 @@ C*******************************************************************************
       EQUIVALENCE (ILIST,JLIST)
       INCLUDE     '($LNMDEF)'
 !
-      CRESULT=' '                      !Will contain
- the translation 
+      CRESULT=' '                      !Will contain the translation 
       JLIST(1)=LEN(CRESULT)            !Length of string space
       JLIST(2)=LNM$_STRING             !Required function
       ILIST(2)=%LOC(CRESULT)           !String location
@@ -186,7 +180,6 @@ C*******************************************************************************
 
 !*****************************************************************************
       SUBROUTINE DRSMSG(LUN,PACKET_NO)
-
 
       BYTE GRPMESS(132)
       CHARACTER CMESS*132
@@ -205,8 +198,7 @@ C*******************************************************************************
       RETURN
       END
 !*****************************************************************************
-      SUBROUTINE G
-INMSG(LUN,packet_no,grp_id,gmess)
+      SUBROUTINE GINMSG(LUN,packet_no,grp_id,gmess)
 
       BYTE GRPMESS(132),GMESS(132)
       CHARACTER*132 CMESS
@@ -223,8 +215,7 @@ INMSG(LUN,packet_no,grp_id,gmess)
         GRPMESS(I)=GMESS(I)
       ENDDO
       IF(STATUS(33).EQ.1) THEN     !If have good DRS data check times
-            J1=NFDATA(10,ST
-ATUS(1))    !Decode DRS time into secs past midnight
+            J1=NFDATA(10,STATUS(1))    !Decode DRS time into secs past midnight
             J2=NFDATA(11,STATUS(1))
             JJHRS=IBITS(J1,8,4)*10+IBITS(J1,4,4)
             JJMIN=IBITS(J1,0,4)*10+IBITS(J2,8,4)
@@ -236,7 +227,6 @@ ATUS(1))    !Decode DRS time into secs past midnight
      &               (grpmess(I),I=1,byte_count)
       IF(ISTAT.EQ.0)PACKET_NO=PACKET_NO+1
       RETURN
-
       END
 !************************************************************************
 
@@ -253,8 +243,7 @@ ATUS(1))    !Decode DRS time into secs past midnight
         CALL LIB$GET_LUN(DLUN)
         OPEN(UNIT=DLUN,FILE='[HORACE]GINDAT.DAT',STATUS='NEW',
      &      IOSTAT=ISTAT,
-     &      ACCESS=
-'DIRECT',FORM='UNFORMATTED',RECL=34)
+     &      ACCESS='DIRECT',FORM='UNFORMATTED',RECL=34)
         IF(ISTAT.NE.0) THEN               !If create failed
           CALL LIB$FREE_LUN(DLUN)   !Release LUN
           DLUN=1000                 !Show stream free
@@ -264,29 +253,28 @@ ATUS(1))    !Decode DRS time into secs past midnight
 	  CALL DRSMSG(DLUN,D_REC)
         END IF
       ENDIF
-      IF(COPTSTS.NE.'Unavailable') THEN
-        CALL LIB$GET_LUN(OLUN)
-        OPEN(UNIT=OLUN,FILE='DUB0:[HORACE]GINDAT.DAT',STATUS='NEW',
-     &      IOSTAT=ISTAT,
-     &      ACCESS='DIRECT',FORM=
-'UNFORMATTED',RECL=34)
-        IF(ISTAT.NE.0) THEN               !If create failed
-          CALL LIB$FREE_LUN(OLUN)   !Release LUN
-          OLUN=1000                 !Show stream free
-	ELSE
-	  print *,'DUB0:[HORACE]GINDAT.DAT open',OLUN 
-	  O_REC=1
-          CALL DRSMSG(OLUN,O_REC)
-        END IF
-      ENDIF
+!  Commented out Write to OPTIC  14/06/07
+!      IF(COPTSTS.NE.'Unavailable') THEN
+!        CALL LIB$GET_LUN(OLUN)
+!        OPEN(UNIT=OLUN,FILE='DUB0:[HORACE]GINDAT.DAT',STATUS='NEW',
+!     &      IOSTAT=ISTAT,
+!     &      ACCESS='DIRECT',FORM='UNFORMATTED',RECL=34)
+!        IF(ISTAT.NE.0) THEN               !If create failed
+!          CALL LIB$FREE_LUN(OLUN)   !Release LUN
+!          OLUN=1000                 !Show stream free
+!	ELSE
+!	  print *,'DUB0:[HORACE]GINDAT.DAT open',OLUN 
+!	  O_REC=1
+!          CALL DRSMSG(OLUN,O_REC)
+!        END IF
+!      ENDIF
       RETURN
       END
 !************************************************************************
 
       SUBROUTINE WRITE_GIN(GRP_ID,GRPMESS)
       CHARACTER*4 CFLTNO,LAST_CFLTNO
-      CHARACTER*12 CSY
-SSTS,COPTSTS
+      CHARACTER*12 CSYSSTS,COPTSTS
       INTEGER*4 DLUN,OLUN,D_REC,O_REC
       INTEGER*2 GRP_ID
       BYTE GRPMESS(132)
@@ -304,14 +292,14 @@ SSTS,COPTSTS
       IF(CSYSSTS.NE.'Unavailable')THEN
          IF(DLUN.NE.1000)THEN
 	   CALL GINMSG(DLUN,D_REC,GRP_ID,GRPMESS)  
-  
-       ENDIF
-      ENDIF
-      IF(COPTSTS.NE.'Unavailable')THEN
-         IF(OLUN.NE.1000)THEN
-	   CALL GINMSG(OLUN,O_REC,GRP_ID,GRPMESS)  
          ENDIF
       ENDIF
+!  Commented out Write to OPTIC   14/06/07
+!      IF(COPTSTS.NE.'Unavailable')THEN
+!         IF(OLUN.NE.1000)THEN
+!	   CALL GINMSG(OLUN,O_REC,GRP_ID,GRPMESS)  
+!         ENDIF
+!      ENDIF
       
       RETURN
       END
@@ -324,8 +312,7 @@ SSTS,COPTSTS
 	IF(OLUN.NE.1000)CLOSE(OLUN)
       RETURN
       END
-!***********************************************
-********************************
+!*******************************************************************************
       SUBROUTINE opensocket(a,b,c,d,port)
 
       IMPLICIT  NONE
@@ -340,8 +327,7 @@ SSTS,COPTSTS
       RECORD / sockaddrin / remote_host
       STRUCTURE / struct_il2 /
           INTEGER*4 il2_length
-          INTEGER*4 il2_address       ! 
-address
+          INTEGER*4 il2_address       ! address
       END STRUCTURE
       RECORD /struct_il2/ rhst_adrs
       COMMON /SOCK/EVNF,JOSB,JCHAN
@@ -354,8 +340,7 @@ address
  
       PRINT *, 'Server address = ', a, '.', b, '.', c, '.', d
       PRINT *, 'Server port    = ', port
-C 
-      ** sin$l_adr needs to store an IP address of form a.b.c.d
+C       ** sin$l_adr needs to store an IP address of form a.b.c.d
 C       ** in the byte order d:c:b:a
         
       call mvbits(d,0,8,f,24)
@@ -370,8 +355,7 @@ C       ** in the byte order d:c:b:a
       PRINT *, 'Server port in network format     = ',
      &              remote_host.sin$w_port
 !
-! Assi
-gn the device
+! Assign the device
 ! 
       ISTAT=SYS$ASSIGN('TCPIP$DEVICE:',JCHAN,,)
       IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
@@ -389,8 +373,7 @@ gn the device
 !  Connect to specified host and port number
 !
       IFUNC=IO$_ACCESS
-      ISTAT=SYS$QIOW(%V
-AL(EVNF),%VAL(JCHAN),%VAL(IFUNC),JOSB,,,
+      ISTAT=SYS$QIOW(%VAL(EVNF),%VAL(JCHAN),%VAL(IFUNC),JOSB,,,
      &    ,,%REF(rhst_adrs),,,)
       IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
       IF(.NOT.JOSB(1)) CALL LIB$STOP(%VAL(JOSB(1)))
@@ -406,8 +389,7 @@ AL(EVNF),%VAL(JCHAN),%VAL(IFUNC),JOSB,,,
       INCLUDE   '($IODEF)'
       INCLUDE   '($SYSSRVNAM)'
       INTEGER*4 ILCIN,IREF
-      INTEGER*4 ISTAT,IFUNC,EVN
-F
+      INTEGER*4 ISTAT,IFUNC,EVNF
       INTEGER*2 JOSB(4),JCHAN
       COMMON /SOCK/EVNF,JOSB,JCHAN
 !
@@ -423,8 +405,7 @@ F
       END
 C*******************************************************************************
 C*******************************************************************************
-      SUBROUTINE closeso
-cket()
+      SUBROUTINE closesocket()
 
       IMPLICIT  NONE
       INCLUDE   'SYS$LIBRARY:TCPIP$INETDEF.FOR'
@@ -441,8 +422,7 @@ cket()
       ISTAT=SYS$QIOW(%VAL(EVNF),%VAL(JCHAN),%VAL(IFUNC),JOSB,,,
      &    ,,,%VAL(TCPIP$C_DSC_ALL),,)
 !      IF(.NOT.ISTAT) CALL LIB$STOP(%VAL(ISTAT))
-!      IF(.NOT.JOSB(1)) CALL 
-LIB$STOP(%VAL(JOSB(1)))
+!      IF(.NOT.JOSB(1)) CALL LIB$STOP(%VAL(JOSB(1)))
 
 ! Close the socket
 
@@ -461,8 +441,7 @@ LIB$STOP(%VAL(JOSB(1)))
  
       ISTAT = lib$free_ef( %REF( EVNF ) )
       IF (.NOT. ISTAT) CALL lib$stop( %VAL(ISTAT ) )
-C       ** free the e
-vent flag
+C       ** free the event flag
  
  
 C       -------------------------------------------------------
@@ -477,4 +456,3 @@ C       ** under the debugger to see where it calls lib$stop()
       RETURN
       END
 C*******************************************************************************
-                                                                               

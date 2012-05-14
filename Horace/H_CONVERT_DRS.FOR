@@ -69,7 +69,11 @@ C
       CHARACTER*8 CFDATE,CFSRTT,CFENDT,
      -            CTDATE,CTTIME,
      -            CEDATE,CETIME,CESRTT,CEENDT
-      INTEGER*4   ISS,IC,IDSTYP,IDUMM(106)
+      INTEGER*4   ISS,IC,IDSTYP,IDUMM(106),IMAXBLK,ISRTTIM,IOS
+      INTEGER*4   IOS1,IHRS,IMIN,ISEC,IENDTIM,IB,IRECLB,ISTATUS
+      INTEGER*4   IFNO,JSTART,JCOUNT,J,IP,IBLK,I,IPARAM,IS,ISAMP
+      INTEGER*4   IPOS,IVAL,LASTSEC,LASTBLK,IRET,IOS2,IOS3,IBYTES
+      INTEGER*4   ITIME,IREC
 C
       INTEGER*4   ISECTN,
      -            ISSRTT(40),
@@ -81,6 +85,8 @@ C
       INTEGER*2   IPLIST(256),
      -            IPLOC(256),
      -            IPFREQ(256)
+
+      LOGICAL LDUMMY,IFIRSTB,IFIRST,IEND,ISRT
 C
       CHARACTER CISSFNAM*10,CFLETT*1,CVDAT*9
       CHARACTER CSTART*8,CEND*8,CLINE*132
@@ -177,7 +183,7 @@ C
               CALL DRSDAT(IBUFF(1,IB),CFDATE) !Get flight date
               CALL TIME(CTTIME)               !Get current time
               CETIME=CTTIME
-              CALL DATE(CVDAT)                !Get current date
+              CALL DATE_AND_TIME(CVDAT)                !Get current date
               CTDATE=CVDAT(1:2)//CVDAT(4:6)//''''//CVDAT(8:9)
               CEDATE=CTDATE
               CALL SPMCTIM(ISEC,CFSRTT)
@@ -193,7 +199,7 @@ C
               ISENDT(ISECTN)=LASTSEC
               ISECTN=ISECTN+1
               IF(ISECTN.GT.40) THEN
-        WRITE(6,*)"%H_CONVERT_DRS-W-Stopping after 40 sections"
+        WRITE(6,*)'H_CONVERT_DRS-W-Stopping after 40 sections'
                 IEND=.TRUE.
               ELSE
                 ISSRTT(ISECTN)=ISEC
@@ -209,7 +215,7 @@ C
               JSTART=JSTART+JCOUNT/2+IRECLB/2 !Update pointer past bad block
               CALL BIO_WAITW(11,IRET)   !Wait for write to complete
               IF(IRET.NE.JCOUNT) THEN
-        WRITE(6,*)"%H_CONVERT_DRS-F-Disc write error.  Aborting."
+        WRITE(6,*)'H_CONVERT_DRS-F-Disc write error.  Aborting.'
                 IEND=.TRUE.
               END IF
               JCOUNT=0
@@ -222,14 +228,14 @@ C
           CALL BIO_WRITE(11,IBUFF(JSTART,IB),JCOUNT)
           CALL BIO_WAITW(11,IRET) !Wait for disc write to complete
           IF(IRET.NE.JCOUNT) THEN
-        WRITE(6,*)"%H_CONVERT_DRS-F-Stopping after disc write error."
+        WRITE(6,*)' H_CONVERT_DRS-F-Stopping after disc write error.'
             IEND=.TRUE.
           END IF
         END IF
         IBYTES=-9999                   !Tell BIO_WAITR to return on error
         CALL BIO_WAITR(12,IBYTES)
         DO WHILE(IBYTES.EQ.-1)         !Until no read error
-        WRITE(6,*) "%H_CONVERT_DRS-W-DRS data read error.  Continuing."
+        WRITE(6,*) ' H_CONVERT_DRS-W-DRS data read error.  Continuing.'
           CALL BIO_READ(12,IBUFF(1,3-IB),IMAXBLK)
           IBYTES=-9999
           CALL BIO_WAITR(12,IBYTES)
@@ -300,7 +306,6 @@ C
       END
 *******************************************************************************
       SUBROUTINE GETLETT(CFLETT)
-CDEC$ IDENT 'V1.00'
 C
 C Asks user for the flight letter.  Pressing [RETURN] uses the default letter
 C H.  Otherwise only alphabetic characters are accepted, and lower case are
@@ -308,6 +313,7 @@ C converted to upper case.
 C
       CHARACTER*(*) CFLETT
       CHARACTER  CREPLY*40
+      integer ios
       CFLETT=' '
       DO WHILE(CFLETT.EQ.' ')
         WRITE(6,10) '$Enter flight letter [B]: '
@@ -325,9 +331,9 @@ C
       END
 *******************************************************************************
       SUBROUTINE READ_ISS(CIFNAM,IPLIST,IPLOC,IPFREQ)
-CDEC$ IDENT 'V1.00'
       INTEGER*2 IPLIST(256),IPLOC(256),IPFREQ(256),IDATA(768)
       CHARACTER*(*) CIFNAM
+      integer ios,j,k,jj
 C
 C Read the ISS data and fill parameter list, parameter offsets, and parameter
 C frequencies.
@@ -335,7 +341,7 @@ C
       OPEN(UNIT=10,FILE=CIFNAM,STATUS='OLD',
      -     READONLY,ACCESS='DIRECT',RECL=384,IOSTAT=IOS)
       IF(IOS.NE.0) THEN
-        WRITE(6,*) "%H_CONVERT_DRS-F-Unable to open "//CIFNAM
+        WRITE(6,*) ' H_CONVERT_DRS-F-Unable to open '//CIFNAM
         CALL EXIT
       END IF
       READ(UNIT=10,REC=1) (IDATA(J),J=1,768)       !Read the record
@@ -367,7 +373,6 @@ C
       END
 *******************************************************************************
       SUBROUTINE DRSDAT(IDATA,CFDATE)
-CDEC$ IDENT 'V1.00'
 C
 C Takes the flight date from a block of DRS data and returns it as a string
 C of the form  ddmmm'yy.
@@ -386,6 +391,7 @@ C Word 6 bits  8 to 11  Month tens
 C
       CHARACTER   CFDATE*8,CMONTHS*36
       INTEGER*2   IDATA(2048)
+      integer j1,j2,jday,jmon,jyear,imindx
       DATA CMONTHS /'JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC'/
  
       J1=JZEXT(IDATA(5))
@@ -402,7 +408,6 @@ C
       END
 *******************************************************************************
       SUBROUTINE BLKSEC(IDATA,IFNO,IBLK,ISEC)
-CDEC$ IDENT 'V1.01'
 C
 C Given a 1s block of raw DRS data, this subroutine returns the DRS block
 C number and the DRS time as seconds past midnight.  DRS block numbers start
@@ -436,6 +441,9 @@ C the same as any time already processed, returns a value of ISEC of -1.  Also
 C returns a time of -1 if the flight number or block number is invalid.
 C
       INTEGER*2   IDATA(2048)
+      integer isec,iblk,j1,j2,jhrs,jmin,jsec,ilstdrssec,ilstvalsec
+      integer ilstblk,IFNO
+      logical LFIRST,LXMN
       DATA        LFIRST /.TRUE./   !True for first call
       DATA        LXMN   /.FALSE./  !True when have crossed midnight
 C
@@ -474,11 +482,11 @@ C
       END
 *******************************************************************************
       SUBROUTINE SPMCTIM(ISECS,CTIM)
-CDEC$ IDENT 'V1.00'
 C
 C Converts time in seconds past midnight to a character string of the form
 C hh:mm:ss
 C
+      integer itim,isecs,ih,im,is
       CHARACTER CTIM*8
       ITIM=MOD(ISECS,24*60*60)    !Reduce to less than a day
       IH=ITIM/3600
@@ -493,7 +501,6 @@ C
       END
 *******************************************************************************
       SUBROUTINE GET_NEXT_FILE(IRECLB,ISTATUS)
-CDEC$ IDENT 'V1.01'
 C
 C Asks user for the name of the next data file.  The file is checked for
 C existence and readability and then opened for asynchronous I/O.
@@ -505,6 +512,8 @@ C
 C V1.01  18-10-93  Now takes blank line as list terminator
 C
       CHARACTER  CREPLY*80
+      integer ios,ireclb
+      logical istatus,itexists
       ISTATUS = .TRUE.
       ITEXISTS = .FALSE.      
       DO WHILE(.NOT. ITEXISTS)

@@ -34,9 +34,14 @@ class DecadesProtocol(basic.LineReceiver):
    delimiter = "" #Java DatInputStream does not have a delimiter between lines
    derindex = 0
    der = []
-   cursor = conn.cursor()
    status_struct_fmt = ">bhh11f4c" # big-endian, byte, short, short, 11 floats, 4 characters
    #para_request_fmt = ">ii" # big-endian, int (starttime), int (endtime), plus some number of parameters
+   def __init__(self, conn):
+       '''Takes a database connection, and creates a cursor'''
+       self.conn = conn
+       self.cursor = self.conn.cursor()
+       self.rtlib = rt_derive.derived(self.cursor) #class processing the cals & producing "real" values
+
    def connectionMade(self):
       log.msg("connection from", self.transport.getPeer())
       self.setRawMode()
@@ -69,16 +74,16 @@ class DecadesProtocol(basic.LineReceiver):
 
          if para[2] == -1:
             #it wants all up to latest data point
-            log.msg(self.cursor.mogrify('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id > %s ',(para[1],)))
-            self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id > %s ',(para[1],))
-            #returndata = rt_derive.derive_data_alt(paralist, '> %i' % para[1])
+            #log.msg(self.cursor.mogrify('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id > %s ',(para[1],)))
+            #self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id > %s ',(para[1],))
+            returndata = self.rtlib.derive_data_alt(paralist, '> %i' % para[1])
          else:
             #in this case there is a specific range it wants
-            self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id BETWEEN %s AND %s',(para[1],para[2]))
-            #returndata = rt_derive.derive_data_alt(paralist, 'BETWEEN %i AND %i' % (para[1],para[2]))
+            #self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id BETWEEN %s AND %s',(para[1],para[2]))
+            returndata = self.rtlib.derive_data_alt(paralist, 'BETWEEN %i AND %i' % (para[1],para[2]))
         
          log.msg(self.cursor.query) 
-         returndata = self.cursor.fetchall()
+         #returndata = self.cursor.fetchall()
          #send integer of size of upcoming data
          self.sendLine(struct.pack(">i",len(returndata)))
          log.msg(repr(len(returndata)))
@@ -113,7 +118,7 @@ class DecadesProtocol(basic.LineReceiver):
 
 class DecadesFactory(protocol.Factory):
    _recvd = {}
-   protocol = DecadesProtocol
+   protocol = DecadesProtocol(conn)
 
 application = service.Application('decades')
 reactor.listenTCP(1500, DecadesFactory())
