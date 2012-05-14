@@ -1,4 +1,5 @@
 #!/usr/bin/python
+'''Listens for requests from the Java client applet and responds appropriately'''
 from array import array
 
 from twisted.internet import protocol, reactor
@@ -26,6 +27,7 @@ log.startLogging(file('/var/log/decades-server/' + 'decades_' + datetime.now().s
 
 #class to handle Decades events
 class DecadesProtocol(basic.LineReceiver):
+   '''Python version of the HORACE server - to work with DECADES'''
    delimiter = "" #Java DatInputStream does not have a delimiter between lines
    derindex = 0
    der = []
