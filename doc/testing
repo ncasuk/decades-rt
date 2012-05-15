@@ -17,4 +17,11 @@ socat tcp4-listen:15111 UDP4-RECV:50001,ip-add-membership=225.0.0.0:eth0
 connecting tcp:15111  to be available to a listener on UDP:50001 (run on local machine)
 socat -T15 udp4-sendto:localhost:50001,reuseaddr tcp:localhost:15111
 
-The combination of the ssh tunnel and the Socat commands makes the UDP inputting to septic appear locally. You can then run listen_udp_twisted.py directly to test the code.
+The combination of the ssh tunnel and the Socat commands makes the UDP inputting to septic appear locally. You can then run listen_udp_twisted.py directly to test the code or cd to pylib and 
+twistd -ny decades-listener.tac
+
+to run it in the same way the daemonisation scripts run.
+
+To run the decades server (which talks to the Java applet) you need to run pylib/decades-server.py
+
+You need to edit your hosts file to fool plot.html into thinking your laptop is horace. Just make horace an alias to 127.0.0.1
