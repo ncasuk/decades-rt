@@ -1,5 +1,7 @@
 import numpy as np
 import rt_data
+from datetime import datetime
+import time
 
 class derived(rt_data.rt_data):
     """ A collection of the processing routines for realtime in flight data """
@@ -815,5 +817,11 @@ C ST    - Corrected Surface Temperature   (deg C)
         raw=self.getdata('CHEM:co',data)  # What raw signal ?
         c=self.cals['CAL154']
         return c[0]+c[1]*raw 
+
+    def time_since_midnight(self,data):
+        raw=self.getdata('uppbbr01_utc_time',data) #unixtimestamp
+        unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
+        #raw is an array, so subtracting an integer appears to be valid
+        return raw - unixtime_at_midnight
         
         
