@@ -11,6 +11,7 @@ class rt_data(object):
                 der.append(d)
         self.derived=der   # list of derivations, empty unless subclassed
         self.database=database #python Cursor class (Named Tuple version)
+        self.database=database
         self.read_cal_const(calfile)
         
     def derive_data(self,names,selection,rawdata=None):

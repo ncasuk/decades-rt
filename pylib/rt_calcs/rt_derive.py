@@ -68,9 +68,10 @@ class derived(rt_data.rt_data):
     def deiced_indicated_air_temp_c(self,data):
         c=self.cals['CAL010']
         raw=self.getdata('CORCON01.di_temp',data)
-        sig_reg=self.getdata('sig_register',data)
+        di=self.getdata('PRTAFT01.deiced_temp_flag',data)
+        #sig_reg=self.getdata('sig_register',data)
+        #di=np.where(np.array(sig_reg,dtype='i2') & int('00100000',2))
         ans=c[0]+c[1]*raw+c[2]*raw**2
-        di=np.where(np.array(sig_reg,dtype='i2') & int('00100000',2))
         ans[di]-=self.cals['CAL001'][0]
         return ans
     def deiced_true_air_temp_k(self,data):
@@ -644,7 +645,7 @@ class derived(rt_data.rt_data):
         ri[ri==0]=1.0
         return ri
   
-    def lifting_condenstation_level(self,data):
+    def lifting_condensation_level(self,data):
         phgt=self.getdata('pressure_height_m',data)  
         tatdi=self.getdata('deiced_true_air_temp_k',data)  
         dp=self.getdata('dew_point',data)+273.16
