@@ -69,16 +69,24 @@ class rt_data(object):
     def getdata_fromdatabase(self,name,selection):
         """ Dummy routine to read one parameter from database"""
         fieldname_part = 'SELECT "%s"' % name #needs to be quoted as contains a dot (.)
-        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s',(selection, ))
+        print(self.database.mogrify(fieldname_part + 'FROM scratchdata WHERE id %s'% selection))
+        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s' % selection )
         return np.array(self.database.fetchall(),dtype='float')
             
     def getbunchofdata_fromdatabase(self,names,selection):
         """ Dummy routine to read several parameters from database"""
-        fieldname_part = 'SELECT "%s"' % '", "'.join(names) #needs to be quoted as contains a dot (.)
-        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s',(selection, ))
+        fieldname_part = 'SELECT %s ' % ', '.join(names) #needs to be quoted as contains a dot (.)
+        print self.database.mogrify(fieldname_part + 'FROM scratchdata WHERE id %s'% selection, )
+        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s'% selection, )
         ans={}
+        data={}
         for name in names:
-            ans[name]=np.array(self.database.fetchall(),dtype='float')
+            data[name] = []
+        for record in self.database: #iterates over results 
+            print record
+            for name in names:
+               data[name].append(getattr(record,name))
+            ans[name]=np.array(data[name],dtype='float')
         return ans
                     
     def constants_not_in_file(self):
