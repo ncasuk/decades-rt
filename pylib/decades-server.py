@@ -64,7 +64,9 @@ class DecadesProtocol(basic.LineReceiver):
          
          #look-up table
          #parano = {515: "uppbbr01_utc_time", 520: "uppbbr01_crio_temp"}
-         parano = {515: "time_since_midnight", 520: "uppbbr01_crio_temp"}
+         #using uppbbr01_radiometer_4_sig because it appears to be returning data
+         #it's pretending to be deiced air temp to the Java applet
+         parano = {515: "time_since_midnight", 520: "uppbbr01_radiometer_4_sig"}
        
          paralist = []
          for paracode in para[4:]:
