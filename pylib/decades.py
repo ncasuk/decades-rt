@@ -55,7 +55,7 @@ class DecadesDataProtocols():
          protoname = self.protocols[proto][0]['field'].lstrip('$')
          fields = []
          for field in self.protocols[proto][1:]: #skip 1st one, instrument name
-            fields.append('"'+protoname+'_'+field['field'].lstrip('$')+'" ')
+            fields.append('"'+protoname.lower()+'_'+field['field'].lstrip('$')+'" ')
             select_fields.append(self.tables[protoname]+'.'+field['field'].lstrip('$'))
          squirrel = squirrel + ', '.join(fields) + ','
       table_list = self.tables.items()
