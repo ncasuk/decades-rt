@@ -10,7 +10,7 @@ class rt_data(object):
             if d not in dir(rt_data):
                 der.append(d)
         self.derived=der   # list of derivations, empty unless subclassed
-        self.database=database #python Cursor class
+        self.database=database #python Cursor class (Named Tuple version)
         self.read_cal_const(calfile)
         
     def derive_data(self,names,selection,rawdata=None):
@@ -68,14 +68,14 @@ class rt_data(object):
  
     def getdata_fromdatabase(self,name,selection):
         """ Dummy routine to read one parameter from database"""
-        fieldname_part = 'SELECT "%s"' % name #needs to be quoted as contains a dot (.)
+        fieldname_part = 'SELECT %s ' % name 
         print(self.database.mogrify(fieldname_part + 'FROM scratchdata WHERE id %s'% selection))
         self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s' % selection )
         return np.array(self.database.fetchall(),dtype='float')
             
     def getbunchofdata_fromdatabase(self,names,selection):
         """ Dummy routine to read several parameters from database"""
-        fieldname_part = 'SELECT %s ' % ', '.join(names) #needs to be quoted as contains a dot (.)
+        fieldname_part = 'SELECT %s ' % ', '.join(names)
         print self.database.mogrify(fieldname_part + 'FROM scratchdata WHERE id %s'% selection, )
         self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s'% selection, )
         ans={}
@@ -83,7 +83,6 @@ class rt_data(object):
         for name in names:
             data[name] = []
         for record in self.database: #iterates over results 
-            print record
             for name in names:
                data[name].append(getattr(record,name))
             ans[name]=np.array(data[name],dtype='float')
