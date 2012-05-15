@@ -6,7 +6,7 @@ import time
 class derived(rt_data.rt_data):
     """ A collection of the processing routines for realtime in flight data """
     def pressure_height_feet(self,data):
-        rvsm_alt=self.getdata('PRTAFT01.pressure_alt',data)
+        rvsm_alt=self.getdata('prtaft01_pressure_alt',data)
         return rvsm_alt*4
     def pressure_height_kft(self,data):
         feet=self.getdata('pressure_height_feet',data) 
@@ -18,7 +18,7 @@ class derived(rt_data.rt_data):
         feet=self.getdata('pressure_height_feet',data)
         return 1013.25*(1-6.87535e-6*feet)**5.2561
     def indicated_air_speed_knts(self,data):
-        rvsm_ias=self.getdata('PRTAFT01.ind_air_speed',data) 
+        rvsm_ias=self.getdata('prtaft01_ind_air_speed',data) 
         return rvsm_ias/32
     def indicated_air_speed(self,data):
         ias=self.getdata('indicated_air_speed_knts',data) 
@@ -41,34 +41,34 @@ class derived(rt_data.rt_data):
         rmach[ind]=rmach[ind]**0.5
         return rmach
     def s9_static_pressure(self,data):
-        raw=self.getdata('CORCON01.s9_press',data)
+        raw=self.getdata('corcon01_s9_press',data)
         #c=self.cals['CAL221']
         c=self.getdata('CAL221',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_pitot_static(self,data):
         c=self.cals['CAL215']
-        raw=self.getdata('CORCON01.tp_p0_s10',data)
+        raw=self.getdata('corcon01_tp_p0_s10',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_attack_diff(self,data):
         c=self.cals['CAL216']
-        raw=self.getdata('CORCON01.tp_up_down',data)
+        raw=self.getdata('corcon01_tp_up_down',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_sideslip_diff(self,data):
         c=self.cals['CAL217']
-        raw=self.getdata('CORCON01.tp_left_right',data)
+        raw=self.getdata('corcon01_tp_left_right',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_attack_check(self,data):
         c=self.cals['CAL218']
-        raw=self.getdata('CORCON01.tp_top_s10',data)
+        raw=self.getdata('corcon01_tp_top_s10',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def turb_probe_sideslip_check(self,data):
         c=self.cals['CAL219']
-        raw=self.getdata('CORCON01.tp_right_s10',data)
+        raw=self.getdata('corcon01_tp_right_s10',data)
         return c[0]+c[1]*raw+c[2]*raw**2
     def deiced_indicated_air_temp_c(self,data):
         c=self.cals['CAL010']
-        raw=self.getdata('CORCON01.di_temp',data)
-        di=self.getdata('PRTAFT01.deiced_temp_flag',data)
+        raw=self.getdata('corcon01_di_temp',data)
+        di=self.getdata('prtaft01_deiced_temp_flag',data)
         #sig_reg=self.getdata('sig_register',data)
         #di=np.where(np.array(sig_reg,dtype='i2') & int('00100000',2))
         ans=c[0]+c[1]*raw+c[2]*raw**2
@@ -82,7 +82,7 @@ class derived(rt_data.rt_data):
         tatdi_K=self.getdata('deiced_true_air_temp_k',data)
         return tatdi_K-273.16
     def nondeiced_indicated_air_temp_c(self,data):
-        raw=self.getdata('CORCON01.ndi_temp',data)
+        raw=self.getdata('corcon01_ndi_temp',data)
         c=self.cals['CAL023']
         return c[0]+c[1]*raw+c[2]*raw**2
     def nondeiced_true_air_temp_k(self,data):
@@ -178,9 +178,9 @@ class derived(rt_data.rt_data):
         
     def dew_point(self,data):
         """Dew point (deg C) from General Eastern Hygrometer"""
-        raw=self.getdata('CORCON01.ge_dew',data)
+        raw=self.getdata('corcon01_ge_dew',data)
         c=self.cals['CAL058']
-        hycc=self.getdata('CORCON01.ge_cont',data)
+        hycc=self.getdata('corcon01_ge_cont',data)
         cc=np.where((hycc>18076) | (hycc<15451)) # not sure what to do with this info ( control lost )
         return raw*c[1]+c[0]
 
@@ -252,7 +252,7 @@ class derived(rt_data.rt_data):
     def jw_liquid_water_content(self,data):
         """Johnson Williams liquid water (g m-3)"""
         c=self.cals['CAL042']
-        raw=self.getdata('CORCON01.jw_lwc',data)
+        raw=self.getdata('corcon01_jw_lwc',data)
         tas=self.getdata('true_air_speed',data)
         jw=c[1]*raw+c[0]
         lwc=np.zeros(len(raw))
@@ -313,7 +313,7 @@ class derived(rt_data.rt_data):
         
     def radar_height(self,data):
         """Radar height (ft)"""
-        return self.getdata('PRTAFT01.rad_alt',data)/4.0
+        return self.getdata('prtaft01_rad_alt',data)/4.0
 
     def vertical_vorticity(self,data):
         """
@@ -338,59 +338,59 @@ class derived(rt_data.rt_data):
     def upper_pyranometer_clear_flux(self,data):
         c=self.cals['CAL081'] 
         corr=self.getdata('pyranometer_correction',data)
-        return (self.getdata('UPPBBR01.radiometer_1_sig',data)-self.getdata('UPPBBR01.radiometer_1_zero',data))*c*corr
+        return (self.getdata('uppbbr01_radiometer_1_sig',data)-self.getdata('uppbbr01_radiometer_1_zero',data))*c*corr
     def upper_pyranometer_red_flux(self,data):
         c=self.cals['CAL082']
         corr=self.getdata('pyranometer_correction',data)
-        return (self.getdata('UPPBBR01.radiometer_2_sig',data)-self.getdata('UPPBBR01.radiometer_2_zero',data))*c*corr
+        return (self.getdata('uppbbr01_radiometer_2_sig',data)-self.getdata('uppbbr01_radiometer_2_zero',data))*c*corr
     def upper_pyrgeometer_flux(self,data):
         c=self.cals['CAL083']
-        return (self.getdata('UPPBBR01.radiometer_3_sig',data)-self.getdata('UPPBBR01.radiometer_3_zero',data))*c
+        return (self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c
 
     def lower_pyranometer_clear_flux(self,data):
         c=self.cals['CAL091']
-        return (self.getdata('LOWBBR01.radiometer_1_sig',data)-self.getdata('LOWBBR01.radiometer_1_zero',data))*c
+        return (self.getdata('lowbbr01_radiometer_1_sig',data)-self.getdata('lowbbr01_radiometer_1_zero',data))*c
     def lower_pyranometer_red_flux(self,data):
         c=self.cals['CAL092']
-        return (self.getdata('LOWBBR01.radiometer_2_sig',data)-self.getdata('LOWBBR01.radiometer_2_zero',data))*c
+        return (self.getdata('lowbbr01_radiometer_2_sig',data)-self.getdata('lowbbr01_radiometer_2_zero',data))*c
     def lower_pyrgeometer_flux(self,data):
         c=self.cals['CAL093']
-        return (self.getdata('LOWBBR01.radiometer_3_sig',data)-self.getdata('LOWBBR01.radiometer_3_zero',data))*c
+        return (self.getdata('lowbbr01_radiometer_3_sig',data)-self.getdata('lowbbr01_radiometer_3_zero',data))*c
 
     def gin_latitude(self,data):
-        return self.getdata('PRTAFT01.gin_lat',data)
+        return self.getdata('prtaft01_gin_lat',data)
     def gin_longitude(self,data):
-        return self.getdata('PRTAFT01.gin_long',data)
+        return self.getdata('prtaft01_gin_long',data)
     def gin_altitude(self,data):
-        return self.getdata('PRTAFT01.gin_alt',data)
+        return self.getdata('prtaft01_gin_alt',data)
     def gin_n_velocity(self,data):
-        return self.getdata('PRTAFT01.gin_north_vel',data)
+        return self.getdata('prtaft01_gin_north_vel',data)
     def gin_e_velocity(self,data):
-        return self.getdata('PRTAFT01.gin_east_vel',data)
+        return self.getdata('prtaft01_gin_east_vel',data)
     def gin_d_velocity(self,data):
-        return self.getdata('PRTAFT01.gin_down_vel',data)
+        return self.getdata('prtaft01_gin_down_vel',data)
     def gin_roll(self,data):
-        return self.getdata('PRTAFT01.gin_roll',data)
+        return self.getdata('prtaft01_gin_roll',data)
     def gin_pitch(self,data):
-        return self.getdata('PRTAFT01.gin_pitch',data)
+        return self.getdata('prtaft01_gin_pitch',data)
     def gin_heading(self,data):
-        return self.getdata('PRTAFT01.gin_heading',data)
+        return self.getdata('prtaft01_gin_heading',data)
     def gin_track_angle(self,data):
-        return self.getdata('PRTAFT01.gin_track',data)
+        return self.getdata('prtaft01_gin_track',data)
     def gin_speed(self,data):
-        return self.getdata('PRTAFT01.gin_speed',data)
+        return self.getdata('prtaft01_gin_speed',data)
     def gin_rate_about_long(self,data):
-        return self.getdata('PRTAFT01.gin_roll_rate',data)
+        return self.getdata('prtaft01_gin_roll_rate',data)
     def gin_rate_about_trans(self,data):
-        return self.getdata('PRTAFT01.gin_pitch_rate',data)
+        return self.getdata('prtaft01_gin_pitch_rate',data)
     def gin_rate_about_down(self,data):
-        return self.getdata('PRTAFT01.gin_heading_rate',data)
+        return self.getdata('prtaft01_gin_heading_rate',data)
     def gin_acc_long(self,data):
-        return self.getdata('PRTAFT01.gin_accel_fwd',data)
+        return self.getdata('prtaft01_gin_accel_fwd',data)
     def gin_acc_trans(self,data):
-        return self.getdata('PRTAFT01.gin_accel_strbrd',data)
+        return self.getdata('prtaft01_gin_accel_strbrd',data)
     def gin_acc_down(self,data):
-        return self.getdata('PRTAFT01.gin_accel_dwn',data)
+        return self.getdata('prtaft01_gin_accel_dwn',data)
 
     """
         Calculation of Equation of Tome and Solar declination per second..
@@ -659,18 +659,18 @@ class derived(rt_data.rt_data):
     def cabin_pressure(self,data):
         """Cabin pressure (mb)"""
         c=self.cals['CAL014']
-        raw=self.getdata('CORCON01.cabin_p',data)
+        raw=self.getdata('corcon01_cabin_p',data)
         return c[2]*raw**2+c[1]*raw+c[0]
 
     def cabin_temperature(self,data):
         """Cabin pressure (mb)"""
         c=self.cals['CAL207']
-        raw=self.getdata('CORCON01.cabin_t',data)
+        raw=self.getdata('corcon01_cabin_t',data)
         return c[1]*raw+c[0]
 
     def heimann_surface_temp(self,data):
         """HEIM  - Heimann surface temperature (deg C)"""
-        raw=self.getdata('CORCON01.heim_t',data)
+        raw=self.getdata('corcon01_heim_t',data)
         c=self.cals['CAL141']
         return c[0]+c[1]*raw
        
@@ -693,10 +693,10 @@ C ST    - Corrected Surface Temperature   (deg C)
         return heim
 
     def nevzorov_liquid_water(self,data):
-        icol=self.getdata('CORCON01.nv_lwc_icol',data)    
-        vcol=self.getdata('CORCON01.nv_lwc_vref',data)    
-        iref=self.getdata('CORCON01.nv_lwc_icol',data)    
-        vref=self.getdata('CORCON01.nv_lwc_vref',data)
+        icol=self.getdata('corcon01_nv_lwc_icol',data)    
+        vcol=self.getdata('corcon01_nv_lwc_vref',data)    
+        iref=self.getdata('corcon01_nv_lwc_icol',data)    
+        vref=self.getdata('corcon01_nv_lwc_vref',data)
         tas=self.getdata('true_air_speed_ms',data)
         c=self.cals['CAL208']   
         power=(icol-iref)*(vcol-vref)
@@ -706,10 +706,10 @@ C ST    - Corrected Surface Temperature   (deg C)
         return nvlwc
         
     def nevzorov_toal_water(self,data):
-        icol=self.getdata('CORCON01.nv_twc_icol',data)    
-        vcol=self.getdata('CORCON01.nv_twc_vref',data)    
-        iref=self.getdata('CORCON01.nv_twc_icol',data)    
-        vref=self.getdata('CORCON01.nv_twc_vref',data)
+        icol=self.getdata('corcon01_nv_twc_icol',data)    
+        vcol=self.getdata('corcon01_nv_twc_vref',data)    
+        iref=self.getdata('corcon01_nv_twc_icol',data)    
+        vref=self.getdata('corcon01_nv_twc_vref',data)
         tas=self.getdata('true_air_speed_ms',data)
         c=self.cals['CAL211']
         power=(icol-iref)*(vcol-vref)
@@ -719,73 +719,73 @@ C ST    - Corrected Surface Temperature   (deg C)
         return nvtwc
         
     def neph_pressure(self,data):
-        raw=self.getdata('AERACK01.csv:neph_pressure',data)
+        raw=self.getdata('aerack01_csv:neph_pressure',data)
         c=self.cals['CAL175']
         return c[0]+c[1]*raw 
 
     def neph_temperature(self,data):
-        raw=self.getdata('AERACK01.csv:neph_temperature',data)
+        raw=self.getdata('aerack01_csv:neph_temperature',data)
         c=self.cals['CAL176']
         return c[0]+c[1]*raw 
 
     def neph_blue_sp(self,data):
-        raw=self.getdata('AERACK01.csv:neph_total_blue',data)
+        raw=self.getdata('aerack01_csv:neph_total_blue',data)
         c=self.cals['CAL177']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_green_sp(self,data):
-        raw=self.getdata('AERACK01.csv:neph_total_green',data)
+        raw=self.getdata('aerack01_csv:neph_total_green',data)
         c=self.cals['CAL178']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_red_sp(self,data):
-        raw=self.getdata('AERACK01.csv:neph_total_red',data)
+        raw=self.getdata('aerack01_csv:neph_total_red',data)
         c=self.cals['CAL179']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_blue_bsp(self,data):
-        raw=self.getdata('AERACK01.csv:neph_backscatter_blue',data)
+        raw=self.getdata('aerack01_csv:neph_backscatter_blue',data)
         c=self.cals['CAL180']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_green_bsp(self,data):
-        raw=self.getdata('AERACK01.csv:neph_backscatter_green',data)
+        raw=self.getdata('aerack01_csv:neph_backscatter_green',data)
         c=self.cals['CAL181']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_red_bsp(self,data):
-        raw=self.getdata('AERACK01.csv:neph_backscatter_red',data)
+        raw=self.getdata('aerack01_csv:neph_backscatter_red',data)
         c=self.cals['CAL182']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_pressure(self,data):
-        raw=self.getdata('AERACK01.csv:neph_humidity',data)
+        raw=self.getdata('aerack01_csv:neph_humidity',data)
         c=self.cals['CAL183']
         return c[0]+c[1]*raw 
 
     def neph_humidity(self,data):
-        raw=self.getdata('AERACK01.csv:neph_status',data)
+        raw=self.getdata('aerack01_csv:neph_status',data)
         c=self.cals['CAL184']
         return c[0]+c[1]*raw 
 
     def psap_lin_abs_coeff(self,data):
-        raw=self.getdata('AERACK01.csv:psap_lin',data)
+        raw=self.getdata('aerack01_csv:psap_lin',data)
         c=self.cals['CAL185']
         return c[0]+c[1]*raw 
 
     def psap_log_abs_coeff(self,data):
-        raw=self.getdata('AERACK01.csv:psap_log',data)
+        raw=self.getdata('aerack01_csv:psap_log',data)
         c=self.cals['CAL186']
         return c[0]+c[1]*raw 
 
     def psap_transmittance(self,data):
-        raw=self.getdata('AERACK01.csv:psap_transmission',data)
+        raw=self.getdata('aerack01_csv:psap_transmission',data)
         c=self.cals['CAL187']
         return c[0]+c[1]*raw 
 
