@@ -8,6 +8,8 @@ from twisted.protocols import basic
 from twisted.python import log
 
 import psycopg2 
+import psycopg2.extras
+from collections import namedtuple # so we can used namedtuple cursors
 
 from sys import stdout
 import time
@@ -16,17 +18,15 @@ from datetime import datetime, timedelta
 import struct
 from rt_calcs import rt_derive
 
+#from decades_file import DecadesFile
 conn = psycopg2.connect (host = "localhost",
                            user = "inflight",
                            password = "wibble",
                            database = "inflightdata")
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
-#from decades_file import DecadesFile
-
 #logfile
 #log.startLogging(file('/var/log/decades-server/' + 'decades_' + datetime.now().strftime('%Y-%m-%d_%H:%M:%S') + '.log', 'w'))
-log.startLogging(stdout)
 
 #class to handle Decades events
 class DecadesProtocol(basic.LineReceiver):
@@ -36,11 +36,11 @@ class DecadesProtocol(basic.LineReceiver):
    der = []
    status_struct_fmt = ">bhh11f4c" # big-endian, byte, short, short, 11 floats, 4 characters
    #para_request_fmt = ">ii" # big-endian, int (starttime), int (endtime), plus some number of parameters
-   def __init__(self, conn):
-       '''Takes a database connection, and creates a cursor'''
-       self.conn = conn
-       self.cursor = self.conn.cursor()
-       self.rtlib = rt_derive.derived(self.cursor) #class processing the cals & producing "real" values
+   def __init__(self):
+       '''Takes a database connection, and creates a NamedTuple cursor (allowing us to
+         access the results by fieldname *or* index'''
+       self.cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+       self.rtlib = rt_derive.derived(self.cursor,'pylib/rt_calcs/HOR_CALIB.DAT') #class processing the cals & producing "real" values
 
    def connectionMade(self):
       log.msg("connection from", self.transport.getPeer())
@@ -63,7 +63,8 @@ class DecadesProtocol(basic.LineReceiver):
          self.sendLine(struct.pack(">i",self.derindex))
          
          #look-up table
-         parano = {515: "AERACK01.utc_time", 520: "UPPBBR01.radiometer_1_temp"}
+         parano = {515: "uppbbr01_utc_time", 520: "uppbbr01_crio_temp"}
+         #parano = {515: "time_since_midnight", 520: "uppbbr01_crio_temp"}
        
          paralist = []
          for paracode in para[4:]:
@@ -82,19 +83,21 @@ class DecadesProtocol(basic.LineReceiver):
             #self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id BETWEEN %s AND %s',(para[1],para[2]))
             returndata = self.rtlib.derive_data_alt(paralist, 'BETWEEN %i AND %i' % (para[1],para[2]))
         
-         log.msg(self.cursor.query) 
+         #log.msg(self.cursor.query) 
          #returndata = self.cursor.fetchall()
          #send integer of size of upcoming data
-         self.sendLine(struct.pack(">i",len(returndata)))
-         log.msg(repr(len(returndata)))
+         print(returndata)
+         size_upcoming = len(returndata[parano[para[4]]])
+         self.sendLine(struct.pack(">i",size_upcoming))
+         #log.msg(repr(len(returndata)))
          
 
-         log.msg('requesting data between %i and %i, returning %i datapoints' % (para[1],para[2],len(returndata)) )
+         log.msg('requesting data between %i and %i, returning %i datapoints' % (para[1],para[2],size_upcoming))
          #send each requested parameter separately
-         for index in range(len(para[4:])):
-            for tup in returndata: 
-               log.msg(repr(returndata.index(tup)))
-               self.sendLine(struct.pack(">f",tup[index]))
+         for paracode in para[4:]: #list of required fields
+               sendable = returndata[parano[paracode]]
+               for each in sendable:
+                  self.sendLine(struct.pack(">f",each))
             
 
          #log.msg(msg)
@@ -108,7 +111,7 @@ class DecadesProtocol(basic.LineReceiver):
       #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
       #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), Wind speed, ms-1, 
       #log.msg(repr(self.der))
-      self.cursor.execute("SELECT id, id FROM scratchdata ORDER BY id DESC LIMIT 1;")
+      self.cursor.execute("SELECT id, id AS dercount FROM scratchdata GROUP BY id ORDER BY id DESC LIMIT 1;")
       (self.derindex, dercount) = self.cursor.fetchone()
       self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),1.1,2.0,3.0,4.0,0.2,6.0,7.0,8.0,9.0,10.0,'T','E','S','T'))
       log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
@@ -118,11 +121,14 @@ class DecadesProtocol(basic.LineReceiver):
 
 class DecadesFactory(protocol.Factory):
    _recvd = {}
-   protocol = DecadesProtocol(conn)
+   protocol = DecadesProtocol
 
-application = service.Application('decades')
-reactor.listenTCP(1500, DecadesFactory())
-reactor.run()
-#factory = DecadesFactory()
-#internet.TCPServer(1500, factory).setServiceParent(service.IServiceCollection(application))
 
+def main():# Listen for TCP:1500
+   log.startLogging(stdout)
+
+   reactor.listenTCP(1500, DecadesFactory())
+   reactor.run()
+
+if __name__ == '__main__':
+    main() #run if this file is called directly, but not if imported

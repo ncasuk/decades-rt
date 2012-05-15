@@ -46,17 +46,17 @@ class rt_data(object):
             . Needs processing
             . Needs to be extracted from database"""
         try:
-            if(data[0].has_key(name)):
-                return data[0][name]
+            if(data.has_key(name)):
+                return data[name]
             elif(self.cals.has_key(name)):
                 return self.cals[name]
             else:    
                 if(name in self.derived):
-                    data[0][name]=eval('self.'+name+'(data)')
+                    data[name]=eval('self.'+name+'(data)')
                     print 'Derive '+name
                 else:
-                    data[0][name]=self.getdata_fromdatabase(name,data[1]) 
-                return data[0][name]               
+                    data[name]=self.getdata_fromdatabase(name,data[1]) 
+                return data[name]               
         except AttributeError:
             # This is for the dummy run which puts the needed raw data into a set
             if(name in self.derived):
@@ -64,7 +64,9 @@ class rt_data(object):
             elif(name in self.cals):
                 return self.cals[name]
             else:
-                data[0].update([name])
+                print data
+                #data[0].update([name])
+                data[0].update({name:[]})
                 return np.array([])
  
     def getdata_fromdatabase(self,name,selection):
