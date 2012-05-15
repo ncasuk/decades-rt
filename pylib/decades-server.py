@@ -63,8 +63,8 @@ class DecadesProtocol(basic.LineReceiver):
          self.sendLine(struct.pack(">i",self.derindex))
          
          #look-up table
-         parano = {515: "uppbbr01_utc_time", 520: "uppbbr01_crio_temp"}
-         #parano = {515: "time_since_midnight", 520: "uppbbr01_crio_temp"}
+         #parano = {515: "uppbbr01_utc_time", 520: "uppbbr01_crio_temp"}
+         parano = {515: "time_since_midnight", 520: "uppbbr01_crio_temp"}
        
          paralist = []
          for paracode in para[4:]:

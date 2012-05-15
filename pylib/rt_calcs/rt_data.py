@@ -21,7 +21,8 @@ class rt_data(object):
         if(rawdata==None):
             rawdata={}
         for name in names:
-            ans[name]=self.getdata(name,(rawdata,selection))
+            #ans[name]=self.getdata(name,(rawdata,selection))
+            ans[name]=self.getdata(name,rawdata)
         return ans
 
     def derive_data_alt(self,names,selection):
@@ -74,7 +75,10 @@ class rt_data(object):
         fieldname_part = 'SELECT %s ' % name 
         print(self.database.mogrify(fieldname_part + 'FROM scratchdata WHERE id %s'% selection))
         self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s' % selection )
-        return np.array(self.database.fetchall(),dtype='float')
+        data[name] = []
+        for record in self.database: #iterates over results 
+            data[name].append(getattr(record,name))
+        return np.array(data[name],dtype='float')
             
     def getbunchofdata_fromdatabase(self,names,selection):
         """ Dummy routine to read several parameters from database"""
@@ -88,6 +92,7 @@ class rt_data(object):
         for record in self.database: #iterates over results 
             for name in names:
                data[name].append(getattr(record,name))
+        for name in names:
             ans[name]=np.array(data[name],dtype='float')
         return ans
                     
