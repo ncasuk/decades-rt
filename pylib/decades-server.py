@@ -19,12 +19,6 @@ import struct
 from rt_calcs import rt_derive
 
 #from decades_file import DecadesFile
-conn = psycopg2.connect (host = "localhost",
-                           user = "inflight",
-                           password = "wibble",
-                           database = "inflightdata")
-conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-
 #logfile
 #log.startLogging(file('/var/log/decades-server/' + 'decades_' + datetime.now().strftime('%Y-%m-%d_%H:%M:%S') + '.log', 'w'))
 
@@ -36,7 +30,7 @@ class DecadesProtocol(basic.LineReceiver):
    der = []
    status_struct_fmt = ">bhh11f4c" # big-endian, byte, short, short, 11 floats, 4 characters
    #para_request_fmt = ">ii" # big-endian, int (starttime), int (endtime), plus some number of parameters
-   def __init__(self):
+   def __init__(self, conn):
        '''Takes a database connection, and creates a NamedTuple cursor (allowing us to
          access the results by fieldname *or* index'''
        self.cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
@@ -121,15 +115,28 @@ class DecadesProtocol(basic.LineReceiver):
    def time_seconds_past_midnight(self):
       return time.time() - time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
 
-class DecadesFactory(protocol.Factory):
+class DecadesFactory(protocol.ServerFactory):
    _recvd = {}
-   protocol = DecadesProtocol
+   def __init__(self, conn):
+      self.conn = conn
+      self.protocol = DecadesProtocol
+   
+   def buildProtocol(self,addr):
+      p = self.protocol(self.conn)
+      p.factory = self
+      return p
 
 
 def main():# Listen for TCP:1500
    log.startLogging(stdout)
 
-   reactor.listenTCP(1500, DecadesFactory())
+   conn = psycopg2.connect (host = "localhost",
+                           user = "inflight",
+                           password = "wibble",
+                           database = "inflightdata")
+   conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+
+   reactor.listenTCP(1500, DecadesFactory(conn))
    reactor.run()
 
 if __name__ == '__main__':
