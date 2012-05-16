@@ -26,23 +26,27 @@ class DecadesDataProtocols():
 
    def create_table(self, protocol_name, cursor, suffix='test_'):
       #returns a suitable (Postgres)SQL CREATE TABLE command for a named protocol
-      s = 'CREATE TABLE %s (' % (protocol_name + suffix)
-      self.tables[protocol_name] = protocol_name.lower() + suffix
+      tablename = (protocol_name.lower() + suffix)
+      s = 'CREATE TABLE %s (' % tablename
+      self.tables[protocol_name] = tablename
       for field in self.protocols[protocol_name]:
          #created postgres field spec. Strips leading $ from field name as it won't work
          s = s + " ".join([field['field'].lstrip('$'),self.field_types_map[field['type']],','])
 
       s = s.rstrip(',') + ")"
+      create_index_query = "CREATE INDEX %s_time_index ON %s (utc_time)" % (tablename, tablename)
       #check if table exists (can't use IF NOT EXISTS until postgres 9.1)
-      cursor.execute("select exists(select * from information_schema.tables where table_name=%s)", (protocol_name.lower() + suffix,))
+      cursor.execute("select exists(select * from information_schema.tables where table_name=%s)", (tablename,))
       if cursor.fetchone()[0]:
          #exists
-         log.msg('Table %s exists' % (protocol_name.lower() + suffix,))
+         log.msg('Table %s exists' % tablename)
          return True
       else:
          #doesn't exist, create table
-         log.msg('Creating table %s' % (protocol_name.lower() + suffix,))
+         log.msg('Creating table %s' % tablename)
          cursor.execute(s)
+         log.msg('Creating index %s_time_index' % tablename)
+         cursor.execute(create_index_query)
          return cursor.connection.commit()
 
    def create_view(self, cursor):
