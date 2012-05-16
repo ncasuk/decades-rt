@@ -347,6 +347,14 @@ class derived(rt_data.rt_data):
         c=self.cals['CAL083']
         return (self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c
 
+    def upper_pyrgeometer_flux_4(self,data):
+        '''uses the radiometer_4 as they seem to have data in the lab - 
+         not sure why, may be noise'''
+        c=self.cals['CAL083']
+        #return (self.getdata('uppbbr01_radiometer_4_sig',data)-self.getdata('uppbbr01_radiometer_4_zero',data))*c
+        #return self.getdata('uppbbr01_radiometer_4_sig',data)
+        return (self.getdata('uppbbr01_radiometer_4_sig',data)*c[0] - self.getdata('uppbbr01_radiometer_4_zero',data)*c[1])
+
     def lower_pyranometer_clear_flux(self,data):
         c=self.cals['CAL091']
         return (self.getdata('lowbbr01_radiometer_1_sig',data)-self.getdata('lowbbr01_radiometer_1_zero',data))*c
@@ -759,7 +767,7 @@ C ST    - Corrected Surface Temperature   (deg C)
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_red_bsp(self,data):
-        raw=self.getdata('aerack01_csv:neph_backscatter_red',data)
+        raw=self.getdata('aerack01_neph_backscatter_red',data)
         c=self.cals['CAL182']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
