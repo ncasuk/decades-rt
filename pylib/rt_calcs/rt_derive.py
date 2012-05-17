@@ -434,7 +434,7 @@ class derived(rt_data.rt_data):
         Tcorr=self.getdata('Equation_of_time',data) # degrees
         Latrad=np.deg2rad(self.getdata('gin_latitude',data))  # radians
         Londeg=self.getdata('gin_longitude',data) # degrees
-        Timedeg=self.getdata('Time',data)/240.0  # 86400 secs = 24 hrs = 360 degrees
+        Timedeg=self.getdata('time_since_midnight',data)/240.0  # 86400 secs = 24 hrs = 360 degrees
         Angrad=np.deg2rad((Timedeg+Tcorr+180.+Londeg) % 360)  #  radians
         # CALCULATE SOLAR ZENITH ANGLE
         Zen=np.rad2deg(np.arccos(np.sin(Decl)*np.sin(Latrad)+np.cos(Decl)*np.cos(Latrad)*np.cos(Angrad)))
@@ -445,7 +445,7 @@ class derived(rt_data.rt_data):
         Tcorr=self.getdata('Equation_of_time',data) # degrees
         Latrad=np.deg2rad(self.getdata('gin_latitude',data))  # radians
         Londeg=self.getdata('gin_longitude',data) # degrees
-        Timedeg=self.getdata('Time',data)/240.0  #  86400 secs = 24 hrs = 360 degrees
+        Timedeg=self.getdata('time_since_midnight',data)/240.0  #  86400 secs = 24 hrs = 360 degrees
         Angrad=np.deg2rad((Timedeg+Tcorr+180.+Londeg) % 360)  #  radians
         # CALCULATE SOLAR AZIMUTH ANGLE
         Azim=180.+np.rad2deg(np.arctan2((np.cos(Decl)*np.sin(Angrad)),
