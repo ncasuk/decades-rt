@@ -8,6 +8,6 @@ XS-Python-Version: current
 
 Package: decades
 Architecture: all
-Depends: ${python:Depends}, python, python-twisted-core, python-psycopg2
-XB-Python-Version: ${python:Versions}
+Depends: ${python:Depends}, python, python-twisted-core, python-psycopg2, python-numpy
+XB-Python-Version: 2.6
 Description: Twisted-based servers for decades
