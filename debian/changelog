@@ -1,6 +1,6 @@
-decades (20120517110655ubuntu2~6.gbp44076b) UNRELEASED; urgency=low
+decades (20120517110655ubuntu2~8.gbp4393d8) UNRELEASED; urgency=low
 
-  ** SNAPSHOT build @44076b614fbe2e3105835cfe06891ff7ea155894 **
+  ** SNAPSHOT build @4393d857ba27b63639b0b9ffcc3722b730559529 **
 
   * [38093ebf29de06244d4d2af607c2e9d55f1e907a] Abstracting tablename; adding DB indicies
   * [f765de0309d20f085da767e2a333c658d09fdd6d] Modified to abstract prior to daemonisation
@@ -9,8 +9,10 @@ decades (20120517110655ubuntu2~6.gbp44076b) UNRELEASED; urgency=low
   * [a6ff178d63b12592de019801e0792a1569da6aa2] Changing packagename to decades
   * removing executable bit from rt_* files; package fixes
   * Adding git author email
+  * Adding decades-server to the init.d file
+  * Adding numpy dependency
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 17 May 2012 11:43:31 +0100
+ -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 17 May 2012 11:58:10 +0100
 
 decades (20120517110655ubuntu1) UNRELEASED; urgency=low
 

@@ -27,7 +27,7 @@ def getDecadesServerService():
     #turn off transactions so the incoming INSERTS do not interfere with each other
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) 
 
-    return internet.TCPServer(1500, DecadesFactory(conn,'/home/eardkdw/work/decades-rt/pylib/rt_calcs/HOR_CALIB.DAT'))
+    return internet.TCPServer(1500, DecadesFactory(conn,'pylib/rt_calcs/HOR_CALIB.DAT'))
 
 # this is the core part of any tac file, the creation of the root-level
 # application object
