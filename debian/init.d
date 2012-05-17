@@ -1,23 +1,23 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          decades-listener
+# Provides:          decades
 # Required-Start:    $syslog
 # Required-Stop:     $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start decades-listener at boot time
-# Description:       Enable service provided by decades-listener.
+# Short-Description: Start decades at boot time
+# Description:       Enable service provided by decades.
 ### END INIT INFO
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-pidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pylib/ file=/etc/decades-listener/decades-listener.tac logfile=/var/log/decades-listener.log
+pidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pylib/ file=/etc/decades/decades-listener.tac logfile=/var/log/decades-listener.log
 
-[ -r /etc/default/decades-listener ] && . /etc/default/decades-listener
+[ -r /etc/default/decades ] && . /etc/default/decades
 
 test -x /usr/bin/twistd || exit 0
 test -r $file || exit 0
-#test -r /usr/share/decades-listener/package-installed || exit 0
+#test -r /usr/share/decades/package-installed || exit 0
 
 
 case "$1" in
@@ -47,7 +47,7 @@ case "$1" in
     ;;
 
     *)
-        echo "Usage: /etc/init.d/decades-listener {start|stop|restart|force-reload}" >&2
+        echo "Usage: /etc/init.d/decades {start|stop|restart|force-reload}" >&2
         exit 1
     ;;
 esac

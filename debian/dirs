@@ -1,7 +1,7 @@
 etc/init.d
-etc/decades-listener
+etc/decades
 etc/default
-var/lib/decades-listener
-usr/share/doc/decades-listener
-usr/share/decades-listener
+var/lib/decades
+usr/share/doc/decades
+usr/share/decades
 usr/local/lib/decades

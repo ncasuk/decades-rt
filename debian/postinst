@@ -1,4 +1,4 @@
 #!/bin/sh
-update-rc.d decades-listener defaults >/dev/null
-invoke-rc.d decades-listener start
+update-rc.d decades defaults >/dev/null
+invoke-rc.d decades start
 #DEBHELPER#

@@ -8,7 +8,7 @@ from fabric.api import *
 import time
 
 # globals
-env.prj_name = 'decades-listener' # no spaces!
+env.prj_name = 'decades' # no spaces!
 env.sudoers_group = 'wheel'
 env.webserver = 'apache2' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'postgresql' # mysql or postgresql
@@ -159,7 +159,7 @@ def create_deb():
       local('debuild -us -uc' % env)
    local('rm -rf %(prj_name)s-%(release)s.orig.tar.gz %(prj_name)s-%(release)s' % env )
    
-   
+  
 def symlink_current_release():
     "Symlink our current release"
     require('release', provided_by=[deploy, setup])
