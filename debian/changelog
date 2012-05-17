@@ -1,82 +1,96 @@
+decades (20120517110655ubuntu2~4.gbpa6ff17) UNRELEASED; urgency=low
+
+  ** SNAPSHOT build @a6ff178d63b12592de019801e0792a1569da6aa2 **
+
+  * [38093ebf29de06244d4d2af607c2e9d55f1e907a] Abstracting tablename; adding DB indicies
+  * [f765de0309d20f085da767e2a333c658d09fdd6d] Modified to abstract prior to daemonisation
+  * [31de8cf7157db04f8e5d3e0e0ded7313d5b26657] Abstracted calfile location. tac file working
+  * [8eb29ac52740816afbb45c096e8f5c5b88f68982] Abstracting calibration file
+  * [a6ff178d63b12592de019801e0792a1569da6aa2] Changing packagename to decades
+
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 17 May 2012 11:20:16 +0100
+
 decades (20120517110655ubuntu1) UNRELEASED; urgency=low
 
-  * Abstracting tablename; adding DB indicies
-  * Modified to abstract prior to daemonisation
-  * Abstracted calfile location. tac file working
+  * [38093ebf29de06244d4d2af607c2e9d55f1e907a] Abstracting tablename; adding DB indicies
+  * [f765de0309d20f085da767e2a333c658d09fdd6d] Modified to abstract prior to daemonisation
+  * [31de8cf7157db04f8e5d3e0e0ded7313d5b26657] Abstracted calfile location. tac file working
+  * [8eb29ac52740816afbb45c096e8f5c5b88f68982] Abstracting calibration file
+  * [a6ff178d63b12592de019801e0792a1569da6aa2] Changing packagename to decades
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 17 May 2012 11:09:22 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 17 May 2012 11:13:23 +0100
 
 decades (20120517110655) quantal; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 17 May 2012 11:06:58 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 17 May 2012 11:06:58 +0100
 
 decades (20120517105050) quantal; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 17 May 2012 10:50:51 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 17 May 2012 10:50:51 +0100
 
 decades (20120517104615) quantal; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 17 May 2012 10:46:16 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 17 May 2012 10:46:16 +0100
 
 decades (20120517103306) quantal; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 17 May 2012 10:33:18 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 17 May 2012 10:33:18 +0100
 
 decades (20120516160700) quantal; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Wed, 16 May 2012 16:07:16 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 16 May 2012 16:07:16 +0100
 
 decades (20120510153339) precise; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 10 May 2012 15:33:40 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 10 May 2012 15:33:40 +0100
 
 decades (20120510152844) precise; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 10 May 2012 15:28:45 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 10 May 2012 15:28:45 +0100
 
 decades (20120510151924) precise; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 10 May 2012 15:19:25 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 10 May 2012 15:19:25 +0100
 
 decades (20120510145921) precise; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 10 May 2012 14:59:22 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 10 May 2012 14:59:22 +0100
 
 decades (20120510144511) precise; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 10 May 2012 14:45:12 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 10 May 2012 14:45:12 +0100
 
 decades (20120510144227) precise; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 10 May 2012 14:42:28 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 10 May 2012 14:42:28 +0100
 
 decades (20120510144120) precise; urgency=low
 
   * new package created
 
- -- Dan Walker <eardkdw@eardkdw-laptop>  Thu, 10 May 2012 14:41:21 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 10 May 2012 14:41:21 +0100
 
 decades (20120510143533) precise; urgency=low
 

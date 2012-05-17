@@ -1,4 +1,4 @@
 #!/bin/sh
 if [ "$1" = purge ]; then
-        update-rc.d decades-listener remove >/dev/null
+        update-rc.d decades remove >/dev/null
 fi
