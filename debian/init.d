@@ -11,12 +11,14 @@
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-pidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pylib/ file=/etc/decades/decades-listener.tac logfile=/var/log/decades-listener.log
+#don't change these here; change them in /etc/default/decades
+listenerpidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pylib/ listenerfile=/etc/decades/decades-listener.tac listenerlogfile=/var/log/decades/decades-listener.log
+serverpidfile=/var/run/decades-server.pid rundir=/var/lib/decades/ serverfile=/etc/decades/decades-server.tac serverlogfile=/var/log/decades/decades-server.log
 
 [ -r /etc/default/decades ] && . /etc/default/decades
 
 test -x /usr/bin/twistd || exit 0
-test -r $file || exit 0
+test -r $listenerfile || exit 0
 #test -r /usr/share/decades/package-installed || exit 0
 
 
@@ -24,16 +26,27 @@ case "$1" in
     start)
         echo -n "Starting decades-listener: twistd"
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
-               --pidfile=$pidfile \
+               --pidfile=$listenerpidfile \
                --rundir=$rundir \
-               --logfile=$logfile \
-               --python=$file
+               --logfile=$listenerlogfile \
+               --python=$listenerfile
         echo "."	
+        echo -n "Starting decades-server: twistd"
+        start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
+               --pidfile=$serverpidfile \
+               --rundir=$rundir \
+               --logfile=$serverlogfile \
+               --python=$serverfile
+        echo "."	
+   
     ;;
 
     stop)
         echo -n "Stopping decades-listener: twistd"
-        start-stop-daemon --stop --quiet              --pidfile $pidfile
+        start-stop-daemon --stop --quiet              --pidfile $listenerpidfile
+        echo "."	
+        echo -n "Stopping decades-server: twistd"
+        start-stop-daemon --stop --quiet              --pidfile $serverpidfile
         echo "."	
     ;;
 
