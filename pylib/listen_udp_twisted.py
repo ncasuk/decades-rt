@@ -34,7 +34,11 @@ class MulticastServerUDP(DatagramProtocol):
 
     def datagramReceived(self, datagram, address):
       '''reads an incoming UDP datagram, splits it up, INSERTs into database'''
-      data = csv.reader([datagram]).next()
+      data = csv.reader([datagram]).next() #assumes only one record
+      #copies data into a dictionary
+      dictdata = dict(zip(self.dataProtocols.fields(data[0][1:]), data)) 
+      print dictdata
+      self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), )).lower())
       squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0][1:]], ', '.join(self.dataProtocols.fields(data[0][1:])))
       processed= []
       for each in data:

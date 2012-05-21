@@ -60,7 +60,7 @@ class DecadesProtocol(basic.LineReceiver):
          #parano = {515: "uppbbr01_utc_time", 520: "uppbbr01_crio_temp"}
          #using uppbbr01_radiometer_4_sig because it appears to be returning data
          #it's pretending to be deiced air temp to the Java applet
-         parano = {515: "time_since_midnight", 520:"deiced_true_air_temp_k", 627:"neph_red_bsp",540:'upper_pyrgeometer_flux_4'}
+         parano = {515: "time_since_midnight", 520:"deiced_true_air_temp_k", 627:"neph_red_bsp",540:'upper_pyrgeometer_flux'}
        
          paralist = []
          for paracode in para[4:]:
@@ -71,12 +71,12 @@ class DecadesProtocol(basic.LineReceiver):
 
          if para[2] == -1:
             #it wants all up to latest data point
-            #log.msg(self.cursor.mogrify('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id > %s ',(para[1],)))
-            #self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id > %s ',(para[1],))
+            #log.msg(self.cursor.mogrify('SELECT \"' + '\", \"'.join(paralist) + '\" FROM mergeddata WHERE id > %s ',(para[1],)))
+            #self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM mergeddata WHERE id > %s ',(para[1],))
             returndata = self.rtlib.derive_data_alt(paralist, '> %i' % para[1])
          else:
             #in this case there is a specific range it wants
-            #self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM scratchdata WHERE id BETWEEN %s AND %s',(para[1],para[2]))
+            #self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM mergeddata WHERE id BETWEEN %s AND %s',(para[1],para[2]))
             returndata = self.rtlib.derive_data_alt(paralist, 'BETWEEN %i AND %i' % (para[1],para[2]))
         
          #log.msg(self.cursor.query) 
@@ -107,7 +107,7 @@ class DecadesProtocol(basic.LineReceiver):
       #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
       #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), Wind speed, ms-1, 
       #log.msg(repr(self.der))
-      self.cursor.execute("SELECT id, id AS dercount FROM scratchdata GROUP BY id ORDER BY id DESC LIMIT 1;")
+      self.cursor.execute("SELECT id, id AS dercount FROM mergeddata GROUP BY id ORDER BY id DESC LIMIT 1;")
       (self.derindex, dercount) = self.cursor.fetchone()
       self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),1.1,2.0,3.0,4.0,0.2,6.0,7.0,8.0,9.0,10.0,'T','E','S','T'))
       log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))

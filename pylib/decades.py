@@ -58,9 +58,9 @@ class DecadesDataProtocols():
       for proto in self.protocols:
          protoname = self.protocols[proto][0]['field'].lstrip('$')
          fields = []
-         for field in self.protocols[proto][1:]: #skip 1st one, instrument name
-            fields.append('"'+protoname.lower()+'_'+field['field'].lstrip('$')+'" ')
-            select_fields.append(self.tables[protoname]+'.'+field['field'].lstrip('$'))
+         for field in self.protocols[proto]: 
+            fields.append('"'+protoname.lower()+'_'+field['field'].lstrip('$').lower()+'" ')
+            select_fields.append(self.tables[protoname]+'.'+field['field'].lstrip('$').lower())
          squirrel = squirrel + ', '.join(fields) + ','
       table_list = self.tables.items()
       squirrel = squirrel.rstrip(',') + ') AS SELECT row_number() OVER (ORDER BY ' + table_list[0][1] + '.utc_time), ' + ", ".join(select_fields)+' FROM ' #creates an id field based on rownumber of the combined view
@@ -70,7 +70,55 @@ class DecadesDataProtocols():
      
       log.msg(cursor.mogrify(squirrel + join_clause)) 
       cursor.execute('DROP VIEW IF EXISTS scratchdata')
-      return cursor.execute(squirrel + join_clause)
+      cursor.execute(squirrel + join_clause)
+      cursor.execute('DROP TABLE IF EXISTS mergeddata')
+      cursor.execute('CREATE TABLE mergeddata AS SELECT * FROM scratchdata LIMIT 0')
+      cursor.execute('ALTER TABLE mergeddata DROP COLUMN id')
+      cursor.execute('ALTER TABLE mergeddata ADD COLUMN utc_time INT PRIMARY KEY')
+      cursor.execute('ALTER TABLE mergeddata ADD COLUMN id SERIAL UNIQUE')
+      cursor.execute('''CREATE OR REPLACE FUNCTION data_merge(sql_update TEXT, sql_insert TEXT) RETURNS VOID AS
+$$
+DECLARE r INTEGER;
+BEGIN
+   -- first try to insert and after to update. Note : insert has pk and update not...
+  LOOP
+    EXECUTE sql_update; 
+    GET DIAGNOSTICS r = ROW_COUNT;
+    IF r = 1 THEN 
+        raise notice '%', r;
+        RETURN; 
+    END IF;
+    BEGIN
+      EXECUTE sql_insert;
+      RETURN;
+      EXCEPTION WHEN unique_violation THEN
+         --do nothing and loop
+    END;
+  END LOOP;
+END;
+$$
+LANGUAGE plpgsql;''')
+
+
+   def add_data(self, cursor, data, instrument):
+      '''adds incoming data to the database. data is a Python 
+         dictionary of fieldname=> value pairs'''
+
+      sql_u = []
+      sql_i = [[],[]]
+      for each in data.iteritems():
+         if each[1]=='':
+            sql_u.append(cursor.mogrify(instrument+'_'+each[0]+'=%s',(None,))) 
+            sql_i[0].append(instrument+'_'+each[0])
+            sql_i[1].append(None)
+         else:
+            sql_u.append(cursor.mogrify(instrument+'_'+each[0]+'=%s',(each[1],))) 
+            sql_i[0].append(instrument+'_'+each[0])
+            sql_i[1].append(each[1])
+
+      sql_update = ('UPDATE mergeddata SET ' + ", ".join(sql_u) + ' WHERE utc_time=' + cursor.mogrify('%s', (data['utc_time'],)))
+      sql_insert = (cursor.mogrify('INSERT INTO mergeddata (' + ", ".join(sql_i[0]) + ', utc_time) VALUES (' + ('%s,' * len(sql_i[1])) + '%s)',sql_i[1] +[data['utc_time']]))
+      cursor.execute('SELECT data_merge($$' + sql_update + '$$, $$'+ sql_insert + '$$)')
    
 
    def fields(self, protocol_name):

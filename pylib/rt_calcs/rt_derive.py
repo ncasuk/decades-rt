@@ -345,7 +345,8 @@ class derived(rt_data.rt_data):
         return (self.getdata('uppbbr01_radiometer_2_sig',data)-self.getdata('uppbbr01_radiometer_2_zero',data))*c*corr
     def upper_pyrgeometer_flux(self,data):
         c=self.cals['CAL083']
-        return (self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c
+        #return (self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c
+        return (self.getdata('uppbbr01_radiometer_3_sig',data)*c[0] - self.getdata('uppbbr01_radiometer_3_zero',data)*c[1])
 
     def upper_pyrgeometer_flux_4(self,data):
         '''uses the radiometer_4 as they seem to have data in the lab - 

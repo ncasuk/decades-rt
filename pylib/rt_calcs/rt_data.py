@@ -73,8 +73,8 @@ class rt_data(object):
     def getdata_fromdatabase(self,name,selection):
         """ Dummy routine to read one parameter from database"""
         fieldname_part = 'SELECT %s ' % name 
-        print(self.database.mogrify(fieldname_part + 'FROM scratchdata WHERE id %s'% selection))
-        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s' % selection )
+        print(self.database.mogrify(fieldname_part + 'FROM mergeddata WHERE id %s'% selection))
+        self.database.execute(fieldname_part + 'FROM mergeddata WHERE id %s' % selection )
         data[name] = []
         for record in self.database: #iterates over results 
             data[name].append(getattr(record,name))
@@ -83,8 +83,8 @@ class rt_data(object):
     def getbunchofdata_fromdatabase(self,names,selection):
         """ Dummy routine to read several parameters from database"""
         fieldname_part = 'SELECT %s ' % ', '.join(names)
-        print self.database.mogrify(fieldname_part + 'FROM scratchdata WHERE id %s'% selection, )
-        self.database.execute(fieldname_part + 'FROM scratchdata WHERE id %s'% selection, )
+        print self.database.mogrify(fieldname_part + 'FROM mergeddata WHERE id %s'% selection, )
+        self.database.execute(fieldname_part + 'FROM mergeddata WHERE id %s'% selection, )
         ans={}
         data={}
         for name in names:
