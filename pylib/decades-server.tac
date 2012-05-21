@@ -22,7 +22,7 @@ def getDecadesServerService():
     Return a service suitable for creating an application object.
     """
     conn = get_database()
-    return internet.TCPServer(1500, DecadesFactory(conn,'/home/eardkdw/work/decades-rt/pylib/rt_calcs/HOR_CALIB.DAT'))
+    return internet.TCPServer(1500, DecadesFactory(conn,'pylib/rt_calcs/HOR_CALIB.DAT'))
 
 # this is the core part of any tac file, the creation of the root-level
 # application object
