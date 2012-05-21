@@ -137,7 +137,7 @@ def main():# Listen for TCP:1500
                            database = "inflightdata")
    conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
-   reactor.listenTCP(1500, DecadesFactory(conn))
+   reactor.listenTCP(1500, DecadesFactory(conn,"pylib/rt_calcs/HOR_CALIB.DAT"))
    reactor.run()
 
 if __name__ == '__main__':

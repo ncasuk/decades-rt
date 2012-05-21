@@ -1,6 +1,6 @@
-decades (20120517110655ubuntu2~1.gbpec0ad9) quantal; urgency=low
+decades (20120517110655ubuntu2~3.gbpc3337d) quantal; urgency=low
 
-  ** SNAPSHOT build @ec0ad9936cd9e20f836dace3e5802026741b2d20 **
+  ** SNAPSHOT build @c3337dff80d94e1297ae92f3d64a8ce07475527a **
 
   * [38093ebf29de06244d4d2af607c2e9d55f1e907a] Abstracting tablename; adding DB indicies
   * [f765de0309d20f085da767e2a333c658d09fdd6d] Modified to abstract prior to daemonisation
@@ -14,8 +14,10 @@ decades (20120517110655ubuntu2~1.gbpec0ad9) quantal; urgency=low
   * Calfile location; change run dir
   * Trying different location for --git-author
   * Trying different location for --git-author
+  * Re-adding deiced temp
+  * Abstracting away database config in tac files
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 17 May 2012 16:46:47 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 18 May 2012 15:16:36 +0100
 
 decades (20120517110655ubuntu1) UNRELEASED; urgency=low
 
