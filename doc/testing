@@ -25,3 +25,9 @@ to run it in the same way the daemonisation scripts run.
 To run the decades server (which talks to the Java applet) you need to run pylib/decades-server.py
 
 You need to edit your hosts file to fool plot.html into thinking your laptop is horace. Just make horace an alias to 127.0.0.1
+
+Running a local copy of decades-server
+======================================
+In pylib directory:
+twistd --rundir=.. --pidfile=server.pid -ny decades-server.tac
+
