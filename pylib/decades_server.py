@@ -60,7 +60,7 @@ class DecadesProtocol(basic.LineReceiver):
          #parano = {515: "uppbbr01_utc_time", 520: "uppbbr01_crio_temp"}
          #using uppbbr01_radiometer_4_sig because it appears to be returning data
          #it's pretending to be deiced air temp to the Java applet
-         parano = {515: "time_since_midnight", 520:"deiced_true_air_temp_k", 627:"neph_red_bsp",540:'upper_pyrgeometer_flux'}
+         parano = {515: "time_since_midnight", 520:"deiced_true_air_temp_k", 523:"nondeiced_true_air_temp_k", 627:"neph_red_bsp",539:"upper_pyranometer_red_flux",540:'upper_pyrgeometer_flux'}
        
          paralist = []
          for paracode in para[4:]:
@@ -82,11 +82,11 @@ class DecadesProtocol(basic.LineReceiver):
          #log.msg(self.cursor.query) 
          #returndata = self.cursor.fetchall()
          #send integer of size of upcoming data
-         print(returndata)
-         size_upcoming = len(returndata[parano[para[4]]])
+         size_upcoming=0
+         if(len(para) > 4): #i.e. if any parameters were requested
+            size_upcoming = len(returndata[parano[para[4]]])
          self.sendLine(struct.pack(">i",size_upcoming))
          #log.msg(repr(len(returndata)))
-         
 
          log.msg('requesting data between %i and %i, returning %i datapoints' % (para[1],para[2],size_upcoming))
          #send each requested parameter separately
