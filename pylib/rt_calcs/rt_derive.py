@@ -342,7 +342,9 @@ class derived(rt_data.rt_data):
     def upper_pyranometer_red_flux(self,data):
         c=self.cals['CAL082']
         corr=self.getdata('pyranometer_correction',data)
-        return (self.getdata('uppbbr01_radiometer_2_sig',data)-self.getdata('uppbbr01_radiometer_2_zero',data))*c*corr
+        #return (self.getdata('uppbbr01_radiometer_2_sig',data)-self.getdata('uppbbr01_radiometer_2_zero',data))*c*corr
+        return (self.getdata('uppbbr01_radiometer_2_sig',data)*c[0] - self.getdata('uppbbr01_radiometer_2_zero',data)*c[1])*corr
+
     def upper_pyrgeometer_flux(self,data):
         c=self.cals['CAL083']
         #return (self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c
@@ -575,7 +577,7 @@ class derived(rt_data.rt_data):
            np.cos(SHDG)*np.sin(PTCH)*np.cos(ROLL)*np.sin(SZEN) +
            np.cos(SZEN)*np.cos(PTCH)*np.sin(ROLL))
         CORR=np.cos(SZEN)/R
-        return corr
+        return CORR
 
 
     def solar_albedo(self,data):
