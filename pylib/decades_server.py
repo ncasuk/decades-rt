@@ -71,12 +71,9 @@ class DecadesProtocol(basic.LineReceiver):
 
          if para[2] == -1:
             #it wants all up to latest data point
-            #log.msg(self.cursor.mogrify('SELECT \"' + '\", \"'.join(paralist) + '\" FROM mergeddata WHERE id > %s ',(para[1],)))
-            #self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM mergeddata WHERE id > %s ',(para[1],))
             returndata = self.rtlib.derive_data_alt(paralist, '> %i' % para[1])
          else:
             #in this case there is a specific range it wants
-            #self.cursor.execute('SELECT \"' + '\", \"'.join(paralist) + '\" FROM mergeddata WHERE id BETWEEN %s AND %s',(para[1],para[2]))
             returndata = self.rtlib.derive_data_alt(paralist, 'BETWEEN %i AND %i' % (para[1],para[2]))
         
          #log.msg(self.cursor.query) 
@@ -87,7 +84,6 @@ class DecadesProtocol(basic.LineReceiver):
             size_upcoming = len(returndata[parano[para[4]]])
          self.sendLine(struct.pack(">i",size_upcoming))
          #log.msg(repr(len(returndata)))
-
          log.msg('requesting data between %i and %i, returning %i datapoints' % (para[1],para[2],size_upcoming))
          #send each requested parameter separately
          for paracode in para[4:]: #list of required fields
@@ -107,7 +103,7 @@ class DecadesProtocol(basic.LineReceiver):
       #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
       #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), Wind speed, ms-1, 
       #log.msg(repr(self.der))
-      self.cursor.execute("SELECT id, id AS dercount FROM mergeddata GROUP BY id ORDER BY id DESC LIMIT 1;")
+      self.cursor.execute("SELECT id, id AS dercount FROM mergeddata WHERE uppbbr01_utc_time IS NOT NULL AND lowbbr01_utc_time IS NOT NULL GROUP BY id ORDER BY id DESC LIMIT 1;")
       (self.derindex, dercount) = self.cursor.fetchone()
       self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),1.1,2.0,3.0,4.0,0.2,6.0,7.0,8.0,9.0,10.0,'T','E','S','T'))
       log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))

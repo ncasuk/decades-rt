@@ -1,6 +1,9 @@
-decades (20120517110655ubuntu2~3.gbpc3337d) quantal; urgency=low
+decades (20120517110655ubuntu2~7.gbpb5b2cd) quantal; urgency=low
 
-  ** SNAPSHOT build @c3337dff80d94e1297ae92f3d64a8ce07475527a **
+  ** SNAPSHOT build @b5b2cd2c182b998d65177749a6474cc3b4ee21ae **
+
+  [ Dan Walker ]
+  ** SNAPSHOT build @4cfaf61a52ce106cc5f196c5f663c5b1877026b1 **
 
   * [38093ebf29de06244d4d2af607c2e9d55f1e907a] Abstracting tablename; adding DB indicies
   * [f765de0309d20f085da767e2a333c658d09fdd6d] Modified to abstract prior to daemonisation
@@ -16,8 +19,20 @@ decades (20120517110655ubuntu2~3.gbpc3337d) quantal; urgency=low
   * Trying different location for --git-author
   * Re-adding deiced temp
   * Abstracting away database config in tac files
+  * Adding calls to database.py so it is properly abstracted
+  * First pass at inserting data into mergeddata
+  * remove the link to my home dir
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 18 May 2012 15:16:36 +0100
+  [ Dave Tiddeman ]
+  * Changed the time parameter in the solar routines
+
+  [ Dan Walker ]
+  * Added decades-server testing command
+  * getbunch only returns data if data are not NULL
+  * Adding IS NOT NULL to single-field queries
+  * zero-parameters bugfix, adding possible field
+
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 23 May 2012 17:01:59 +0100
 
 decades (20120517110655ubuntu1) UNRELEASED; urgency=low
 
