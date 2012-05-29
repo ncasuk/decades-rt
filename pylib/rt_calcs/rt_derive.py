@@ -336,37 +336,47 @@ class derived(rt_data.rt_data):
         return None
         
     def upper_pyranometer_clear_flux(self,data):
+        ''' not sure why only CAL081[1] is used and not CAL081[0], but his is what HOR_CALCS did '''
         c=self.cals['CAL081'] 
         corr=self.getdata('pyranometer_correction',data)
-        return (self.getdata('uppbbr01_radiometer_1_sig',data)-self.getdata('uppbbr01_radiometer_1_zero',data))*c*corr
+        return (self.getdata('uppbbr01_radiometer_1_sig',data)-self.getdata('uppbbr01_radiometer_1_zero',data))*c[1]*corr
     def upper_pyranometer_red_flux(self,data):
         c=self.cals['CAL082']
         corr=self.getdata('pyranometer_correction',data)
         #return (self.getdata('uppbbr01_radiometer_2_sig',data)-self.getdata('uppbbr01_radiometer_2_zero',data))*c*corr
-        return (self.getdata('uppbbr01_radiometer_2_sig',data)*c[0] - self.getdata('uppbbr01_radiometer_2_zero',data)*c[1])*corr
+        return (self.getdata('uppbbr01_radiometer_2_sig',data) - self.getdata('uppbbr01_radiometer_2_zero',data))*c[1]*corr
 
     def upper_pyrgeometer_flux(self,data):
         c=self.cals['CAL083']
-        #return (self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c
-        return (self.getdata('uppbbr01_radiometer_3_sig',data)*c[0] - self.getdata('uppbbr01_radiometer_3_zero',data)*c[1])
+        ct=self.cals['CAL089']
+        t=self.getdata('uppbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
+        s=(self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c[1]
+        uir=5.899E-8*(rt+273.16)**4+rs
+        return uir
 
     def upper_pyrgeometer_flux_4(self,data):
         '''uses the radiometer_4 as they seem to have data in the lab - 
          not sure why, may be noise'''
         c=self.cals['CAL083']
-        #return (self.getdata('uppbbr01_radiometer_4_sig',data)-self.getdata('uppbbr01_radiometer_4_zero',data))*c
-        #return self.getdata('uppbbr01_radiometer_4_sig',data)
-        return (self.getdata('uppbbr01_radiometer_4_sig',data)*c[0] - self.getdata('uppbbr01_radiometer_4_zero',data)*c[1])
+        ct=self.cals['CAL089']
+        t=self.getdata('uppbbr01_radiometer_4_temp',data)*ct[1]+ct[0]
+        s=(self.getdata('uppbbr01_radiometer_4_sig',data)-self.getdata('uppbbr01_radiometer_4_zero',data))*c[1]
+        uir=5.899E-8*(rt+273.16)**4+rs
+        return uir
 
     def lower_pyranometer_clear_flux(self,data):
         c=self.cals['CAL091']
-        return (self.getdata('lowbbr01_radiometer_1_sig',data)-self.getdata('lowbbr01_radiometer_1_zero',data))*c
+        return (self.getdata('lowbbr01_radiometer_1_sig',data)-self.getdata('lowbbr01_radiometer_1_zero',data))*c[1]
     def lower_pyranometer_red_flux(self,data):
         c=self.cals['CAL092']
-        return (self.getdata('lowbbr01_radiometer_2_sig',data)-self.getdata('lowbbr01_radiometer_2_zero',data))*c
+        return (self.getdata('lowbbr01_radiometer_2_sig',data)-self.getdata('lowbbr01_radiometer_2_zero',data))*c[1]
     def lower_pyrgeometer_flux(self,data):
         c=self.cals['CAL093']
-        return (self.getdata('lowbbr01_radiometer_3_sig',data)-self.getdata('lowbbr01_radiometer_3_zero',data))*c
+        ct=self.cals['CAL099']
+        t=self.getdata('lowbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
+        s=(self.getdata('lowbbr01_radiometer_3_sig',data)-self.getdata('lowbbr01_radiometer_3_zero',data))*c[1]
+        uir=5.899E-8*(rt+273.16)**4+rs
+        return uir
 
     def gin_latitude(self,data):
         return self.getdata('prtaft01_gin_lat',data)
@@ -831,6 +841,7 @@ C ST    - Corrected Surface Temperature   (deg C)
         return c[0]+c[1]*raw 
 
     def time_since_midnight(self,data):
+        """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
         raw=self.getdata('uppbbr01_utc_time',data) #unixtimestamp
         unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
         #raw is an array, so subtracting an integer appears to be valid
