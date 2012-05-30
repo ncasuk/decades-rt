@@ -5,3 +5,4 @@ var/lib/decades
 usr/share/doc/decades
 usr/share/decades
 usr/local/lib/decades
+var/log/decades
