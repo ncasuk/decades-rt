@@ -68,6 +68,7 @@ def setup():
 
 def create_deb():
    #only create deb if it's the first time this run it's been called
+   local('git-dch %(dchopts)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    current=local('head -n1 debian/changelog',capture=True)
    env.release=current.split('(')[1].split(')')[0] #version number of deb
    debs = glob.glob('%(prj_name)s_%(release)s*.deb' % env)
@@ -75,7 +76,6 @@ def create_deb():
       local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz pylib' % env)
       local('mkdir %(prj_name)s-%(timestamp)s' % env)
       local('git checkout-index --prefix=%(prj_name)s-%(timestamp)s/ -a' % env)
-      local('git-dch %(dchopts)s --auto --git-author' % env) #adds latest commit details to a snapshot version
       local('cp -rp debian %(prj_name)s-%(timestamp)s/' % env)
       with lcd('%(prj_name)s-%(timestamp)s' % env):
          debuild_out = local('debuild -us -uc' % env, capture=True)
