@@ -5,13 +5,14 @@
 # modified for fabric 0.9/1.0
 #from __future__ import with_statement # needed for python 2.5
 from fabric.api import *
-import time, os
+import time, os, glob
 
 # globals
 env.prj_name = 'decades' # no spaces!
 env.sudoers_group = 'wheel'
 env.webserver = 'apache2' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'postgresql' # mysql or postgresql
+env.timestamp = time.strftime('%Y%m%d%H%M%S')
 
 def list_hosts():
    print env.hosts
@@ -63,20 +64,26 @@ def setup():
    
 
 def create_deb():
-   env.release = time.strftime('%Y%m%d%H%M%S')
-   local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(release)s.orig.tar.gz pylib' % env)
-   local('mkdir %(prj_name)s-%(release)s' % env)
-   local('git checkout-index --prefix=%(prj_name)s-%(release)s/ -a' % env)
-   local('git-dch -S --auto --git-author') #adds latest commit details to a snapshot version
-   local('cp -rp debian %(prj_name)s-%(release)s/' % env)
-   with lcd('%(prj_name)s-%(release)s' % env):
-      debuild_out = local('debuild -us -uc' % env, capture=True)
-      debuild_outlist = debuild_out.splitlines()
-      for line in debuild_outlist:
-         if "dpkg-deb: building package " in line:
-            packagename = line.split('/')[1][:-2] #extract the .deb filename
-   local('rm -rf %(prj_name)s-%(release)s.orig.tar.gz %(prj_name)s-%(release)s' % env )
-   return packagename
+   #only create deb if it's the first time this run it's been called
+   debs = glob.glob('%(prj_name)s_%(timestamp)s*.deb' % env)
+   print '%(prj_name)s_%(timestamp)s*.deb' % env
+   if len(debs) < 1:
+      local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz pylib' % env)
+      local('mkdir %(prj_name)s-%(timestamp)s' % env)
+      local('git checkout-index --prefix=%(prj_name)s-%(timestamp)s/ -a' % env)
+      local('git-dch -S --auto --git-author') #adds latest commit details to a snapshot version
+      local('cp -rp debian %(prj_name)s-%(timestamp)s/' % env)
+      with lcd('%(prj_name)s-%(timestamp)s' % env):
+         debuild_out = local('debuild -us -uc' % env, capture=True)
+         debuild_outlist = debuild_out.splitlines()
+         for line in debuild_outlist:
+            if "dpkg-deb: building package " in line:
+               packagename = line.split('/')[1][:-2] #extract the .deb filename
+      local('rm -rf %(prj_name)s-%(timestamp)s.orig.tar.gz %(prj_name)s-%(timestamp)s' % env )
+      return packagename
+   else:
+      print debs[0]
+      return debs[0]
    
 def deploy_deb(debname=False):
    if debname:

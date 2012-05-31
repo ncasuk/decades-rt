@@ -1,6 +1,14 @@
-decades (20120517110655ubuntu2~21.gbp2473b0) quantal; urgency=low
+decades (0.7.1~2.gbpec3104) quantal; urgency=low
 
-  ** SNAPSHOT build @2473b0c7fe7774ef02d9e9dccea01e95a3563cda **
+  ** SNAPSHOT build @ec3104537750d29233c052ffa91601d36bebf99e **
+
+  *renumbering to have a clearer version number.
+
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 31 May 2012 14:59:35 +0100
+
+decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
+
+  ** SNAPSHOT build @ec3104537750d29233c052ffa91601d36bebf99e **
 
   [ Dan Walker ]
   ** SNAPSHOT build @4cfaf61a52ce106cc5f196c5f663c5b1877026b1 **
@@ -34,8 +42,9 @@ decades (20120517110655ubuntu2~21.gbp2473b0) quantal; urgency=low
   * IS NOT NULL fix so fewer null datapoints are rt'd
   * First pass deb deploy and setup functions
   * Adding decades default log directory
+  * fabfile full deploy routine first go
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 31 May 2012 10:52:29 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 31 May 2012 14:54:36 +0100
 
 decades (20120517110655ubuntu1) UNRELEASED; urgency=low
 
