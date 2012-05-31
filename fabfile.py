@@ -13,6 +13,9 @@ env.sudoers_group = 'wheel'
 env.webserver = 'apache2' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'postgresql' # mysql or postgresql
 env.timestamp = time.strftime('%Y%m%d%H%M%S')
+env.dchopts = '--snapshot'
+if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
+   env.dchopts = '--release'
 
 def list_hosts():
    print env.hosts
@@ -71,7 +74,7 @@ def create_deb():
       local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz pylib' % env)
       local('mkdir %(prj_name)s-%(timestamp)s' % env)
       local('git checkout-index --prefix=%(prj_name)s-%(timestamp)s/ -a' % env)
-      local('git-dch -S --auto --git-author') #adds latest commit details to a snapshot version
+      local('git-dch %(dchopts)s --auto --git-author' % env) #adds latest commit details to a snapshot version
       local('cp -rp debian %(prj_name)s-%(timestamp)s/' % env)
       with lcd('%(prj_name)s-%(timestamp)s' % env):
          debuild_out = local('debuild -us -uc' % env, capture=True)
