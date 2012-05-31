@@ -68,8 +68,9 @@ def setup():
 
 def create_deb():
    #only create deb if it's the first time this run it's been called
-   debs = glob.glob('%(prj_name)s_%(timestamp)s*.deb' % env)
-   print '%(prj_name)s_%(timestamp)s*.deb' % env
+   current=local('head -n1 debian/changelog',capture=True)
+   env.release=current.split('(')[1].split(')')[0] #version number of deb
+   debs = glob.glob('%(prj_name)s_%(release)s*.deb' % env)
    if len(debs) < 1:
       local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz pylib' % env)
       local('mkdir %(prj_name)s-%(timestamp)s' % env)
