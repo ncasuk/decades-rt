@@ -1,6 +1,6 @@
-decades (20120517110655ubuntu2~7.gbpb5b2cd) quantal; urgency=low
+decades (20120517110655ubuntu2~21.gbp2473b0) quantal; urgency=low
 
-  ** SNAPSHOT build @b5b2cd2c182b998d65177749a6474cc3b4ee21ae **
+  ** SNAPSHOT build @2473b0c7fe7774ef02d9e9dccea01e95a3563cda **
 
   [ Dan Walker ]
   ** SNAPSHOT build @4cfaf61a52ce106cc5f196c5f663c5b1877026b1 **
@@ -31,8 +31,11 @@ decades (20120517110655ubuntu2~7.gbpb5b2cd) quantal; urgency=low
   * getbunch only returns data if data are not NULL
   * Adding IS NOT NULL to single-field queries
   * zero-parameters bugfix, adding possible field
+  * IS NOT NULL fix so fewer null datapoints are rt'd
+  * First pass deb deploy and setup functions
+  * Adding decades default log directory
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 23 May 2012 17:01:59 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 31 May 2012 10:52:29 +0100
 
 decades (20120517110655ubuntu1) UNRELEASED; urgency=low
 

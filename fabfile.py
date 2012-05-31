@@ -12,10 +12,6 @@ env.prj_name = 'decades' # no spaces!
 env.sudoers_group = 'wheel'
 env.webserver = 'apache2' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'postgresql' # mysql or postgresql
-if os.environ.has_key('HOSTS'):
-   env.hosts = os.environ['HOSTS'].split(',')
-else:
-   env.hosts = ['septic','fish']
 
 def list_hosts():
    print env.hosts
@@ -60,8 +56,10 @@ def setup():
    '''ab initio setup'''
    sudo('apt-get -y install aptitude')
    sudo('aptitude -y install postgresql') 
-   sudo('psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"',user="postgres")
-   sudo('createdb -O inflight inflightdata', user="postgres")
+   with settings(warn_only=True): #already-exists errors ignored
+      sudo('psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"',user="postgres")
+      sudo('createdb -O inflight inflightdata', user="postgres")
+      sudo('createlang plpgsql inflightdata',user="postgres")
    
 
 def create_deb():
@@ -72,14 +70,23 @@ def create_deb():
    local('git-dch -S --auto --git-author') #adds latest commit details to a snapshot version
    local('cp -rp debian %(prj_name)s-%(release)s/' % env)
    with lcd('%(prj_name)s-%(release)s' % env):
-      local('debuild -us -uc' % env)
+      debuild_out = local('debuild -us -uc' % env, capture=True)
+      debuild_outlist = debuild_out.splitlines()
+      for line in debuild_outlist:
+         if "dpkg-deb: building package " in line:
+            packagename = line.split('/')[1][:-2] #extract the .deb filename
    local('rm -rf %(prj_name)s-%(release)s.orig.tar.gz %(prj_name)s-%(release)s' % env )
+   return packagename
    
 def deploy_deb(debname=False):
    if debname:
       put(debname)
+      #installs all dependencies
       sudo('aptitude -y install `dpkg --info %s | grep Depends | awk -F ":" \'{print $2}\' | sed -e "s/,/ /g"`' % debname)
       sudo('dpkg -i %s' % debname) 
    else:
       print('No deb filename specified')
+
+def deploy():   
+   deploy_deb(debname=create_deb())
      
