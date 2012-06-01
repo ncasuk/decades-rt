@@ -17,6 +17,7 @@ env.dchopts = '--snapshot'
 if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
    env.dchopts = '--release'
 
+@hosts('')
 def list_hosts():
    print env.hosts
 
@@ -65,10 +66,9 @@ def setup():
       sudo('createdb -O inflight inflightdata', user="postgres")
       sudo('createlang plpgsql inflightdata',user="postgres")
    
-
+@hosts('')
 def create_deb():
    #only create deb if it's the first time this run it's been called
-   local('git-dch %(dchopts)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    current=local('head -n1 debian/changelog',capture=True)
    env.release=current.split('(')[1].split(')')[0] #version number of deb
    debs = glob.glob('%(prj_name)s_%(release)s*.deb' % env)
@@ -76,9 +76,10 @@ def create_deb():
       local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz pylib' % env)
       local('mkdir %(prj_name)s-%(timestamp)s' % env)
       local('git checkout-index --prefix=%(prj_name)s-%(timestamp)s/ -a' % env)
+      local('git-dch %(dchopts)s --auto --git-author' % env) #adds latest commit details to a snapshot version
       local('cp -rp debian %(prj_name)s-%(timestamp)s/' % env)
       with lcd('%(prj_name)s-%(timestamp)s' % env):
-         debuild_out = local('debuild -us -uc' % env, capture=True)
+         debuild_out = local('git-buildpackage --git-upstream-branch=master --git-debian-branch=master --git-export=INDEX --git-ignore-new' % env, capture=True)
          debuild_outlist = debuild_out.splitlines()
          for line in debuild_outlist:
             if "dpkg-deb: building package " in line:
@@ -99,5 +100,5 @@ def deploy_deb(debname=False):
       print('No deb filename specified')
 
 def deploy():   
-   deploy_deb(debname=create_deb())
+   debname = execute(create_deb())
      
