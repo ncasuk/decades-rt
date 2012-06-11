@@ -103,7 +103,7 @@ class DecadesProtocol(basic.LineReceiver):
       #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
       #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), Wind speed, ms-1, 
       #log.msg(repr(self.der))
-      self.cursor.execute("SELECT id, id AS dercount FROM mergeddata WHERE uppbbr01_utc_time IS NOT NULL AND lowbbr01_utc_time IS NOT NULL GROUP BY id ORDER BY id DESC LIMIT 1;")
+      self.cursor.execute("SELECT id, id AS dercount FROM mergeddata WHERE uppbbr01_utc_time IS NOT NULL AND corcon01_utc_time IS NOT NULL AND aerack01_utc_time IS NOT NULL AND lowbbr01_utc_time IS NOT NULL GROUP BY id ORDER BY id DESC LIMIT 1;")
       (self.derindex, dercount) = self.cursor.fetchone()
       self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),1.1,2.0,3.0,4.0,0.2,6.0,7.0,8.0,9.0,10.0,'T','E','S','T'))
       log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
