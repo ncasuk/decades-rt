@@ -65,7 +65,6 @@ class rt_data(object):
             elif(name in self.cals):
                 return self.cals[name]
             else:
-                print data
                 #data[0].update([name])
                 data[0].update({name:[]})
                 return np.array([])
@@ -83,7 +82,8 @@ class rt_data(object):
     def getbunchofdata_fromdatabase(self,names,selection):
         """ Dummy routine to read several parameters from database"""
         fieldname_part = 'SELECT %s ' % ', '.join(names)
-        self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s AND ' + ' IS NOT NULL AND '.join(names) + ' IS NOT NULL ')% selection, )
+        #self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s AND ' + ' IS NOT NULL AND '.join(names) + ' IS NOT NULL ')% selection, )
+        self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s ')% selection, )
         print self.database.query
         ans={}
         data={}
