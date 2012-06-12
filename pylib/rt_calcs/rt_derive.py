@@ -349,8 +349,8 @@ class derived(rt_data.rt_data):
     def upper_pyrgeometer_flux(self,data):
         c=self.cals['CAL083']
         ct=self.cals['CAL089']
-        t=self.getdata('uppbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
-        s=(self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c[1]
+        rt=self.getdata('uppbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
+        rs=(self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c[1]
         uir=5.899E-8*(rt+273.16)**4+rs
         return uir
 
