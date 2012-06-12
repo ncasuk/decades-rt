@@ -72,7 +72,7 @@ class rt_data(object):
     def getdata_fromdatabase(self,name,selection):
         """ Dummy routine to read one parameter from database"""
         fieldname_part = 'SELECT %s ' % name 
-        self.database.execute(fieldname_part + 'FROM mergeddata WHERE id %s AND %s IS NOT NULL' % (selection, name) )
+        self.database.execute(fieldname_part + 'FROM mergeddata WHERE id %s AND %s IS NOT NULL ORDER BY id' % (selection, name) )
         print self.database.query
         data[name] = []
         for record in self.database: #iterates over results 
@@ -83,7 +83,7 @@ class rt_data(object):
         """ Dummy routine to read several parameters from database"""
         fieldname_part = 'SELECT %s ' % ', '.join(names)
         #self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s AND ' + ' IS NOT NULL AND '.join(names) + ' IS NOT NULL ')% selection, )
-        self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s ')% selection, )
+        self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s  ORDER BY id')% selection, )
         print self.database.query
         ans={}
         data={}
