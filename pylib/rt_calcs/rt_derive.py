@@ -842,7 +842,7 @@ C ST    - Corrected Surface Temperature   (deg C)
 
     def time_since_midnight(self,data):
         """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
-        raw=self.getdata('uppbbr01_utc_time',data) #unixtimestamp
+        raw=self.getdata('corcon01_utc_time',data) #unixtimestamp
         unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
         #raw is an array, so subtracting an integer appears to be valid
         return raw - unixtime_at_midnight
