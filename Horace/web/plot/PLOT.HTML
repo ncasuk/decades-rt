@@ -176,7 +176,7 @@ if((plottype=="mxplot")&&(parameters.substring(0,4)=="515,")){
   w1.document.write("'plot.html#'+document.applets[0].gettimes());void(0);");
   w1.document.writeln('">New plot, same times</A><br>');
 }
-w1.document.write("<APPLET CODE='plotapp.class' ARCHIVE='Plot.jar'");
+w1.document.write("<APPLET CODE='plotapp.class' ARCHIVE='plot.jar'");
 w1.document.writeln(" WIDTH=600 HEIGHT="+hgt+" MAYSCRIPT>");
 w1.document.writeln("<param name='plottype' value='"+plottype+"'>");
 w1.document.writeln("<param name='parameters' value='"+parameters+"'>");
@@ -279,7 +279,7 @@ function writepage(){
 document.writeln('<center>');
 //document.writeln('<H1>Choose Horace Plot</H1>');
 
-document.write("<APPLET CODE='plotapp.class' ARCHIVE='Plot.jar'");
+document.write("<APPLET CODE='plotapp.class' ARCHIVE='plot.jar'");
 document.writeln(" WIDTH=500 HEIGHT=100 MAYSCRIPT>");
 document.writeln("<param name='plottype' value='table'>");
 document.writeln("<param name='parameters' value=''>");

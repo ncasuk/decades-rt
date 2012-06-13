@@ -1,10 +1,31 @@
-decades (0.7.1~2.gbpec3104) quantal; urgency=low
+decades (0.7.1~29.gbpfa20b0) quantal; urgency=low
 
-  ** SNAPSHOT build @ec3104537750d29233c052ffa91601d36bebf99e **
+  ** SNAPSHOT build @fa20b019c264ef7af1fd2641076c6edaa5acd380 **
+
+  [ Dan Walker ]
+  ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
+
 
   *renumbering to have a clearer version number.
+  * Version numbering change
+  * Allowing specification of new version calling
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 31 May 2012 14:59:35 +0100
+  [ Dave Tiddeman ]
+  * Sorted out some mistakes in the bbr calculations compared to what HOR_CALCS did.
+
+  [ Dan Walker ]
+  * "is deb up-to-date?" detection
+  * deb detection update
+  * Updates to deploy routines
+  * Wait for network to be up before starting!
+  * Revert to debuild rather than git-buildpackage
+  * SQL syntax error
+  * incorrect variable names corrected
+  * Removing IS NOT NULL clause as it is unreliable when not all data are coming in.
+  * Force to be in correct order just in case
+  * fix empty-time-field for nondeicedtemp (only)
+
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 12 Jun 2012 16:17:23 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
