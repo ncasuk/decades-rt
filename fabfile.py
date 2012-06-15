@@ -97,3 +97,8 @@ def deploy_deb(debname=False):
 def deploy():   
    debname=create_deb()
    deploy_deb(debname=debname)
+
+def Plot_jar():
+   '''Creates the JAR file for the display applicaton'''
+   with lcd('Horace/web/plot/plot'):
+      local('make jar && cp Plot.jar ..') 
