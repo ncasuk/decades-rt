@@ -268,7 +268,7 @@ public Vector data=new Vector();
         try{
          if(parameters!=null){
           float[][] a=getData(parameters,lasttime,-1,false);
-          delt=3*(time-lasttime);
+          delt=1*(time-lasttime);
           lasttime=time;
           for(int i=0;i<np;i++){
             addPoints(i,a[i],-1);
