@@ -8,3 +8,4 @@
 *.build
 *.changes
 *.tar.gz
+*.class
