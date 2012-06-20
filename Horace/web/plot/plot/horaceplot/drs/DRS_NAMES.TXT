@@ -1,0 +1,118 @@
+[HORACE.WEB.PLOT]DRS_NAMES.TXT 
+ 
+Created by CREATE_DRS_NAMES
+ 
+    1        FLNO  DRS       FLIGHT NUMBER                 
+    2        GMTH  DRS       FLIGHT GMT(HH+M)              
+    3        GMTM  DRS       FLIGHT GMT(M+SS)              
+    4        EVM   DRS       EVENT MARK                    
+    5        DRSS  DRS       DRS STATUS                    
+   10        DITM  DRS       DE-ICED TEMP                  
+   14        CABP  DRS       CABIN PRESSURE                
+   23        NDTM  DRS       NON-DEICED TEMP               
+   27        SREG  DRS       SIGNAL REGISTER               
+   37        RDHT  DRS       RADAR ALTIMETER               
+   42        J/W   DRS       JOHNSON WILLIAMS              
+   50        CNC   DRS       CNC CONCENTRATION             
+   58        HYGR  DRS       GEN EAST DEW POINT            
+   59        HYCS  DRS       GEN EAST CNTL COND            
+   70        TWCD  DRS       TWC DETECTOR                  
+   71        TNOS  DRS       TWC NOSE TEMP                 
+   72        TSAM  DRS       TWC SAMPLE TEMP               
+   73        TAMB  DRS       TWC AMBIENT TEMP              
+   74        TSRC  DRS       TWC SOURCE TEMP               
+   75        HTR1  DRS       TWC EVAP1 CURRNT              
+   76        HTR2  DRS       TWC EVAP2 CURRNT              
+   77        ISRC  DRS       TWC SRCE CURRNT               
+   78        STAT  DRS       TWC STATUS WORD               
+   81        UPOS  DRS       UPP VIS CLR SIG               
+   82        UPIS  DRS       UPP VIS RED SIG               
+   83        USIS  DRS       UPP I/R SIGNAL                
+   84        UPOZ  DRS       UPP VIS CLR ZERO              
+   85        UPIZ  DRS       UPP VIS RED ZERO              
+   86        USIZ  DRS       UPP I/R ZERO                  
+   87        UPOT  DRS       UPP VIS CLR TEMP              
+   88        UPIT  DRS       UPP VIS RED TEMP              
+   89        USIT  DRS       UPP I/R TEMP                  
+   91        LPFS  DRS       LWR VIS CLR SIG               
+   92        LSFS  DRS       LWR VIS RED SIG               
+   93        LPAS  DRS       LWR I/R SIGNAL                
+   94        LPFZ  DRS       LWR VIS CLR ZERO              
+   95        LSFZ  DRS       LWR VIS RED ZERO              
+   96        LPAZ  DRS       LWR I/R ZERO                  
+   97        LPFT  DRS       LWR VIS CLR TEMP              
+   98        LSFT  DRS       LWR VIS RED TEMP              
+   99        LPAT  DRS       LWR I/R TEMP                  
+  100        O3    DRS       OZONE SIGNAL                  
+  106        O3P   DRS       O3 PRESSURE                   
+  113        O3T   DRS       O3 TEMPERATURE                
+  114        O3F   DRS       O3 FLOW                       
+  140        CCN   DRS       CLOUD COND NUC CNT            
+  141        HEIM  DRS       HEIM TARGET TEMP              
+  142        HEIC  DRS       HEIM CALIB TEMP               
+  150        HCHO  DRS       FORMALDEHYDE                  
+  151        ORGP  DRS       ORGANIC PEROXIDE              
+  152        H2O2  DRS       HYDROGEN PEROXIDE             
+  154        CO    DRS       CARBON MONOXIDE               
+  157        PRC1  DRS       PERCA 1                       
+  158        PRC2  DRS       PERCA 2                       
+  163        I01   DRS       INS I01 MESSAGE               
+  164        TTAG  DRS       INS TIME TAG                  
+  165        VXVY  DRS       INS FINE VX/VY                
+  166        VZTH  DRS       INS FINE VZ/TH                
+  167        RORR  DRS       INS FINE RO/RR                
+  168        PIPR  DRS       INS FINE PI/PR                
+  169        PAYR  DRS       INS FINE PA/YR                
+  170        EV1V  DRS       TWC EVAP 1 VOLTS              
+  171        EV2V  DRS       TWC EVAP 2 VOLTS              
+  172        NPWR  DRS       TWC NOSE HEATER PWR           
+  173        EV1C  DRS       TWC EVAP 1 CURR O/S           
+  174        EV2C  DRS       TWC EVAP 2 CURR O/S           
+  175        NPRS  DRS       NEPH PRESSURE                 
+  176        NTMP  DRS       NEPH TEMPERATURE              
+  177        NBTS  DRS       NEPH BLUE SP                  
+  178        NGTS  DRS       NEPH GREEN SP                 
+  179        NRTS  DRS       NEPH RED SP                   
+  180        NBBS  DRS       NEPH BLUE BSP                 
+  181        NRBS  DRS       NEPH RED BSP                  
+  182        NGBS  DRS       NEPH GREEN BSP                
+  183        NHUM  DRS       NEPH HUMIDITY                 
+  184        NSTS  DRS       NEPH STATUS                   
+  185        PLIN  DRS       PSAP LIN ABS COEFF            
+  186        PLOG  DRS       PSAP LOG ABS COEFF            
+  187        PTRN  DRS       PSAP TRANSMITTANCE            
+  188        PFLO  DRS       PSAP FLOW RATE                
+  195        F1FL  DRS       FILTER 1 FLOW                 
+  196        F1PR  DRS       FILTER 1 PRESSURE             
+  197        F2FL  DRS       FILTER 2 FLOW                 
+  198        F2PR  DRS       FILTER 2 PRESSURE             
+  199        NO    DRS       NOXY NO                       
+  200        NO2   DRS       NOXY NO2                      
+  201        NOY1  DRS       NOXY NOY1                     
+  202        NOY2  DRS       NOXY NOY2                     
+  203        NOX1  DRS       NOX CHANNEL 1                 
+  204        NOX2  DRS       NOX CHANNEL 2                 
+  205        NOX3  DRS       NOX CHANNEL 3                 
+  207        CABT  DRS       CABIN TEMPERATURE             
+  208        NVLW  DRS       NEVZ LIQUID WATER             
+  209        NVLR  DRS       NEVZ LIQUID REFERENCE         
+  210        NVLC  DRS       NEVZ LIQUID COLLECTOR         
+  211        NVTW  DRS       NEVZ TOTAL WATER              
+  212        NVTR  DRS       NEVZ TOTAL REFERENCE          
+  213        NVTC  DRS       NEVZ TOTAL COLLECTOR          
+  214        SO2   DRS       TECO SO2                      
+  215        TBP1  DRS       TURBULENCE PROBE 1            
+  216        TBP2  DRS       TURBULENCE PROBE 2            
+  217        TBP3  DRS       TURBULENCE PROBE 3            
+  218        TBP4  DRS       TURBULENCE PROBE 4            
+  219        TBP5  DRS       TURBULENCE PROBE 5            
+  220        TBP6  DRS       TURBULENCE PROBE 6            
+  221        TBP7  DRS       TURBULENCE PROBE 7            
+  222        TBP8  DRS       TURBULENCE PROBE 8            
+  223        TBP9  DRS       TURBULENCE PROBE 9            
+  224        USOS  DRS       UPP STBD OUT SIG              
+  225        USOZ  DRS       UPP STBD OUT ZERO             
+  226        USOT  DRS       UPP STBD OUT TEMP             
+  227        LSAS  DRS       LWR STBD AFT SIG              
+  228        LSAZ  DRS       LWR STBD AFT ZERO             
+  229        LSAT  DRS       LWR STBD AFT TEMP             
