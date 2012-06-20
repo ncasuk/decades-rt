@@ -125,7 +125,7 @@ public class xyplot1 extends zoomplot implements java.awt.event.ItemListener
     */
    
    public void drawBackground(Graphics g){
-    g.setFont(new Font("SansSerif",Font.BOLD,fontSize));
+    g.setFont(new Font("Gill Sans MT",Font.BOLD,fontSize));
        int i1=1;
         int i2=0;
         float d0=q.max0-q.min0;
