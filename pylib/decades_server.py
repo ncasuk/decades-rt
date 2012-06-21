@@ -60,7 +60,7 @@ class DecadesProtocol(basic.LineReceiver):
          #parano = {515: "uppbbr01_utc_time", 520: "uppbbr01_crio_temp"}
          #using uppbbr01_radiometer_4_sig because it appears to be returning data
          #it's pretending to be deiced air temp to the Java applet
-         parano = {515: "time_since_midnight", 520:"deiced_true_air_temp_k", 523:"nondeiced_true_air_temp_k", 627:"neph_red_bsp",539:"upper_pyranometer_red_flux",540:'upper_pyrgeometer_flux'}
+         parano = {515: "time_since_midnight", 520:"deiced_true_air_temp_k", 522:"nondeiced_indicated_air_temp_c", 523:"nondeiced_true_air_temp_k", 524:"nondeiced_true_air_temp_c", 627:"neph_red_bsp",539:"upper_pyranometer_red_flux",540:'upper_pyrgeometer_flux'}
        
          paralist = []
          for paracode in para[4:]:
