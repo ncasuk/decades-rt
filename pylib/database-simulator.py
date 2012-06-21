@@ -32,7 +32,10 @@ while 1:
 					'corcon01_ndi_temp':int(911223 + (1204 * math.sin(timestamp/3))),
 					'uppbbr01_radiometer_3_temp':int(900000 + 6500 * math.cos(timestamp/3)),
 					'uppbbr01_radiometer_3_sig':int(random.normalvariate(50000,10000)),
-					'uppbbr01_radiometer_3_zero':int(random.normalvariate(50000,10000))
+					'uppbbr01_radiometer_3_zero':int(random.normalvariate(50000,10000)),
+               'gindat01_latitude_gin':(52.07 + 10*math.sin(math.radians(timestamp*3))),
+               'gindat01_longitude_gin':(-0.61 + 10*math.cos(math.radians(timestamp*3))),
+               'gindat01_heading_gin':(360-((timestamp*3) % 360))
             }
             
             #cursor.execute('INSERT INTO mergeddata (utc_time, prtaft01_utc_time, corcon01_utc_time, uppbbr01_utc_time, gindat01_utc_time, lowbbr01_utc_time, aerack01_utc_time, corcon01_ndi_temp, uppbbr01_radiometer_3_temp, uppbbr01_radiometer_3_sig, uppbbr01_radiometer_3_zero) VALUES (' + str(timestamp) + ', ' + str(timestamp) + ', ' + str(timestamp) + ', ' + str(timestamp) + ',' + str(timestamp) + ',' + str(timestamp) + ',' + str(timestamp) + ', ' + str(911223 + (1204 * math.sin(timestamp/3))) +', ' + str(900000 + 650 * math.cos(timestamp/3)) +', ' + +');')
