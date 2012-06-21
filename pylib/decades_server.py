@@ -60,7 +60,7 @@ class DecadesProtocol(basic.LineReceiver):
          #parano = {515: "uppbbr01_utc_time", 520: "uppbbr01_crio_temp"}
          #using uppbbr01_radiometer_4_sig because it appears to be returning data
          #it's pretending to be deiced air temp to the Java applet
-         parano = {515: "time_since_midnight", 520:"deiced_true_air_temp_k", 522:"nondeiced_indicated_air_temp_c", 523:"nondeiced_true_air_temp_k", 524:"nondeiced_true_air_temp_c", 627:"neph_red_bsp",539:"upper_pyranometer_red_flux",540:'upper_pyrgeometer_flux'}
+         parano = {515: "time_since_midnight", 520:"deiced_true_air_temp_k", 522:"nondeiced_indicated_air_temp_c", 523:"nondeiced_true_air_temp_k", 524:"nondeiced_true_air_temp_c", 627:"neph_red_bsp",539:"upper_pyranometer_red_flux",540:'upper_pyrgeometer_flux', 605:'gindat01_latitude_gin', 606:'gindat01_longitude_gin'}
        
          paralist = []
          for paracode in para[4:]:
@@ -103,9 +103,9 @@ class DecadesProtocol(basic.LineReceiver):
       #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
       #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), Wind speed, ms-1, 
       #log.msg(repr(self.der))
-      self.cursor.execute("SELECT id, id AS dercount FROM mergeddata WHERE uppbbr01_utc_time IS NOT NULL AND corcon01_utc_time IS NOT NULL AND aerack01_utc_time IS NOT NULL AND lowbbr01_utc_time IS NOT NULL GROUP BY id ORDER BY id DESC LIMIT 1;")
-      (self.derindex, dercount) = self.cursor.fetchone()
-      self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),1.1,2.0,3.0,4.0,0.2,6.0,7.0,8.0,9.0,10.0,'T','E','S','T'))
+      self.cursor.execute("SELECT id, id AS dercount, GREATEST(gindat01_heading_gin,-1.0) AS gindat01_heading_gin FROM mergeddata WHERE uppbbr01_utc_time IS NOT NULL AND corcon01_utc_time IS NOT NULL AND aerack01_utc_time IS NOT NULL AND lowbbr01_utc_time IS NOT NULL ORDER BY id DESC LIMIT 1;")
+      (self.derindex, dercount, gindat01_heading_gin) = self.cursor.fetchone()
+      self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),gindat01_heading_gin,2.0,3.0,4.0,0.2,6.0,7.0,8.0,9.0,10.0,'T','E','S','T'))
       log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
    
    def time_seconds_past_midnight(self):
