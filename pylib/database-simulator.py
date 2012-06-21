@@ -3,7 +3,7 @@
 #Presently produces data 
 #515 Time from Midnight (s)
 #520 Deiced True Air Temp (K)
-import psycopg2, datetime, time, math
+import psycopg2, datetime, time, math, random
 
 conn = psycopg2.connect (host = "localhost",
                            user = "inflight",
@@ -19,7 +19,24 @@ while 1:
             time.sleep(1)
             seconds_since_midnight = (datetime.datetime.now() - datetime.datetime(datetime.datetime.now().year,datetime.datetime.now().month,datetime.datetime.now().day)).seconds
             timestamp = int(math.floor(time.time()))
+
+            #create dictionary of fieldnames => simulated value
+            fakedata = {
+               'utc_time':timestamp,
+               'prtaft01_utc_time':timestamp,
+               'corcon01_utc_time':timestamp,
+               'uppbbr01_utc_time':timestamp,
+					'gindat01_utc_time':timestamp,
+					'lowbbr01_utc_time':timestamp,
+					'aerack01_utc_time':timestamp,
+					'corcon01_ndi_temp':int(911223 + (1204 * math.sin(timestamp/3))),
+					'uppbbr01_radiometer_3_temp':int(900000 + 6500 * math.cos(timestamp/3)),
+					'uppbbr01_radiometer_3_sig':int(random.normalvariate(50000,10000)),
+					'uppbbr01_radiometer_3_zero':int(random.normalvariate(50000,10000))
+            }
             
-            cursor.execute('INSERT INTO mergeddata (utc_time, prtaft01_utc_time, corcon01_utc_time, uppbbr01_utc_time, gindat01_utc_time, lowbbr01_utc_time, aerack01_utc_time, corcon01_ndi_temp) VALUES (' + str(timestamp) + ', ' + str(timestamp) + ', ' + str(timestamp) + ', ' + str(timestamp) + ',' + str(timestamp) + ',' + str(timestamp) + ',' + str(timestamp) + ', ' + str(911223 + (1204 * math.sin(timestamp/3))) +');')
+            #cursor.execute('INSERT INTO mergeddata (utc_time, prtaft01_utc_time, corcon01_utc_time, uppbbr01_utc_time, gindat01_utc_time, lowbbr01_utc_time, aerack01_utc_time, corcon01_ndi_temp, uppbbr01_radiometer_3_temp, uppbbr01_radiometer_3_sig, uppbbr01_radiometer_3_zero) VALUES (' + str(timestamp) + ', ' + str(timestamp) + ', ' + str(timestamp) + ', ' + str(timestamp) + ',' + str(timestamp) + ',' + str(timestamp) + ',' + str(timestamp) + ', ' + str(911223 + (1204 * math.sin(timestamp/3))) +', ' + str(900000 + 650 * math.cos(timestamp/3)) +', ' + +');')
+            cursor.execute('INSERT INTO mergeddata (' + ", ".join(fakedata.keys()) + ') VALUES (' + ", ".join(['%s'] * len(fakedata)) + ')', fakedata.values()) 
+            print cursor.query
             conn.commit()
 
