@@ -379,9 +379,9 @@ class derived(rt_data.rt_data):
         return uir
 
     def gin_latitude(self,data):
-        return self.getdata('prtaft01_gin_lat',data)
+        return self.getdata('gindat01_latitude_gin',data)
     def gin_longitude(self,data):
-        return self.getdata('prtaft01_gin_long',data)
+        return self.getdata('gindat01_longitude_gin',data)
     def gin_altitude(self,data):
         return self.getdata('prtaft01_gin_alt',data)
     def gin_n_velocity(self,data):
