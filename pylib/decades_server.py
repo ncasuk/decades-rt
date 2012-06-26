@@ -60,7 +60,32 @@ class DecadesProtocol(basic.LineReceiver):
          #parano = {515: "uppbbr01_utc_time", 520: "uppbbr01_crio_temp"}
          #using uppbbr01_radiometer_4_sig because it appears to be returning data
          #it's pretending to be deiced air temp to the Java applet
-         parano = {515: "time_since_midnight", 520:"deiced_true_air_temp_k", 522:"nondeiced_indicated_air_temp_c", 523:"nondeiced_true_air_temp_k", 524:"nondeiced_true_air_temp_c", 627:"neph_red_bsp",539:"upper_pyranometer_red_flux",540:'upper_pyrgeometer_flux', 605:'gindat01_latitude_gin', 606:'gindat01_longitude_gin'}
+         parano = {
+         515: 'time_since_midnight',
+         516:'indicated_air_speed',
+         517:'true_air_speed',
+         518:'mach_no',
+         519:'deiced_indicated_air_temp_c',
+         520:'deiced_true_air_temp_k',
+         521:'deiced_true_air_temp_c',
+         522:'nondeiced_indicated_air_temp_c',
+         523:'nondeiced_true_air_temp_k',
+         524:'nondeiced_true_air_temp_c',
+         527:'potential_temperature',
+         528:'dry_air_density',
+         529:'dew_point',
+         530:'vapour_pressure',
+         536:'relative_humidity',
+         539:'upper_pyranometer_red_flux',
+         540:'upper_pyrgeometer_flux',
+         576:'static_pressure',
+         577:'pitot_static_pressure',
+         578:'pressure_height_m',
+         579:'pressure_height_kft',
+         605:'gindat01_latitude_gin',
+         606:'gindat01_longitude_gin',
+         627:'neph_red_bsp'
+         }
        
          paralist = []
          for paracode in para[4:]:
