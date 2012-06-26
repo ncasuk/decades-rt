@@ -72,7 +72,8 @@ class derived(rt_data.rt_data):
         #sig_reg=self.getdata('sig_register',data)
         #di=np.where(np.array(sig_reg,dtype='i2') & int('00100000',2))
         ans=c[0]+c[1]*raw+c[2]*raw**2
-        ans[di]-=self.cals['CAL001'][0]
+        #ans[di]-=self.cals['CAL001'][0]
+        ans = ans - self.cals['CAL001'][0]*di
         return ans
     def deiced_true_air_temp_k(self,data):
         iatdi_C=self.getdata('deiced_indicated_air_temp_c',data)
@@ -192,6 +193,7 @@ class derived(rt_data.rt_data):
         sat=np.where(rd>=rt)
         rh[sat]=100.0
         unsat=np.where(rd<rt)
+        print unsat, type(unsat)
         esbot=6.112*np.exp((17.67*rt[unsat])/(243.5+rt[unsat]))
         ind=unsat[np.where(esbot!=0)]
         rh[ind]=(6.112*np.exp((17.67*rd[ind])/(243.5+rd[ind])))/esbot
