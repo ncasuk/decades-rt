@@ -29,7 +29,7 @@ while 1:
                'prtaft01_deiced_temp_flag':True if timestamp%2 else False, #alternates between true and false
                'corcon01_utc_time':timestamp,
                'corcon01_di_temp':int(911223 + (1204 * math.sin(timestamp/3))),
-               'corcon01_ge_dew':int(901223 + (1204 * math.sin(timestamp/3))),
+               'corcon01_ge_dew':int(39371 + (1204 * math.sin(timestamp/3))),
                'uppbbr01_utc_time':timestamp,
                'gindat01_utc_time':timestamp,
                'lowbbr01_utc_time':timestamp,
