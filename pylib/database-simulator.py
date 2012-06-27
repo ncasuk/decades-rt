@@ -24,17 +24,17 @@ while 1:
             fakedata = {
                'utc_time':timestamp,
                'prtaft01_utc_time':timestamp,
-               'prtaft01_pressure_alt':int(2500 + (50 * math.sin(timestamp/4))), #average 10kft
+               'prtaft01_pressure_alt':int(1000 + (50 * math.sin(timestamp/4))), #average 10kft
                'prtaft01_ind_air_speed':int(9600 + (10 * math.cos(timestamp*4))), #average 300kts
                'prtaft01_deiced_temp_flag':True if timestamp%2 else False, #alternates between true and false
                'corcon01_utc_time':timestamp,
-               'corcon01_di_temp':int(911223 + (1204 * math.sin(timestamp/3))),
-               'corcon01_ge_dew':int(39371 + (1204 * math.sin(timestamp/3))),
+               'corcon01_di_temp':int(23000 + (1204 * math.sin(timestamp/3))),
+               'corcon01_ge_dew':int(39371 + (1204 * math.cos(timestamp/3))),
+               'corcon01_ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
                'uppbbr01_utc_time':timestamp,
                'gindat01_utc_time':timestamp,
                'lowbbr01_utc_time':timestamp,
                'aerack01_utc_time':timestamp,
-               'corcon01_ndi_temp':int(911223 + (1204 * math.sin(timestamp/3))),
                'uppbbr01_radiometer_3_temp':int(900000 + 6500 * math.cos(timestamp/3)),
                'uppbbr01_radiometer_3_sig':int(random.normalvariate(50000,10000)),
                'uppbbr01_radiometer_3_zero':int(random.normalvariate(50000,10000)),
