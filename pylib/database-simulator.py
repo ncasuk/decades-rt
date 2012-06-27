@@ -27,10 +27,12 @@ while 1:
                'prtaft01_pressure_alt':int(1000 + (50 * math.sin(timestamp/4))), #average 10kft
                'prtaft01_ind_air_speed':int(9600 + (10 * math.cos(timestamp*4))), #average 300kts
                'prtaft01_deiced_temp_flag':True if timestamp%2 else False, #alternates between true and false
+               'prtaft01_rad_alt':int(random.normalvariate(10000,400)),
                'corcon01_utc_time':timestamp,
                'corcon01_di_temp':int(23000 + (1204 * math.sin(timestamp/3))),
                'corcon01_ge_dew':int(39371 + (1204 * math.cos(timestamp/3))),
                'corcon01_ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
+               'corcon01_jw_lwc':int(22300 + (1204 * math.sin(timestamp/3))),
                'uppbbr01_utc_time':timestamp,
                'gindat01_utc_time':timestamp,
                'lowbbr01_utc_time':timestamp,
