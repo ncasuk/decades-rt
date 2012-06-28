@@ -34,15 +34,20 @@ while 1:
                'corcon01_ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
                'corcon01_jw_lwc':int(22300 + (1204 * math.sin(timestamp/3))),
                'uppbbr01_utc_time':timestamp,
-               'gindat01_utc_time':timestamp,
-               'lowbbr01_utc_time':timestamp,
-               'aerack01_utc_time':timestamp,
+               'uppbbr01_radiometer_1_sig':int(random.normalvariate(5000,100)),
+               'uppbbr01_radiometer_1_zero':int(random.normalvariate(4000,100)),
                'uppbbr01_radiometer_3_temp':int(900000 + 6500 * math.cos(timestamp/3)),
                'uppbbr01_radiometer_3_sig':int(random.normalvariate(50000,10000)),
                'uppbbr01_radiometer_3_zero':int(random.normalvariate(50000,10000)),
-               'gindat01_latitude_gin':(52.07 + 10*math.sin(math.radians(timestamp*3))),
+               'gindat01_utc_time':timestamp,
+               'lowbbr01_utc_time':timestamp,
+               'aerack01_utc_time':timestamp,
+               'gindat01_latitude_gin':(52.07 + 10*math.sin(math.radians(timestamp*3))), #A circle centred on Cranfield
                'gindat01_longitude_gin':(-0.61 + 10*math.cos(math.radians(timestamp*3))),
-               'gindat01_heading_gin':(360-((timestamp*3) % 360))
+               'gindat01_heading_gin':(360-((timestamp*3) % 360)),
+               'gindat01_roll_gin':int(random.normalvariate(0,5)),
+               'gindat01_pitch_gin':int(random.normalvariate(0,5))
+
    
 
             }
