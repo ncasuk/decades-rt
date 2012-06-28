@@ -185,7 +185,7 @@ class derived(rt_data.rt_data):
         cc=np.where((hycc>18076) | (hycc<15451)) # not sure what to do with this info ( control lost )
         return raw*c[1]+c[0]
 
-    def relative_humidity(self,data):
+    '''def relative_humidity(self,data):
         """Relative humidity (%)"""
         rd=self.getdata('dew_point',data)+273.16
         rt=self.getdata('deiced_true_air_temp_k',data)
@@ -193,11 +193,24 @@ class derived(rt_data.rt_data):
         sat=np.where(rd>=rt)
         rh[sat]=100.0
         unsat=np.where(rd<rt)
-        print unsat, type(unsat)
         esbot=6.112*np.exp((17.67*rt[unsat])/(243.5+rt[unsat]))
         ind=unsat[np.where(esbot!=0)]
         rh[ind]=(6.112*np.exp((17.67*rd[ind])/(243.5+rd[ind])))/esbot
-        return rh
+        return rh'''
+    def relative_humidity(self,data):
+        """Relative humidity (%)"""
+        Td=self.getdata('dew_point',data)
+        T=self.getdata('deiced_true_air_temp_c',data)
+        RH=np.zeros(len(Td))
+        RH[Td>=T]=100.0     # saturated temp<dew point
+        unsat=Td<T          # calculate for unsaturated section
+        # NOAA approximation http://www.srh.noaa.gov/images/epz/wxcalc/rhTdFromWetBulb.pdf
+        # es = 6.112*exp(17.67*T/(T+243.5))
+        # e  = 6.112*exp(17.67*Td/(Td+243.5))
+        # RH = 100*e/es 
+ 
+        RH[unsat]=100.0*np.exp(17.67*(Td[unsat]/(243.5+Td[unsat])-T[unsat]/(243.5+T[unsat])))
+        return RH
 
     def vapour_pressure(self,data):
         """Vapour pressure (mb)"""
@@ -356,16 +369,6 @@ class derived(rt_data.rt_data):
         uir=5.899E-8*(rt+273.16)**4+rs
         return uir
 
-    def upper_pyrgeometer_flux_4(self,data):
-        '''uses the radiometer_4 as they seem to have data in the lab - 
-         not sure why, may be noise'''
-        c=self.cals['CAL083']
-        ct=self.cals['CAL089']
-        t=self.getdata('uppbbr01_radiometer_4_temp',data)*ct[1]+ct[0]
-        s=(self.getdata('uppbbr01_radiometer_4_sig',data)-self.getdata('uppbbr01_radiometer_4_zero',data))*c[1]
-        uir=5.899E-8*(rt+273.16)**4+rs
-        return uir
-
     def lower_pyranometer_clear_flux(self,data):
         c=self.cals['CAL091']
         return (self.getdata('lowbbr01_radiometer_1_sig',data)-self.getdata('lowbbr01_radiometer_1_zero',data))*c[1]
@@ -385,7 +388,7 @@ class derived(rt_data.rt_data):
     def gin_longitude(self,data):
         return self.getdata('gindat01_longitude_gin',data)
     def gin_altitude(self,data):
-        return self.getdata('prtaft01_gin_alt',data)
+        return self.getdata('gindat01_altitude_gin',data)
     def gin_n_velocity(self,data):
         return self.getdata('prtaft01_gin_north_vel',data)
     def gin_e_velocity(self,data):
