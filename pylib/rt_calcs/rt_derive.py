@@ -390,33 +390,33 @@ class derived(rt_data.rt_data):
     def gin_altitude(self,data):
         return self.getdata('gindat01_altitude_gin',data)
     def gin_n_velocity(self,data):
-        return self.getdata('prtaft01_gin_north_vel',data)
+        return self.getdata('gindat01_velocity_north_gin',data)
     def gin_e_velocity(self,data):
-        return self.getdata('prtaft01_gin_east_vel',data)
+        return self.getdata('gindat01_velocity_east_gin',data)
     def gin_d_velocity(self,data):
-        return self.getdata('prtaft01_gin_down_vel',data)
+        return self.getdata('gindat01_velocity_down_gin',data)
     def gin_roll(self,data):
-        return self.getdata('prtaft01_gin_roll',data)
+        return self.getdata('gindat01_roll_gin',data)
     def gin_pitch(self,data):
-        return self.getdata('prtaft01_gin_pitch',data)
+        return self.getdata('gindat01_pitch_gin',data)
     def gin_heading(self,data):
-        return self.getdata('prtaft01_gin_heading',data)
+        return self.getdata('gindat01_heading_gin',data)
     def gin_track_angle(self,data):
-        return self.getdata('prtaft01_gin_track',data)
+        return self.getdata('gindat01_track_gin',data)
     def gin_speed(self,data):
-        return self.getdata('prtaft01_gin_speed',data)
+        return self.getdata('gindat01_speed_gin',data)
     def gin_rate_about_long(self,data):
-        return self.getdata('prtaft01_gin_roll_rate',data)
+        return self.getdata('gindat01_rate_about_long_gin',data)
     def gin_rate_about_trans(self,data):
-        return self.getdata('prtaft01_gin_pitch_rate',data)
+        return self.getdata('gindat01_rate_about_trans_gin',data)
     def gin_rate_about_down(self,data):
-        return self.getdata('prtaft01_gin_heading_rate',data)
+        return self.getdata('gindat01_rate_about_down_gin',data)
     def gin_acc_long(self,data):
-        return self.getdata('prtaft01_gin_accel_fwd',data)
+        return self.getdata('gindat01_long_accel_gin',data)
     def gin_acc_trans(self,data):
-        return self.getdata('prtaft01_gin_accel_strbrd',data)
+        return self.getdata('gindat01_trans_accel_gin',data)
     def gin_acc_down(self,data):
-        return self.getdata('prtaft01_gin_accel_dwn',data)
+        return self.getdata('gindat01_down_accel_gin',data)
 
     """
         Calculation of Equation of Tome and Solar declination per second..
