@@ -852,4 +852,6 @@ C ST    - Corrected Surface Temperature   (deg C)
         #raw is an array, so subtracting an integer appears to be valid
         return raw - unixtime_at_midnight
         
+    def derindex(self,data):
+      return self.getdata('id',data)
         

@@ -25,12 +25,12 @@ class rt_data(object):
             ans[name]=self.getdata(name,rawdata)
         return ans
 
-    def derive_data_alt(self,names,selection):
+    def derive_data_alt(self,names,selection,order=" ORDER BY id"):
         """Alternative read in data and process.  Separated so that only one database query
            ( Goes through the process twice - first with empty data array, then reads all raw data
              before the second pass)"""
         rawset=self.get_raw_required(names)
-        rawdata=self.getbunchofdata_fromdatabase(rawset,selection)
+        rawdata=self.getbunchofdata_fromdatabase(rawset,selection, order)
         return self.derive_data(names,selection,rawdata=rawdata)
 
     def get_raw_required(self,names):
@@ -79,11 +79,11 @@ class rt_data(object):
             data[name].append(getattr(record,name))
         return np.array(data[name],dtype='float')
             
-    def getbunchofdata_fromdatabase(self,names,selection):
+    def getbunchofdata_fromdatabase(self,names,selection,order=' ORDER BY id'):
         """ Dummy routine to read several parameters from database"""
         fieldname_part = 'SELECT %s ' % ', '.join(names)
         #self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s AND ' + ' IS NOT NULL AND '.join(names) + ' IS NOT NULL ')% selection, )
-        self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s  ORDER BY id')% selection, )
+        self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s %s')% (selection, order) )
         print self.database.query
         ans={}
         data={}
