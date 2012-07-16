@@ -68,7 +68,8 @@ def setup():
    
 @runs_once
 def create_deb():
-   local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz pylib' % env)
+   #local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz pylib' % env)
+   #local('tar zcv --transform=\'s$Horace$/opt/decades/Horace$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz Horace' % env)
    local('mkdir %(prj_name)s-%(timestamp)s' % env)
    local('git checkout-index --prefix=%(prj_name)s-%(timestamp)s/ -a' % env)
    local('git-dch %(dchopts)s --auto --git-author' % env) #adds latest commit details to a snapshot version
