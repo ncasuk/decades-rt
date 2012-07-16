@@ -1,7 +1,7 @@
 <VirtualHost *:80>
 	ServerAdmin webmaster@localhost
 
-	DocumentRoot /var/www/WEB
+	DocumentRoot /usr/local/lib/decades/web
 	<Directory />
 		Options FollowSymLinks
 		AllowOverride None
@@ -12,7 +12,7 @@
 		Order allow,deny
 		allow from all
 	</Directory>
-	<Directory /var/www/WEB>
+	<Directory /usr/local/lib/decades/web>
 		Options Indexes FollowSymLinks MultiViews ExecCGI
       CheckSpelling On
 		AddHandler cgi-script .cgi

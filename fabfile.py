@@ -95,6 +95,7 @@ def deploy_deb(debname=False):
       print('No deb filename specified')
 
 def deploy():   
+   Plot_jar()
    debname=create_deb()
    deploy_deb(debname=debname)
 
