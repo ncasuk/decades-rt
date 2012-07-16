@@ -40,7 +40,7 @@ CAL188 2  -7.36E-1,1.12E-4,         	PSAP flow rate *
 CAL207 2  -5.06,7.59E-4,            	Cabin temperature *
 							Nevzorov Data to be added
 CAL215 3  0.4963,0.005447,0.00E-10,	Turb probe pitot-static (mb)
-CAL216 3  ,-0.08816,2.103E-05,0.00E-10,	Turb probe attack diff (mb)
+CAL216 3  -0.08816,2.103E-05,0.00E-10,	Turb probe attack diff (mb)
 CAL217 3  -0.13520,8.462E-06,0.00E-10,	Turb probe sideslip diff (mb)
 CAL218 3  0.5754,0.01079,0.00E-10,	Turb probe attack check (mb)
 CAL219 3  -0.6113,0.01070,0.00E-10,	Turb probe sideslip check (mb)
