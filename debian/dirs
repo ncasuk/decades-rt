@@ -1,6 +1,7 @@
 etc/init.d
 etc/decades
 etc/default
+etc/apache2/sites-enabled
 var/lib/decades
 usr/share/doc/decades
 usr/share/decades
