@@ -30,6 +30,7 @@ install-stamp: build-stamp
 	cp config/apache-config debian/decades/etc/apache2/sites-enabled/decades
 	cp -rp pylib debian/decades/usr/local/lib/decades/
 	cp -rp Horace/web debian/decades/usr/local/lib/decades/
+	cp dataformats/*  debian/decades/opt/decades/dataformats/
 	touch debian/decades/usr/share/decades/package-installed
 	touch install-stamp
 

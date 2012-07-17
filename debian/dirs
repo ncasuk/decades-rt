@@ -2,6 +2,7 @@ etc/init.d
 etc/decades
 etc/default
 etc/apache2/sites-enabled
+opt/decades/dataformats
 var/lib/decades
 usr/share/doc/decades
 usr/share/decades
