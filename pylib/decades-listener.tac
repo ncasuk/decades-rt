@@ -25,7 +25,7 @@ def getDecadesService():
     while True:
       try:
          service = internet.MulticastServer(50001, MulticastServerUDP(conn))
-      except twisted.internet.error.MulticastJoinError, e:
+      except twisted.internet.error.MulticastJoinError:
          service = false
       if(service):
          break;
