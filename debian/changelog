@@ -1,6 +1,6 @@
-decades (0.7.1~36.gbp5f86a9) quantal; urgency=low
+decades (0.7.1~41.gbp62728d) quantal; urgency=low
 
-  ** SNAPSHOT build @5f86a93e41885599bbf1fdf1acd065d45c844047 **
+  ** SNAPSHOT build @62728dfbc169c84e2977ba2926ac6044a31ecf90 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -55,8 +55,12 @@ decades (0.7.1~36.gbp5f86a9) quantal; urgency=low
   * Fixed typo that preventes YX plots working.
   * replace calibration file
   * Corrected type in calib data
+  * Apache config file
+  * First go at automatic apache config.
+  * Deprecated tarfile generation
+  * Added Apache config directory
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 16 Jul 2012 15:29:04 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 17 Jul 2012 09:43:07 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
