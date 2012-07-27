@@ -1,1 +1,0 @@
-pro printstatuscommon horace,sock,outd,host,port,derindex,dercount,mapstatus,status,fltnoinfo,derindex,dercount,fltnoinfo,statusprint,statusreturnend

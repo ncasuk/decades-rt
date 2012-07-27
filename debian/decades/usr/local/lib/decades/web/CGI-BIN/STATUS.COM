@@ -1,1 +1,0 @@
-$!$! STATUS. - Shows HORACE status.  Note that this procedure runs under the$! Apache account and therefore has limited access to HORACE information.$! This is mainly kept here as an example.$!$! URL is http://horace/cgi-bin/status$!$ WRITE SYS$OUTPUT "content-type: text/plain"$ WRITE SYS$OUTPUT ""$ SHOW SYS$ EXIT

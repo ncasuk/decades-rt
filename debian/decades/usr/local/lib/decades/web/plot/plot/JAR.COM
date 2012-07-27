@@ -1,1 +1,0 @@
-$@sys$manager:java$setup$!copy [-.drs]horconn.java *.*$javac plotapp.java$open/write tmp jar.temp$write tmp "$jar cvf0 Plot.jar -" $nextbit:$q=f$search("*.class")$if q.eqs."" then goto endit$q=f$parse(q,,,"NAME")+".class -"$write tmp q$goto nextbit$endit:$write tmp ""$write tmp "$exit"$close tmp$@jar.temp$!copy plot.jar [-]$EXIT

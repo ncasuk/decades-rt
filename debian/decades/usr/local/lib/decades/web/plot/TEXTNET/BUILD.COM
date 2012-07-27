@@ -1,1 +1,0 @@
-$@sys$manager:java$setup$!copy [-.drs]horconn.java *.*$javac textnet.java$!jar cvf0 textnet.jar *.class  !  Doesn't seem to work with wildcards ?$zip -0 [-]textnet.jar *.class$exit 

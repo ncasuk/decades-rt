@@ -1,1 +1,0 @@
-pro quithorace,soccommon horace,sock,outd,host,port,derindex,dercount,mapstatus,status,fltno  outd(0:3)=byte("QUIT")  socket_write,sock,outd  socket_close,sock  returnend

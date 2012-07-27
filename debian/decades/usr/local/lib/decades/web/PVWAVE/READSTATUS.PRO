@@ -1,1 +1,0 @@
-pro readstatuscommon horace,sock,outd,host,port,derindex,dercount,mapstatus,status,fltnostatus=bytarr(53)nb=socket_read(sock,status)mapstatus=status(0)b=status(1:4)data_convert,b,from='unix',type='int'print,bderindex=b(0)dercount=b(1)fltno=string(status(49:52))status=status(5:48)data_convert,status,from='unix',type='float'returnend
