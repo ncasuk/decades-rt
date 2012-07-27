@@ -99,6 +99,8 @@ def deploy():
    Plot_jar()
    debname=create_deb()
    deploy_deb(debname=debname)
+   sudo('a2enmod speling')
+   sudo('service apache2 restart')
 
 def Plot_jar():
    '''Creates the JAR file for the display applicaton'''
