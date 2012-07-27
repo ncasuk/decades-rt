@@ -1,8 +1,0 @@
-listenerpidfile=/var/run/decades-listener.pid
-rundir=/usr/local/lib/decades
-listenerfile=/etc/decades/decades-listener.tac
-listenerlogfile=/var/log/decades/decades-listener.log
- 
-serverpidfile=/var/run/decades-server.pid
-serverfile=/etc/decades/decades-server.tac
-serverlogfile=/var/log/decades/decades-server.log

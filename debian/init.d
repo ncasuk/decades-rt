@@ -14,6 +14,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 #don't change these here; change them in /etc/default/decades
 listenerpidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pylib/ listenerfile=/etc/decades/decades-listener.tac listenerlogfile=/var/log/decades/decades-listener.log
 serverpidfile=/var/run/decades-server.pid rundir=/var/lib/decades/ serverfile=/etc/decades/decades-server.tac serverlogfile=/var/log/decades/decades-server.log
+tcplistenerpidfile=/var/run/decades-tcplistener.pid rundir=/var/lib/decades/ tcplistenerfile=/etc/decades/decades-tcp-listener.tac tcplistenerlogfile=/var/log/decades/decades-tcplistener.log
 
 [ -r /etc/default/decades ] && . /etc/default/decades
 
@@ -38,6 +39,13 @@ case "$1" in
                --logfile=$serverlogfile \
                --python=$serverfile
         echo "."	
+        echo -n "Starting decades-tcp-listener: twistd"
+        start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
+               --pidfile=$tcplistenerpidfile \
+               --rundir=$rundir \
+               --logfile=$tcplistenerlogfile \
+               --python=$tcplistenerfile
+        echo "."	
    
     ;;
 
@@ -47,6 +55,9 @@ case "$1" in
         echo "."	
         echo -n "Stopping decades-server: twistd"
         start-stop-daemon --stop --quiet              --pidfile $serverpidfile
+        echo "."	
+        echo -n "Stopping decades-tcp-listener: twistd"
+        start-stop-daemon --stop --quiet              --pidfile $tcplistenerpidfile
         echo "."	
     ;;
 

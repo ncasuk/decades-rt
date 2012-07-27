@@ -1,6 +1,6 @@
-decades (0.7.1~50.gbp41032b) quantal; urgency=low
+decades (0.7.1~52.gbp426d5e) quantal; urgency=low
 
-  ** SNAPSHOT build @41032b10e6c50cc74128eebea29dc054781fc8f0 **
+  ** SNAPSHOT build @426d5e0e389a57e0e8a24e5d7f02aea8289cfb6e **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -67,8 +67,10 @@ decades (0.7.1~50.gbp41032b) quantal; urgency=low
   * Add Spelling mod enabling.
   * pylib/decades-tcp-listener.tac
   * Initial version
+  * Mistake!
+  * Undoing mistake!
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 27 Jul 2012 15:07:37 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 27 Jul 2012 15:25:40 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
