@@ -24,6 +24,7 @@ install-stamp: build-stamp
 	mkdir -p debian/decades/etc/init.d
 	mkdir -p debian/decades/etc/default
 	cp pylib/decades-listener.tac debian/decades/etc/decades
+	cp pylib/decades-tcp-listener.tac debian/decades/etc/decades
 	cp pylib/decades-server.tac debian/decades/etc/decades
 	cp debian/init.d debian/decades/etc/init.d/decades
 	cp debian/default debian/decades/etc/default/decades
