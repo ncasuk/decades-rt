@@ -1,0 +1,158 @@
+
+                                                                   APPENDIX 9
+                                                                   26 Oct 1988
+                            DOWNWARD FACING CAMERA
+
+CIRCUIT BREAKERS REQUIRED
+
+1.   Pilot's upper circuit breaker panel - MRF LH AC BUS
+     a)   Downward Camera Door Heater
+2.   Co-Pilot's MRF DC circuit breaker panel - MRF MAIN & ESS. DC BUS
+     a)   D/W Camera Demist
+     b)   MRF Power Control
+3.   Co-Pilot's upper circuit breaker panel - MAIN AC BUS
+     a)   MRF Power - Phase A
+                      Phase B
+                      Phase C
+4.   Cargo hold forward bulkhead - MRF MAIN DISTRIBUTION PANEL
+     a)   28 V DC JB4A (2 breakers)
+     b)   Downward Camera Bay - CONTROL  }
+     c)                       - BLOWER   }  GREEN
+     d)                       - HEATER   }
+     e)   200V AC - TRU
+5.   Front of Van - JB4A
+     a)   28V DC - LAMP TEST
+     b)          - Downward Camera Control - CAMERA
+     c)                                    - DOOR
+     d)                                    - HEATER
+If required the camera operation can be checked without power;
+     a)   Remove floor panel and camera blank
+     b)   Rotate disk - port side upright face of camera - anticlockwise
+          observe that the shutter blinds and drive cogs operate  
+     c)   If magazine fitted left knurled knob will rotate
+With power - EXERCISE CARE TO AVOID INJURY FROM HEATER BLOWER IN CAMERA BAY
+
+PRE-FLIGHT
+
+1.   Check 3 Green CB made, DOWNWARD CAMERA BAY, MRF MAIN DISTRIBUTION PANEL
+2.   Remove floor panel and camera blank - stow in worktop drawer - ensure
+     camera area is clean
+3.   Set film speed - silver arrows and numerals;
+     Black and White Film
+     a)   6« for cloud photography
+          5 for ground photography
+     Colour Film
+     b)   3 for all photography
+4.   Filter:
+     a)   Check yellow filter fitted on lens for Black and White Film
+          (NB. Ground Crew fit yellow filter, kept in darkroom cupboard)
+     b)   Check NO filter fitted if Colour Film used
+5.   Open camera doors from Flight Leader's position, observe indicator
+     functions and "Press to test" Film Running indicator lamp
+6.   Select Frame Rate to 1 per 3 seconds and 500th set
+7.   Switch ON DRS to drive camera time display
+8.   Select RUN and check shutter blinds operate, lens clear of obstructions,
+     light illuminate and drive cogs rotate.  Also check that there is warm
+     air supply with Green CB's made
+                                        -1-
+
+
+                                                                   APPENDIX 9
+                                                                   26 Oct 1988
+
+9.   Select OFF, set Frames Remaining counter to 500 - for a full magazine -
+     or appropriate number for part used 
+10.  Select magazine - remove cover and stow in worktop
+
+11.  Fit magazine - by offering up to drive side of camera, lowering into
+     place and locking with lever - taking care not to snag film
+12.  Select RUN and check forward spindle rotates at selected rate.  If not
+     select OFF remove and check film for damage, refit or select another
+     magazine and repeat
+13.  Select OFF, observe that Frames Remaining counter has decremented, leave
+     frame rate selected
+14.  Check magazine secure and no loose articles in camera bay.  Refit floor
+     panel and check contents of tool kit
+15.  Proceed outside aircraft.  Check DFC window is clean and undamaged.  Test
+     auto iris by shining torch at sensor and observe that sensor and camera
+     iris operate in conjunction with light
+16.  Return inside aircraft.  Close DFC doors and observe light extinguishes. 
+     Reset Frame Rate Selector OFF and at some stage check doors physically
+     closed
+
+IN FLIGHT
+1.   Select Door Control to OPEN and observe indicator illuminated
+2.   Set Frame Rate Selector as required for automatic operation
+3.   Set 1000th/500th Switch as required
+     a)   Normal operation 500th set
+     b)   Low level, eg. position fixes, 1000th set
+4.   Select RUN when required.  Note Time/EM, taking rate and counter reading. 
+     On automatic, film running lamp will illuminate ~ every 10 shots for full
+     mag. and ~ every 5 shots just before film is exhausted.  Observe counter
+     occasionally - for amount used and operation rate
+5.   Single shot mode may be used.  S/Shot overides auto for each operation of
+     switch
+6.   Before removing magazine run on 5 frames
+7.   Select Door CLOSE before landing.
+
+TO CHANGE MAGAZINE IN FLIGHT (FLIGHT LEADER & OBSERVER)
+EXERCISE CARE TO AVOID INJURY FROM HEATER BLOWER IN BAY
+1.   Select OFF when 000 frames remaining
+2.   Remove floor panel, unlock magazine and remove, refit mag. cover.  Check
+     that all film has been used or try to ascertain this by turning left
+     spindle by hand until all film wound through.
+3.   Check operation of camera - F/L selects a run rate; Observer monitors
+     operation.
+4.   Locate new magazine remove and stow cover.  Fit magazine - as pre-flight
+     and lock into place.
+5.   Flight Leader - reset Frames Remaining and select a run rate; Observer -
+     monitor operation.
+6.   Check camera bay for loose articles, refit panel, check and stow tool
+     kit.  Label used magazine.
+7.   Continue photography as required.
+
+
+                                        -2-
+
+
+                                                                   APPENDIX 9
+                                                                   26 Oct 1988
+SWITCH OFF 
+1.   Run ~ 5 frames after end of photography to ensure shots from
+     experimentals run inside magazine.
+
+2. Set OFF.
+3.   Set Frame Rate Selector OFF.
+4.   Select Door CLOSE
+5.   Break 3 GREEN CB's - MRF MAIN DISTRIBUTION PANEL - (BEFORE LANDING)
+     a)   Downward Camera Bay - CONTROL
+     b)                       - BLOWER      > GREEN
+     c)                       - HEATER
+
+AFTER FLIGHT
+
+1.   Remove floor panel.
+2.   Unlock magazine, remove, refit cover.
+3.   Check camera for damage, refit blank.
+4.   Ensure all magazines used are labelled with Flight No, Date, and Frames
+     Remaining - for part used.
+5.   Refit floor panel, check and stow tool kit.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

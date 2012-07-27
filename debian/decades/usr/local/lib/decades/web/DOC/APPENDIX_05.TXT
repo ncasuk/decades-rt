@@ -1,0 +1,519 @@
+                                                                APPENDIX 5
+                                                                21 August 1989
+                   MRF HERCULES INERTIAL NAVIGATION SYSTEM
+
+FERRANTI FIN 1012 INS
+
+USER'S NOTES                                          (Version 3, March 1988)
+
+
+A1.  General
+
+1.   The FIN 1012 INS is a self-contained navigational system capable of
+operating within the latitude limits of 89.5oN and 89.5oS.  On the MRF
+Hercules it is installed primarily for experimental purposes but it is also
+used by the aircrew as a navigation aid.  An a/c scientist requiring to use
+the Control and Display Unit should ensure that the Navigator is aware of this
+requirement.
+
+2.   The IN Equipment consists of two main units:-
+
+     i)   the Inertial Navigation Unit (INU), containing the inertial
+     platform, power supplies, electronic and computer cards and input/output
+     interface circuits.
+
+     ii)  the Inertial Navigation Control and Display Unit (INCDU), containing
+     the operators controls and displays, and its own power supply.  See
+     Figure 1.
+
+3.   The INU (H430) is mounted, with its cooling fan, in the nose boom bay. 
+     The INCDU (H432) and a monitor panel (H437) are installed at the
+     navigator's station.
+
+A2.  Inputs and Outputs
+
+4.   For normal operation the equipment requires only one data input -
+     barometric altitude.  This is supplied from a transducer, the Baro Unit
+     (H431), in the nose boom bay and a height generator box (H433) near the
+     navigator's position.  The equipment will function without the barometric
+     input but at reduced accuracy.
+
+5.   The INCDU provides outputs of velocities, position, heading and attitude
+     together with the equipment's status on its displays.
+
+6.   The INU ouputs the aircraft's velocity in 3 axes, the aircraft's attitude
+     in terms of heading, roll and pitch, and a status word, to the Data
+     Recording System (DRS).
+
+7.   The aircraft heading (true) is also displayed on a Heading Indicator at
+     the navigator's station, and is supplied to the doppler radar system's
+     aerial.
+
+8.   Lamps indicating "IN good in navigation mode", and "IN fault" are
+     positioned on the monitor panel and near the flight leader's position in
+     the Van.  The navigator also has a meter indicating the platform
+     temperature and a LED to indicate that the cooling fan is powered.
+                                        -1-
+
+
+                                                                APPENDIX 5
+                                                                21 August 1989
+A3.  Principles of Operation
+
+9.   Inertial navigation is based on the ability of the accelerometer to
+     measure accelerations along the line of its sensitive axes, and the
+     ability of the gyroscope to detect rotational changes.
+10.  Three accelerometers are aligned north, east and vertically (with respect
+     to the local gravity vector).  They are maintained in this alignment on
+     their stabilised platform, independently of aircraft movement, by
+     mounting gyroscopes on the platform and by placing the instrument cluster
+     in a gimbal arrangement, and using 3 servo loops to correct any
+     misalignment.
+
+11.  Corrections are applied for movement over the curved surface of the
+     earth, the earth's rotation, the effect of gravitational, centrifugal and
+     coriolis forces.
+
+12.  The accelerations measured in 3 axes (north, east and vertical) are
+     integrated to give velocities and the velocities are integrated to give
+     increments of distance.  The horizontal increments update known
+     coordinates to give latitude and longitude.  The vertical increment is
+     compared with the barometric derived term and a correction is fed back to
+     the vertical velocity.
+
+13.  The aircraft attitude in terms of heading, roll and pitch are digitised
+     from signals read from the appropriate gimbal's synchro.
+
+B1.  Operation
+
+B2.  Switch On
+
+14.  a)   The ideal INS Bay temperature is between +25oC and +30oC.  The
+     Heater and Blower switches at the Navigator's station should be selected
+     to bring the Bay temperature to this range as quickly as possible bearing
+     in mind the ambient conditions.
+
+     b)   During the Alignment period the INS Bay temperature meter should be
+     monitored and if +20oC is not reached, or +30oC is exceeded, an attempt
+     to correct the temperature should be made by using the Heater and Blower
+     switches as appropriate.  The INS Bay should be stabilised automatically
+     at +30OC by the flamestat.  If this does not appear to be occurring
+     report as a fault.
+
+     c)   Ensure INCDU Mode Selector is to the OFF position.
+
+     d)   Verify that the following circuit breakers are closed:-
+
+
+
+
+
+
+
+
+
+                                        -2-
+
+                                                                APPENDIX 5
+                                                                21 August 1989
+
+15.            Pilot's CB panels
+
+               MRF LH AC BUS - INERTIAL NAV. FANS SUPPLY, PHASE A, B and C
+               (Green cap).
+               
+               MRF LH AC BUS - INERTIAL NAV. RAPID HT., PHASE A, B and C
+
+               MRF LH AC BUS - INCDU LIGHTS (MONITOR PANEL AC SUPPLY)
+
+               ISOLATED DC BUS - INERTIAL NAVIGATOR (green cap)
+
+               ESS. AC BUS - NAV HEADING IND. PHASE A (green cap)
+
+16.            Co-pilot's CB panels
+
+               MRF MAIN DC BUS - IN NAV AC UNIT GROUND CONTROL
+
+               MRF MAIN DC BUS - INERTIAL NAVIGATION HEIGHT GEN (Green cap)
+               MRF MAIN DC BUS - INERTIAL NAVIGATION MONITOR PANEL (Green cap)
+
+17.  e)   Select NORM on Alignment Selector (unless doing a calibration
+     alignment).
+
+     f)   Select IPI on MODE Selector.  Status Indicator LH digit = 7.
+
+     g)   The Rapid Heaters are now energised.  The HTR lamp will be on and
+     will flash if the platform temperature is below +5oC.  The HTR lamp will
+     go off when operating temperature is reached.
+
+     h)   The INS should be left in IPI mode until the IN Bay temperature
+     meter has reached +20oC AND the INU TEMP meter (on H437 Monitor Panel)
+     has stabilised at +55oC and is "pulsing", OR 20 minutes has elapsed since
+     the HTR lamp went out.
+
+     i)   Insertion of Present Position and/or Heading can be made, if
+     necessary, at any time during this period.
+
+     j)   When the conditions in paragraph 3h) have been reached (and this
+     will depend on the ambient conditions) the Mode Selection switch may be
+     moved to ALN.  The LH Status Indicator will = 6; this reduces during
+     alignment.
+
+     k)   Sometime during the period when ALN is selected move the Display
+     Selector switch to "I".  On the keypad enter 72104 followed by ENT.  The
+     upper display will show 72104 and the lower display will show the value
+     of the Vertical Velocity (Vz) parameter.  The correct display should be a
+     single value which decreases towards 1E/2W as the alignment proceeds.  If
+     this is the case the alignment may continue as normal.
+
+
+
+
+                                        -3-
+
+
+                                                                APPENDIX 5
+                                                                21 August 1989
+
+     l)   If the lower display should be switching between two large values
+     with the E and W lamps being illuminated alternately a fault condition
+     exists.  The Mode Selector switch should be moved to OFF.  Wait at least
+     3 minutes then carry out the actions of paras 3b) to 3k).
+
+     m)   Check that the Height Generator box (H433) is ON (Green LED
+     illuminated).  The red LED and associated switch are a test facility
+     which inserts zero feet into the INU.  If the red LED is illuminated
+     cancel it by operating the adjacent switch.  The INU requires the baro.
+     input to be present before the alignment mode is entered.
+
+B3   Initial Position Insertion (IPI)
+
+18.  a)   With Display Selector at PP enter Latitude (51o 16.7'N for RAE) by
+     pressing N (or S) followed by coordinates.  Data is displayed on upper
+     panel.  If wrong press CLR, if correct press ENT.
+
+     b)   Enter Longitude (00o 46.8'W for RAE) in a similar manner.  Data is
+     displayed on lower panel.  Leading zeros need not be entered, trailing
+     zeros must be entered.
+
+     c)   Select HDG/DR on Display Selector, enter heading, if displayed value
+     on upper panel is not within 5o of the best estimate of true heading, on
+     the keyboard buttons.  If data in upper panel correct then press ENT,
+     otherwise press CLR and re-enter.
+
+19.  Switching to IPI initiates the Built In Test program which then runs
+automatically until the IN is switched off.  If a fault is detected a digit
+will be displayed in the RH Status Indicator.  See Table 2.
+
+20.  Occasionally 77 will be displayed when IPI is selected.  Switch to OFF
+and back to IPI (known fault).
+
+B4.  Alignment
+
+21.  The preferred method is the Double Alignment procedure as follows:-
+
+     a)   After rapid heat is completed, and any insertions made at IPI,
+     select ALN on the Mode Selector switch.  The LH Status Indicator
+     will = 6; this reduces during the alignment.  See Table 2.
+
+     b)   After 12 minutes in Align select NAV for 1 minute (to torque out
+     heading error).  Heading display may vary during the Align procedure.
+
+     c)   Reselect ALN for as long as possible; 7 minutes; or until
+     LH digit = 0; depending on the time available.
+
+     d)   During the alignment carry out the check in Section B2. paras k)
+     and l).
+
+
+
+                                        -4-
+
+
+                                                                APPENDIX 5
+                                                                21 August 1989
+B5.  Navigate
+
+22.  When alignment is complete, and before moving the aircraft, the Mode
+Selector is moved to NAV.  This switch position is guarded and the switch must
+be pushed before turning to or from NAV.  The green "IN good in Nav. Mode"
+light should illuminate and the LH Status Indicator digit go blank.
+
+23.  This is the normal operating mode of the INS.
+
+24.  The data available is shown in Table 3, and is selected for display by
+the Display Selector swtich.
+
+25.  Additional data can be displayed by use of the Program Inspect facility. 
+A table of program inspect addresses can be found in Table 5.  The Display
+Selector is moved to I and the address entered on the keys followed by ENT. 
+The data displayed on the lower panel requires scaling by the factor shown in
+Table 5.
+
+26.  Parameters from the IN data stream (see Table 4) are recorded on the DRS
+and may be displayed independently on the DRS monitor or the Real Time
+Display.
+
+27.  Destination (Waypoint) coordinates may be entered in NAV mode, or
+changed, if entered earlier.  Steering information to destinations is
+displayed by suitable combinations of the Display Selector and the Destination
+Selector toggle switch.
+
+C1.  Flight
+
+28.  The present position can be updated when overflying known coordinates by
+pressing the FIX button and entering known position.  Note - this action
+invalidates the post-flight Gyro Drift Update facility (see later).  Present
+Position will not normally be updated on experimental sorties.
+Note that the INCDU provides an alternative source of Ground Speed and Drift
+information, of particular use when Doppler data is not available.
+
+29.  The Mode Selector switch should NEVER be moved to the T (test) position
+during flight.
+
+C2.  Faults
+
+30.  Fault conditions within the IN equipment are indicated by a digit in the
+Right Hand Status Indicator (see Table 2).  The amber "INS fault" lamp should
+light (except for some power supply faults).
+
+31.  The action taken depends on the fault indicated and the mission.  For
+example, Fault 5 (INCDU) may leave good data being recorded on DRS, and the
+flight could continue.
+
+32.  Certain power supply faults, overheating of the platform, and gyro faults
+will cause an Automatic Switch-Off.  The amber "INS fault" lamp should light
+and the INCDU will go blank.
+
+                                        -5-
+
+
+                                                                APPENDIX 5
+                                                                21 August 1989
+33.  As circuits within the IN remain energised the equipment should be
+switched to OFF manually.
+
+34.  Whenever the INS is switched OFF in the air, the aircraft should be flown
+Straight and Level for 3 minutes, if possible.
+
+35.  Do NOT attempt to re-align in flight.
+
+36.  The sortie may continue after switch off with no restrictions.
+
+D1.  Post Flight
+
+D2.  Gyro Drift Updating
+
+37.  1.   Note on the pro-forma the Present Position as displayed
+     2.   Note the Inspect Addresses 71117(Vn), 71115(Ve), 72104(Vz)
+     3.   Carry out a Gyro Drift Update by:-
+
+          a)   Pressing the FIX button (Status Indicator = 9) and insert the
+               park position co-ordinates.
+
+          b)   Setting the Mode Selector to ALN (Status Indicator = 5).
+
+          c)   Setting the Display Selector to G (Y and Z drifts displayed).
+
+          d)   Pressing the FIX button - updated values of Y and Z gyro drifts
+               displayed.
+
+          N.B. X gyro drift term is not modified.
+
+          e)   Noting new Y and Z values on the pro-forma.
+
+     4.   Switch off the INS.
+
+D3.  Switch Off
+
+38.  Select OFF on the Mode Selector.
+
+39.  Pull all green capped CBs made in Paragraphs B2, 15 and 16.
+
+40.  THE INU (or the aircraft) SHOULD NOT BE MOVED UNTIL AT LEAST 3 MINUTES
+HAVE ELAPSED SINCE SWITCH OFF.  
+This prevents possible expensive damage to the Platform from excessive rates
+of rotation.
+
+D4.  Standby
+
+41.  This mode is provided so that the instrument cluster may be maintained
+above +5oC using minimum power.  Only 28V dc supply is required.  Cooling air
+(fan) is not necessary during this mode.
+
+                                        -6-
+
+
+                                                                APPENDIX 5
+                                                                21 August 1989
+E1.  Servicing
+
+42.  Pre-flight servicing (sections B1-B4 above) will normally be carried out
+by Aircraft Department.
+
+43.  Corrective maintenance will be normally carried out by MRF Electronics
+Section who will consult with Ferranti plc, Silverknowes, Edinburgh, as
+necessary.  Normally servicing will be restricted to card replacement.
+
+44.  Calibration alignments will be carried out by RAE Aircraft Department, or
+MRF Electronics Section, after consultation.
+
+E3.  Safety
+
+45.  The INU must NOT be moved until at least 3 minutes have elapsed since the
+equipment was switched off, as the platform could be damaged.
+
+46.  If switched off in flight the aircraft should be flown straight and level
+for 3 minutes, if possible.
+
+47.  There are no restrictions on flight manoeuvres with the INS powered or
+unpowered.
+
+48.  The equipment uses lethal voltages - applicable safety procedures should
+be taken.
+
+49.  The INU power supply pack contains a Lithium battery - see Hazard Notes
+in AP112J-0310-1A before removing.
+
+F1.  Bibliography
+
+50.  AP101B-0702-1, Cover 2, Part L, Section XXVI (AL8, Nov 75) Hercules
+W Mk 2 Aircraft Servicing Manual.
+
+51.  ISD661/D1 Operator's Guide for FIN 1012 I.N. Equipment (Nimrod)
+Issue 1 -  Ferranti.
+
+52.  AP112J-0310-1A Nimrod Aircraft Inertial Navigation System (FIN 1012)
+General and Technical Information.
+
+53.  AP112J-0310-10 Nimrod Aircraft Invertial Navigation System (FIN 1012)
+Servicing diagrams.
+
+54.  MRF Internal Note No 9 The measurement of flight level wind and aircraft
+position by the MRF Hercules (S Nicholls).
+
+
+
+W J Gilchrist
+Head of Electronics Section
+Met Research Flight
+
+8 March 1988
+                                        -7-
+
+
+                                                                APPENDIX 5
+                                                                21 August 1989
+D/Met O (MRF)/3/5/1
+7 March 1988
+
+Electronics Section Instruction 3/88
+
+                                HERCULES XV208
+
+                            FIN 1012 INS ALIGNMENT
+
+1.   Experience with the FIN 1012 INS has shown that when the Alignment
+procedure is carried out before the platform has become thoroughly warm the
+Vertical Velocity (Vz) parameter is not "captured" and the resulting data is
+unusable.
+
+2.   The Switch On procedure is, therefore, modified to overcome this fault.
+
+3.   Switch On
+
+     a)   The ideal INS Bay temperature is between +25oC and +30oC.  The
+     Heater and Blower switches at the Navigator's station should be selected
+     to bring the Bay temperature to this range as quickly as possible bearing
+     in mind the ambient conditions.
+
+     b)   During the Alignment period the INS Bay temperature meter should be
+     monitored and if +20oC is not reached, or +30oC is exceeded, an attempt
+     to correct the temperature should be made by using the Heater and Blower
+     switches as appropriate.  The INS Bay should be stabilised automatically
+     at +30oC by the flamestat.  If this does not appear to be occurring
+     report as a fault.
+
+     c)   Ensure INCDU Mode Selector is to the OFF position.
+
+     d)   Verify that the following circuit breakers are closed:-
+
+               Pilot's CB panels
+
+               MRF LH AC BUS - INERTIAL NAV. FANS SUPPLY, PHASE A, B and C
+               (Green cap).
+               
+               MRF LH AC BUS - INERTIAL NAV. RAPID HT., PHASE A, B and C
+
+               MRF LH AC BUS - INCDU LIGHTS (MONITOR PANEL AC SUPPLY)
+
+               ISOLATED DC BUS - INERTIAL NAVIGATOR (green cap)
+
+               ESS. AC BUS - NAV HEADING IND. PHASE A (green cap)
+
+               Co-pilot's CB panels
+
+               MRF MAIN DC BUS - IN NAV AC UNIT GROUND CONTROL
+               MRF MAIN DC BUS - INERTIAL NAVIGATION HEIGHT GEN (Green cap)
+               MRF MAIN DC BUS - INERTIAL NAVIGATION MONITOR PANEL (Green cap)
+
+                                        -8-
+
+
+                                                                APPENDIX 5
+                                                                21 August 1989
+
+     e)   Select NORM on Alignment Selector (unless doing a calibration
+     alignment).
+
+     f)   Select IPI on MODE Selector.  Status Indicator LH digit = 7.
+
+     g)   The Rapid Heaters are now energised.  The HTR lamp will be on and
+     will flash if the platform temperature is below +5oC.  The HTR lamp will
+     go off when operating temperature is reached.
+
+     h)   The INS should be left in IPI mode until the IN Bay temperature
+     meter has reached +20oC AND the INU TEMP meter (on H437 Monitor Panel)
+     has stabilised at +55oC and is "pulsing", OR 20 minutes has elapsed since
+     the HTR lamp went out.
+
+     i)   Insertion of Present Position and/or Heading can be made, if
+     necessary, at any time during this period.
+
+     j)   When the conditions in paragraph 3h) have been reached (and this
+     will depend on the ambient conditions) the Mode Selection switch may be
+     moved to ALN.  The LH Status Indicator will = 6; this reduces during
+     alignment.
+
+     k)   Sometime during the period when ALN is selected move the Display
+     Selector switch to "I".  On the keypad enter 72104 followed by ENT.  The
+     upper display will show 72104 and the lower display will show the value
+     of the Vertical Velocity (Vz) parameter.  The correct display should be a
+     single value which decreases towards 1E/2W as the alignment proceeds.  If
+     this is the case the alignment may continue as normal.
+
+     l)   If the lower display should be switching between two large values
+     with the E and W lamps being illuminated alternately a fault condition
+     exists.  The Mode Selector switch should be moved to OFF.  Wait at least
+     3 minutes then carry out the actions of paras 3b) to 3k).
+
+5.   The MRF Hercules'Inertial Navigation System User's Notes have been
+amended.  The current issue is Version 3, March 1988.
+
+
+W J Gilchrist
+Head of Electronics Section
+MRF
+Distribution:
+Head of Facilities
+FLO
+Aircraft Dept. RAE (2)
+OC MRF RAF
+Flight Leader's Instructions
+WJG
+DWA
+JGL
+PWT
+File
+                                        -9-
+                                                                      

@@ -1,0 +1,1 @@
+pro getstatuscommon horace,sock,outd,host,port,derindex,dercount,mapstatus,status,fltnooutd(0:3)=byte("STAT")socket_write,sock,outdreadstatusreturnend

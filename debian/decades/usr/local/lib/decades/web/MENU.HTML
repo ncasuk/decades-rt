@@ -1,0 +1,61 @@
+<HTML>
+<HEAD>
+<TITLE>Horace Index</TITLE>
+<script>
+function telnet(){
+  loc=window.location.host;
+  window.location.href='telnet://'+loc;
+}
+function jumpto(a,b,c){
+  loc=a+window.location.host+b;
+  window.open(loc,c);
+}
+function winopen(a,b,c){
+  window.open(a,b,c);
+}
+</script>
+</HEAD>
+<BODY bgcolor=#0C2174 text=#FFFFFF link=#E4F23B vlink=#E4F23B alink=#E4F23B>
+<center><H3>
+HORACE</H3>
+<TABLE>
+
+<TR><TD><A
+HREF=
+"javascript:winopen('plot/plot.html','Plot','height=450,width=600,resizable,scrollbars')"
+>Derived
+data</A></TD>
+<TR><TD><A HREF="javascript:jumpto('http://',':1500','FLTSUMM')">
+Flight summary</A></TD>
+
+<TR><TD><B>Instruments</B></TD>
+<TR><TD><A HREF=
+"javascript:winopen('plot/drs.html','_blank','height=520,width=550,toolbar=yes,menubar=yes,resizable,scrollbars')"
+>    DRS plot</A></TD>
+<TR><TD><A HREF=plot/textnet.html#7 target='DRStext'>    DRS </A></TD>
+<TR><TD><A HREF=plot/textnet.html#2 target='DRStext'>    GPS </A></TD>
+<TR><TD><A HREF=plot/textnet.html#5 target='DRStext'>    INU </A></TD>
+<TR><TD><A HREF=plot/textnet.html#3 target='DRStext'>    NDU </A></TD>
+<TR><TD><A HREF=plot/textnet.html#8 target='DRStext'>    Nephelometer </A></TD>
+<TR><TD><A HREF=plot/textnet.html#4 target='DRStext'>    Nevzorov </A></TD>
+<TR><TD><A HREF=plot/textnet.html#1 target='DRStext'>    Satcom-C </A></TD>
+
+<TR><TD><B>System</B></TD>
+<TR><TD><A HREF=plot/textnet.html#6 target='DRStext'>    Status </A></TD>
+<TR><TD><A HREF="javascript:winopen('plot/timeevents.html','TimeEvent','height=30,width=550,resizable')">    Time </A></TD>
+<TR><TD><A HREF=
+"javascript:winopen('plot/flts.html','Update_fltsumm','height=270,width=500,resizable,scrollbars')"
+>
+Update summary</A></TD>
+<TR><TD><A HREF="javascript:telnet();">    Telnet </A></TD>
+<TR><TD><A HREF=http://192.168.101.157/ target='_blank'> Optra 45</A></TD>
+
+<TR><TD><B>Documentation </B></TD>
+<TR><TD><A HREF=/doc/index.html target='_blank'> Instrument 
+notes</A></TD>
+<TR><TD><A HREF=plot/plotuserguide.htm target='UserGuide'> User Guide</A></TD>
+
+</table>
+</CENTER>
+</BODY>
+</HTML>

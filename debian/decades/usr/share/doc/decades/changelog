@@ -1,6 +1,6 @@
-decades (0.7.1~50.gbp41032b) quantal; urgency=low
+decades (0.7.1~40.gbpf40af9) quantal; urgency=low
 
-  ** SNAPSHOT build @41032b10e6c50cc74128eebea29dc054781fc8f0 **
+  ** SNAPSHOT build @f40af966566b8f4830f255d02d1689e9d5df638b **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -58,17 +58,8 @@ decades (0.7.1~50.gbp41032b) quantal; urgency=low
   * Apache config file
   * First go at automatic apache config.
   * Deprecated tarfile generation
-  * Added Apache config directory
-  * Adding dataformat CSV files
-  * Adding dataformats to deb file.
-  * try/except loop to catch no-network-interface-yet.
-  * Tweak to the try/except
-  * First alpha of TCP listener
-  * Add Spelling mod enabling.
-  * pylib/decades-tcp-listener.tac
-  * Initial version
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 27 Jul 2012 15:07:37 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 17 Jul 2012 09:39:04 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 

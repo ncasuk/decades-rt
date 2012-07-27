@@ -1,0 +1,233 @@
+                                                                      
+                                                                APPENDIX 7
+                                                               28th April 1998
+
+           TELEVISION CAMERAS, MONITORS AND VIDEO RECORDING SYSTEM
+
+                             Forward Facing Camera (FFC)
+
+Circuit breakers required
+1.   Co-pilot's DC circuit breaker panel - MRF Main and Ess DC BUS.
+     (a)  MRF Power control
+
+2.   Co-pilot's upper circuit breaker panel - Main AC BUS
+     (a)  MRF Power - Phase A
+     (b)              Phase B
+     (c)              Phase C
+
+3.   Recorder Van - JB4A (a) NIPS                                        
+                         (b) FFC & Ramp Monitors                     
+                         (c) Video Panel                             
+                         (d) Altitude Switch Vid. Cntrl (always made)
+
+Pre-flight
+1.  On the Video Panel, switch the 28 V and 230 V supplies ON.
+2.  On the Video Systems Control Panel - switch Power ON
+                                       - switch FFC ON
+3.  Switch on the RH TV monitor. 
+4.  Switch on Video Timer (upper).
+5.  Adjust the colour and contrast as preferred.
+                                        
+In flight
+1.   Adjust pictures as required.
+
+After flight
+1.   Switch off the TV Monitor.
+2.   Switch off the Video Timer.
+3.   At the Video System Control Panel switch OFF (a) FFC 
+                                                  (b) Power
+4.   On JB4A break : FFC & Ramp Monitors - green circuit breaker.
+
+
+
+                               Ramp Television
+
+Circuit Breakers required
+1.   Co-pilot's DC circuit breaker panel - MRF Main and Ess DC BUS
+
+2.   Co-pilot's upper circuit breaker panel - Main AC BUS
+                                         
+3.   Recorder Van JB4A  (a) NIPS                                        
+                        (b) FFC & Ramp Monitors                     
+                        (c) Video Panel                             
+                        (d) Altitude Switch Vid. Cntrl (always made)
+
+Principles of Operation
+The camera is mounted vertically on the aircraft ramp and views downwards
+through a window.  For rearward vision a 45° prism is attached, outside the
+aircraft, and is protected by a fairing.
+
+Both the camera and the prism are provided with a heater/blower for demisting. 
+The camera and demister controls are situated in the front compartment of the
+van on the Camera Control Panel H172.
+
+The Video Timer must be switched on to pass a picture from the ramp camera to 
+monitor.
+
+                                        
+Pre-flight
+1.   On Video Systems Control Panel - switch Power ON.         
+                                    - switch Ramp ON.
+2.   Switch Video Timer ON (lower).
+3.   Switch LH TV monitor ON.
+4.   If required to clear the optics, switch Prism Demisters ON (amber lights). 
+     Switch OFF after use and do not run demist for more than 15 minutes unless
+     in very cold, damp conditions.
+
+In flight
+At high level and/or damp conditions it may be necessary to operate the
+camera/prism demist controls.
+
+After flight
+1.   Switch  Monitor OFF
+2.   Switch  Video Timer OFF
+3.   On Video Systems Control Panel - switch RAMP and Power OFF. 
+
+
+
+                              TV Monitor Control
+
+Circuit Breakers Required
+1.   Co-pilots DC circuit breaker panel MRF Main and ESS DC Bus.
+     a)   MRF power control.
+2.   Co-pilots upper circuit breaker panel - main AC BUS
+     a)   MRF Power - Phase A
+     b)               Phase B
+     c)               Phase C               
+3.   Recorder Van, forward compartment - Junction Box 4A
+     a)  NIPS
+     b)  FFC & RAMP Monitors
+     c)  Video Panel
+                                              
+Video Systems Control Panel 
+1.  Switch Power ON.
+2.  Switch FFC / Ramp Camera ON as required.
+
+There are two monitors. The left hand one displays the Ramp Camera picture.
+The right hand monitor displays the Forward Facing Camera picture.
+
+
+
+                             Video Timer Control
+Power
+230V 50Hz (AII Inverters)
+NIPS
+Junction Box 4A Fuse - TV Systems Timer.
+                         
+
+Principles of Operation
+There are 2 Video Timers, one each to date/time stamp the FFC and Ramp pictures.
+
+Push Button switches are used to count up appropriate month, day, hour and
+minute and also to start, stop and reset the clock as required.  Up/Down
+switches are available to switch off any pair of characters not required on
+the display, and also to control the size of the character in the vertical and
+the horizontal.  Rotary controls position the characters horizontally and
+vertically and also operate the format, white-black characters.
+
+Pre-flight
+1. Switch on both Timers to check TV Cameras and Monitors.
+2. Set up month, date, and time characters and start clock in synchronization
+   with DRS time.  (The Timers are held up by NIPS during power change-over).
+
+After flight
+Switch both Timers OFF.
+
+
+
+                             VHS Video Recorder
+
+Circuit Breakers Required
+1.   Co-pilots DC circuit breaker panel - MRF Main and Ess DC BUS
+     a)   MRF Power control on.
+2.   Co-pilots upper circuit breaker panel - Main AC BUS
+     a)   MRF Power - Phase A
+     b)               Phase B
+     c)               Phase C
+
+3.   Cargo Hold, forward bulkhead - MRF Main Distribution Panel
+     a)   28V DC JB4A
+     b)   200/115v AC (AO) JB4A               
+
+4.   Recorder Van, forward compartment - Junction Box 4A
+     a)   NIPS
+     b)   28V DC Video Control
+     c)   230V   VCR
+
+
+Switch On                                                          
+1.  Switch Video Recorder to ON (2 switches - one is on the front,      
+    the other is located near the power cable at LH rear of unit).
+2.  Load tape into VCR.
+
+Record Mode
+1.   Select Camera position you wish to record (ie. FFC or RAMP).
+2.   Ensure Record / Play switch on Video Systems Control Panel set to Record
+3.   Press Play AND Record on Video Recorder or Remote Control Unit.   
+
+To Stop
+1.   Press STOP on Video Recorder or Remote Control.  
+              
+Play Mode
+1.   Select PLAY on Video Systems Control Panel.
+2.   Press PLAY on Video Recorder or Remote Control.
+
+In Flight
+1.   The camera position to record should be selected as required.
+2.   The Flight Leader should log details of the recording on the Video Tape
+     Log kept with that tape ie. start/end times, FFC, DFC, RFC etc.
+3.   Annotate video tape box and video tape spine with date and flight number.
+N.B. The audio track on the tape records the PA channel off the aircraft
+     intercom.
+
+Post Flight
+1.   Copy Video Log - put original in tape cover and a copy in Flight Folder.
+2.   Store video tape in Computer Room tape store and fill in log book.
+
+
+
+                          Video 8  Video Recorders
+
+Circuit Breakers Required - as for VHS Recorder above.
+
+The two Video8 Recorders are positioned next to the TV monitors.  The RH VCR
+records the FFC Camera picture and the LH VCR records the Ramp Camera picture.
+        
+Switch On
+1.   Press button on top right of the unit and lift up LCD screen.
+2.   Switch Video 8 Power ON.
+3.   Press Eject and load Video 8 tape. Push down on front of unit to close.
+4.   Press Display to show status on LCD.
+
+Record
+1.   Press Record - a dot (recording indicator), appears on the display and the
+     counter increments.
+
+To Stop
+1.   Press Stop on the Video Recorder.
+
+Play Mode 
+1.   Press Play on the Video Recorder.
+
+Pre-Flight
+1.   Switch on, load tape and check operation.
+2.   Press Menu to show current setup.  Adjust as required with Select and Set
+     buttons.  (Normaly Long Play ie. LP mode is selected). Press ENTer to
+     leave Menu display.
+3.   The Video 8 VCRs are NOT held up during power change-over, so they need to
+     be switched on again - press Power, then Display.  
+4.   Reset counter.
+
+In Flight
+1.   Record as required.
+2.   Change tape when approaching 3 hours of recording (LP).
+NB:  The counter timer does not differentiate between SP and LP modes.  So,
+     for a 90-minute tape, with Long Play selected, the counter will show
+     1:30:00 when at the end of the tape, NOT 3:00:00.  BEWARE.
+3.   At the very end of the tape, the "record dot" disappears and the
+     counter stops incrementing.
+4.   As for VHS Recorder - log recording details, label the tapes and boxes.
+
+Post Flight
+1.   Copy Video Log - put original in tape box, copy in Flight Folder
+2.   Store tapes in Computer Room tape store at Farnborough. Update logbook.  

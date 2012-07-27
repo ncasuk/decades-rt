@@ -1,0 +1,235 @@
+
+                                                                APPENDIX 26
+                                                                16 Oct 1989
+
+                       FLUORESCENCE WATER VAPOUR SENSOR
+
+Circuit Breakers Required
+
+Forward Bulkhead:-       MRF MAIN DISTRIBUTION PANEL
+                         a) 28V JB3A SUPPLY (one circuit breaker)
+
+Forward Cargo Hold:-     JB 3A
+                         a) 28V DC 'FWVS'
+
+Principles of Operation
+
+The instrument measures water vapour in two modes, Absorption and
+Fluorescence, the output appearing on a front panel display and the DRS as
+calculated dew point along with housekeeping parameters.
+
+Absorption
+
+The Absorption cell utilises a property of UV light at the Lyman Alpha
+wavelength (121.8nm) to be absorbed by water vapour.  A fixed optical path
+arrangement of source and detector exists, with a reference detector in place
+to monitor the lamp output.  The Absorption instrument works over the range
+from +30 to -30°C at which point the sensitivity is too low for measurement
+purposes.
+
+Fluorescence
+
+The Fluorescence instrument consists of a high power Lyman Alpha source tube,
+reference detectors for Lyman Alpha and H Alpha emmission and a
+photomultiplier as a Fluorescence detector.  In the presence of water vapour
+Lyman Alpha radiation (121.8nm) can excite the water vapour molecules to
+fluoresce at 310nm.  This provides a very sensitive system capable of
+measuring dew points from -15 to -100°C.  A solenoid valve switches the
+airflow on to the Fluorescence instrument when the dew point is below -15°C,
+an in built flowmeter records the flow.
+
+Instrument and Data Control
+
+The instrument is controlled by a 6809 microprocessor based system and
+operates in a fully automatic mode.  Internal calibrations take place every
+ten minutes, the type of calibration is dependant on dew point.  In the
+overlap region when both instruments are in operation the Fluorescence
+instrument will calibrate the Absorption.  Data are output to the DRS as a
+number of parameters, an RS232 port is also available.  Real time calculated
+dew points are output at 1Hz as a separate parameter, 8Hz data require ground
+based analysis.  An instrument status word is also output to indicate current
+operating conditions such as the data source ie Absorption/Fluorescence and
+whether the instrument is in a calibration routine.
+
+
+
+
+
+                                   -1-
+
+
+                                                                APPENDIX 26
+                                                                16 Oct 1989
+Front Panel
+
+On the front panel of the instrument a seven segment display shows the number
+of minutes to the next calibration, a letter 'c' indicating that the
+instrument is in a calibration routine.  The presence of the left hand decimal
+point shows that the Fluorescence lamp is on.  An LCD panel meter displays an
+eight bit representation of the dew point, (ie to the nearest 1°C).
+
+Pre-Flight
+
+1.   Make circuit Breakers.
+
+2.   Check electrical and pipe connections.
+
+3.   Make sure that the small toggle switch below the seven segment display is
+     in the down position.
+
+4.   Switch on the locking toggle switch (On/Off).
+
+5.   The seven segment display will show a number '3'.
+
+6.   Check that the number counts down at one minute intervals and passes
+     through a calibration cycle after decrementing past '0', (indicated by a
+     letter 'c').
+
+7.   A check should also be made on the DRS for data integrity.
+
+8.   Switch off and prepare for take off.
+
+In-Flight
+
+1.   Switch on instrument as described above.
+
+2.   Obtain permission from the Flight Leader to open the Starboard Air Sample
+     Pipe caps (fore and aft).
+
+3.   Operation of this instrument is completely automatic.
+
+CONTROLS AND DISPLAYS
+
+1.   To the left of the seven segment display are two push buttons, the top
+     one will cause the instrument to enter a calibration routine, the lower
+     button inhibits the next calibration.
+
+2.   The toggle switch should be left in the down position unless the dew
+     point is below -25°C and the Fluorescence lamp is not in operation
+     (indicated by the lack of the decimal point), please refer to separate
+     sheet.  NB  the Fluorescence lamp will not come on unless the following
+     conditions are met.
+
+     a)   Five minutes has elapsed since the instrument was powered up.
+     b)   There is sufficient airflow through the instrument.
+     c)   The dew point is below -25°C.
+
+                                   -2-
+
+                                                                APPENDIX 26
+                                                                16 Oct 1989
+
+3.   In normal automatic mode, once the Fluorescence lamp has been turned on,
+     it will stay on until the dew point rises above -15°C.
+
+4.   The LCD display gives an 8 bit representation of the real time calculated
+     dew point and approximates to the nearest degree, and is for operator
+     re-assurance only.
+
+Pre-Landing
+
+1.   Switch off instrument and close air sample pipe caps.
+
+DRS Information
+
+The Fluorescence Water Vapour Sensor is connected to the DRS by a standard MRF
+type ASMA link.  The instrument operates in a fully automatic mode and
+supplies data when requested by the DRS.  An RS232 serial data output is also
+available.
+
+FWVS PARAMETER                DRS PARA                 SAMPLE RATE
+                              NUMBER                       (Hz)
+
+Fluorescence Count              126                         8
+Lyman Alpha Intensity           127                         8
+Absorption Signal               128                         8
+Absorption Reference            129                         1
+Flowmeter A                     130                         1
+Flowmeter B                     131                         1
+Pressure                        132                         1
+Fl Chamber Thermistor           133                         1
+Absorption Thermistor           134                         1
+H-Alpha Signal                  135                         1
+Fl source run time              136                         1
+Absorption run time             137                         1
+Calculated Dew point            138                         1
+Status Word                     139                         1
+
+STATUS WORD
+
+Bit            Meaning when bit=1
+
+0    1         Frost point calculated from Fluorescence
+1    2         Servo Enabled
+2    4         CaFl In
+3    8         Calibrating
+
+4    10        Servo Active
+5    20        Flow meter heater ON
+6    40        Discharge 2 (Absorption) ON
+7    80        Discharge 1 (Fluorescence) ON
+
+8    100       EHT ON/Valve OPEN
+9    200       Cap OPEN
+10   400       Control Logic in Lab Test mode
+20   800       -----
+
+
+
+                                                                APPENDIX 26
+                                                                16 Oct 1989
+
+
+Instructions to switch on the main lamp, when the frost point calculated by
+the short path cell is incorrect.
+
+The main lamp should turn on when the frost point calculated using the short
+path lamp goes below -15 degrees C, provided there is sufficient airflow
+through the instrument and more than five minutes have elapsed since the
+instrument was switched on.  The current condition of the main lamp may be
+determined by examination of the status word (DRS parameter 139, bit 7=1
+indicates lamp on), or by observing the decimal point on the left hand side of
+the 7-segment l.e.d displaying the time to the next calibration (the point is
+lit when lamp is on).  The calculated frost point is also stored by the DRS as
+parameter 138.  This may be converted to degrees C by dividing the decimal
+value recorded by 20, and then subtracting 100.
+
+If the stored constant for the short path cell is incorrect, the calculated
+frost point may not reach -15 degrees, even in cold, dry air, and hence the
+main lamp will not be turned on automatically by the instrument.  In this
+case, the main lamp may be switched on manually by moving the toggle switch
+below the the 7-segment l.e.d to the upper position.  Provided the frost point
+is below -25 degrees C, the display should then show the value calculated
+using fluorescence data.  If the instrument is in the overlap region when both
+lamps are lit (frost points between -20 and -35 degrees C), then a new value
+for the short path constant may be calculated more accurately by pressing the
+upper push button next to the frost point display, which will force the
+instrument to carry out an immediate self-calibration.  When the instrument is
+operating normally and the frost point is calculated to be below the point at
+which the main lamp turns on, then the toggle switch should be returned to the
+lower position.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        -4-
+
+                                                                      

@@ -1,0 +1,10 @@
+Package: decades
+Version: 0.7.1~40.gbpf40af9
+Architecture: all
+Maintainer: Dan Walker <D.K.D.Walker@leeds.ac.uk>
+Installed-Size: 2494
+Depends: python, python-twisted-core, python-psycopg2, python-numpy
+Section: net
+Priority: extra
+Description: Twisted-based servers for decades
+Python-Version: 2.6

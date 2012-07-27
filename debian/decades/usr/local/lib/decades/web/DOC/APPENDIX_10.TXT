@@ -1,0 +1,175 @@
+                                                                  APPENDIX 10
+                                                                  5 March 1985
+                     OPERATION OF THE E290 WEATHER RADAR
+Pre Flight Checks
+1.   Make 28V DC RADAR CB at JB3B.
+2.   Make 200V AC RACK 2 INV CB at JB3B.
+3.   Switch ON INVERTER - SW1 at Rack No 2.
+4.   Switch ON RADAR TRANSFORMER at Rack No 2.
+5.   Switch ON POWER & INDICATOR on Radar Programming Unit
+6.   Set date on RPU, check display indicators by operating DATA/HOLD SWITCH
+     (DATE, TIME, ELEVATION).
+7.   Check camera operation by rotating the knob at the side of each unit. 
+     Ensure the film advance claw is at its lowest position and fit two 16 mm
+     film magazines, with film marked in the gate.
+8.   Switch ON both switches below CAM 1 and CAM 2 meters.  Check RED lights
+     and contents displayed.
+9.   Operate Camera Test Switch and observe mechanisms.  Remove magazines to
+     check film has advanced then refit.
+10.  When complete switch OFF POWER & INDICATOR.  Stow spare magazines.
+
+In Flight Operation
+1.   Switch ON POWER & INDICATOR on RPU.
+2.   Referring to Indicator Control Panel below display;
+     a)   Set RANGE to STANDBY.
+     b)   Set POWER ON - indicator illuminates.  After ~2 minutes.
+     c)   Set RANGE as required - display operates.
+     d)   Set WEA or CONTOUR.
+     e)   Adjust MARK. BRILL to Max and CONTRAST for optimum.
+
+To Obtain Control:  After Setting Up
+1.   ENSURE UPPER AND LOWER ELEVATION SETTINGS ARE IN THE CORRECT RELATIONSHIP
+     AND GREATER THAN 3o APART, RPU & DISPLAY ARE ON.
+2.   set ELEVATION to SINGLE.
+3.   Request the Flight Leader to obtain control from the Navigator.  The
+     Captain or Navigator's Unit should be set to WEATHER before hand over.
+4.   When control is acquired the TILT indicator will illuminate on the RPU. 
+     The data display above screen will operate in time with scanner sweeps. 
+     The RADAR will scan on the last elevation set before hand over.
+
+Use of the RADAR
+Elevation - With this switch set to Program the scanner will operate between
+the limits set in 3o steps.  This mode can be used to locate weather or scan a
+Frontal layer.
+- With the switch set to SINGLE the unit will scan at a selected level.  This
+mode can be used to observe echoes at set heights within cloud.
+
+To select an elevation
+a)   Set ELEVATION LIMITS switches to scan through a range of elevations
+     including that desired
+b)   Set switch to PROGRAM and observe display
+c)   Set switch to SINGLE.  This should be done JUST BEFORE the desired  
+     value appears, ie. if -3o is required select just after 0o when scanner
+     is declining or just after -6o when inclining.  Otherwise the scanner may
+     set to any random value.
+
+
+                                        -1-
+
+
+                                                                  APPENDIX 10
+                                                                  5 March 1985
+
+Function - The MRF unit will display in either WEA or CONTOUR position.
+In WEA the display shows all clouds containing large water droplets.
+
+In CONTOUR the returns are processed to indicate relative turbulence within
+clouds caused by varying precipitation rates.  Parts of the return signal
+exceeding a pre-determined amplitude appear blank on the screen, therefore the
+relationship between the overall size and blank portion shows the gradient of
+turbulence.
+
+The display is compensated such that, for the first 25 NM echoes from distant
+ranges are amplified more than those from close range.  This means that a
+given cloud will maintain its return as the aircraft nears it and the relative
+intensity of near and far echoes are as they appear.  This feature does not
+operate beyond ~25 NM.  The echo intensity decreases with increasing range.
+
+Photography - When the RADAR has been set to the required mode and elevation
+or scan (generally to avoid ground returns as Table 1) the display can be
+photographed.  The cameras should be set to F4 and focussed to the appropriate
+distance (during servicing).
+
+Remove visor from screen, fit shade between magazines.  The front panel door
+should be closed when photographing.
+
+With two switches below meters ON the cameras are triggered by the scanner ~1
+frame per second.  Therefore a fully loaded magazine will last ~2 hours, but
+should be changed when it indicates about ¬ full.
+
+The right magazine produces a correctly oriented image.
+
+After Use
+
+1.   Switch OFF both cameras
+
+2.   Set ELEVATION to SINGLE at 0o
+
+3.   Return control of the RADAR via the Flight Leader to the Aircrew.  Tilt
+     extinguished when control taken.
+
+4.   After control has been taken set RANGE to STANDBY and switch OFF display.
+
+5.   Switch RADAR Program Unit - Indicator OFF
+                               - Power OFF
+
+6.   Switch OFF RADAR TRANSFORMER at Rack No 2
+     IF PRT4 REQUIRED LEAVER INVERTER SW1 ON otherwise:
+
+7.   Switch OFF INVERTER SW1 at Rack No 2
+
+8.   Break 28V DC RADAR CB at JB3B
+
+9.   Remove and annotate magazines, refit visor and camera cover.
+
+                                        -2-
+
+
+                                                                  APPENDIX 10
+                                                                  5 March 1985
+Radar Attenuator
+This unit is fitted above the RADAR controls on Rack 2 and is generally for
+use on Met O 15 projects.  As of April 1984 the unit has not been calibrated
+but is intended to provide attenuation in four automatic steps corresponding
+to approximate precipitation rates of:
+
+     0 = Max Signal/Min Attenuation = 0.5-1.0 mm/hr
+     1                              =  2      mm/hr
+     2                              =  8      mm/hr
+     3 = Min Signal/Max Attenuation = 20      mm/hr
+
+These values are displayed, on the unit digitally, also above the screen by
+two lights.  There is also a B or Blank position which interrupts the video
+signal between sweeps to erase the screen.
+
+When the unit is switched on it will start from B and sequence as follows:
+
+     B3B2B1B0BBB3B2B1B0BBB3 etc.
+
+Table 1
+
+                                                                              
+  Aircraft Height    Range         To avoid ground       To just include
+       (Ft)          (Nm)               return            ground return       
+                     20                 -9                      -12 (18nm)
+     25 K                                                                     
+                     50                 -3                      -6
+                                                                              
+                     20              -6 or -9                   -9 (18nm)
+     24 K                                                                     
+                     50                 0                       -3
+                                                                              
+                     20                 -3                      -6
+     16 K                                                                     
+                     50                 0                       -3 (30nm)
+                                                                              
+                     20                 0                       -3 (17nm)
+     10 K                                                                     
+                     50                 0                       -3 (17-20nm)
+                                                                              
+                     20                 +3                      0 (15nm)
+      3 K                                                                     
+                     50                 +3                      0 (15-20nm)
+                                                                              
+
+
+
+
+
+
+
+
+
+                                         -3-
+
+                                                                        

@@ -1,0 +1,177 @@
+Particle Soot Absorption Photometer                                 Appendix_04
+                                                                    AUGUST 1996
+Circuit Breakers required
+        JB3B    "EPDB Control"
+ 
+        EPDB 12  230VAC panel     CB19, 200V, 400Hz, 3ph
+                                  28VDC  Input switch  (green light)
+                                  230V   Output switch (amber light)
+                                  CB13, 230V
+        115V,    1ph panel        CB7, 115V, 400Hz
+ 
+Herc Rack 5
+        230V  Distribution box    PSAP switch ON (underside)
+
+ 
+Background
+
+Aerosol particles emitted from combustion sources contain many different
+carbonaceous compounds and structures.  One of these components is carbon in a
+microcrystalline graphitic form, which, due to its strong optical absorption,
+is termed "black carbon".  This material can only be produced by incomplete
+combustion, there are no secondary mechanisms known for its production.  It is
+also inert to transformation in the atmosphere and therefore possesses
+qualities that make it a good tracer for combustion emissions.
+ 
+Chemical techniques for the determination of the black carbon content of
+aerosol samples collected on filters are generally complex and time consuming.
+In contrast, optical measurements are often simple and rapid.
+ 
+Since most ambient aerosols do not contain large amounts of other
+noncarbonaceous absorbing particulate material, a measurement of optical
+absorption of the filter deposit corresponds very closely to the black carbon
+determination.
+
+
+ 
+Principle of Operation
+
+The PSAP operates on the principle of continuous measuring of the attenuation
+of a beam of light transmitted through a filter, while the particle-laden air is
+being drawn through the filter.  At a constant airstream velocity (approx 2
+slpm), the rate of deposition of black carbon on the filter is proportional to
+its concentration in the aerosol and gives a corresponding rate of increase of
+optical attenuation.
+ 
+Measurement of this last quantity constitutes the basis of this method.  The
+aerosol particles are retained on the filter and are available for subsequent
+analysis by other physical and chemical means.
+ 
+A transparent mask with a 5mm diameter hole covers the quartz filter.  The air
+flow is thus drawn through only a small part of the filter, on which the
+particles are collected.  The remainder of the filter is used as a reference
+for the optical measurement and as a blank for chemical analyses.
+ 
+The filter is uniformly illuminated from above by an ultra-bright, green led
+(wavelength=565nm).  Below the filter, a pair of matched photodetectors measure
+the transmitted light through the signal and reference paths.
+
+                                      -1-
+                                                                     
+Particle Soot Absorption Photometer                                 Appendix_04
+                                                                    AUGUST 1996
+
+
+Pre-flight
+
+1.  Check that all CBs are made.
+
+2.  Remove the filter, if fitted, and insert a new one in the holder.  Ensure
+    that the filter is placed sample (ie. rough), side up, and that the o-rings
+    are in position on the top half of the holder.
+
+3.  Close and secure the holder.
+
+4.  Switch the PSAP and the Pump Control Unit ON.  The signal level screen
+    will show for about 10 seconds then the main screen will be displayed.
+
+5.  Check the flow rate is approx. 2 lpm, adjust the front panel needle valve if
+    necessary.
+
+6.  Set the PSAP clock to DRS time.  Use the FUNCTION switch to select the
+    time-set screen.  Time and date settings are changed with the ITEM switch. 
+    "Up" (select), moves the cursor to the digit to be changed; "Down" (set),
+    changes the value of that digit.
+
+7.  The averaging period is normally set to 30s.  The first few averaging
+    periods will be noisy until the filter position stabilises and the data
+    registers get valid transmission measurements.  If a different averaging
+    period is required, use the Function switch to step through the screens,
+    and the Item switch to change the Sample period value.
+
+8.  The "lvl" values shown on the main screen relate to the photodetector
+    current and should be in the range 20 to 65.  If either is outside these
+    limits, then use the Function switch to step through to the signal level
+    screen.  The values shown on this screen are x 10,000.
+    To change the values, use the Item switch.
+
+9.  If a new filter was loaded, wait at least 1 averaging period then press and
+    HOLD the "Reset" switch up until "Tr" on the display resets to 1.000.  The
+    filter transmittance (Tr), value is used by the software to correct for
+    filter loading as well as indicate when the filter should be changed.
+
+10. Take a note of the pre-flight readings then switch the PCU and PSAP off (to
+    avoid filling up the filter).
+
+
+
+
+
+
+
+
+
+
+
+
+                                     -2-                        
+
+Particle Soot Absorption Photometer                               Appendix_04
+                                                                  August 1996
+
+In-flight 
+
+1.  Switch the PSAP and PCU on.
+
+2.  The instrument will take about 15 minutes for its internal temperature to
+    stabilise.
+
+3.  If there are no specific requirements regarding changing the filter, then
+    the default is to change it before the transmittance, Tr, falls to 0.5.
+    (In most cases, one filter should last for the whole flight).
+
+4.  Monitor and adjust the flow rate as required.  It is not crucial that the
+    rate be exactly 2 lpm because the PSAP's software takes the flow rate into
+    account in its calculations.
+
+5.  The PSAP has 4 analogue outputs which are recorded by the DRS at 1Hz.
+
+      DRS Para    Signal                          DRSU       Range
+       185	  Linear Absorption coeff (Bap)   0->4095    0 -> 5E-5 /m
+       186        Log Absorption coeff (Bap)      0->4095    1E-7 -> 1E-2 /m
+       187	  Filter Transmittance (Tr)       0->4095    0 -> 1.25    
+       188        Sample Flow Rate                0->4095    0 -> 5 lpm    
+
+6.  The HORACE parameters are:- 554  PLIN   0 -> 5E-5 /m
+                                555  PLOG   0 -> 4095 DRSU (not yet a log scale)
+                                556  TRNS   0 -> 1.25 
+
+7.  When flying through cloud / precipitation, it is best to switch the PCU
+    off as the filter has been known to get wet in such conditions.  This
+    can result in the filter becoming more transparent and the Transmittance
+    value increasing.
+    If this happens, remove and change the filter.  Then, after at least one
+    averaging period, reset the Transmittance to 1.000.
+    Note all of this down on the log sheet.
+
+8.  On the return transit, or when the instrument is no longer required, switch
+    the PSAP and PCU off.  Remove the filter.
+
+
+After flight
+
+1.  On HERC Rack 5, 230V Distribution box, switch PSAP OFF (underside).
+
+2.  On JB12,  230V panel, pull CB 13, switch 230V and 28V OFF.
+              115V panel, pull CB 7.
+
+
+
+
+
+
+
+
+
+
+                                     -3-

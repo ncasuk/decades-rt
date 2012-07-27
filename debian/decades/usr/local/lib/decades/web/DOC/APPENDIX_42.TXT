@@ -1,0 +1,460 @@
+
+                                                                 APPENDIX 42
+                                                                 9 July 1990
+                       SEADAS OPERATIONAL INSTRUCTIONS
+
+PRE-FLIGHT OPERATION
+
+It is normal to check the operation of probes fitted before flight.  This is
+carried out in accordance with the current safety procedures.  Only personnel
+authorised by the AIRCRAFT MANAGER may book out the keys and operate the
+SEADAS system.
+
+At present five keys will need to be drawn from the Aircraft Managers office,
+and these are held in a transparent case.  From the same office sufficient
+2D operators logs should also be collected as well as a pair of safety
+goggles.  Exabyte tapes (Sony Video 8) can be collected from the tape store
+(suggest 3 tapes) as well as the SEADAS hard disk failure floppy disks.
+
+There are three mounting pods on the port wing for PMS probes.  As there are
+now four types of PMS probes available, we run either a large fit or a small
+fit.  With the large fit the precipitation probe is fitted, whilst the small
+fit has the PCASP.
+
+Transport the 2D caravan out to the pan and set up the safety notices in
+accordance with current safety procedures.  Place the FSSP calibration
+equipment on the safety raiser and connect the mains extension lead to the
+aircraft 240V supply (H043, lower 240 O/P - disconnect the Barnes temporary). 
+Connect the vacuum cleaner pipe to the rear of the sampling tube after fitting
+the droplet generator to the sampling arms of the FSSP.  Turn on the vacuum
+cleaner and adjust the flow valve to about 50.  Make sure there is sufficient
+water and now air trapped in the feeder pipe.
+
+Mae the circuit breakers on JB6 (the nearest to the SEADAS), these being 2D
+KNOL CONTROL, PMS EQUIP, 2DP PROBE, 2DC PROBE, FSSP 100, CLOUD PHYSICS
+MONITOR.  Turn on the monitor and SEADAS and open up the keyboard using the
+relevant key.  Insert the correct laser keys into the switching unit and turn
+the probes on.  Select option A (for small fit) or option B (for large fit). 
+After the operational software has loaded a gaussian distribution should be
+seen on the operators FSSP XY plot of counts against size.  Using the safety
+goggles move a finger through the cloud (and if fitted, the precipitation)
+probe sampling arms and observe whether the SEADAS 2D image display(s) has
+updated.  If the PCASP is fitted use the command "cmd1d 1 1" to start the
+motor.  A distribution should then be seen on the operators PCASP XY plot of
+counts against size.  As soon as the operation of the PCASP is confirmed use
+the command "cmd1d 1 0" to stop the motor so that it doesn't overheat.
+
+If no problems are encountered then the system may be switched off, and the
+circuit breakers broken.  Return the laser keys back to their carrying case. 
+Lock the keyboard try closed and return to the carrying case also.  Stow all
+objects for flight and remove the water droplet generator and associated
+equipment back into the caravan which should be returned to the covered area.
+
+If problems are encountered then notify the Aircraft Manager and seek advice
+from the Cloud Physics section.
+
+                                     -1-
+
+
+                                                                 APPENDIX 42
+                                                                 9 July 1990
+
+FLIGHT OPERATION
+
+The system should be switched on as detailed in PRE-FLIGHT OPERATION.  As soon
+as possible place an Exabyte tape into its drive by pressing the eject button
+on the drive after it has warmed up (green light on).  Place the cartridge
+into the drive and close the mechanism.  It is useful to set the SEADAS time
+to that of the DRS clock.  To do this select option T and place the correct
+time in the suggested format.  At the correct instance press enter.
+
+If the transit period is going to be very short then it would be best to
+select the operational software (option C or D), otherwise select the correct
+pre-flight option which will give the Exabyte drive further time to warm up. 
+If the software fails to run then reselect the option.
+
+You are expected to keep a written log as well as enter comments on the
+command line of the SEADAS.  Remember not to type in STOP or QUIT as the start
+of any comments you may make.  All the commands you may make are listed with
+examples on separate sheets to this notice.  It is important to enter the DRS
+time as a comment particularly if you didn't have a chance to correct the
+systems clock before recording took place.  You should do this at the
+beginning and the end of the recorded data.
+
+You will not need to use all the commands listed on the separate sheets.  The
+most important ones are the formulae changes and strip and XY plot changes. 
+To change the TAS from the default value to say 125 M/S then enter fml 1 125
+on the command line.  To change the A number use formula 10. eg. fml 10 15
+will give A 15.  If the small fit is used then it is necessary to specify the
+height used formula 6, eg. fml 6 1000 gives 1000ft.  For strip chart limit
+changes you must use the correct strip chart number as shown on the sheets
+provided (eg. stp 22 lim 0 100 will change the limits to 0 to 100 on the 2D-C
+MEAN DIA strip chart on the operators screen - large fit only).  Similarly for
+XY charts select the right number.  Also remember for XY plots that you can
+change both axis, so use xlim or ylim as appropriate.
+
+Errors occurring on the new system should not fail the programme but list the
+occurrence on the command line and in more detail in the error window.  Be
+very suspicious if errors start occurring after you have changed a limit on an
+XY plot as you may not have noticed it was a logarithmic scale.  Please note
+the error on the log sheet as well as informing the aircraft scientist.
+
+There are forty possible macros available.  These string commands together at
+a push of a button (or two).  Some of the macros are common to the large and
+small fits, others are not.  A listing for each of the different fits can be
+found on separate sheets.  One important macro is the one that controls the
+FSSP range.  The FSSP has four ranges:
+
+     range 0   particle sizes 2 - 47æ dia press F10
+     range 1   particle sizes 2 - 32æ dia press SHIFT_F10
+     range 2   particle sizes 1 - 16æ dia press CTRL_F10
+     range 3   particle sizes « -  8æ dia press ALT_F10
+
+                                    - 2 -
+
+
+                                                                 APPENDIX 42
+                                                                 9 July 1990
+COMMAND PROCESSING
+
+The Model 200 provides a set of commands to control system functions.  These
+are entered from the keyboard during operation.
+
+FORMULA COMMANDS:
+
+FML  FML VALUE           Formula override.  Set old value of formula to value
+                         specified.
+FML  AUTO                Return formula to auto value.
+
+EXAMPLE:
+     fml 10 356          Set the value of formula 10 to 356.
+
+FML?  FML [ INDEX]       Query value of formula.  Index is optional and is
+                         only used if the formula is an array of values.
+
+EXAMPLE:
+     fml? 30             Display the value of formula 30 in query part of the
+                         command window.
+     fml? 34 3           Display the value of the 3rd element of formula 34 in
+                         query part of the command window.
+
+GENERAL COMMANDS:
+
+QUIT                     Terminates acquisition, with rewind.
+STOP                     Terminates acquisition, without rewind.
+CMD1D  PRB CMD           Command byte (value).
+
+EXAMPLE:
+     cmd1d 1 cmd         Get 1D command byte from probe 1.
+
+REARM  BUF FREQ          Change async buffer rearm rate.  Note this is the
+                         buffer number from the acquisition table, not the
+                         probe number.
+
+EXAMPLE:
+     rearm 0 10          Change the rearm rate of probe 0 to 10.
+
+SCN  SCN CMD             Choose screen where commands will be active.
+
+EXAMPLE:
+     scn 1 cmd           Select screen 1 to be active.
+
+FILE ON                  Turn on storage to device (disc).
+FILE OFF                 Turn off storage to device (disc).
+
+EXAMPLE:
+     file on             Storage of data will be done.
+
+The default range is 0 and for most large fit applications this is fine. 
+However, consult the aircraft scientist as he may wish you to keep to the
+lowest size range possible.  This may mean you will have to change the range
+regularly so as not to exclude larger particles.
+                                     -3-
+
+                                                                 APPENDIX 42
+                                                                 9 July 1990
+
+When the scientific sortie has finished use the command QUIT which will rewind
+and eject the Exabyte tape.  Place this tape into its case and mark it as a
+SEADAS TAPE and include the A number and date.  If several apes were used then
+mark it as tape 1 or whatever.  It is worth pointing out that if you make an
+error such as exiting the programme accidentally then eject the present
+Exabyte tape and insert a fresh tape before running the M200 programme. 
+Switch off the system and break the circuit breakers.  Place the keys back
+into their carrying case remembering to lock the keyboard first.  Stow all
+loose objects for landing.
+
+After landing give the flight leader a copy of the log and the Exabyte tape. 
+Sign back the keys in the Aircraft Managers office and place the hard disk
+failure floppy disks as well as any spare Exabyte tapes back in the cupboard
+in the tape store.
+
+SYSTEM FAILURES
+
+You will notice that on occasion that when you try to run the M200 programme
+it does not work, but jumps out to the option page.  In this case simply
+resubmit the option.
+
+It has been known for the hard disk to fail.  On these occasions a message to
+that effect is displayed.  Select a suitable disk from the hard disk failure
+pack and insert into the appropriate drive located above the Exabyte drive. 
+Pressing F2 loads the operational software.  Remember to remove the floppy
+disk before switching off the power.
+
+Sometimes, particularly after just starting, the display freezes.  The
+indicator lights on the SEADAS will show a wait state and a storage problem. 
+Usually the problem will clear within a minute.  If it has not cleared after
+two minutes, reboot.  Of course if this has occured sometime into the flight
+you must use a new tape.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    - 4 -
+
+
+                                                                 APPENDIX 42
+                                                                 9 July 1990
+
+CLR ERR                  Clear error message in command window.
+CLR QRY                  Clear query information in command window.
+
+EXAMPLE:
+     cle err             Clear error message in command window.
+
+PARTICAL 2D COMMANDS:
+
+P2D  IMG ON              Turn p2d plot on.
+P2D  IMG OFF             Turn p2d plot off.
+P2D  IMG RED [GRN, BLU]  Turn p2d plot on and to red (grn, blu).
+P2D  ING HOLD ON         Do not update image.
+P2D  ING HOLD OFF        Update image as normal
+P2D  IMG AGE AGE_LIMIT   Change age limit for image.
+
+EXAMPLE:
+     p2d 1 on            Turn 2d image 1 on.
+
+TAS2D  PRB FREQ          Set 2d probe tas frequency.
+TAS2D  PRB AUTO          Return 2d tas frequency to auto.
+
+EXAMPLE:
+     tas2d 0 auto        Return true air speed of 2d probe 0 to normal value.
+
+PLOT X Y COMMANDS:
+
+PXY  PXY ON                   Turn xy plot on.
+PXY  PXY OFF                  Turn xy plot off.
+PXY  PXY RED [WHT, GRN, BLU]  Turn xy plot on and to red (wht, grn, blu).
+PXY  PXY XLIM MIN MAX         Turn xy plot on and change x limits.
+PXY  PXY YLIM MIN MAX         Turn xy plot on and change y limits.
+
+EXAMPLE:
+     pxy 7 blu                Turn xy plot 7 on and to blue.
+     pxy 2 xlim 1 5           Change x limit of xy plot number 2 to 1 to 5.
+
+STRING COMMANDS:
+
+STR  STR ON                   Turn string on.
+STR  STR OFF                  Turn string off.
+STR  STR RED [WHT, GRN, BLU]  Turn string on and to red (wht, grn, blu)
+STR  STR HOLD ON              Do not change string displayed.
+STR  STR HOLD OFF             Update string as normal.
+STR  STR AGE AGE_LIMIT        Change age limit for string.
+
+EXAMPLE:
+     str 2 off                Turn string 2 display off.
+     str 6 wht                Turn string 6 on and to white.
+
+
+
+                                    - 5 -
+
+
+                                                                 APPENDIX 42
+                                                                 9 July 1990
+STRIP CHART COMMANDS:
+
+STP  STP ON                   Turn strip chart on.
+STP  STP OFF                  Turn strip chart off.
+STP  STP RED [WHT, GRN, BLU]  Turn strip chart on and to red (wht, etc).
+STP  STP HOLD ON              Do not change strip displayed.
+STP  STP HOLD OFF             Update strip as normal.
+STP  STP LIM MIN MAX          Turn strip chart on and change limits.
+
+EXAMPLE:
+     stp 2 off                Turn strip chart's 2 display off.
+     stp 4 lim -5.0 5.0       Change limits of strip chart 4 to -5.0 and 5.0.
+
+TEXT COMMANDS:
+
+TXT  TXT ON                   Turn text on.
+TXT  TXT OFF                  Turn text off.
+TXT  TXT RED [WHT, GRN, BLU]  Turn text on and to red (wht, grn, blu).
+
+EXAMPLE:
+     txt 1 on                 Turn text 1 on.
+     txt 3 grn                Turn text 3 green.
+
+                           MACRO COMMANDS LARGE FIT
+
+F1                            SCREEN SCROLL OPERATOR MONITOR
+SHIFT_F1                      SCREEN SCROLL A/S MONITOR
+F2        IM                  2DC IN UPPER WINDOW
+SHIFT_F2                      2DP IN UPPER WINDOW
+F10                           FSSP RANGE 0 (2-47)
+SHIFT_F10                     FSSP RANGE 1 (2-32)
+CTRL_F10                      FSSP RANGE 2 (1-16)
+ALT_F10                       FSSP RANGE 3 (0.5-8)
+-----------------------------------A/S MONITOR--------------------------------
+F3        TXT        101      FSSP CONC
+                     102      FSSP MEAN RAD.
+                     103      FSSP LWC
+                     311      2DC MAX SIZE
+                     411      2DP MAX SIZE
+SHIFT_F3  TXT        104      Rv
+                     105      Ra
+                     106      Reff
+                     312      2DC IWC
+                     412      2DP IWC
+F4        STP        100      2DC CONC
+                     101      2DP CONC
+                     102      FSSP CONC
+SHIFT F4  STP        103      2DC IWC
+                     104      2DP IWC
+                     105      FSSP LWC
+F5        STP        106      2DC MEAN DIA
+SHIFT_F5  STP        107      2DP MEAN DIA
+CTRL_F5   STP        108      FSSP MEAN RAD
+ALT_F5    STP        109      FSSP Reff
+                                    - 7 -
+
+
+                                                                 APPENDIX 42
+                                                                 9 July 1990
+F6        XY         303      2DC COUNTS vs. DIA
+SHIFT_F6  XY         403      2DP COUNTS vs. DIA
+CTRL_F6   XY         104      FSSP COUNTS vs. DIA
+ALT_F6    XY         105      FSSP LWC vs. DIA
+NOTE XY PLOT 106 (Rv vs CON) MUST BE SELECTED EXPLICITLY USING THE COMMAND
+"PXY 106 ON"
+------------------------------OPERATORS MONITOR-------------------------------
+F7        XY         302      2DC CONC
+                     402      2DP CONC
+                     102      FSSP CON
+SHIFT_F7  XY         301      2DC COUNT
+                     401      2DP COUNT
+                     101      FSSP COUNT
+CTRL_F7   XY         103      FSSP LWC
+F8        STP         16      2DC CON
+                      17      2DP CONC
+                      18      FSSP CONC
+SHIFT_F8  STP         19      2DC IWC
+                      20      2DP IWC
+                      21      FSSP LWC
+F9        STP         22      2DC MEAN DIA
+                      23      2DP MEAN DIA
+                      24      FSSP MEAN RAD
+SHIFT_F9  STP         25      Ra
+                      26      Rv
+                      27      Reff
+CTRL_F9   STP         28      2DC MAX DIA
+                      29      2DP MAX DIA
+                      30      FSSP MAX DIA
+ALT_F9    STP         31      2DC DRZ LWC
+                      32      2DP DRZ LWC
+                      33      FSSP LWC
+
+                           MACRO COMMANDS SMALL FIT
+
+F1                            SCREEN SCROLL OPERATORS MONITOR
+SHIFT_F1                      SCREEN SCROLL A/S MONITOR
+CTRL_F1   TXT                 FLIGHT NUMBER VISIBLE
+ALT_F1    TXT                 HEIGHT VISIBLE
+F10                           FSSP RANGE 0 (2-47æ)
+SHIFT_F10                     FSSP RANGE 1 (2-32æ)
+CTRL_F10                      FSSP RANGE 2 (1-16æ)
+ALT_F10                       FSSP RANGE 3 (« -8æ)
+-----------------------------------A/S MONITOR--------------------------------
+F2        STP        101      FSSP CONC
+SHIFT_F2  STP        102      PCASP CONC
+CTRL_F2   STP        105      FSSP LWC
+ALT_F2    STP        106      PCASP LWC
+F3        TXT         10      FSSP CONC
+                      11      FSSP MEAN RAD
+                      12      FSSP LWC
+                      20      PCASP CON
+                      21      PCASP MEAN RAD
+                      22      PCASP MASS
+                                    - 8 -
+
+
+                                                                 APPENDIX 42
+                                                                 9 July 1990
+SHIFT_F3  TXT         13      FSSP Rv
+                      14      FSSP Ra
+                      15      FSSP Reff
+                      23      PCASP Rv
+                      24      PCASP Ra
+                      25      PCASP Reff
+F4        XY         205      FSSP COUNT
+                     210      PCASP COUNT
+SHIFT_F4             206      FSSP CONC
+                     211      PCASP CON
+CTRL_F4              207      FSSP LWC
+                     212      PCASP MASS
+F5        STP        110      FSSP Ra
+SHIFT_F5             111      FSSP Rv
+CTRL_F5              112      FSSP Reff
+F6        STP        115      PCASP Ra
+SHIFT_F6             116      PCASP Rv
+CTRL_F6              117      PCASP Reff
+------------------------------OPERATORS MONITOR-------------------------------
+F7        STP        20/30    2DC CONC
+                     21/31    FSSP CONC
+                     22/32    PCASP CONC
+SHIFT_F7             25/35    2DC LWC
+                     26/36    FSSP LWC
+                     27/37    PCASP MASS
+F8        XY         100      2DC COUNT
+                     105      FSSP COUNT
+                     110      PCASP COUNT
+SHIFT_F8             101      2DC CON
+                     106      FSSP CON
+                     111      PCASP CON
+CTRL_F8              102      2DC LWC
+                     197      FSSP LWC
+                     112      PCASP MASS
+F9        STP         40      2DC MEAN DIA
+                      41      FSSP MEAN RAD
+                      42      PCASP MEAN RAD
+SHIFT_F9              45      2DC MAX DIA
+                      46      FSSP MAX DIA
+                      47      PCASP MAX DIA
+CTRL_F9               50      FSSP Ra
+                      51      FSSP Rv
+                      52      FSSP Reff
+ALT_59                55      PCASP Ra
+                      56      PCASP Rv
+                      57      PCASP Reff
+
+
+
+
+
+                                    - 9 -
+

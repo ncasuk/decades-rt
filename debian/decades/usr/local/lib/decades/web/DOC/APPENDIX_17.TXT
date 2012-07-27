@@ -1,0 +1,118 @@
+                                                               APPENDIX 17
+                                                               6th May, 1998
+
+                  TSI 3-Wavelength Integrating Nephelometer
+                 
+
+Circuit Breakers Required
+1.   Cargo hold forward bulkhead - MRF Main Distribution Panel.
+     a.   28V DC - JB3B
+     b.   115/200V AC - JB3B 
+2.   Junction Box 3B  - EPDB 12
+3.   EPDB 12 - 230VAC Panel	CB1, 200V 400Hz, 3ph
+				28VDC Input switch (green light)
+				230V Output switch (amber light)
+				CB13 230V
+
+
+
+Power
+1.   Herc Rack 5  - 230V Distribution box - Neph
+					  - Neph Pump
+
+
+Principles of Operation  (see attached pages)
+
+
+Pre-flight
+1.  Check Pipework.  Black intake pipe from ASP to inlet, Outlet pipe via pump.
+2.  OPEN Starboard Air Sampling Pipes (use the adapter handle for the inlet).
+3.  Make CBs and switches on EPDB 12.
+4.  On Herc Rack 5 Distribution Box, switch Neph ON
+                                     switch Neph Pump ON
+5.  The three leds on the front of the Nephelometer should light up.
+6.  Check the Neph parameters on the DRS / HORACE.
+
+	DRS Para	HORACE Para  		Signal
+
+ 	175  NPRS	620  NEPH PRS           Sample Pressure
+	176  NTMP	621  NEPH TMP		Sample Temperature
+	177  NBTS	622  NEPH BTS		Total Scat. Blue
+	178  NGTS	623  NEPH GTS		Total Scat. Green
+	179  NRTS	624  NEPH RTS		Total Scat. Red 
+	180  NBBS	625  NEPH BBS		Back Scat. Blue
+	181  NGBS	626  NEPH GBS		Back Scat. Green
+	182  NRBS	627  NEPH RBS		Back Scat. Red 
+	183  NHUM	628  NEPH HUM           Sample Humidity
+	184  NSTS	629  NEPH STS 		Status
+
+    The following points should establish if the instrument is working properly.
+     a)	The pressure, temperature and humidity values should be close to 
+        ambient. 
+     b)	The three Total Scattering signals should be the same shape and in size
+        order be Blue, Green, Red.  (Blue having the highest value).
+     c)	The Back Scattering signals are typically an order of magnitude less 
+        than the Total Scattering ones.  Again they should be of the same 
+        general shape and in terms of signal size, be in the order Blue, Green
+        then Red.  A Zero Cal. should be done if not.
+        (The status signal is mainly used for flagging data during processing). 
+
+
+7.   A Zero Calibration can give another indication that the instrument is
+     working properly.  This can be done from any HORACE display.  
+    	Select Option 17 - Instruments.
+        Select Option  5 - Nephelometer.  
+        Select Option  1 - Zero calibration to start the cal.
+     During the calibration, all scattering signals will remain at the values
+     they had immediately prior to the Cal.  The time taken for a Zero 
+     Calibration is currently set at 5 minutes.  Note values in Flight Log.
+
+8.   On HR5 Distribution box, switch Neph Pump OFF
+                              switch Neph OFF.
+9.   Close 2 Starboard Air Sampling Pipes (use T-bar for the inlet).
+
+
+
+After take-off
+1.  OPEN Starboard Air Sampling Pipes.
+2.  Check CBs and switches made on EPDB 12.
+3.  On Herc Rack 5 Distribution Box, switch Neph ON
+                                     switch Neph Pump ON.
+4.  The main requirement in-flight is to perform a Zero Calibration at every 
+    new level.  This is normally done either before the start or after the end
+    of a Run.  Check with the Scientist as to which is preferred.  
+*** IT IS VERY IMPORTANT THAT THERE IS NO CHANGE IN HEIGHT DURING A CAL. *** 
+    If there is, then this should be noted in the log and the Scientist 
+    informed.  It will probably be necessary to do it again. 
+
+5.  Monitor signals on HORACE and print off Scatter Channels' plot periodically
+    (or note down levels), and log Calibration times.
+
+
+
+On Return Transit, when no longer required
+1.  On HR5 Dist. box, switch Neph Pump OFF
+                      switch Neph OFF. 
+2.  Check with other Operators before breaking CBs.
+3.    "    "     "       "       "    closing ASPs.
+
+
+
+After Flight
+1.   A Zero Calibration may be required on the ground after power changeover.
+2.   Check all ASPs closed and CBs broken before leaving aircraft.
+
+
+
+
+
+
+
+
+SOME TYPICAL SCATTERING COEFFICIENTS       Approx. order of magnitude
+
+     Unpolluted North westerly     	           x10-6/m           
+     Clean Air at sea level             	   x10-5/m              
+     European anticyclone            	           x10-4/m             
+     Heavily polluted air eg. smoke from	   x10-3/m       
+     stubble burning

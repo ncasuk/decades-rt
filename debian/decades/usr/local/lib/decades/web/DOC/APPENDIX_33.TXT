@@ -1,0 +1,117 @@
+                                                                 APPENDIX 33
+                                                             31 October 1991
+                      DIOXIDE ANALYSER (National Power)
+
+Circuit Breakers Required
+
+Forward Bulkhead:-   MRF Main Distribution Panel
+                     a.  230V JB11 SUPPLY (two circuit breakers)
+Rear Cargo Hold:-    JB11A
+                     a.  230V CB `CERL TRANS'
+               :-    L.H.S. Climbing frame
+                     a.  5A fuse `332 5A'
+
+Principles of Operation
+
+Sample air is drawn through an H2S scrubber, which removes H2S from the
+sample, and into the detector block by means of a vacuum pump.  Hydrogen is
+supplied under a slight pressure from an external cylinder.  When sulphur
+species are burnt in a hydrogen flame chemiluminescence occurs at around
+394nm.  This wavelength is detected using a combination of a narrow band
+filter and a photomultiplier.  The output from the photomultiplier is
+amplified to produce the output on the meter dial which is proportional to the
+amount of SO2 in the air sample.
+
+Pre-Flight
+
+1.   Allow TWO HOURS BEFORE Take-off for the instrument to warm up.
+2.   ZERO and SPAN potentiometers should NOT be adjusted.
+3.   The TIME CONSTANT switch should be left on 1sec for normal operation.
+4.   DISCONNECT the sample line (the only 1/8th inch pipe on port air sampling
+     pipe) and CONNECT the ZERO FILTER.
+     NB. the ZERO FILTER removes SO2 from the ambient air and also dries it.
+5.   Power to the instrument should be turned ON and the 230V CB MADE.
+6.   Switch the POWER switch ON.
+7.   Adjust H2 FLOW ADJUST to its lowest reading and wait until this falls to
+     zero.
+8.   Switch the RANGE switch to 100 for normal operation.
+9.   Turn the valve on the hydrogen cylinder ON and pressurize to 50lb/in2.
+10.  Check the hydrogen cylinder for leaks with `snoop'.
+11.  Adjust the H2 FLOW ADJUST to 46mm.
+12.  The flame in the burner should light automatically - indicated by a kick
+     on the METER DIAL and the IGNITION light being OFF.
+     If the IGNITION light is ON this is a warning that the flame is NOT
+     alight - there is a fail safe auto cut-out for the hydrogen supply.
+13.  If the flame does not light automatically it can be lit manually by
+     pressing IN the IGNITION light for about 1 minute - indicated by a kick
+     on the METER DIAL and the IGNITION light being off when released.
+14.  A pre-flight tape of the zero readings should be made - see data logger
+     instructions.
+15.  NOTE the zero reading on the meter dial and the H2 flow reading.
+16.  Half-an-hour before take-off DISCONNECT the ZERO FILTER and RE-CONNECT
+     the sample line.
+17.  Switch the power and then hydrogen supply OFF before take-off.
+
+
+
+                                        -1-
+
+
+                                                                 APPENDIX 33
+                                                                 4 Sept 1989
+In-Flight
+
+1.   After take-off switch ON the hydrogen supply and then the power and
+     re-light at about 3000ft.  The instrument will not remain alight above
+     9000ft, above this level - the power and hydrogen supply should be turned
+     OFF. 
+2.   The instrument should NOT be run WITHOUT the hydrogen supply being ON as
+     this will burn out the igniter.
+3.   It will be necessary to adjust the RANGE switch to 500 when the meter is
+     occasionally reading off-scale on the 100 range.  These occasions should
+     be noted on the log sheet.
+4.   At the end of experimental flight a high level zero is required:
+     At approximately 7000ft DISCONNECT SAMPLE LINE and CONNECT ZERO FILTER
+     run for about 5 minutes.
+5.   Before landing or at end of experimental flight turn the power then the
+     hydrogen supply OFF.
+
+NOTE:  A full bottle of hydrogen contains about 1500lb/in2, which should be
+enough for 3 flights - each flight using about 300lb/in2.  If far more than
+this is used a leak in the system is indicated, the power and then the
+hydrogen should be switched OFF.
+
+The tubing of the instrument can become `dirty' this is indicated by a long
+response time (the SO2 normally has a fast response time).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        -2-
+
+                                                                       

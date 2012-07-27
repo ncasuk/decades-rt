@@ -1,0 +1,59 @@
+
+                                                                 APPENDIX 35
+                                                             31 October 1991
+                  NITROGEN OXIDES ANALYSER (National Power)
+
+Circuit Breakers Required
+
+Forward Bulkhead:-   MRF Main Distribution Panel
+                     a.  230V JB11 SUPPLY (two circuit breakers)
+Rear Cargo Hold:-    JB11A
+                     a.  3A fuse `NOx DETECTOR'
+                     b.  `NOx PUMP' (CB)
+
+Principles of Operation
+
+The sample air is filtered then split into two streams: NO and NOx.  The NOx
+stream passes through a converter which converts NO2 to NO.  Both streams then
+pass through separate chambers where they are mixed with ozone.  This causes a
+chemiluminescent reaction between the ozone and the NO concentration in the
+air sample.  The wavelengths emitted (500-3000nm) are detected by two
+photomultipliers, the light intensity emitted being proportional to the NO
+concentration in the sample.  The NO2 concentration is electronically
+calculated by subtracting the NO output from the NOx output.  Any one of these
+three outputs can be output to the meter dial if selected by the option
+switch.
+
+Pre-Flight
+
+1.   Turn POWER and PUMP ON, leave for HALF-AN-HOUR to dry out.
+     DO NOT PUT OZONE ON AT THIS STAGE.
+2.   DO NOT adjust SPAN settings.
+3.   Dessicant should be BLUE (pink when damp).
+4.   Switch RANGE switch to 0.1 for normal operation.
+5.   Turn OZONE ON.
+6.   Switch MODE switch to NOx for normal operation.
+7.   BEFORE TAKE-OFF switch OZONE OFF FIRST.
+8.   Switch POWER and PUMP OFF.
+
+In-Flight
+
+1.   Switch POWER and PUMP ON.
+2.   Switch OZONE ON.
+3.   Switch OZONE OFF.
+4.   Switch POWER and PUMP OFF.
+
+
+
+
+
+
+
+
+
+
+
+
+                                        -1-
+
+                                                                       

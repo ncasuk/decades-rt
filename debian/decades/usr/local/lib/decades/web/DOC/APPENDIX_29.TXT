@@ -1,0 +1,232 @@
+
+                                                                APPENDIX 29
+                                                            26 November 1990
+
+        INSTRUCTIONS FOR OPERATING THE MULTI CHANNEL RADIOMETER (MCR)
+
+Circuit Breakers
+
+     3 CB's on flight deck MRF L.H.A.C.BUS.
+     3 CB's on JB6 (rear cargo hold port side).
+     1 CB in van JB4A.
+
+Principles of Operation
+
+The multichannel radiometer detects radiation in selected wavelengths and
+directions in the solar and terrestrial spectrum.  The instrument consists of
+three main units.
+
+1.   The sensor unit contains the optical system and much of the signal
+     processing circuitry and is located in the nose-cone of the port
+     maxi-pod.
+2.   The electronics unit contains the control and timing circuits, analogue
+     multiplexer and serial links to the data recoding system, this is located
+     in the centre section of the pod.
+3.   The control unit is located in the van and is used to control and display
+     the functions of the MCR.
+
+The MCR 5" monitor tells the status of the fulter wheels and the mirror
+position.  Mirror position is shown on a cartwheel and each position has a
+unique number:-
+
+     0 = Black Body (Parking position)
+     1 = Zenith
+     2 = Cold Black Body
+     3 = N60o
+     4 = N45o
+     5 = N30o
+     6 = N15o
+     7 = Nadir
+
+The upper and lower shutters are operated by two rocker switches on the
+shutter control panel.
+
+The MCR can be operated in essentially two modes with either all filters
+rotating or filters fixed in position.  For most situations the first mode of
+operation is used.
+
+To fix one or all filter wheels type:
+     "Fn" where n is the number of the filter to be fixed then reply with
+     either A, B, C, D or any combination of these or the word ALL.
+To restart filters type "FE".
+To move the mirror type "M" <RETURN> "n", where n is the number of the
+position required.
+
+NB: THE MCR SHOULD BE CLOSED COMPLETELY WHEN FLYING IN CLOUD OR RAIN.
+
+
+                                    - 1 -
+
+                                                                APPENDIX 29
+                                                            26 November 1990
+A:   Before Flight
+
+1.   Make 3 CB's on flight deck (MRF L.H.A.C.BUS) located to left of aircraft
+scientists seat.  These are the MCR heater CB's, stow the red clips in van.
+
+2.   Make 3 CB's on JB6 (rear cargo hold on port side)
+          MAXI POD POWER - Power to port maxi-pod 115V 400Hz.
+          HBB            - Power to Hot Black Body
+          MCR            - Power to mirror motor.
+
+3.   Make MCR CB in van JB4A - power to MCR control unit.
+
+4.   Load two disks into tape drive of MCR control unit
+          Disk labelled 0 into bottom drive
+          Disk labelled 1 into top drive
+     Close tape drives.
+
+5.   Switch on MCR control unit at rocker switch next to tape drive.
+
+6.   Load MCR control programme - see Annex 1.
+
+7.   Open lower shutter and then move mirror to NADIR view.  Tomove mirror
+type M <RETURN> followed by number of position required.
+
+8.   Go out to pod and inspect mirror for obvious damage and look up through
+MCR pod at upper diffuser plate to check for contamination (note any
+contamination in log).  Clean top surface of upper shutter (the diffuser)
+carefully - blow dust off first to reduce the risk of scratching the surface. 
+Clean with a soft rag or blue tissues with alcohol.
+
+9.   Close shutter and exercise mirror.  Leave mirror on HBB with both
+shutters CLOSED.
+
+10.  Select DRS program BCDS.  Parameter 506.
+
+11.  Check that the last two characters in the last line are cycling through
+the sequence 00, 55, FF, AA.  This is the filter position monitor and the
+display of the correct sequence indicates that the filter wheels are rotating
+properly.  Note any irregularities.  If the sequence is incorrect then restart
+filters using command "FE".  If problem still persists turn off MCR and
+restart process from point A:5.  If the problem still persists after several
+minutes of operation then help should be sought.  If the filters are not
+rotating properly the data stream will be corrupt. (See Trouble Shooting,
+Annex 2.)
+
+12.  Select parameters 501, 502, 503, 504 (Channels A, B, C, D) in turn and
+check that the signal ramps are present - 5 points on each.  Note that a
+typical ramp should be something like this:-
+     2047      1015      1370      1750      1900
+
+The first number on each line is the top of the ramp.  If the magnitude of the
+numbers does not follow this order after a few minutes running then restart
+MCR from section A:5. (See Trouble Shooting, Annex 2.)
+                                    - 2 -
+
+
+                                                                APPENDIX 29
+                                                            26 November 1990
+13.  Close both shutters and part mirror on position "O" the HBB.
+
+14.  Prior to power changeover turn off MCR Control Unit and switch by disk
+drive.
+
+A:   After Power Transfer
+
+15.  REPEAT STAGES 5 AND 6 (ie. switch on MCR).
+
+C:   During Flight
+
+16.  Filter selection and mirror position will be dictated by the relevant
+trial instruction.  Occasionally check as in A: 10-12 that MCR is working. 
+Also use HORACE display to check for meaningful data.
+
+17.  DO NOT OPEN THE SHUTTERS IF FLYING IN CLOUD OR PRECIPITATION
+
+18.  Prior to landing leave MCR on HBB with both shutters CLOSED, then turn of
+shutter control unit and switch by disk drive.
+
+D:   After Landing
+
+19.  Remove disks from drives.
+
+20.  Break CB in van.
+
+21.  Break 3 CB's in cargo hold JB6.
+
+22.  Break 3 CB's on flight deck and replace red clips.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    - 3 -
+
+
+                                                                APPENDIX 29
+                                                            26 November 1990
+ANNEX 1.
+
+Use grey keyboard stowed behind HORACE keyboard to operate MCR.  To start up
+MCR follow these steps.
+a)   Type D
+b)   Input any date you like eg. 1 1 1 (no commas)
+c)   After the line of three stars appears type S
+d)   Input first delay of 100
+e)   Input second delay of 2000
+f)   MCR cartwheel should now appear on 5" screen, if not reset terminal and
+     start from a) again.
+g)   Switch on MCR at rocker switch on shutter control panel the rest of the
+     display on the 5" screen should appear.
+h)   Type return several times to ensure screen is updating with filter
+     status.
+
+ANNEX 2.
+TROUBLE-SHOOTING
+
+1.  Sign       HORACE shows "?" by filter status or DRS housekeeping
+               (para 506) does not show 00 55 FF AA repeat cycle in last
+               column.
+    Cause      Filters not rotating properly.
+    Treatment  Restart filters using command FE, if problem persists after
+               several attempts at a restart then turn OFF MCR and start
+               again.
+2.  Sign       Mirror in wrong position
+    Cause      Usually typing error
+    Treatment  Try again
+3.  Sign       NOT LOCATED signal on 5" display
+    Cause      Mirror is lost between photodiode locators and computer has
+               lost track of its position.
+    Treatment  Type "S" (search) on command line and MCR will step mirror
+               until it has been located by a photodiode.  Themirror is
+               located by any single diode through three steps of the motor so
+               the command "S" should be repeated again to locate the mirror
+               in the middle of the photodiode's beam.  Only in this position
+               is the MCR accurately located.
+4.  Sign       All temperatures too low (usually only in cold climates eg.
+               FINLAND)
+    Cause      MCR cold
+    Treatment  Make the heater CB in cargo hold JB6 to warm up MCR.  This can
+               then be left on.
+5.  Sign       MCR ramp not correct or HORACE shows corrupt data
+    Cause      The MCR sampling sequence has been corrupted
+    Treatment  Turn OFF MCR and restart.
+
+
+
+
+
+
+
+
+                                    - 4 -
+                                                                      

@@ -1,0 +1,60 @@
+
+ The details on this page are being updated, please contact    APPENDIX 34
+ MRF Chemistry Section for further info in the meantime.      31 October 1991
+-------------------------------------------------------------                                                             
+                      BENDIX OZONE ANALYSER (Now replaced by the TECO instrument)
+
+Circuit Breakers Required
+
+Forward Bulkhead:-   MRF Main Distribution Panel
+                     a.  230V JB11 SUPPLY (two circuit breakers)
+Rear Cargo Hold:-    JB11A
+                     a.  230V CB `CERL TRANS'
+               :-    L.H.S. Climbing frame
+                     a.  3A fuse `332 3A'
+
+Principles of Operation
+
+Sample air is mixed with ethylene, from an external cylinder, which produces a
+chemiluminescent reaction.  The wavelengths emitted are detected by a
+photomultiplier.  The output from the photomultipler is amplified to produce
+the output on the meter dial which is proportional to the amount of ozone in
+the air sample.
+
+Pre-Flight
+
+1.   SPAN and ZERO potentiometers should NOT be adjusted.
+2.   The TIME CONSTANT switch should be left on 1sec for normal operation.
+3.   Turn the valve on the ethylene cylinder ON and pressurize to 50lb/in2.
+4.   Check the Ethylene cylinder for leaks with `snoop'.
+5.   Turn the POWER and the PUMP ON.
+6.   Make sure that the PUMP BYPASS is closed for CERL flights.
+7.   The SAMPLE AND ETHYLENE flow rate should read 28.
+8.   The ETHYLENE pressure should read 22.
+9.   The MODE switch should be on AMBIENT, turn the MODE switch to ZERO.
+10.  Turn the RANGE switch to 0.01 and leave the instrument to warm up for an
+     hour.
+11.  Turn the MODE switch to SPAN, and the RANGE switch to 0.2 and leave for
+     half-an-hour.
+12.  Check the meter reading is mid-range and note both of the flow readings
+     and the meter reading.
+13.  Turn the MODE switch to AMBIENT for 5 minutes.
+14.  Turn the PUMP, the POWER and ETHYLENE OFF for take-off.
+
+In-Flight
+
+1.   Turn the ETHYLENE, PUMP and POWER ON.
+2.   For normal operation:-   MODE switch to AMBIENT
+                              RANGE switch to 0.2
+3.   BEFORE LANDING or at the end of experimental flight, switch the PUMP,
+     POWER and ETHYLENE OFF.
+
+NOTE:  A full bottle of ethylene should last for at least 5 flights - if far
+more ethylene is being used a leak in the system is indicated, the PUMP, POWER
+and ETHYLENE should be switched OFF.
+
+
+
+                                        -1-
+
+                                                                       

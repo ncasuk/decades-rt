@@ -1,0 +1,59 @@
+
+                                                                 APPENDIX 20
+                                                                 04 Nov 1993
+                        NON DE-ICED TEMPERATURE SENSOR
+
+Circuit Breakers Required
+
+1.   Forward Bulkhead - MRF Main Distribution Panel.
+                        230 V. JB 4B
+2.   Recorder Van, rear compartment - Junction Box 4B 0.5A Fuse.
+
+PRINCIPLES OF OPERATION
+
+The Non de-iced temperature element is a platinum resistance thermometer.  The
+resistance of the platinum wire within the element alters in relation to the
+changes in the air temperature.  The signal output from the sensor enters an
+interface board in MILLIE where it is converted into DRS units and split into
+two parameters : 23 -  fine non-deiced temperature and 24 -  coarse non-deiced
+temperature. A seperate output goes from to a DPM which displays the data as
+the Indicated Air Temperature.
+
+                              
+PRE FLIGHT
+1.   Check temperature probe clear and undamaged.
+2.   Check all connections on the rear of I.A.T. display unit are secure.
+3.   Check INT/EXT switch on rear of display is set to EXTERNAL.
+4.   Check DRS power switch on DRS control panel is ON.
+5.   Switch I.A.T. display unit power to ON.
+6.   Check display is reading with reasonable agreement with the outside air
+     temperature.
+
+IN FLIGHT
+1.   Regular monitoring of I.A.T. readings in conjunction with I.A.S. and
+     altitude should be maintained and logged.
+2.   True non-deiced air temperature can be obtained from HORACE where it is 
+     displayed as HORACE parameters 523 & 524.
+
+3.   True air temperature can also be obtained by cross reference of I.A.S.,
+     I.A.T. and height to extract a correction from the T.A.T. correction book.
+
+POST FLIGHT
+1.   ON TAXY, switch I.A.T. display unit OFF.
+2.   Check temperature probe is clean and undamaged.
+3.   After low level flights the temperature elements should be sprayed with
+     distilled water followed by methylated spirit to clear any salt deposits. 
+     During winter use meths only.
+
+
+
+
+
+
+
+
+
+
+
+
+

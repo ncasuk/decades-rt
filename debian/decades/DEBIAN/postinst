@@ -1,0 +1,4 @@
+#!/bin/sh
+update-rc.d decades defaults >/dev/null
+invoke-rc.d decades start
+

@@ -1,0 +1,1 @@
+$@sys$manager:java$setup$!copy [-.drs]horconn.java *.*$javac choices.java$!jar cvf0 choices.jar *.class  !  Doesn't seem to work with wildcards ?$zip -0 [-]choices.jar *.class$exit 

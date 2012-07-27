@@ -1,0 +1,3 @@
+mapplot 19-jan-2004 - plane drawing fixed
+zoomplot 19-mar-2004 - fix so doesnt drawlatestdata before drawdata (possible fix for
+mapplot crashing )

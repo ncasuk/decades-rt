@@ -1,0 +1,46 @@
+<html>
+<title>Brief User Guide, Aircraft Plots</title>
+<body bgcolor=#0C2174 text=#FFFFFF >
+<h3><center>Aircraft Plots, a brief user guide</center></h3>
+<p>
+There are two types of plots available, Derived Data, and Raw Data.
+</p>
+<h4>Derived Data</h4>
+<p>
+These are plots of parameters in scientific units ( using a minimal calibration
+in the HORACE routines).  There are several different types of plot.
+<ul><b>XY plot</b> - a plot of one or more dependant Y varaible against one 
+indepentant X variable.  eg a Time Series plot.</ul>
+<ul><b>YX plot</b> - a plot of one or more dependant X varaible against one 
+indepentant Y variable. eg a Profile plot.</ul>
+<ul><b>Tephigram</b> - a meteorological T-phi diagram</ul>
+<ul><b>Hodograph</b> - a polar plot of wind strengths and directions.</ul>
+<ul><b>Track Plot</b> - a plot of Lat and Long over a map.</ul>
+<ul><b>Text</b> - a dump of a list of parameters.</ul>
+<p>
+Choose one of these options, then choose which parameters to plot.  You can 
+also choose the time period to plot ( by default the last 1/2 hour ) and the
+symbols to plot with.  Then press the <b>Plot</b> button.
+</p>
+<p>
+A new window should pop up with the plot in it.  The plot can be zoomed in on
+by 
+selecting a rectangle with the mouse, to zoom out again use the right mouse
+button.
+</p>
+<h4>Raw Data</h4>
+Raw data still in DRS units is treated differently.  Only Time series plots are
+available,
+a number can be plotted at once in different colours.  The plot is 'zoomed in'
+by 
+reducing the number of bits of data displayed, from showing all 16 bits to just
+the least
+significant 4 bits.  Double-clicking on the plot will reduce the number of bits
+shown (
+zoom in) right-clcking will increase the number of bits shown (zoom out).
+  Each parameter can also be displayed as individual bits ( used for
+looking at status words etc ).  It is a rolling plot with the most recent data
+replacing
+oldest every second.  
+</body>
+</html>

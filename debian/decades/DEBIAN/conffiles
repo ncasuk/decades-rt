@@ -1,0 +1,5 @@
+/etc/apache2/sites-enabled/decades
+/etc/default/decades
+/etc/init.d/decades
+/etc/decades/decades-server.tac
+/etc/decades/decades-listener.tac
