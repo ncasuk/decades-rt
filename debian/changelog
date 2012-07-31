@@ -1,6 +1,6 @@
-decades (0.7.1~52.gbp426d5e) quantal; urgency=low
+decades (0.7.1~59.gbpada7d2) quantal; urgency=low
 
-  ** SNAPSHOT build @426d5e0e389a57e0e8a24e5d7f02aea8289cfb6e **
+  ** SNAPSHOT build @ada7d27cd9f58767f3ff487ab99a94aaf05d51b2 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -69,8 +69,11 @@ decades (0.7.1~52.gbp426d5e) quantal; urgency=low
   * Initial version
   * Mistake!
   * Undoing mistake!
+  * debian deb generation fixes
+  * tcp-listener tac copy
+  * test output filename change
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 27 Jul 2012 15:25:40 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 30 Jul 2012 16:55:08 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
