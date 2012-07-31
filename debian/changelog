@@ -1,6 +1,6 @@
-decades (0.7.1~59.gbpada7d2) quantal; urgency=low
+decades (0.7.1~60.gbp6c026c) quantal; urgency=low
 
-  ** SNAPSHOT build @ada7d27cd9f58767f3ff487ab99a94aaf05d51b2 **
+  ** SNAPSHOT build @6c026c8f4825514cdcf553b42693ee340addd5c5 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -72,8 +72,9 @@ decades (0.7.1~59.gbpada7d2) quantal; urgency=low
   * debian deb generation fixes
   * tcp-listener tac copy
   * test output filename change
+  * Fixing the listener to not run the reactor if called indirectly.
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 30 Jul 2012 16:55:08 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 31 Jul 2012 11:18:20 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
