@@ -11,17 +11,16 @@ from twisted.internet.defer import Deferred
 import psycopg2, csv, psycopg2.extensions, time
 from decades import DecadesDataProtocols
 from twisted.python import log 
+
+from retryingcall import RetryingCall, simpleBackoffIterator
     
 
 
-def joinGroupErrorHandler(failure):
-   #detect and handle MulticastJoinErrors
-   failure.trap(error.MulticastJoinError)
-   log.msg("MulticastJoinError - retrying")
-   time.sleep(5)
+class multicastJoinFailureTester(object):
+   okErrs=(error.MulticastJoinError)
 
-def joinGroupSuccessHandler(result):
-   log.msg("MulticastJoin - Success")
+   def __call__(self, failure):
+      failure.trap(self.okErrs)
 
 class MulticastServerUDP(DatagramProtocol):
     dataProtocols = DecadesDataProtocols() 
@@ -37,12 +36,9 @@ class MulticastServerUDP(DatagramProtocol):
         log.msg('CREATE VIEW')
         self.dataProtocols.create_view(self.cursor)
       
-        is_fail = True 
-        while is_fail: 
-            is_fail = False
-            # Join a specific multicast group, which is the IP we will respond to
-            d = self.transport.joinGroup('225.0.0.0') #d is Deferred object
-            d.addCallbacks(joinGroupSuccessHandler, joinGroupErrorHandler) #detect & handle join errors
+        # Join a specific multicast group, which is the IP we will respond to
+        r = RetryingCall(self.transport.joinGroup, '225.0.0.0')
+        d = r.start(failureTester=multicastJoinFailureTester())
    
         log.msg('Started Listening')
          

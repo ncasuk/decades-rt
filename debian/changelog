@@ -1,6 +1,6 @@
-decades (0.7.1~62.gbp1b11db) quantal; urgency=low
+decades (0.7.1~63.gbpf3d638) quantal; urgency=low
 
-  ** SNAPSHOT build @1b11db287172ffec2dc63533ff73570d9731f684 **
+  ** SNAPSHOT build @f3d638e29596dc04af9433ee98fd8b28aab2184a **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -74,8 +74,9 @@ decades (0.7.1~62.gbp1b11db) quantal; urgency=low
   * test output filename change
   * Fixing the listener to not run the reactor if called indirectly.
   * Spelling mistake!
+  * Try to fix startup problem
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 06 Aug 2012 14:21:53 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 09 Aug 2012 12:22:05 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
