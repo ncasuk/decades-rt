@@ -22,13 +22,8 @@ def getDecadesService():
     Return a service suitable for creating an application object.
     """
     conn = get_database()
-    while True:
-      try:
-         service = internet.MulticastServer(50001, MulticastServerUDP(conn))
-      except twisted.internet.error.MulticastJoinError:
-         service = false
-      if(service):
-         break;
+    protocol = MulticastServerUDP(conn)
+    service = internet.MulticastServer(50001, protocol)
     return service
 
 # this is the core part of any tac file, the creation of the root-level

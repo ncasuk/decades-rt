@@ -6,12 +6,22 @@
 # NCAS
 
 from twisted.internet.protocol import DatagramProtocol
-from twisted.internet import reactor
-from twisted.application.internet import MulticastServer
-import psycopg2, csv, psycopg2.extensions
+from twisted.internet import reactor, error
+from twisted.internet.defer import Deferred 
+import psycopg2, csv, psycopg2.extensions, time
 from decades import DecadesDataProtocols
 from twisted.python import log 
+    
 
+
+def joinGroupErrorHandler(failure):
+   #detect and handle MulticastJoinErrors
+   failure.trap(error.MulticastJoinError)
+   log.msg("MulticastJoinError - retrying")
+   time.sleep(5)
+
+def joinGroupSuccessHandler(result):
+   log.msg("MulticastJoin - Success")
 
 class MulticastServerUDP(DatagramProtocol):
     dataProtocols = DecadesDataProtocols() 
@@ -26,12 +36,16 @@ class MulticastServerUDP(DatagramProtocol):
             self.dataProtocols.create_table(proto, self.cursor, '_' + self.dataProtocols.protocol_versions[proto])
         log.msg('CREATE VIEW')
         self.dataProtocols.create_view(self.cursor)
-        
+      
+        is_fail = True 
+        while is_fail: 
+            is_fail = False
+            # Join a specific multicast group, which is the IP we will respond to
+            d = self.transport.joinGroup('225.0.0.0') #d is Deferred object
+            d.addCallbacks(joinGroupSuccessHandler, joinGroupErrorHandler) #detect & handle join errors
+   
         log.msg('Started Listening')
-        # Join a specific multicast group, which is the IP we will respond to
-        self.transport.joinGroup('225.0.0.0')
          
-
     def datagramReceived(self, datagram, address):
       '''reads an incoming UDP datagram, splits it up, INSERTs into database'''
       data = csv.reader([datagram]).next() #assumes only one record
