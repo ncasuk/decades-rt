@@ -1,6 +1,0 @@
-/var/log/decades/*.log {
-        rotate 100
-        nocreate
-        copytruncate
-        missingok
-}
