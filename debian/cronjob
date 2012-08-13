@@ -1,0 +1,3 @@
+#!/bin/sh
+#delete log files other than 30 days
+find /var/log/decades/ -type f -mtime +30 -delete
