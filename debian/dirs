@@ -1,4 +1,5 @@
 etc/init.d
+etc/cron.daily
 etc/decades
 etc/default
 etc/apache2/sites-enabled
