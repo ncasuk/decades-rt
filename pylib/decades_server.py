@@ -85,6 +85,7 @@ class DecadesProtocol(basic.LineReceiver):
          538:'upper_pyranometer_clear_flux',
          539:'upper_pyranometer_red_flux',
          540:'upper_pyrgeometer_flux',
+         541:'lower_pyranometer_clear_flux',
          575:'radar_height',
          576:'static_pressure',
          577:'pitot_static_pressure',
