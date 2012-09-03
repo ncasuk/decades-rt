@@ -54,7 +54,7 @@ class rt_data(object):
             else:    
                 if(name in self.derived):
                     data[name]=eval('self.'+name+'(data)')
-                    print 'Derive '+name
+                    #print 'Derive '+name
                 else:
                     data[name]=self.getdata_fromdatabase(name,data[1]) 
                 return data[name]               
@@ -73,7 +73,7 @@ class rt_data(object):
         """ Dummy routine to read one parameter from database"""
         fieldname_part = 'SELECT %s ' % name 
         self.database.execute(fieldname_part + 'FROM mergeddata WHERE id %s AND %s IS NOT NULL ORDER BY id' % (selection, name) )
-        print self.database.query
+        #print self.database.query
         data[name] = []
         for record in self.database: #iterates over results 
             data[name].append(getattr(record,name))
@@ -84,7 +84,7 @@ class rt_data(object):
         fieldname_part = 'SELECT %s ' % ', '.join(names)
         #self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s AND ' + ' IS NOT NULL AND '.join(names) + ' IS NOT NULL ')% selection, )
         self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s %s')% (selection, order) )
-        print self.database.query
+        #print self.database.query
         ans={}
         data={}
         for name in names:

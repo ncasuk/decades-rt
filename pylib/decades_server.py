@@ -49,7 +49,7 @@ class DecadesProtocol(basic.LineReceiver):
       if data[0:4] == "PARA":
          formt = ">4s" + str((len(data)/4)-1) + 'i' # 4 characters (P A R A), start time integer, end time integer, integer indicating number of parameters, then integer codes for the parameters (see horaceplot/choices/PARANO.TXT)
          para = struct.unpack(formt,data)
-         log.msg("Incoming: " +  repr(para))
+         #log.msg("Incoming: " +  repr(para))
          self.writeStatus()
          #log.msg(">iiffff",-1,para[3],self.time_seconds_past_midnight(),274,self.time_seconds_past_midnight(),274)
          #self.der.append([self.time_seconds_past_midnight(),274.1 + (5 * math.sin(self.time_seconds_past_midnight()))])
@@ -118,7 +118,7 @@ class DecadesProtocol(basic.LineReceiver):
             size_upcoming = len(returndata[parano[para[4]]])
          self.sendLine(struct.pack(">i",size_upcoming))
          #log.msg(repr(len(returndata)))
-         log.msg('requesting data between %i and %i, returning %i datapoints' % (para[1],para[2],size_upcoming))
+         #log.msg('requesting data between %i and %i, returning %i datapoints' % (para[1],para[2],size_upcoming))
          #send each requested parameter separately
          for paracode in para[4:]: #list of required fields
                sendable = returndata[parano[paracode]]
@@ -142,7 +142,7 @@ class DecadesProtocol(basic.LineReceiver):
       #(self.derindex, dercount, gindat01_heading_gin) = self.cursor.fetchone()
       (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
       self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),statusdata['gin_heading'],statusdata['static_pressure'],statusdata['pressure_height_feet'],statusdata['true_air_speed'],statusdata['deiced_true_air_temp_c'],statusdata['dew_point'],statusdata['gin_wind_speed'],statusdata['wind_angle'],statusdata['gin_latitude'],statusdata['gin_longitude'],'T','E','S','T'))
-      log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
+      #log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
    
    def time_seconds_past_midnight(self):
       return time.time() - time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))

@@ -116,7 +116,7 @@ class derived(rt_data.rt_data):
         A0 = c[0]+mach*(c[1]+mach*c[2])
         A1 = c[3]+mach*(c[4]+mach*c[5])
         ind=np.where((A1!=0) & (psp!=0))
-        print A1,psp
+        #print A1,psp
         AOA[ind]=(tpad[ind]/psp[ind]-A0[ind])/A1[ind]
         AOA = AOA*c[6] + c[7]
         return AOA
@@ -130,7 +130,7 @@ class derived(rt_data.rt_data):
         B0 = c[0]+mach*(c[1]+mach*c[2])
         B1 = c[3]+mach*(c[4]+mach*c[5])
         ind=np.where((B1!=0) & (psp!=0))
-        print B1,psp
+        #print B1,psp
         AOSS[ind]=(tpsd[ind]/psp[ind]-B0[ind])/B1[ind]
         AOSS = AOSS*c[6] + c[7]
         return AOSS
@@ -253,7 +253,7 @@ class derived(rt_data.rt_data):
         return shum*mad
         
     def equivalent_potential_temp(self,data):
-        """ Equivalent Portntial Temperature K"""
+        """ Equivalent Potential Temperature K"""
         tatc=self.getdata('deiced_true_air_temp_c',data)
         tatk=self.getdata('deiced_true_air_temp_k',data)
         mmr=self.getdata('mass_mixing_ratio',data)

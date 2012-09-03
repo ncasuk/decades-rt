@@ -1,6 +1,6 @@
-decades (0.7.1~69.gbp52c2c6) quantal; urgency=low
+decades (0.7.1~70.gbpf9a1b4) quantal; urgency=low
 
-  ** SNAPSHOT build @52c2c6666e5994c7ffc617c0b5082c30f9d6fa30 **
+  ** SNAPSHOT build @f9a1b45ff13420b4ee59e9209170d7ecff92a8f0 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -83,8 +83,9 @@ decades (0.7.1~69.gbp52c2c6) quantal; urgency=low
   * Trying logrotate again.
   * Removing logrotate
   * Daily log clean-up cronjob
+  * Adding cronjob
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 13 Aug 2012 15:57:28 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 16 Aug 2012 09:55:52 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
