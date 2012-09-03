@@ -689,7 +689,7 @@ class derived(rt_data.rt_data):
         return c[2]*raw**2+c[1]*raw+c[0]
 
     def cabin_temperature(self,data):
-        """Cabin pressure (mb)"""
+        """Cabin temperature (C)"""
         c=self.cals['CAL207']
         raw=self.getdata('corcon01_cabin_t',data)
         return c[1]*raw+c[0]
@@ -745,41 +745,41 @@ C ST    - Corrected Surface Temperature   (deg C)
         return nvtwc
         
     def neph_pressure(self,data):
-        raw=self.getdata('aerack01_csv:neph_pressure',data)
+        raw=self.getdata('aerack01_neph_pressure',data)
         c=self.cals['CAL175']
         return c[0]+c[1]*raw 
 
     def neph_temperature(self,data):
-        raw=self.getdata('aerack01_csv:neph_temperature',data)
+        raw=self.getdata('aerack01_neph_temperature',data)
         c=self.cals['CAL176']
         return c[0]+c[1]*raw 
 
     def neph_blue_sp(self,data):
-        raw=self.getdata('aerack01_csv:neph_total_blue',data)
+        raw=self.getdata('aerack01_neph_total_blue',data)
         c=self.cals['CAL177']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_green_sp(self,data):
-        raw=self.getdata('aerack01_csv:neph_total_green',data)
+        raw=self.getdata('aerack01_neph_total_green',data)
         c=self.cals['CAL178']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_red_sp(self,data):
-        raw=self.getdata('aerack01_csv:neph_total_red',data)
+        raw=self.getdata('aerack01_neph_total_red',data)
         c=self.cals['CAL179']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_blue_bsp(self,data):
-        raw=self.getdata('aerack01_csv:neph_backscatter_blue',data)
+        raw=self.getdata('aerack01_neph_backscatter_blue',data)
         c=self.cals['CAL180']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_green_bsp(self,data):
-        raw=self.getdata('aerack01_csv:neph_backscatter_green',data)
+        raw=self.getdata('aerack01_neph_backscatter_green',data)
         c=self.cals['CAL181']
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
@@ -791,27 +791,27 @@ C ST    - Corrected Surface Temperature   (deg C)
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
     def neph_pressure(self,data):
-        raw=self.getdata('aerack01_csv:neph_humidity',data)
+        raw=self.getdata('aerack01_neph_humidity',data)
         c=self.cals['CAL183']
         return c[0]+c[1]*raw 
 
     def neph_humidity(self,data):
-        raw=self.getdata('aerack01_csv:neph_status',data)
+        raw=self.getdata('aerack01_neph_status',data)
         c=self.cals['CAL184']
         return c[0]+c[1]*raw 
 
     def psap_lin_abs_coeff(self,data):
-        raw=self.getdata('aerack01_csv:psap_lin',data)
+        raw=self.getdata('aerack01_psap_lin',data)
         c=self.cals['CAL185']
         return c[0]+c[1]*raw 
 
     def psap_log_abs_coeff(self,data):
-        raw=self.getdata('aerack01_csv:psap_log',data)
+        raw=self.getdata('aerack01_psap_log',data)
         c=self.cals['CAL186']
         return c[0]+c[1]*raw 
 
     def psap_transmittance(self,data):
-        raw=self.getdata('aerack01_csv:psap_transmission',data)
+        raw=self.getdata('aerack01_psap_transmission',data)
         c=self.cals['CAL187']
         return c[0]+c[1]*raw 
 
