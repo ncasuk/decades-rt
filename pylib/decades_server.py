@@ -38,7 +38,7 @@ class DecadesProtocol(basic.LineReceiver):
        self.rtlib = rt_derive.derived(self.cursor,calfile) #class processing the cals & producing "real" values
        self.parano = {}
        parser = SafeConfigParser()
-       self.config = parser.read('pylib/decades.ini')
+       self.config = parser.read('/etc/decades/decades.ini','pylib/decades.ini')
        for (code, function) in parser.items('Parameters'):
          self.parano[int(code)] = function
          
