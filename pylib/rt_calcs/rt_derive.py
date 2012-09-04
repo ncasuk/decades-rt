@@ -551,7 +551,7 @@ class derived(rt_data.rt_data):
         RU=east+TAS*(RCH*RV3-RSH*RV2)+RIP*(RCH*RV4-RSH*RV5) #E wind (m s-1)
         return RU
 
-    def v_wind(self,data):
+    def vertical_wind_component(self,data):
         TAS=self.getdata('turb_probe_tas',data)
         down=self.getdata('gin_d_velocity',data)
         AOA=np.deg2rad(self.getdata('angle_of_attack',data))
