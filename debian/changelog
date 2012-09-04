@@ -1,6 +1,6 @@
-decades (0.7.1~70.gbpf9a1b4) quantal; urgency=low
+decades (0.7.1~71.gbp94a5dd) quantal; urgency=low
 
-  ** SNAPSHOT build @f9a1b45ff13420b4ee59e9209170d7ecff92a8f0 **
+  ** SNAPSHOT build @94a5dd120a23340e63b440a984c756a39c91e1cb **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -84,8 +84,10 @@ decades (0.7.1~70.gbpf9a1b4) quantal; urgency=low
   * Removing logrotate
   * Daily log clean-up cronjob
   * Adding cronjob
+  * Adding lower pyrogemeter flux after test flight.
+  * Disabling logging for efficiency
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 16 Aug 2012 09:55:52 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 03 Sep 2012 10:30:55 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
