@@ -851,6 +851,11 @@ C ST    - Corrected Surface Temperature   (deg C)
         unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
         #raw is an array, so subtracting an integer appears to be valid
         return raw - unixtime_at_midnight
+
+    def flight_number(self, data):
+      """ Returns the flight code, failing over from one DLU to another"""
+      code = self.getdata('corcon01_flight_num',data) 
+      return code
         
     def derindex(self,data):
       return self.getdata('id',data)

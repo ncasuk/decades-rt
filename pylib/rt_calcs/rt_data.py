@@ -93,7 +93,11 @@ class rt_data(object):
             for name in names:
                data[name].append(getattr(record,name))
         for name in names:
-            ans[name]=np.array(data[name],dtype='float')
+            try:
+               ans[name]=np.array(data[name],dtype='float')
+            except ValueError:
+               #can't cast to float, presumably string
+               ans[name] = data[name]
         return ans
                     
     def constants_not_in_file(self):

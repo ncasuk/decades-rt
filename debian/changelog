@@ -1,6 +1,6 @@
-decades (0.7.1~71.gbp94a5dd) quantal; urgency=low
+decades (0.7.1~72.gbp2d38a3) quantal; urgency=low
 
-  ** SNAPSHOT build @94a5dd120a23340e63b440a984c756a39c91e1cb **
+  ** SNAPSHOT build @2d38a348022a5d5262fbb4981616e64f3345bdb5 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -86,8 +86,13 @@ decades (0.7.1~71.gbp94a5dd) quantal; urgency=low
   * Adding cronjob
   * Adding lower pyrogemeter flux after test flight.
   * Disabling logging for efficiency
+  * Imported all remaining parameters from Parano.txt
+  * Correcting name of aerack parameters
+  * Adding remaining paramenters from Parano.txt
+  * Abstracting away parameter configuration
+  * Adding call to a config file in /etc/decades
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 03 Sep 2012 10:30:55 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 04 Sep 2012 15:41:25 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 

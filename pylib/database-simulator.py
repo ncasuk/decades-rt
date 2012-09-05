@@ -21,6 +21,7 @@ while 1:
             timestamp = int(math.floor(time.time()))
 
             #create dictionary of fieldnames => simulated value
+            flightnum = 'SIMU'
             fakedata = {
                'utc_time':timestamp,
                'prtaft01_utc_time':timestamp,
@@ -46,9 +47,12 @@ while 1:
                'gindat01_longitude_gin':(-0.61 + 10*math.cos(math.radians(timestamp*3))),
                'gindat01_heading_gin':(360-((timestamp*3) % 360)),
                'gindat01_roll_gin':int(random.normalvariate(0,5)),
-               'gindat01_pitch_gin':int(random.normalvariate(0,5))
-
-   
+               'gindat01_pitch_gin':int(random.normalvariate(0,5)),
+               'gindat01_flight_num':flightnum,
+               'aerack01_flight_num':flightnum,
+               'corcon01_flight_num':flightnum,
+               'uppbbr01_flight_num':flightnum,
+               'lowbbr01_flight_num':flightnum
 
             }
             
