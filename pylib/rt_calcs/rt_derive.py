@@ -860,11 +860,9 @@ C ST    - Corrected Surface Temperature   (deg C)
       code.append(self.getdata('aerack01_flight_num',data))
       code.append(self.getdata('lowbbr01_flight_num',data)) 
       code.append(self.getdata('uppbbr01_flight_num',data)) 
-      print code
       if len(code[0]) ==1: #i.e. it isn't the dummy pass
          #filter out NaNs
          code = [x for x in code if isinstance(x[0], str)] 
-      print code
       return code[0] # return the first element
         
     def derindex(self,data):
