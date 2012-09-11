@@ -9,3 +9,5 @@
 *.changes
 *.tar.gz
 *.class
+#ignore compile dirs
+decades-201*
