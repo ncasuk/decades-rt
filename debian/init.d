@@ -17,6 +17,9 @@ serverpidfile=/var/run/decades-server.pid rundir=/var/lib/decades/ serverfile=/e
 tcplistenerpidfile=/var/run/decades-tcplistener.pid rundir=/var/lib/decades/ tcplistenerfile=/etc/decades/decades-tcp-listener.tac tcplistenerlogfile=/var/log/decades/decades-tcplistener.log
 
 [ -r /etc/default/decades ] && . /etc/default/decades
+cfg.parser '/etc/decades/decades.ini' DECADES_
+cfg.section.Servers
+SLAVEPORTS=`seq $DECADES_slave_base_port $(($DECADES_slave_base_port+$DECADES_slaves-1))`
 
 test -x /usr/bin/twistd || exit 0
 test -r $listenerfile || exit 0
@@ -29,16 +32,19 @@ case "$1" in
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$listenerpidfile \
                --rundir=$rundir \
-               --logfile=$listenerlogfile \
+               -logfile=$listenerlogfile \
                --python=$listenerfile
         echo "."	
-        echo -n "Starting decades-server: twistd"
-        start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
-               --pidfile=$serverpidfile \
-               --rundir=$rundir \
-               --logfile=$serverlogfile \
-               --python=$serverfile
-        echo "."	
+        for DECADESPORT in $SLAVEPORTS
+        do
+            echo -n "Starting decades-server [port $DECADESPORT]: twistd"
+            start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
+               --pidfile=${DECADESPORT}$serverpidfile \
+               --rundir=${DECADESPORT}$rundir \
+               --logfile=${DECADESPORT}$serverlogfile \
+               --python=${DECADESPORT}$serverfile
+            echo "."	
+        done
         echo -n "Starting decades-tcp-listener: twistd"
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$tcplistenerpidfile \
@@ -53,9 +59,12 @@ case "$1" in
         echo -n "Stopping decades-listener: twistd"
         start-stop-daemon --stop --quiet              --pidfile $listenerpidfile
         echo "."	
-        echo -n "Stopping decades-server: twistd"
-        start-stop-daemon --stop --quiet              --pidfile $serverpidfile
-        echo "."	
+        for DECADESPORT in $SLAVEPORTS
+        do
+            echo -n "Stopping decades-serveri [port $DECADESPORT]: twistd"
+            start-stop-daemon --stop --quiet   --pidfile ${DECADESPORT}$serverpidfile
+            echo "."	
+        done
         echo -n "Stopping decades-tcp-listener: twistd"
         start-stop-daemon --stop --quiet              --pidfile $tcplistenerpidfile
         echo "."	
