@@ -9,4 +9,5 @@ var/lib/decades
 usr/share/doc/decades
 usr/share/decades
 usr/local/lib/decades
+usr/local/bin
 var/log/decades

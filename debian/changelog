@@ -1,6 +1,6 @@
-decades (0.7.1~72.gbp2d38a3) quantal; urgency=low
+decades (0.7.1~73.gbp376119) quantal; urgency=low
 
-  ** SNAPSHOT build @2d38a348022a5d5262fbb4981616e64f3345bdb5 **
+  ** SNAPSHOT build @376119413158ffb7642b50723d6ee33dda4dba7f **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -91,8 +91,17 @@ decades (0.7.1~72.gbp2d38a3) quantal; urgency=low
   * Adding remaining paramenters from Parano.txt
   * Abstracting away parameter configuration
   * Adding call to a config file in /etc/decades
+  * Bugfix; parses two config files.
+  * Function rename.
+  * Making the config parser an instance variable for flexibility.
+  * Flight number reading.
+  * Deals correctly when one, but not all, DLUs are returning flight_num
+  * Removing debug lines
+  * Load-balancer fro decades-servers
+  * Basic balancer for decades-server instances
+  * First attempt at multiple-instance init script
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 04 Sep 2012 15:41:25 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 27 Sep 2012 16:40:49 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 

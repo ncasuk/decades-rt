@@ -32,7 +32,7 @@ install-stamp: build-stamp
 	cp debian/default debian/decades/etc/default/decades
 	cp debian/copyright debian/decades/usr/share/doc/decades/
 	cp debian/README.Debian debian/decades/usr/share/doc/decades/
-	cp debian/cfg_parser.sh debian/decades/usr/share/doc/decades/
+	cp debian/cfg_parser.sh debian/decades/usr/local/bin
 	cp config/apache-config debian/decades/etc/apache2/sites-enabled/decades
 	cp -rp pylib debian/decades/usr/local/lib/decades/
 	cp -rp Horace/web debian/decades/usr/local/lib/decades/

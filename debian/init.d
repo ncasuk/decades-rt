@@ -17,6 +17,9 @@ serverpidfile=/var/run/decades-server.pid rundir=/var/lib/decades/ serverfile=/e
 tcplistenerpidfile=/var/run/decades-tcplistener.pid rundir=/var/lib/decades/ tcplistenerfile=/etc/decades/decades-tcp-listener.tac tcplistenerlogfile=/var/log/decades/decades-tcplistener.log
 
 [ -r /etc/default/decades ] && . /etc/default/decades
+
+#Load config file
+. /usr/local/bin/cfg_parser.sh
 cfg.parser '/etc/decades/decades.ini' DECADES_
 cfg.section.Servers
 SLAVEPORTS=`seq $DECADES_slave_base_port $(($DECADES_slave_base_port+$DECADES_slaves-1))`
