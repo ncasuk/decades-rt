@@ -1,6 +1,6 @@
-decades (0.7.1~73.gbp376119) quantal; urgency=low
+decades (0.7.1~74.gbp0bf78f) quantal; urgency=low
 
-  ** SNAPSHOT build @376119413158ffb7642b50723d6ee33dda4dba7f **
+  ** SNAPSHOT build @0bf78feba59eb1cba2ccd12dbb66eb6297e3d3e0 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -100,8 +100,9 @@ decades (0.7.1~73.gbp376119) quantal; urgency=low
   * Load-balancer fro decades-servers
   * Basic balancer for decades-server instances
   * First attempt at multiple-instance init script
+  * Pass two at ini file change for multiple instances
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 27 Sep 2012 16:40:49 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 27 Sep 2012 16:51:11 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ### BEGIN INIT INFO
 # Provides:          decades
 # Required-Start:    $local_fs $remote_fs $network $syslog
