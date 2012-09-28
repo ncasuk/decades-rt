@@ -1,6 +1,6 @@
-decades (0.7.1~75.gbp97fcfd) quantal; urgency=low
+decades (0.7.1~76.gbpf15ea7) quantal; urgency=low
 
-  ** SNAPSHOT build @97fcfda1b5b88ac037fe5b7230ef4c91ffbace1a **
+  ** SNAPSHOT build @f15ea7e41837a0f4a328cd9b16262094bf88586a **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -102,8 +102,9 @@ decades (0.7.1~75.gbp97fcfd) quantal; urgency=low
   * First attempt at multiple-instance init script
   * Pass two at ini file change for multiple instances
   * Third pass. Changing to bash rather than sh for teh init script.
+  * Correcting filenames
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 09:52:21 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:24:03 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 

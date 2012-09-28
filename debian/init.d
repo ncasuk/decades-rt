@@ -45,7 +45,7 @@ case "$1" in
                --pidfile=$serverpidfile${DECADESPORT} \
                --rundir=$rundir${DECADESPORT} \
                --logfile=$serverlogfile${DECADESPORT} \
-               --python=$serverfile${DECADESPORT}
+               --python=$serverfile
             echo "."	
         done
         echo -n "Starting decades-tcp-listener: twistd"
