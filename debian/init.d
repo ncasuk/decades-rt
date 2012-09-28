@@ -43,7 +43,7 @@ case "$1" in
             echo -n "Starting decades-server [port $DECADESPORT]: twistd"
             DECADESPORT=$DECADESPORT start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$serverpidfile${DECADESPORT} \
-               --rundir=$rundir${DECADESPORT} \
+               --rundir=$rundir \
                --logfile=$serverlogfile${DECADESPORT} \
                --python=$serverfile
             echo "."	

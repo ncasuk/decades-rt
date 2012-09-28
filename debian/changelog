@@ -1,6 +1,6 @@
-decades (0.7.1~77.gbp2b96d4) quantal; urgency=low
+decades (0.7.1~78.gbp141f39) quantal; urgency=low
 
-  ** SNAPSHOT build @2b96d4306933cafb73f92bde3817faacba5f1c6a **
+  ** SNAPSHOT build @141f39f762c61242e047dd46a87c27fa1dc447c9 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -104,8 +104,9 @@ decades (0.7.1~77.gbp2b96d4) quantal; urgency=low
   * Third pass. Changing to bash rather than sh for teh init script.
   * Correcting filenames
   * Tac file is not instance-specific!
+  * Forgot to set environment variable
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:30:24 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:33:02 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
