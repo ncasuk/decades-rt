@@ -1,6 +1,6 @@
-decades (0.7.1~76.gbpf15ea7) quantal; urgency=low
+decades (0.7.1~77.gbp2b96d4) quantal; urgency=low
 
-  ** SNAPSHOT build @f15ea7e41837a0f4a328cd9b16262094bf88586a **
+  ** SNAPSHOT build @2b96d4306933cafb73f92bde3817faacba5f1c6a **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -103,8 +103,9 @@ decades (0.7.1~76.gbpf15ea7) quantal; urgency=low
   * Pass two at ini file change for multiple instances
   * Third pass. Changing to bash rather than sh for teh init script.
   * Correcting filenames
+  * Tac file is not instance-specific!
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:24:03 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:30:24 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
