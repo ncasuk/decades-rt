@@ -42,10 +42,10 @@ case "$1" in
         do
             echo -n "Starting decades-server [port $DECADESPORT]: twistd"
             start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
-               --pidfile=${DECADESPORT}$serverpidfile \
-               --rundir=${DECADESPORT}$rundir \
-               --logfile=${DECADESPORT}$serverlogfile \
-               --python=${DECADESPORT}$serverfile
+               --pidfile=$serverpidfile${DECADESPORT} \
+               --rundir=$rundir${DECADESPORT} \
+               --logfile=$serverlogfile${DECADESPORT} \
+               --python=$serverfile${DECADESPORT}
             echo "."	
         done
         echo -n "Starting decades-tcp-listener: twistd"
@@ -65,7 +65,7 @@ case "$1" in
         for DECADESPORT in $SLAVEPORTS
         do
             echo -n "Stopping decades-serveri [port $DECADESPORT]: twistd"
-            start-stop-daemon --stop --quiet   --pidfile ${DECADESPORT}$serverpidfile
+            start-stop-daemon --stop --quiet   --pidfile $serverpidfile${DECADESPORT}
             echo "."	
         done
         echo -n "Stopping decades-tcp-listener: twistd"
