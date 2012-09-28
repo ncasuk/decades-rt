@@ -64,7 +64,7 @@ case "$1" in
         echo "."	
         for DECADESPORT in $SLAVEPORTS
         do
-            echo -n "Stopping decades-serveri [port $DECADESPORT]: twistd"
+            echo -n "Stopping decades-server [port $DECADESPORT]: twistd"
             DECADESPORT=$DECADESPORT start-stop-daemon --stop --quiet   --pidfile $serverpidfile${DECADESPORT}
             echo "."	
         done

@@ -1,6 +1,6 @@
-decades (0.7.1~79.gbp023cd3) quantal; urgency=low
+decades (0.7.1~80.gbp72333c) quantal; urgency=low
 
-  ** SNAPSHOT build @023cd326440eaa61dd6fee3f92fe45ebf3e5616b **
+  ** SNAPSHOT build @72333cbd4d7bc0e52c7e2987ff36b230b4857eb9 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -106,8 +106,9 @@ decades (0.7.1~79.gbp023cd3) quantal; urgency=low
   * Tac file is not instance-specific!
   * Forgot to set environment variable
   * And neither does the rundir
+  * Missing hyphen. Not sure how that happened.
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:38:38 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:41:15 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
