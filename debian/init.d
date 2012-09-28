@@ -35,7 +35,7 @@ case "$1" in
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$listenerpidfile \
                --rundir=$rundir \
-               -logfile=$listenerlogfile \
+               --logfile=$listenerlogfile \
                --python=$listenerfile
         echo "."	
         for DECADESPORT in $SLAVEPORTS

@@ -1,6 +1,6 @@
-decades (0.7.1~78.gbp141f39) quantal; urgency=low
+decades (0.7.1~79.gbp023cd3) quantal; urgency=low
 
-  ** SNAPSHOT build @141f39f762c61242e047dd46a87c27fa1dc447c9 **
+  ** SNAPSHOT build @023cd326440eaa61dd6fee3f92fe45ebf3e5616b **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -105,8 +105,9 @@ decades (0.7.1~78.gbp141f39) quantal; urgency=low
   * Correcting filenames
   * Tac file is not instance-specific!
   * Forgot to set environment variable
+  * And neither does the rundir
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:33:02 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:38:38 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
