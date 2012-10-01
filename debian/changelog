@@ -1,6 +1,6 @@
-decades (0.7.1~84.gbp042376) quantal; urgency=low
+decades (0.7.1~85.gbp8951c3) quantal; urgency=low
 
-  ** SNAPSHOT build @04237639990b16b45e75edadb5376ad9858460b5 **
+  ** SNAPSHOT build @8951c3bdb3d4164cefe7ab34fda45e6c021e13f3 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -111,8 +111,9 @@ decades (0.7.1~84.gbp042376) quantal; urgency=low
   * adding server names into the virtualhostfile
   * Adding Plot.jar as version controlled
   * Adding server-balancer to init file
+  * Correct filename
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 01 Oct 2012 16:36:36 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 01 Oct 2012 16:39:05 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
