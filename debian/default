@@ -13,5 +13,5 @@ tcplistenerfile=/etc/decades/decades-tcp-listener.tac
 tcplistenerlogfile=/var/log/decades/decades-tcplistener.log
 
 serverbalancerpidfile=/var/run/decades-serverbalancer.pid
-serverbalancerfile=/etc/decades/decades-serverbalancer.tac
+serverbalancerfile=/etc/decades/decades-server-balancer.tac
 serverbalancerlogfile=/var/log/decades/decades-serverbalancer.log
