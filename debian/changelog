@@ -1,6 +1,6 @@
-decades (0.7.1~80.gbp72333c) quantal; urgency=low
+decades (0.7.1~82.gbp15496d) quantal; urgency=low
 
-  ** SNAPSHOT build @72333cbd4d7bc0e52c7e2987ff36b230b4857eb9 **
+  ** SNAPSHOT build @15496d79e0780d2ded7c5c7007fe204988f4f53d **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -107,8 +107,10 @@ decades (0.7.1~80.gbp72333c) quantal; urgency=low
   * Forgot to set environment variable
   * And neither does the rundir
   * Missing hyphen. Not sure how that happened.
+  * Spelling. Seems to work otherwise.
+  * adding server names into the virtualhostfile
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 10:41:15 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 14:46:14 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
