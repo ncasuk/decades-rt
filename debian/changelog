@@ -1,6 +1,6 @@
-decades (0.7.1~82.gbp15496d) quantal; urgency=low
+decades (0.7.1~83.gbpdd4108) quantal; urgency=low
 
-  ** SNAPSHOT build @15496d79e0780d2ded7c5c7007fe204988f4f53d **
+  ** SNAPSHOT build @dd4108734aed312a831b200a4e77dcccf8ffd59b **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -109,8 +109,9 @@ decades (0.7.1~82.gbp15496d) quantal; urgency=low
   * Missing hyphen. Not sure how that happened.
   * Spelling. Seems to work otherwise.
   * adding server names into the virtualhostfile
+  * Adding Plot.jar as version controlled
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 28 Sep 2012 14:46:14 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 01 Oct 2012 16:27:44 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 

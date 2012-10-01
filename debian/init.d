@@ -14,7 +14,8 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 #don't change these here; change them in /etc/default/decades
 listenerpidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pylib/ listenerfile=/etc/decades/decades-listener.tac listenerlogfile=/var/log/decades/decades-listener.log
 serverpidfile=/var/run/decades-server.pid rundir=/var/lib/decades/ serverfile=/etc/decades/decades-server.tac serverlogfile=/var/log/decades/decades-server.log
-tcplistenerpidfile=/var/run/decades-tcplistener.pid rundir=/var/lib/decades/ tcplistenerfile=/etc/decades/decades-tcp-listener.tac tcplistenerlogfile=/var/log/decades/decades-tcplistener.log
+tcplistenerpidfile=/var/run/decades-tcplistener.pid tcplistenerfile=/etc/decades/decades-tcp-listener.tac tcplistenerlogfile=/var/log/decades/decades-tcplistener.log
+serverbalancerpidfile=/var/run/decades-serverbalancer.pid serverbalancerfile=/etc/decades/decades-serverbalancer.tac serverbalancerlogfile=/var/log/decades/decades-serverbalancer.log
 
 [ -r /etc/default/decades ] && . /etc/default/decades
 
@@ -31,6 +32,13 @@ test -r $listenerfile || exit 0
 
 case "$1" in
     start)
+        echo -n "Starting decades-tcp-listener: twistd"
+        start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
+               --pidfile=$tcplistenerpidfile \
+               --rundir=$rundir \
+               --logfile=$tcplistenerlogfile \
+               --python=$tcplistenerfile
+        echo "."	
         echo -n "Starting decades-listener: twistd"
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$listenerpidfile \
@@ -48,12 +56,12 @@ case "$1" in
                --python=$serverfile
             echo "."	
         done
-        echo -n "Starting decades-tcp-listener: twistd"
+        echo -n "Starting decades-server-balancer: twistd"
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
-               --pidfile=$tcplistenerpidfile \
+               --pidfile=$serverbalancerpidfile \
                --rundir=$rundir \
-               --logfile=$tcplistenerlogfile \
-               --python=$tcplistenerfile
+               --logfile=$serverbalancerlogfile \
+               --python=$serverbalancerfile
         echo "."	
    
     ;;
@@ -61,6 +69,9 @@ case "$1" in
     stop)
         echo -n "Stopping decades-listener: twistd"
         start-stop-daemon --stop --quiet              --pidfile $listenerpidfile
+        echo "."	
+        echo -n "Stopping decades-server-balancer: twistd"
+        start-stop-daemon --stop --quiet              --pidfile $serverbalancerpidfile
         echo "."	
         for DECADESPORT in $SLAVEPORTS
         do

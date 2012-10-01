@@ -1,8 +1,17 @@
-listenerpidfile=/var/run/decades-listener.pid
 rundir=/usr/local/lib/decades
+
+listenerpidfile=/var/run/decades-listener.pid
 listenerfile=/etc/decades/decades-listener.tac
 listenerlogfile=/var/log/decades/decades-listener.log
  
 serverpidfile=/var/run/decades-server.pid
 serverfile=/etc/decades/decades-server.tac
 serverlogfile=/var/log/decades/decades-server.log
+
+tcplistenerpidfile=/var/run/decades-tcplistener.pid
+tcplistenerfile=/etc/decades/decades-tcp-listener.tac
+tcplistenerlogfile=/var/log/decades/decades-tcplistener.log
+
+serverbalancerpidfile=/var/run/decades-serverbalancer.pid
+serverbalancerfile=/etc/decades/decades-serverbalancer.tac
+serverbalancerlogfile=/var/log/decades/decades-serverbalancer.log
