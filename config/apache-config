@@ -16,7 +16,7 @@
 	</Directory>
 	<Directory /usr/local/lib/decades/web>
 		Options Indexes FollowSymLinks MultiViews ExecCGI
-      CheckSpelling On
+      #CheckSpelling On
 		AddHandler cgi-script .cgi
 		AddHandler wsgi-script .wsgi
 
