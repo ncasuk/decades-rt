@@ -102,6 +102,14 @@ def deploy():
    #sudo('a2enmod speling')
    sudo('service apache2 restart')
 
+def clean():
+   local('find . -maxdepth 1 -name \*.tar.gz -exec rm {} \;')
+   local('find . -maxdepth 1 -name \*.deb -exec rm {} \;')
+   local('find . -maxdepth 1 -name \*.dsc -exec rm {} \;')
+   local('find . -maxdepth 1 -name \*.build -exec rm {} \;')
+   local('find . -maxdepth 1 -name \*.changes -exec rm {} \;')
+   local(' rm -rf decades-20[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
+
 def Plot_jar():
    '''Creates the JAR file for the display applicaton'''
    with lcd('Horace/web/plot/plot'):

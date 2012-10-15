@@ -1,6 +1,6 @@
-decades (0.7.1~86.gbp0bdeab) quantal; urgency=low
+decades (0.7.1~88.gbp7a0f3a) quantal; urgency=low
 
-  ** SNAPSHOT build @0bdeab1664b4ac5a8e1174b5e0fd6a2338a75d1a **
+  ** SNAPSHOT build @7a0f3a8ac40d75c20cf0cdf24215d8e30909f831 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -113,8 +113,9 @@ decades (0.7.1~86.gbp0bdeab) quantal; urgency=low
   * Adding server-balancer to init file
   * Correct filename
   * Add TAC file to deployment routine.
+  * Disable case-insensitivity for efficiency
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 01 Oct 2012 16:42:10 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 05 Oct 2012 15:03:48 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
