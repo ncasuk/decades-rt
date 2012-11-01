@@ -14,8 +14,8 @@ sys.path.append("/usr/local/lib/decades/pylib") #add deploy python dir to Python
 import os
 from twisted.application import service, internet
 from twisted.web import static, server
-from decades_tcp_factory import DecadesTCPFactory
-from database import get_database
+from pylib.decades_tcp_factory import DecadesTCPFactory
+from pylib.database import get_database
 
 from ConfigParser import SafeConfigParser
 
@@ -25,7 +25,7 @@ def getDecadesTCPListenerService():
     """
     conn = get_database()
     parser = SafeConfigParser()
-    config = parser.read(['/etc/decades/decades.ini','decades.ini'])
+    config = parser.read(['/etc/decades/decades.ini','pylib/decades.ini','decades.ini'])
     tcp_port = int(parser.get('TCP_Listener','tcp_port'))
     return internet.TCPServer(tcp_port, DecadesTCPFactory())
 

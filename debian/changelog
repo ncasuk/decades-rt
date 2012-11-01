@@ -1,6 +1,6 @@
-decades (0.7.1~89.gbp13dfa4) quantal; urgency=low
+decades (0.7.1~90.gbp2a4fa1) quantal; urgency=low
 
-  ** SNAPSHOT build @13dfa44d75adcfc32e22841162c6aa9c11358f69 **
+  ** SNAPSHOT build @2a4fa17728c329cd0acc134d4851e887159dd31d **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -115,8 +115,9 @@ decades (0.7.1~89.gbp13dfa4) quantal; urgency=low
   * Add TAC file to deployment routine.
   * Disable case-insensitivity for efficiency
   * Added Clean stanza to fabfile, and default slaves=4
+  * Initial doc file, parameterising the tcp listener
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 15 Oct 2012 10:12:55 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 01 Nov 2012 11:13:13 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
