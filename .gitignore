@@ -11,3 +11,14 @@
 *.class
 #ignore compile dirs
 decades-201*
+doc/*.log
+doc/*.pdf
+doc/*.idx
+doc/*.make
+doc/*.out
+doc/*.aux
+doc/*.d
+doc/*.run
+doc/*.fls
+doc/*.toc
+doc/*.cookie

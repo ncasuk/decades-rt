@@ -17,12 +17,17 @@ from twisted.web import static, server
 from decades_tcp_factory import DecadesTCPFactory
 from database import get_database
 
+from ConfigParser import SafeConfigParser
+
 def getDecadesTCPListenerService():
     """
     Return a service suitable for creating an application object.
     """
     conn = get_database()
-    return internet.TCPServer(3502, DecadesTCPFactory())
+    parser = SafeConfigParser()
+    config = parser.read(['/etc/decades/decades.ini','decades.ini'])
+    tcp_port = int(parser.get('TCP_Listener','tcp_port'))
+    return internet.TCPServer(tcp_port, DecadesTCPFactory())
 
 # this is the core part of any tac file, the creation of the root-level
 # application object

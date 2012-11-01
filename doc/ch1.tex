@@ -1,0 +1,44 @@
+%ch1.tex
+
+
+\chapter{Testing the DECADES server}
+\begin{center}
+{\small\em An approach to testing the DECADES server in cases where no live data are available}
+\end{center}
+
+\section{Abstract}
+An approach is described to allow the testing of the Server element of the application is isolation using a Python script
+which simulates incoming data to replace the Listener element.
+
+\section{Procedure}
+\subsection{Stop the Listener element} 
+Locate the decades-listener process, and kill it: 
+
+\texttt{ \$ sudo kill `sudo cat /var/run/decades-listener.pid`}
+
+\subsection{Start the database simulator}
+Change directory to the decades pylib dir:
+
+\texttt{ \$ cd /usr/local/lib/decades/pylib/}
+
+Start the database simulator:
+
+\texttt{ \$ ./database-simulator.py }
+
+This replaces the UDP Listener element with simulated data.
+
+\subsection{Run clients}
+On a machine connected to same network as the tanks, go to
+
+\texttt{http://fish/plot/plot.html} 
+
+or
+
+\texttt{http://septic/plot/plot.html}
+
+as appropriate, and start various applets monitoring incoming data. (Not all values are simulated; for a full list, see \texttt{ /usr/local/lib/decades/pylib/database-simulator.py }, line 25)
+
+\section{Monitoring}
+As you increase the number of clients, you can monitor the effect on the tabk machine by running the command \texttt{ top} and looking for processes called \texttt{ twistd}.
+
+\newpage
