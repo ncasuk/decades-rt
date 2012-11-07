@@ -10,7 +10,7 @@ the final root-level section, which sets up the object called 'application'
 which twistd will look for
 """
 import sys
-sys.path.append("/usr/local/lib/decades/pylib") #add deploy python dir to Python path
+sys.path.append("/usr/local/lib/decades") #add deploy python dir to Python path
 import os
 from twisted.application import service, internet
 from twisted.web import static, server
