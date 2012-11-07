@@ -37,7 +37,7 @@ class MulticastServerUDP(DatagramProtocol):
         self.dataProtocols.create_view(self.cursor)
       
         # Join a specific multicast group, which is the IP we will respond to
-        r = RetryingCall(self.transport.joinGroup, '225.0.0.0')
+        r = RetryingCall(self.transport.joinGroup, '239.1.4.6')
         d = r.start(backoffIterator=simpleBackoffIterator(maxResults=20), failureTester=multicastJoinFailureTester())
    
         log.msg('Started Listening')
