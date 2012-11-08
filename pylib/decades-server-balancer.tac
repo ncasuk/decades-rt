@@ -2,19 +2,19 @@
 #    twistd --rundir=.. -ny decades-server-balancer.tac
 
 """
-This is a .tac file which starts a TCP server and listens
-for STAT and PARA requests from the Java client applet
+This is a .tac file which starts a TCP server which does
+round-robin balancing between multiple instances of decades-server.
 
 The important part of this, the part that makes it a .tac file, is
 the final root-level section, which sets up the object called 'application'
 which twistd will look for
 """
 import sys
-sys.path.append("/usr/local/lib/decades/pylib") #add deploy python dir to Python path
+sys.path.append("/usr/local/lib/decades") #add deploy python dir to Python path
 import os
 from twisted.application import service, internet
 from twisted.web import static, server
-from decades_server_balancer import Balancer
+from pylib.decades_server_balancer import Balancer
 
 from ConfigParser import SafeConfigParser
 
