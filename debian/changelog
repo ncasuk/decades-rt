@@ -1,6 +1,6 @@
-decades (0.7.1~90.gbp2a4fa1) quantal; urgency=low
+decades (0.7.1~95.gbp9e4fca) quantal; urgency=low
 
-  ** SNAPSHOT build @2a4fa17728c329cd0acc134d4851e887159dd31d **
+  ** SNAPSHOT build @9e4fcaa64a4e15ccf1748ab9f8cac1b0a1937457 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -116,8 +116,13 @@ decades (0.7.1~90.gbp2a4fa1) quantal; urgency=low
   * Disable case-insensitivity for efficiency
   * Added Clean stanza to fabfile, and default slaves=4
   * Initial doc file, parameterising the tcp listener
+  * Adding empty __init__.py file to make pylib act as a python module.
+  * Test case for Decades protocol & more ini file locs.
+  * PARA Unit test added.
+  * Changing multicast IP
+  * Correct location so import command is cleaner
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 01 Nov 2012 11:13:13 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 07 Nov 2012 16:55:58 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
