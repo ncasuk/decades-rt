@@ -1,6 +1,6 @@
-decades (0.7.1~97.gbp2e0774) quantal; urgency=low
+decades (0.7.1~98.gbpfa3a7c) quantal; urgency=low
 
-  ** SNAPSHOT build @2e0774f7170556da2e7127d305cde6f43d0872eb **
+  ** SNAPSHOT build @fa3a7c20a9b4b2895bb3dc8b7374861fd8ec0a9f **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -123,8 +123,9 @@ decades (0.7.1~97.gbp2e0774) quantal; urgency=low
   * Correct location so import command is cleaner
   * Correcting comments; fixing Import statement
   * correcting/updating the import statements
+  * fixes to utc+time and flight_num parameters, to allow for missing DLUs
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 08 Nov 2012 13:46:35 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 19 Nov 2012 15:41:16 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
