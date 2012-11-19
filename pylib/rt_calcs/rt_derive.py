@@ -847,15 +847,25 @@ C ST    - Corrected Surface Temperature   (deg C)
 
     def time_since_midnight(self,data):
         """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
-        raw=self.getdata('corcon01_utc_time',data) #unixtimestamp
+        code = []
+        code.append(self.getdata('corcon01_utc_time',data))
+        code.append(self.getdata('prtaft01_utc_time',data))
+        code.append(self.getdata('gindat01_utc_time',data)) 
+        code.append(self.getdata('aerack01_utc_time',data))
+        code.append(self.getdata('lowbbr01_utc_time',data)) 
+        code.append(self.getdata('uppbbr01_utc_time',data)) 
+        if len(code[0]) ==1: #i.e. it isn't the dummy pass
+           #filter out NaNs
+           code = [x for x in code if isinstance(x[0], str)] 
         unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
         #raw is an array, so subtracting an integer appears to be valid
-        return raw - unixtime_at_midnight
+        return code[0] - unixtime_at_midnight
 
     def flight_number(self, data):
       """ Returns the flight code, failing over from one DLU to another"""
       code = []
       code.append(self.getdata('corcon01_flight_num',data))
+      code.append(self.getdata('prtaft01_flight_num',data))
       code.append(self.getdata('gindat01_flight_num',data)) 
       code.append(self.getdata('aerack01_flight_num',data))
       code.append(self.getdata('lowbbr01_flight_num',data)) 
