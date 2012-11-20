@@ -857,10 +857,12 @@ C ST    - Corrected Surface Temperature   (deg C)
         if len(code[0]) >0: #i.e. it isn't the dummy pass
             #filter out NaNs
             code = [x for x in code if np.isnan(x[0])] 
-        print code
-        unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
-        #raw is an array, so subtracting an integer appears to be valid
-        return int(code[0] - unixtime_at_midnight)
+            print code
+            unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
+            #raw is an array, so subtracting an integer appears to be valid
+            return int(code[0] - unixtime_at_midnight)
+        else:
+            return code[0]
 
     def flight_number(self, data):
       """ Returns the flight code, failing over from one DLU to another"""
