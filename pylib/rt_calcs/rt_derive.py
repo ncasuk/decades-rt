@@ -860,7 +860,7 @@ C ST    - Corrected Surface Temperature   (deg C)
             print code
             unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
             #raw is an array, so subtracting an integer appears to be valid
-            return int(code[0] - unixtime_at_midnight)
+            return code[0] - unixtime_at_midnight
         else:
             return code[0]
 

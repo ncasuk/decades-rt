@@ -1,6 +1,6 @@
-decades (0.7.1~104.gbpe7d122) quantal; urgency=low
+decades (0.7.1~105.gbp833168) quantal; urgency=low
 
-  ** SNAPSHOT build @e7d12206900dd383dcf2c09672798bfc11b7a0ff **
+  ** SNAPSHOT build @833168963960078fce88c9c22452db95ed289710 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -129,8 +129,9 @@ decades (0.7.1~104.gbpe7d122) quantal; urgency=low
   * Test bravo
   * Test Charlie
   * Test delta
+  * Test echo
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 20 Nov 2012 12:24:27 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 20 Nov 2012 12:28:54 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
