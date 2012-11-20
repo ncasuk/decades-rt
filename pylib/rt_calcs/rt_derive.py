@@ -848,20 +848,19 @@ C ST    - Corrected Surface Temperature   (deg C)
     def time_since_midnight(self,data):
         """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
         code = []
-        code.append(int(self.getdata('corcon01_utc_time',data)))
-        code.append(int(self.getdata('prtaft01_utc_time',data)))
-        code.append(int(self.getdata('gindat01_utc_time',data))) 
-        code.append(int(self.getdata('aerack01_utc_time',data)))
-        code.append(int(self.getdata('lowbbr01_utc_time',data))) 
-        code.append(int(self.getdata('uppbbr01_utc_time',data))) 
-        print code
-        #if len(code[0]) ==1: #i.e. it isn't the dummy pass
-        #filter out NaNs
-        code = [x for x in code if np.isnan(x[0])] 
+        code.append(self.getdata('corcon01_utc_time',data))
+        code.append(self.getdata('prtaft01_utc_time',data))
+        code.append(self.getdata('gindat01_utc_time',data)) 
+        code.append(self.getdata('aerack01_utc_time',data))
+        code.append(self.getdata('lowbbr01_utc_time',data)) 
+        code.append(self.getdata('uppbbr01_utc_time',data)) 
+        if len(code[0]) >0: #i.e. it isn't the dummy pass
+            #filter out NaNs
+            code = [x for x in code if np.isnan(x[0])] 
         print code
         unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
         #raw is an array, so subtracting an integer appears to be valid
-        return code[0] - unixtime_at_midnight
+        return int(code[0] - unixtime_at_midnight)
 
     def flight_number(self, data):
       """ Returns the flight code, failing over from one DLU to another"""
