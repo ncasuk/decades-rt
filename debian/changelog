@@ -1,6 +1,6 @@
-decades (0.7.1~106.gbp9ed9d8) quantal; urgency=low
+decades (0.7.1~107.gbpb81f43) quantal; urgency=low
 
-  ** SNAPSHOT build @9ed9d8d2e9e0218b9c50682984fa09e1d1f4967d **
+  ** SNAPSHOT build @b81f43a04592e5a150b5250e18f3f341588d6ffe **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -131,8 +131,9 @@ decades (0.7.1~106.gbp9ed9d8) quantal; urgency=low
   * Test delta
   * Test echo
   * test fido
+  * test Hotel, stop paying attention to DLU utc_times
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 20 Nov 2012 12:39:09 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 21 Nov 2012 11:40:29 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 

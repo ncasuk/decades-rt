@@ -863,7 +863,7 @@ C ST    - Corrected Surface Temperature   (deg C)
             return code[0] - unixtime_at_midnight
         else:
             return code[0]'''
-         return time.mktime(datetime.now().timetuple())-time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0)) # assumes the tank clock is accurate
+        return np.array(time.mktime(datetime.now().timetuple())-time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))) # assumes the tank clock is accurate
 
     def flight_number(self, data):
       """ Returns the flight code, failing over from one DLU to another"""
