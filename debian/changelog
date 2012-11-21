@@ -1,6 +1,6 @@
-decades (0.7.1~107.gbpb81f43) quantal; urgency=low
+decades (0.7.1~108.gbp3de9e4) quantal; urgency=low
 
-  ** SNAPSHOT build @b81f43a04592e5a150b5250e18f3f341588d6ffe **
+  ** SNAPSHOT build @3de9e492e02d7ca860ac7bd1d1533682d81a314a **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -132,8 +132,9 @@ decades (0.7.1~107.gbpb81f43) quantal; urgency=low
   * Test echo
   * test fido
   * test Hotel, stop paying attention to DLU utc_times
+  * Changing over to use tank's clock for time_since_midnight
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 21 Nov 2012 11:40:29 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 21 Nov 2012 11:54:23 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
