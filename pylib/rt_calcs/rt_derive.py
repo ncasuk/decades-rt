@@ -847,7 +847,7 @@ C ST    - Corrected Surface Temperature   (deg C)
 
     def time_since_midnight(self,data):
         """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
-        code = []
+        '''code = []
         code.append(self.getdata('corcon01_utc_time',data))
         code.append(self.getdata('prtaft01_utc_time',data))
         code.append(self.getdata('gindat01_utc_time',data)) 
@@ -862,7 +862,8 @@ C ST    - Corrected Surface Temperature   (deg C)
             #raw is an array, so subtracting an integer appears to be valid
             return code[0] - unixtime_at_midnight
         else:
-            return code[0]
+            return code[0]'''
+         return time.mktime(datetime.now().timetuple())-time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0)) # assumes the tank clock is accurate
 
     def flight_number(self, data):
       """ Returns the flight code, failing over from one DLU to another"""
