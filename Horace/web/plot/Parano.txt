@@ -1,4 +1,4 @@
-PARANO.TXT - Derived parameter numbers for HORACE                      07/08/02
+PARANO.TXT - Derived parameter numbers for HORACE                      22/09/2012
  
 Numbers start at 513, so there is no confusion with DRS parameter numbers.
 On Horace 512 is deducted from the number and the parameters are stored in 
@@ -63,7 +63,7 @@ arrays of 2560 secs.
 572   (60)   TWC         TOTAL WATER CONTENT          g kg
 573   (61)   FLDP        DEW POINT (FLUORESCENCE WVS) deg C
 574   (62)   OZMR        OZONE MIXING RATIO           ppb
-575   (63)   RHGT        RADAR HEIGHT                 m
+575   (63)   RHGT        RADAR HEIGHT                 ft
 576   (64)   SPR         STATIC PRESSURE              mb
 577   (65)   PSP         PITOT STATIC PRESSURE        mb
 578   (66)   PHGT        PRESSURE HEIGHT              m
@@ -81,6 +81,15 @@ arrays of 2560 secs.
 590   (78)   ST          CORRECTED SURFACE TEMP       deg C
 591   (79)   TWCDP       DEW POINT (TOTAL WATER)      deg C
 592   (80)   HCHO MR     HCHO MIXING RATIO            ppb
+593   (81)   TBP0        TURB PROBE PITOT-STATIC      mb
+594   (82)   TBPA        TURB PROBE ATTACK DIFF       mb
+595   (83)   TBPB        TURB PROBE SIDESLIP DIFF     mb
+596   (84)   TBPC        TURB PROBE ATTACK CHECK      mb
+597   (85)   TBPD        TURB PROBE SIDESLIP CHECK    mb
+598   (86)   S9SP        S9 STATIC PRESSURE           mb
+599   (87)   TASD        TURB PROBE DRY TAS           m s-1
+600   (88)   TASW        TURB PROBE WET TAS           m s-1
+601   (89)   TPSP        TURB PROBE COR PITOT-STATIC  mb
 605   (93)   ILAT        INU LATITUDE                 deg (+ve N)
 606   (94)   ILONG       INU LONGITUDE                deg (+ve E)
 607   (95)   GLAT        GPS LATITUDE                 deg (+ve N)
@@ -134,3 +143,26 @@ arrays of 2560 secs.
 659  (147)   TECO NOx    TECO NOx                     ppb
 660  (148)   NEVZ LWAT   NEVZOROV LIQUID WATER        g m-3
 661  (149)   NEVZ TWAT   NEVZOROV TOTAL WATER         g m-3
+662  (150)   GIN LAT     LATITUDE (GIN)               deg +ve N
+663  (151)   GIN LONG    LONGITUDE (GIN)              deg +ve E
+664  (152)   GIN ALT     ALTITUDE (GIN)               m
+665  (153)   GIN N V     N VELOCITY (GIN)             m s-1
+666  (154)   GIN E V     E VELOCITY (GIN)             m s-1
+667  (155)   GIN D V     D VELOCITY (GIN)             m s-1
+668  (156)   GIN ROLL    ROLL (GIN)                   deg
+669  (157)   GIN PIT     PITCH (GIN)                  deg
+670  (158)   GIN HEAD    HEADING (GIN)                deg
+671  (159)   GIN WAND    WANDER ANGLE (GIN)           deg
+672  (160)   GIN TRAC    TRACK ANGLE (GIN)            deg
+673  (161)   GIN SPD     SPEED (GIN)                  m s-1
+674  (162)   GIN RLON    RATE ABOUT LONG (GIN)        deg s-1
+675  (163)   GIN RTRN    RATE ABOUT TRANS (GIN)       deg s-1
+676  (164)   GIN RDWN    RATE ABOUT DOWN (GIN)        deg s-1
+677  (165)   GIN ALON    ACC LONG (GIN)               m s-2
+678  (166)   GIN ATRN    ACC TRANS (GIN)              m s-2
+679  (167)   GIN ADWN    ACC DOWN (GIN)               m s-2
+680  (168)   VERT VORT   VERTICAL VORTICITY           s-1
+
+
+
+

@@ -1,4 +1,4 @@
-PARANO.TXT - Derived parameter numbers for HORACE                      04/08/03
+PARANO.TXT - Derived parameter numbers for HORACE                      22/09/2012
  
 Numbers start at 513, so there is no confusion with DRS parameter numbers.
 On Horace 512 is deducted from the number and the parameters are stored in 
@@ -143,3 +143,26 @@ arrays of 2560 secs.
 659  (147)   TECO NOx    TECO NOx                     ppb
 660  (148)   NEVZ LWAT   NEVZOROV LIQUID WATER        g m-3
 661  (149)   NEVZ TWAT   NEVZOROV TOTAL WATER         g m-3
+662  (150)   GIN LAT     LATITUDE (GIN)               deg +ve N
+663  (151)   GIN LONG    LONGITUDE (GIN)              deg +ve E
+664  (152)   GIN ALT     ALTITUDE (GIN)               m
+665  (153)   GIN N V     N VELOCITY (GIN)             m s-1
+666  (154)   GIN E V     E VELOCITY (GIN)             m s-1
+667  (155)   GIN D V     D VELOCITY (GIN)             m s-1
+668  (156)   GIN ROLL    ROLL (GIN)                   deg
+669  (157)   GIN PIT     PITCH (GIN)                  deg
+670  (158)   GIN HEAD    HEADING (GIN)                deg
+671  (159)   GIN WAND    WANDER ANGLE (GIN)           deg
+672  (160)   GIN TRAC    TRACK ANGLE (GIN)            deg
+673  (161)   GIN SPD     SPEED (GIN)                  m s-1
+674  (162)   GIN RLON    RATE ABOUT LONG (GIN)        deg s-1
+675  (163)   GIN RTRN    RATE ABOUT TRANS (GIN)       deg s-1
+676  (164)   GIN RDWN    RATE ABOUT DOWN (GIN)        deg s-1
+677  (165)   GIN ALON    ACC LONG (GIN)               m s-2
+678  (166)   GIN ATRN    ACC TRANS (GIN)              m s-2
+679  (167)   GIN ADWN    ACC DOWN (GIN)               m s-2
+680  (168)   VERT VORT   VERTICAL VORTICITY           s-1
+
+
+
+
