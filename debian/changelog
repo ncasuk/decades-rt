@@ -1,6 +1,6 @@
-decades (0.7.1~109.gbpef0405) quantal; urgency=low
+decades (0.7.1~110.gbp5e770c) quantal; urgency=low
 
-  ** SNAPSHOT build @ef0405299e085d6ce4111de4b5aa706481f85fc4 **
+  ** SNAPSHOT build @5e770cd14da7ce0615ad0640c98a83e58081118e **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -134,8 +134,9 @@ decades (0.7.1~109.gbpef0405) quantal; urgency=low
   * test Hotel, stop paying attention to DLU utc_times
   * Changing over to use tank's clock for time_since_midnight
   * Changing to always return something...
+  * Fixing nan filter!
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 21 Nov 2012 13:16:20 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 21 Nov 2012 14:34:28 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
