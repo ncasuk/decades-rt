@@ -1,6 +1,6 @@
-decades (0.7.1~112.gbpa1e4ab) quantal; urgency=low
+decades (0.7.1~113.gbp279006) quantal; urgency=low
 
-  ** SNAPSHOT build @a1e4abb17078775b99a29fa37bc5d533f382a63d **
+  ** SNAPSHOT build @279006d3a9c7580a6aecaf6bce3418244d67fafe **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -137,8 +137,9 @@ decades (0.7.1~112.gbpa1e4ab) quantal; urgency=low
   * Fixing nan filter!
   * Changed parametersm updated CALIB
   * Parano file updated
+  * experimental split TCP incoming filenames by DLU
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 22 Nov 2012 14:46:44 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 22 Nov 2012 16:02:46 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
