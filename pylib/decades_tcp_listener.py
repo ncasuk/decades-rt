@@ -5,7 +5,7 @@ from decades import DecadesDataProtocols
 
 class DecadesTCPListener(Protocol):
    dataProtocols = DecadesDataProtocols() 
-   outfiles = []
+   outfiles = {} #dictonary of output files.
    def __init__(self):
       for each in self.dataProtocols.available():
          self.outfiles[each] = open('/opt/decades/output/decades-tcp-' + each +'-'+datetime.utcnow().strftime('%Y-%m-%d_%H.%M.%S') +'.bin','w')

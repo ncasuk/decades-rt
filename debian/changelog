@@ -1,6 +1,6 @@
-decades (0.7.1~114.gbpa8535c) quantal; urgency=low
+decades (0.7.1~115.gbp394be1) quantal; urgency=low
 
-  ** SNAPSHOT build @a8535cc94eb6c8471eca73b4f124f35c96856163 **
+  ** SNAPSHOT build @394be1c9c4e69226ee67090d1f312580320ebd1d **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -139,8 +139,9 @@ decades (0.7.1~114.gbpa8535c) quantal; urgency=low
   * Parano file updated
   * experimental split TCP incoming filenames by DLU
   * Typo.
+  * Separet files, but one per instance
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 22 Nov 2012 16:19:30 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 22 Nov 2012 16:29:58 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
