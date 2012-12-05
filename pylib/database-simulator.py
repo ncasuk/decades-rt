@@ -48,6 +48,10 @@ while 1:
                'gindat01_heading_gin':(360-((timestamp*3) % 360)),
                'gindat01_roll_gin':int(random.normalvariate(0,5)),
                'gindat01_pitch_gin':int(random.normalvariate(0,5)),
+               'gindat01_velocity_north_gin':int((4800 + (5 * math.cos(timestamp*4)))/32 * math.cos(math.radians(360-((timestamp*3) % 360)))), #m/s is kts/2 ish
+               'gindat01_velocity_east_gin':int((4800 + (5 * math.cos(timestamp*4)))/32 * math.sin(math.radians(360-((timestamp*3) % 360)))), #m/s is kts/2 ish
+               'gindat01_velocity_down_gin':int(6 * math.cos(timestamp*3)),
+               'gindat01_altitude_gin':int(1000 + (50 * math.sin(timestamp/4))),  #average 10kft
                'gindat01_flight_num':flightnum,
                'aerack01_flight_num':flightnum,
                'corcon01_flight_num':flightnum,
