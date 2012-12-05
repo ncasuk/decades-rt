@@ -9,6 +9,9 @@
 *.changes
 *.tar.gz
 *.class
+#ignore temp dirs
+pylib/_trial_temp
+_trial_temp
 #ignore compile dirs
 decades-201*
 doc/*.log
