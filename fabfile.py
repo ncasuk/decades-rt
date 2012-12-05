@@ -95,6 +95,10 @@ def deploy_deb(debname=False):
    else:
       print('No deb filename specified')
 
+def test():
+   '''runs all the unit tests'''
+   local('trial pylib')
+
 def deploy():   
    Plot_jar()
    debname=create_deb()
