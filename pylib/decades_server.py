@@ -110,7 +110,6 @@ class DecadesProtocol(basic.LineReceiver):
       #self.cursor.execute("SELECT id, id AS dercount, GREATEST(gindat01_heading_gin,-1.0) AS gindat01_heading_gin FROM mergeddata WHERE uppbbr01_utc_time IS NOT NULL AND corcon01_utc_time IS NOT NULL AND aerack01_utc_time IS NOT NULL AND lowbbr01_utc_time IS NOT NULL ORDER BY id DESC LIMIT 1;")
       #(self.derindex, dercount, gindat01_heading_gin) = self.cursor.fetchone()
       (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
-      print 1,self.derindex,dercount
       self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),statusdata['gin_heading'],statusdata['static_pressure'],statusdata['pressure_height_kft'],statusdata['true_air_speed'],float(self.stat_output_format.format(statusdata['deiced_true_air_temp_c'][0])),float(self.stat_output_format.format(statusdata['dew_point'][0])),statusdata['gin_wind_speed'],statusdata['wind_angle'],statusdata['gin_latitude'],statusdata['gin_longitude'],statusdata['flight_number'][0][0],statusdata['flight_number'][0][1],statusdata['flight_number'][0][2],statusdata['flight_number'][0][3]))
       #log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
    
