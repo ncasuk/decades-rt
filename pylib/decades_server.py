@@ -28,6 +28,7 @@ class DecadesProtocol(basic.LineReceiver):
    '''Python version of the HORACE server - to work with DECADES'''
    delimiter = "" #Java DatInputStream does not have a delimiter between lines
    derindex = 0
+   stat_output_format = "{0:.2f}"   #Format string for those output variables that are displayed unmodified in STAT lines 2 d.p at present
    der = []
    status_struct_fmt = ">bhh11f4c" # big-endian, byte, short, short, 11 floats, 4 characters
    #para_request_fmt = ">ii" # big-endian, int (starttime), int (endtime), plus some number of parameters
@@ -105,11 +106,12 @@ class DecadesProtocol(basic.LineReceiver):
       #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
       #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), Wind speed, ms-1, 
       #log.msg(repr(self.der))
-      statusdata = self.rtlib.derive_data_alt(['derindex','gin_heading','static_pressure','pressure_height_feet','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle','gin_latitude','gin_longitude','flight_number'], '=id','ORDER BY id DESC LIMIT 1')
+      statusdata = self.rtlib.derive_data_alt(['derindex','gin_heading','static_pressure','pressure_height_kft','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle','gin_latitude','gin_longitude','flight_number'], '=id','ORDER BY id DESC LIMIT 1')
       #self.cursor.execute("SELECT id, id AS dercount, GREATEST(gindat01_heading_gin,-1.0) AS gindat01_heading_gin FROM mergeddata WHERE uppbbr01_utc_time IS NOT NULL AND corcon01_utc_time IS NOT NULL AND aerack01_utc_time IS NOT NULL AND lowbbr01_utc_time IS NOT NULL ORDER BY id DESC LIMIT 1;")
       #(self.derindex, dercount, gindat01_heading_gin) = self.cursor.fetchone()
       (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
-      self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),statusdata['gin_heading'],statusdata['static_pressure'],statusdata['pressure_height_feet'],statusdata['true_air_speed'],statusdata['deiced_true_air_temp_c'],statusdata['dew_point'],statusdata['gin_wind_speed'],statusdata['wind_angle'],statusdata['gin_latitude'],statusdata['gin_longitude'],statusdata['flight_number'][0][0],statusdata['flight_number'][0][1],statusdata['flight_number'][0][2],statusdata['flight_number'][0][3]))
+      print 1,self.derindex,dercount
+      self.sendLine(struct.pack(self.status_struct_fmt,1,self.derindex,dercount,self.time_seconds_past_midnight(),statusdata['gin_heading'],statusdata['static_pressure'],statusdata['pressure_height_kft'],statusdata['true_air_speed'],float(self.stat_output_format.format(statusdata['deiced_true_air_temp_c'][0])),float(self.stat_output_format.format(statusdata['dew_point'][0])),statusdata['gin_wind_speed'],statusdata['wind_angle'],statusdata['gin_latitude'],statusdata['gin_longitude'],statusdata['flight_number'][0][0],statusdata['flight_number'][0][1],statusdata['flight_number'][0][2],statusdata['flight_number'][0][3]))
       #log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
    
    def time_seconds_past_midnight(self):
