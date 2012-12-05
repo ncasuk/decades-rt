@@ -1,6 +1,6 @@
-decades (0.7.1~115.gbp394be1) quantal; urgency=low
+decades (0.7.1~117.gbpe4acc4) quantal; urgency=low
 
-  ** SNAPSHOT build @394be1c9c4e69226ee67090d1f312580320ebd1d **
+  ** SNAPSHOT build @e4acc4ebfb50d1ffe90dbbc3a648305b2430db67 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -140,8 +140,9 @@ decades (0.7.1~115.gbp394be1) quantal; urgency=low
   * experimental split TCP incoming filenames by DLU
   * Typo.
   * Separet files, but one per instance
+  * list->dictionary because list indices are integers
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 22 Nov 2012 16:29:58 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 23 Nov 2012 15:44:22 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
