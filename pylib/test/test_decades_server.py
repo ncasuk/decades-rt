@@ -43,7 +43,7 @@ def test_parameters(param_id, function):
 parser = SafeConfigParser()
 config = parser.read(['/etc/decades/decades.ini','pylib/decades.ini'])
 for (code, function) in parser.items('Parameters'):
-   if code != "513": #flight_number is not called for plotting, and would fail as ir doesn't return a float
+   if code != "513": #flight_number is not called for plotting, and would fail as it doesn't return a float
       test_method = test_parameters(code, function)
       test_method.__name__ = 'test_%s' % function 
       setattr (DecadesProtocolTestCase, test_method.__name__, test_method)
