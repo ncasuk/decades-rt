@@ -99,6 +99,11 @@ def test():
    '''runs all the unit tests'''
    local('trial pylib')
 
+def unit_test_parameter(paramname):
+   '''runs a unit test for a single parameter, e.g vertical_vorticity. 
+   Usage: fab unit_test_parameter:<parametername>'''
+   local('trial pylib.test.test_decades_server.DecadesProtocolTestCase.test_%s' % paramname)
+
 def deploy():   
    Plot_jar()
    debname=create_deb()
