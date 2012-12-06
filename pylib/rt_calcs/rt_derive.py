@@ -750,7 +750,7 @@ C ST    - Corrected Surface Temperature   (deg C)
         return c[0]+c[1]*raw 
 
     def neph_temperature(self,data):
-        raw=self.getdata('aerack01_neph_temperature',data)
+        raw=self.getdata('aerack01_neph_temp',data)
         c=self.cals['CAL176']
         return c[0]+c[1]*raw 
 
