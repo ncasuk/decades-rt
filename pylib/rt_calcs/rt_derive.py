@@ -645,7 +645,7 @@ class derived(rt_data.rt_data):
         i1=np.where((phgt>1)&(ws>0))
         VK=0.40                                  #Von Karman's constant
         EPS=0.005                                #Required fit
-        USTAR=np.zero(len(ws))
+        USTAR=np.zeros(len(ws))
         USTAR[i1]=0.3                             #Surface friction velocity m/s
         US=0.0
         MAXIT=30                                 #Max iterations
@@ -653,7 +653,7 @@ class derived(rt_data.rt_data):
             ind=np.where(USTAR>US)               
             US=USTAR
             Z0=0.3905E-4/USTAR[ind]+1.604E-3*USTAR[ind]*USTAR[ind]-0.017465E-2 #Pierson model
-            USTAR[ind]=VK*wa[ind]/np.log(phgt[ind]/Z0)
+            USTAR[ind]=VK*ws[ind]/np.log(phgt[ind]/Z0)
         tenmws[i1]=ws[i1]+USTAR[i1]*np.log(10.0/phgt[i1])/VK
         return tenmws
     
