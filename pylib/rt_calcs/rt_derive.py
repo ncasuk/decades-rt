@@ -790,15 +790,15 @@ C ST    - Corrected Surface Temperature   (deg C)
         rv=c[0]+c[1]*raw
         return (10**((rv/c[3])-c[2])-c[4])*1E6
 
-    def neph_pressure(self,data):
+    def neph_humidity(self,data):
         raw=self.getdata('aerack01_neph_humidity',data)
         c=self.cals['CAL183']
         return c[0]+c[1]*raw 
 
-    def neph_humidity(self,data):
+    def neph_status(self,data):
         raw=self.getdata('aerack01_neph_status',data)
         c=self.cals['CAL184']
-        return c[0]+c[1]*raw 
+        return c[0]+c[1]*raw  
 
     def psap_lin_abs_coeff(self,data):
         raw=self.getdata('aerack01_psap_lin',data)
