@@ -40,7 +40,7 @@ public class choices extends Applet
 	java.awt.Label[] label=new Label[maxp+1];
 	java.awt.Button[] delbutton=new Button[maxp];
 //	java.awt.Button addbutton;
-	java.awt.Color backgr=new Color((int)12,(int)33,(int)116);
+	java.awt.Color backgr=new Color((int)24,(int)111,(int)77);
 	java.awt.Color foregr=new Color((int)228,(int)242,(int)59);
 
 	/**

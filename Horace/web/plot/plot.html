@@ -2,7 +2,7 @@
 <head>
 <title>Plot</title>
 </head>
-<body text="#FFFFFF" bgcolor="#0C2174" onLoad="checktime();">
+<body text="#FFFFFF" bgcolor="#186f4d" onLoad="checktime();">
 <script>
 hashh=location.hash;
 middlebit="";
@@ -169,7 +169,7 @@ w1=window.open("","_blank",
  "location=no,status=no,menubar=yes,width=455,height=550,resizable=yes,scrollbars=yes");
 w1.document.open();
 w1.document.writeln("<html>");
-w1.document.writeln("<body bgcolor='#ffffff' text='#0c2174' link='#000000'><center>");
+w1.document.writeln("<body bgcolor='#ffffff' text='#186f4d' link='#000000'><center>");
 if((plottype=="mxplot")&&(parameters.substring(0,4)=="515,")){
   w1.document.writeln("<a href=");
   w1.document.write('"javascript:window.open(');
@@ -311,7 +311,7 @@ document.writeln('</select><p>');
 document.writeln('<br><INPUT TYPE="button" Value="Save" ');
 document.writeln('onClick="splot();"> plot parameters as ');
 document.writeln('<INPUT TYPE="text" name="plotname" Value="'+plots[0].name+'">');
-document.write('<APPLET CODE="choices.class" ARCHIVE="choices.jar"');
+document.write('<APPLET CODE="horaceplot.choices.choices.class" ARCHIVE="Plot.jar"');
 document.writeln(' WIDTH=550 HEIGHT='+height+'>');
 document.writeln('<PARAM NAME="names" VALUE="'+paras+'">');
 document.writeln('<PARAM NAME="paras" VALUE="'+defpara+'">');
