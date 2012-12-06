@@ -2,7 +2,7 @@ from pylib.decades_server import DecadesFactory, DecadesProtocol
 from pylib.database import get_database
 from twisted.trial import unittest
 from twisted.test import proto_helpers
-import os, struct
+import os, struct, exceptions
 
 from twisted.python import log
 from ConfigParser import SafeConfigParser
