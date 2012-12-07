@@ -82,9 +82,16 @@ class rt_data(object):
     def getbunchofdata_fromdatabase(self,names,selection,order=' ORDER BY id'):
         """ Dummy routine to read several parameters from database"""
         fieldname_part = 'SELECT %s ' % ', '.join(names)
+        #gets a set of the "names" list's entry's first 8 characters
+        #sets are unique so removes duplicates
+        instruments = set([s[0:8] for s in names]) 
+        instruments.discard('id') # don't need that one, it's not an instrument
+        #if the instrument is returning data <instrumentname>_utc_time will not be null
+        not_null_part = ''
+        if len(instruments) >0:
+            not_null_part = ' AND %s' % '_utc_time IS NOT NULL AND '.join(instruments) + '_utc_time IS NOT NULL'
         #self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s AND ' + ' IS NOT NULL AND '.join(names) + ' IS NOT NULL ')% selection, )
-        self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s %s')% (selection, order) )
-        #print self.database.query
+        self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s %s %s')% (selection, not_null_part, order) )
         ans={}
         data={}
         for name in names:
