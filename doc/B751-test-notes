@@ -1,0 +1,5 @@
+Comma in config file
+   The Lower Pyro Clear Flux was not working due to a misplaced comma - SUGGESTION - unit tests to verify parameter functions (DONE)
+Time inconsistiency (we had TAI, UTC, and GPS all on the same screen at one stage)
+
+
