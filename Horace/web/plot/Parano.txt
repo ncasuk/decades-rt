@@ -89,8 +89,6 @@ arrays of 2560 secs.
 599   (87)   TASD        TURB PROBE DRY TAS           m s-1
 600   (88)   TASW        TURB PROBE WET TAS           m s-1
 601   (89)   TPSP        TURB PROBE COR PITOT-STATIC  mb
-605   (93)   ILAT        INU LATITUDE                 deg (+ve N)
-606   (94)   ILONG       INU LONGITUDE                deg (+ve E)
 607   (95)   GLAT        GPS LATITUDE                 deg (+ve N)
 608   (96)   GLONG       GPS LONGITUDE                deg (+ve E)
 609   (97)   GALT        GPS ALTITUDE                 m
