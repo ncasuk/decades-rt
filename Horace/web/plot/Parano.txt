@@ -4,7 +4,6 @@ Numbers start at 513, so there is no confusion with DRS parameter numbers.
 On Horace 512 is deducted from the number and the parameters are stored in 
 arrays of 2560 secs. 
  
-513   (1)    FLNO        FLIGHT NUMBER
 515   (3)    SECS        TIME FROM MIDNIGHT           secs
 516   (4)    IAS         INDICATED AIR SPEED          m s-1
 517   (5)    TAS         TRUE AIR SPEED               knots
