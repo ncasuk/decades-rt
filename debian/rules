@@ -27,6 +27,7 @@ install-stamp: build-stamp
 	cp pylib/decades-tcp-listener.tac debian/decades/etc/decades
 	cp pylib/decades-server.tac debian/decades/etc/decades
 	cp pylib/decades-server-balancer.tac debian/decades/etc/decades
+	cp pylib/decades-gin.tac debian/decades/etc/decades
 	cp pylib/decades.ini debian/decades/etc/decades
 	cp debian/init.d debian/decades/etc/init.d/decades
 	cp debian/cronjob debian/decades/etc/cron.daily/decades

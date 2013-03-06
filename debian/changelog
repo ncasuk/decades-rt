@@ -1,6 +1,6 @@
-decades (0.7.1~120.gbpd8701c) quantal; urgency=low
+decades (0.7.1~121.gbp24209e) quantal; urgency=low
 
-  ** SNAPSHOT build @d8701c7ed9bddde23efe6d5be13ac9c7b6a6907b **
+  ** SNAPSHOT build @24209ee2fa87ccbe6a13969e0fa04df9b6e08893 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -173,8 +173,11 @@ decades (0.7.1~120.gbpd8701c) quantal; urgency=low
   * Separating clauses to aid debugging.
   * Switching the STAT display to DLU time
   * First go at new TCP filenames
+  * gin-forward working as flown March 1st
+  * Gin forward tac file seems to be working
+  * Adding GIN stuff to init routine
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 20 Dec 2012 14:44:31 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 06 Mar 2013 16:18:35 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
