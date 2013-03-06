@@ -16,6 +16,7 @@ listenerpidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pyli
 serverpidfile=/var/run/decades-server.pid rundir=/var/lib/decades/ serverfile=/etc/decades/decades-server.tac serverlogfile=/var/log/decades/decades-server.log
 tcplistenerpidfile=/var/run/decades-tcplistener.pid tcplistenerfile=/etc/decades/decades-tcp-listener.tac tcplistenerlogfile=/var/log/decades/decades-tcplistener.log
 serverbalancerpidfile=/var/run/decades-serverbalancer.pid serverbalancerfile=/etc/decades/decades-server-balancer.tac serverbalancerlogfile=/var/log/decades/decades-serverbalancer.log
+ginpidfile=/var/run/decades-gin.pid ginfile=/etc/decades/decades-gin.tac ginlogfile=/var/log/decades/decades-gin.log
 
 [ -r /etc/default/decades ] && . /etc/default/decades
 
@@ -64,6 +65,14 @@ case "$1" in
                --python=$serverbalancerfile
         echo "."	
    
+        echo -n "Starting decades-gin: twistd"
+        start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
+               --pidfile=$ginpidfile \
+               --rundir=$rundir \
+               --logfile=$ginlogfile \
+               --python=$ginfile
+        echo "."	
+   
     ;;
 
     stop)
@@ -72,6 +81,9 @@ case "$1" in
         echo "."	
         echo -n "Stopping decades-server-balancer: twistd"
         start-stop-daemon --stop --quiet              --pidfile $serverbalancerpidfile
+        echo "."	
+        echo -n "Stopping decades-gin: twistd"
+        start-stop-daemon --stop --quiet              --pidfile $ginpidfile
         echo "."	
         for DECADESPORT in $SLAVEPORTS
         do
