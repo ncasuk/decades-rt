@@ -46,14 +46,14 @@ class GINClient(Proxy):
     serverFactory = GINServerFactory
 
     def __init__(self):
-        self.outfile = open('gindat_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S')+'.bin','a')
+        self.outfile = open('/opt/decades/output/gindat_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S')+'.bin','a')
     
     def connectionMade(self):
         print "Connected to GIN"
         #self.transport.pauseProducing()
         server = self.serverFactory()
         server.setClient(self)
-        reactor.listenTCP(5902, server, interface="192.168.102.21")
+        reactor.listenTCP(5602, server, interface="192.168.102.21")
         #self.transport.write("hello, world!")
     
     def dataReceived(self, data):

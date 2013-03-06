@@ -1,6 +1,6 @@
-decades (0.7.1~117.gbpe4acc4) quantal; urgency=low
+decades (0.7.1~120.gbpd8701c) quantal; urgency=low
 
-  ** SNAPSHOT build @e4acc4ebfb50d1ffe90dbbc3a648305b2430db67 **
+  ** SNAPSHOT build @d8701c7ed9bddde23efe6d5be13ac9c7b6a6907b **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -141,8 +141,40 @@ decades (0.7.1~117.gbpe4acc4) quantal; urgency=low
   * Typo.
   * Separet files, but one per instance
   * list->dictionary because list indices are integers
+  * adding stanza for unit tests
+  * Fixing B751 Snags #8 & #9 fixing
+  * Lower pyrogemeter ini file syntax error fix
+  * renaming fn to match expectations of client app. (B751 snag #14?)
+  * Changelog
+  * Doc files and ignore list update
+  * Variable name error (DT to conform OK?)
+  * Remove debug line
+  * Add GIN component velocities and altitude
+  * Test case for data-processing functions
+  * Fix typo-type bugs highlighted by ten_m_wind unit test
+  * Neph temp incoming datum mislabelled.
+  * Correcting function names!
+  * Added exceptions list
+  * Single-parameter test case function for convenience
+  * Changing background colour (Snag #18)
+  * Excluding flight number from tests as is not plottable
+  * Commenting out obsolescent fields etc
+  * non-core, deleting
+  * Not currently used
+  * regenerated jar files and spelling
+  * Master Snag #16 fix.
+  * INU GPS no longer exists (Master Snag #34)
+  * Fixing some of the superscripts and such
+  * Database simulator has non-simultaneous DLU data
+  * decades-server occasionally returning NaNs when incoming DLU data are not in sync. Added check that all relevant instruments have returned utc_time (which must be present if the DLU is returning data at all) Master Snag List #31
+  * test notes
+  * Correcting comment character
+  * Filthy hack to remove flight_num and utc_time entries from the "dont return NaNs" code
+  * Separating clauses to aid debugging.
+  * Switching the STAT display to DLU time
+  * First go at new TCP filenames
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 23 Nov 2012 15:44:22 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 20 Dec 2012 14:44:31 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
