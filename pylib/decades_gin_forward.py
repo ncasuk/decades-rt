@@ -50,24 +50,23 @@ class GINClient(Proxy):
     
     def connectionMade(self):
         print "Connected to GIN"
-        #self.transport.pauseProducing()
         server = self.serverFactory()
         server.setClient(self)
-        reactor.listenTCP(5602, server, interface="192.168.102.21")
-        #self.transport.write("hello, world!")
+        reactor.listenTCP(self.factory.outport, server, interface=self.factory.outaddress)
     
     def dataReceived(self, data):
         self.outfile.write(data)
         if(self.peer):
             self.peer.transport.write(data)
-    
-    #def connectionLost(self, reason):
-    #    print "connection lost"
 
 
 class GINClientFactory(ReconnectingClientFactory):
     protocol = GINClient
     serverprotocol = GINServer
+
+    def __init__(self, outaddress="192.168.102.21", outport=5602):
+        self.outaddress = outaddress
+        self.outport = outport
 
     def startedConnecting(self, connector):
         print 'Started to connect.'
@@ -75,6 +74,7 @@ class GINClientFactory(ReconnectingClientFactory):
     def buildProtocol(self, *args, **kw):
         print 'Resetting reconnection delay'
         prot = ReconnectingClientFactory.buildProtocol(self, *args, **kw)
+        print(self.outAddress, self.outPort)
         self.resetDelay()
         return prot
 
@@ -87,7 +87,7 @@ class GINClientFactory(ReconnectingClientFactory):
         ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
 
-# this connects the protocol to a server runing on port 8000
+# this connects the protocol to the GIN and starts rebroadcasting
 def main():
     f = GINClientFactory()
     reactor.connectTCP("192.168.101.21", 5602, f)

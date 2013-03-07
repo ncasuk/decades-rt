@@ -34,7 +34,7 @@ def getDecadesGINService():
    GinOutAddress = (parser.get('GIN', 'outaddress'))  
       
    conn = get_database()
-   return internet.TCPClient(GinAddress, GinPort, GINClientFactory())
+   return internet.TCPClient(GinAddress, GinPort, GINClientFactory(outaddress=GinOutAddress, outport=GinOutPort))
 
 # this is the core part of any tac file, the creation of the root-level
 # application object
