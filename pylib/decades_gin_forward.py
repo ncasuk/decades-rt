@@ -65,8 +65,8 @@ class GINClientFactory(ReconnectingClientFactory):
     serverprotocol = GINServer
 
     def __init__(self, outaddress="192.168.102.21", outport=5602):
-        self.outaddress = outaddress
-        self.outport = outport
+        self.outAddress = outaddress
+        self.outPort = outport
 
     def startedConnecting(self, connector):
         print 'Started to connect.'

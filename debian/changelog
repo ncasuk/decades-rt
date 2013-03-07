@@ -1,6 +1,6 @@
-decades (0.7.1~121.gbp24209e) quantal; urgency=low
+decades (0.7.1~123.gbp93f977) quantal; urgency=low
 
-  ** SNAPSHOT build @24209ee2fa87ccbe6a13969e0fa04df9b6e08893 **
+  ** SNAPSHOT build @93f977bb4133127460fbb9a278eb3765bf28bd6d **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -176,8 +176,12 @@ decades (0.7.1~121.gbp24209e) quantal; urgency=low
   * gin-forward working as flown March 1st
   * Gin forward tac file seems to be working
   * Adding GIN stuff to init routine
+  * adding new tac file to deploy routine
+  * Removing executable bits from files that don't need it
+  * Changed to require Java 1.5 rather than 1.6
+  * 2nd pass at GIN forwarder; uses decades.ini params
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 06 Mar 2013 16:18:35 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 07 Mar 2013 12:07:57 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
