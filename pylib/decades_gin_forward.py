@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from twisted.internet import reactor
 from twisted.internet.protocol import Protocol, ReconnectingClientFactory, ServerFactory
+from twisted.python import log
 from datetime import datetime
 
 class Proxy(Protocol):
@@ -15,13 +16,13 @@ class Proxy(Protocol):
          #self.peer.transport.loseConnection()
          self.peer.peer = None
       elif self.noisy:
-         print("Unable to connect to peer: %s" % (reason,))
+         log.msg("Unable to connect to peer: %s" % (reason,))
 
 #GIN server protocol
 class GINServer(Proxy):
       
     def connectionMade(self):
-       print "Client connection made"
+       log.msg("Client connection made")
        self.peer.setPeer(self)
        #self.peer.transport.resumeProducing()
 
@@ -33,7 +34,7 @@ class GINServerFactory(ServerFactory):
       self.client = client
    
    def buildProtocol(self, *args, **kw):
-      print "building server protocol"
+      log.msg("building server protocol")
       prot = ServerFactory.buildProtocol(self, *args, **kw)
       prot.setPeer(self.client)
       return prot
@@ -49,7 +50,7 @@ class GINClient(Proxy):
         self.outfile = open('/opt/decades/output/gindat_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S')+'.bin','a')
     
     def connectionMade(self):
-        print "Connected to GIN"
+        log.msg( "Connected to GIN")
         server = self.serverFactory()
         server.setClient(self)
         reactor.listenTCP(self.factory.outPort, server, interface=self.factory.outAddress)
@@ -69,21 +70,21 @@ class GINClientFactory(ReconnectingClientFactory):
         self.outPort = outport
 
     def startedConnecting(self, connector):
-        print 'Started to connect.'
+        log.msg('Started to connect.')
 
     def buildProtocol(self, *args, **kw):
-        print 'Resetting reconnection delay'
+        log.msg( 'Resetting reconnection delay')
         prot = ReconnectingClientFactory.buildProtocol(self, *args, **kw)
-        print(self.outAddress, self.outPort)
+        log.msg("Listening for clients on ",(self.outAddress, self.outPort))
         self.resetDelay()
         return prot
 
     def clientConnectionFailed(self, connector, reason):
-        print 'Connection failed. Reason:', reason
+        log.msg('Connection failed. Reason:', reason)
         ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
     
     def clientConnectionLost(self, connector, reason):
-        print 'Lost connection.  Reason:', reason
+        log.msg('Lost connection.  Reason:', reason)
         ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
 

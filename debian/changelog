@@ -1,6 +1,6 @@
-decades (0.7.1~124.gbpd5b1ca) quantal; urgency=low
+decades (0.7.1~125.gbpf30842) quantal; urgency=low
 
-  ** SNAPSHOT build @d5b1cae60dc61e158174a090143176ca67be2d32 **
+  ** SNAPSHOT build @f308421ddc2ee14350217083a2e9b9b006f9937c **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -181,8 +181,9 @@ decades (0.7.1~124.gbpd5b1ca) quantal; urgency=low
   * Changed to require Java 1.5 rather than 1.6
   * 2nd pass at GIN forwarder; uses decades.ini params
   * case-change to bugfix
+  * Case-issues again
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 07 Mar 2013 13:01:50 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 07 Mar 2013 14:28:42 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
