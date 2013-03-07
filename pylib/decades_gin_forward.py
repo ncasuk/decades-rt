@@ -52,7 +52,7 @@ class GINClient(Proxy):
         print "Connected to GIN"
         server = self.serverFactory()
         server.setClient(self)
-        reactor.listenTCP(self.factory.outport, server, interface=self.factory.outaddress)
+        reactor.listenTCP(self.factory.outPort, server, interface=self.factory.outAddress)
     
     def dataReceived(self, data):
         self.outfile.write(data)
