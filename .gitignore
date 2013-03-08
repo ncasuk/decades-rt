@@ -9,6 +9,7 @@
 *.changes
 *.tar.gz
 *.class
+*.CLASS
 #ignore temp dirs
 pylib/_trial_temp
 _trial_temp
