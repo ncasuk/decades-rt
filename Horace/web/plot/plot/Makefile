@@ -25,7 +25,7 @@ MODE_FILES      = 444
 MODE_DIRS       = 2755
 
 # Build programs
-JAVAC           = javac #-target 1.5 
+JAVAC           = javac -source 1.6 -target 1.6 
 JAVADOC         = javadoc
 JAR             = jar
 

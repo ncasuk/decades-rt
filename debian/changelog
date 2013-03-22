@@ -1,6 +1,6 @@
-decades (0.7.1~128.gbp67291e) quantal; urgency=low
+decades (0.7.1~131.gbp3c2854) quantal; urgency=low
 
-  ** SNAPSHOT build @67291e7bbde314681fc7a6dec9b605d8af621b27 **
+  ** SNAPSHOT build @3c2854ca12181657d2cdd2f84c668657ffe7365b **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -184,8 +184,10 @@ decades (0.7.1~128.gbp67291e) quantal; urgency=low
   * Case-issues again
   * Changing to standard log framework
   * Returning to not specifying Java target
+  * Java fixes
+  * Trying something else wuth Plot.jar
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 08 Mar 2013 12:09:34 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 11 Mar 2013 11:16:25 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
