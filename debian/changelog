@@ -1,6 +1,6 @@
-decades (0.7.1~131.gbp3c2854) quantal; urgency=low
+decades (0.7.1~132.gbp57b449) quantal; urgency=low
 
-  ** SNAPSHOT build @3c2854ca12181657d2cdd2f84c668657ffe7365b **
+  ** SNAPSHOT build @57b4494aec353973320735e7f688f370892c6656 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -186,8 +186,9 @@ decades (0.7.1~131.gbp3c2854) quantal; urgency=low
   * Returning to not specifying Java target
   * Java fixes
   * Trying something else wuth Plot.jar
+  * Force output to Java 1.6
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 11 Mar 2013 11:16:25 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 22 Mar 2013 10:00:29 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 

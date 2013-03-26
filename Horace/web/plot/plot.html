@@ -1,9 +1,12 @@
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Plot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
-<body text="#FFFFFF" bgcolor="#186f4d" onLoad="checktime();">
-<script>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[ 
 hashh=location.hash;
 middlebit="";
 plottype="";
@@ -19,8 +22,7 @@ symbols="";
 zooms="";
 starttime="";
 stoptime="";
-cols=["White","Black","Red","Green","Blue","Cyan","Orange","Magenta",
-"Pink","Yellow","Gray"];
+cols=["White","Black","Red","Green","Blue","Cyan","Orange","Magenta", "Pink","Yellow","Gray"];
 nam=new Array();
 pni=0;
 w1=null;
@@ -58,7 +60,6 @@ function checktime(){
     document.form1.starttime.value=hashh.substring(1,9);
     document.form1.stoptime.value=hashh.substring(10,18);
   }
-
 
 }
 
@@ -174,7 +175,7 @@ if((plottype=="mxplot")&&(parameters.substring(0,4)=="515,")){
   w1.document.writeln("<a href=");
   w1.document.write('"javascript:window.open(');
   w1.document.write("'plot.html#'+document.applets[0].gettimes());void(0);");
-  w1.document.writeln('">New plot, same times</A><br>');
+  w1.document.writeln('">New plot, same times<\/a>');
 }
 w1.document.write("<applet code='horaceplot.plot.plotapp.class' archive='Plot.jar'");
 w1.document.writeln(" width='600' height='"+hgt+"' mayscript>");
@@ -189,13 +190,13 @@ w1.document.writeln("<param name='colours' value='"+colours+"'>");
 w1.document.writeln("<param name='port' value='1500'>");
 w1.document.writeln("<param name='printfactor' value='"+factor+"'>");
 w1.document.writeln("<param name='normalfactor' value='14'>");
-w1.document.writeln("</applet>");
-w1.document.writeln("<br>");
-w1.document.writeln("<form name=form1>");
-w1.document.writeln("<input type=hidden name=zm>");
-w1.document.writeln("</form>");
-w1.document.writeln("</body>");
-w1.document.writeln("</html>");
+w1.document.writeln("<\/applet>");
+w1.document.writeln("<br \/>");
+w1.document.writeln("<form name='form1'>");
+w1.document.writeln("<input type='hidden' name='zm'>");
+w1.document.writeln("<\/form>");
+w1.document.writeln("<\/body>");
+w1.document.writeln("<\/html>");
 w1.document.close();
 }
 function showparas(){
@@ -277,54 +278,53 @@ function splot(){
 function writepage(){
 
 document.writeln('<center>');
-//document.writeln('<H1>Choose Horace Plot</H1>');
 
 document.write("<applet code='horaceplot.plot.plotapp.class' archive='Plot.jar'");
 document.writeln(" width='500' height='100' mayscript>");
 document.writeln("<param name='plottype' value='table'>");
 document.writeln("<param name='parameters' value=''>");
 document.writeln("<param name='normalfactor' value='10'>");
-document.writeln("</applet>");
+document.writeln("<\/applet>");
 
 document.writeln('<form name="form1">');
 document.writeln('<select name="select1" onChange="differentplot();">');
   for(var i=0;i<plots.length;i++){
-     document.writeln("<option>"+plots[i].name);
+     document.writeln("<option>"+plots[i].name+"<\/option>");
   }
-document.writeln('</select>');
-document.writeln('<INPUT TYPE="button" Value="Plot" onClick="showparas();">');
+document.writeln('<\/select>');
+document.writeln('<input type="button" value="plot" onclick="showparas();">');
 document.write('From:');
-document.write('<INPUT TYPE="text" size="8" name="starttime"');
-document.writeln(' value="start" onFocus="stimes();" >');
+document.write('<input type="text" size="8" name="starttime"');
+document.writeln(' value="start" onfocus="stimes();" >');
 document.write(' To:');
-document.write('<INPUT TYPE="text" size="8" name="stoptime"');
+document.write('<input type="text" size="8" name="stoptime"');
 document.writeln(' value="now" onFocus="stimes();" >');
-document.writeln(' <SELECT name="select2" onChange="differenttimes();">');
+document.writeln(' <select name="select2" onchange="differenttimes();">');
   document.write("<option>--");
   for(var i=5;i<=60;i+=5){
      document.write("<option");
      if(i==30)document.write(" selected");
-     document.writeln(">last "+i+" mins");
+     document.writeln(">last "+i+" mins<\/option>");
   }
-  document.write("<option>All");
-document.writeln('</select><p>');
-document.writeln('<br><INPUT TYPE="button" Value="Save" ');
-document.writeln('onClick="splot();"> plot parameters as ');
-document.writeln('<INPUT TYPE="text" name="plotname" Value="'+plots[0].name+'">');
-document.write('<APPLET CODE="horaceplot.choices.choices.class" ARCHIVE="Plot.jar"');
-document.writeln(' WIDTH=550 HEIGHT='+height+'>');
-document.writeln('<PARAM NAME="names" VALUE="'+paras+'">');
-document.writeln('<PARAM NAME="paras" VALUE="'+defpara+'">');
-document.writeln('<PARAM NAME="colours" VALUE="'+colours+'">');
-document.writeln('<PARAM NAME="symbols" VALUE="'+symbols+'">');
-document.writeln('</APPLET><p>');
-document.writeln('</form>');
-document.writeln('</CENTER>');
+  document.write("<option>All<\/option>");
+document.writeln('<\/select><p>');
+document.writeln('<br \/><input type="button" value="Save" ');
+document.writeln('onclick="splot();"> plot parameters as ');
+document.writeln('<input type="text" name="plotname" value="'+plots[0].name+'">');
+document.write('<applet code="horaceplot.choices.choices.class" archive="Plot.jar"');
+document.writeln(' width="550" height="'+height+'">');
+document.writeln('<param name="names" value="'+paras+'">');
+document.writeln('<param name="paras" value="'+defpara+'">');
+document.writeln('<param name="colours" value="'+colours+'">');
+document.writeln('<param name="symbols" value="'+symbols+'">');
+document.writeln('<\/applet>');
+document.writeln('<\/form>');
+document.writeln('<\/center>');
 for(var i=0;i<40;i++){
-  document.writeln('<br>');
+  document.writeln('<br \/>');
 }
-document.writeln('</body>');
-document.writeln('</html>');
+document.writeln('<\/body>');
+document.writeln('<\/html>');
 i=plots.length;
 while(loadPlot(i)){
   op=new Option(plots[i].name,"",false,false);
@@ -333,4 +333,10 @@ while(loadPlot(i)){
 }
 plottype="table";
 }
+//set Onload handler
+$(document).ready(function() { checktime(); });
+//]]>
 </script>
+<body text="#ffffff" bgcolor="#186f4d">
+</body>
+</html>
