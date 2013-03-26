@@ -1,6 +1,6 @@
-decades (0.7.1~132.gbp57b449) quantal; urgency=low
+decades (0.7.1~133.gbpeeb747) quantal; urgency=low
 
-  ** SNAPSHOT build @57b4494aec353973320735e7f688f370892c6656 **
+  ** SNAPSHOT build @eeb747b9982d303a217357b2789a5d092db186f7 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -187,8 +187,10 @@ decades (0.7.1~132.gbp57b449) quantal; urgency=low
   * Java fixes
   * Trying something else wuth Plot.jar
   * Force output to Java 1.6
+  * Allows for data-types with endianness indicator (<>)
+  * Standards-compliance & UTF-8 setting
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Fri, 22 Mar 2013 10:00:29 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 26 Mar 2013 12:57:47 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
