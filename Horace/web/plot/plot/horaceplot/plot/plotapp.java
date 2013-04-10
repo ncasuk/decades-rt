@@ -294,6 +294,7 @@ public void update(Graphics g)
         hdr.append((int)HC.status[2]).append("mb");
         gr.setFont(getfon(factor,Font.PLAIN));
         gr.drawString(hdr.toString(),200/factor,400/factor);
+        Properties properties = System.getProperties();
         hdr=new StringBuffer();
 //        hdr.append("Lat ");
 //        StringBuffer l=new StringBuffer();
@@ -318,6 +319,7 @@ public void update(Graphics g)
         hdr=new StringBuffer().append("Temp ");
         hdr.append(HC.status[5]).append("C  Dewpoint ");
         hdr.append(HC.status[6]).append("C");
+        hdr.append(properties.getProperty('file.encoding') + " " + properties.getProperty('sun.io.unicode.encoding') + " " + properties.getProperty('sun.jnu.encoding'))
         gr.drawString(hdr.toString(),200/factor,800/factor);
         if(bufferim!=null)g.drawImage(bufferim,0,0,this);
         }
