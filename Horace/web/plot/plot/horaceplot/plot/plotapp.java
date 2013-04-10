@@ -319,11 +319,8 @@ public void update(Graphics g)
         gr.drawString(hdr.toString(),200/factor,600/factor);
         hdr=new StringBuffer().append("Temp ");
         hdr.append(HC.status[5]).append("C  Dewpoint ");
-        hdr.append(HC.status[6]).append("C");
-        hdr.append(properties.getProperty("file.encoding") + " fe ");
-        hdr.append(properties.getProperty("file.encoding.pkg") + " fep ");
-        hdr.append(properties.getProperty("sun.io.unicode.encoding") + " siue ");
-        hdr.append(properties.getProperty("sun.jnu.encoding") + " sje ");
+        hdr.append(HC.status[6]).append("C Encoding: ");
+        hdr.append(properties.getProperty("file.encoding"));
         gr.drawString(hdr.toString(),200/factor,800/factor);
         if(bufferim!=null)g.drawImage(bufferim,0,0,this);
         }

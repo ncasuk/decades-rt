@@ -1,6 +1,6 @@
-decades (0.7.1~144.gbp092232) quantal; urgency=low
+decades (0.7.1~145.gbp9453d3) quantal; urgency=low
 
-  ** SNAPSHOT build @0922326f021241a4d53a341bb371492905b8f51d **
+  ** SNAPSHOT build @9453d3fd913eff4c448aefc6049c0f90436a5616 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -195,8 +195,9 @@ decades (0.7.1~144.gbp092232) quantal; urgency=low
   * Try again
   * And again. Apperently there's an undocumented setting
   * Adding encoding properties debug
+  * re-adding plot.jar...
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 10 Apr 2013 12:07:45 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 10 Apr 2013 12:15:06 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
