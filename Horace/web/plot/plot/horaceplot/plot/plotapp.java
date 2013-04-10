@@ -5,6 +5,7 @@ import java.awt.*;
 import java.applet.*;
 import java.io.*;
 import horaceplot.stringutl;
+import java.util.Properties;
 
 /**
  * The applet that produces the plots.
@@ -319,7 +320,10 @@ public void update(Graphics g)
         hdr=new StringBuffer().append("Temp ");
         hdr.append(HC.status[5]).append("C  Dewpoint ");
         hdr.append(HC.status[6]).append("C");
-        hdr.append(properties.getProperty('file.encoding') + " " + properties.getProperty('sun.io.unicode.encoding') + " " + properties.getProperty('sun.jnu.encoding'))
+        hdr.append(properties.getProperty("file.encoding") + " fe ");
+        hdr.append(properties.getProperty("file.encoding.pkg") + " fep ");
+        hdr.append(properties.getProperty("sun.io.unicode.encoding") + " siue ");
+        hdr.append(properties.getProperty("sun.jnu.encoding") + " sje ");
         gr.drawString(hdr.toString(),200/factor,800/factor);
         if(bufferim!=null)g.drawImage(bufferim,0,0,this);
         }

@@ -1,6 +1,6 @@
-decades (0.7.1~141.gbp7c8668) quantal; urgency=low
+decades (0.7.1~144.gbp092232) quantal; urgency=low
 
-  ** SNAPSHOT build @7c86681e0239084de20fdb76998d3df9ac490189 **
+  ** SNAPSHOT build @0922326f021241a4d53a341bb371492905b8f51d **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -194,8 +194,9 @@ decades (0.7.1~141.gbp7c8668) quantal; urgency=low
   * Applet encoding parameter
   * Try again
   * And again. Apperently there's an undocumented setting
+  * Adding encoding properties debug
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 10 Apr 2013 10:52:38 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 10 Apr 2013 12:07:45 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
