@@ -1,6 +1,6 @@
-decades (0.7.1~133.gbpeeb747) quantal; urgency=low
+decades (0.7.1~138.gbp582f19) quantal; urgency=low
 
-  ** SNAPSHOT build @eeb747b9982d303a217357b2789a5d092db186f7 **
+  ** SNAPSHOT build @582f19a20a912b000f48c8569a2bc2f499686162 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -189,8 +189,10 @@ decades (0.7.1~133.gbpeeb747) quantal; urgency=low
   * Force output to Java 1.6
   * Allows for data-types with endianness indicator (<>)
   * Standards-compliance & UTF-8 setting
+  * Adding BOM
+  * Removing internationalization test string
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Tue, 26 Mar 2013 12:57:47 +0000
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 27 Mar 2013 16:49:11 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
