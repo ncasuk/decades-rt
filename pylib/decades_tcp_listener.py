@@ -19,6 +19,12 @@ class DecadesTCPListener(Protocol):
    def writedata(self, data, instrument, flightno):
       try:
          self.outfiles[instrument][flightno].write(data)
-      except KeyError:
-         self.outfiles[instrument][flightno] = open('/opt/decades/output/' + instrument +'_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S') +'_' + flightno,'w')
+      except KeyError: #i.e.file does not exist yet
+         try: #try to create file 
+            self.outfiles[instrument][flightno] = open('/opt/decades/output/' + instrument +'_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S') +'_' + flightno,'w')
+         except TypeError: 
+            '''usually some incoming data corruption so 'instrument' and/or 'flightno'
+            are not valid due to containing some NULL bytes; ignore data in that case'''
+            log.msg('Invalid TCP data, discarding')
+            
 
