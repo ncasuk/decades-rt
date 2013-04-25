@@ -125,3 +125,4 @@ def Plot_jar():
       local('make jar && cp Plot.jar ..') 
    with lcd('Horace/web/plot'):
       local('jarsigner Plot.jar fish')
+      local('jarsigner choices.jar fish')

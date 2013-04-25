@@ -84,7 +84,7 @@ class rt_data(object):
         fieldname_part = 'SELECT %s ' % ', '.join(names)
         #gets a set of the "names" list's entry's first 8 characters
         #sets are unique so removes duplicates
-        instruments = set([s[0:8] for s in filter(lambda a: a[9:] != 'flight_num',filter(lambda b: b[9:] != 'utc_time',names))]) 
+        instruments = set([s[0:8] for s in filter(lambda a: a[9:] != 'flight_num',filter(lambda b: b[9:] != 'utc_time',filter(lambda c: c != 'utc_time',names)))]) 
         instruments.discard('id') # don't need that one, it's not an instrument
         #if the instrument is returning data <instrumentname>_utc_time will not be null
         not_null_part = ''

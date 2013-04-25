@@ -52,7 +52,7 @@ class DecadesProtocol(basic.LineReceiver):
       log.msg(line)
 
    def rawDataReceived(self, data):
-      if data == "STAT":
+      if data[0:4] == "STAT":
          self.writeStatus()
       if data[0:4] == "PARA":
          formt = ">4s" + str((len(data)/4)-1) + 'i' # 4 characters (P A R A), start time integer, end time integer, integer indicating number of parameters, then integer codes for the parameters (see horaceplot/choices/PARANO.TXT)
@@ -66,7 +66,7 @@ class DecadesProtocol(basic.LineReceiver):
          
        
          paralist = []
-         for paracode in para[4:]:
+         for paracode in para[4:(4+para[3])]:
             paralist.append(self.parano[paracode])
 
          if len(paralist) == 0:
@@ -89,7 +89,7 @@ class DecadesProtocol(basic.LineReceiver):
          #log.msg(repr(len(returndata)))
          #log.msg('requesting data between %i and %i, returning %i datapoints' % (para[1],para[2],size_upcoming))
          #send each requested parameter separately
-         for paracode in para[4:]: #list of required fields
+         for paracode in para[4:(4+para[3])]: #list of required fields
                sendable = returndata[self.parano[paracode]]
                for each in sendable:
                   self.sendLine(struct.pack(">f",each))

@@ -1,6 +1,6 @@
-decades (0.7.1~146.gbpf1ccd1) quantal; urgency=low
+decades (0.7.1~148.gbpc575ba) quantal; urgency=low
 
-  ** SNAPSHOT build @f1ccd11f53901e32321af03a2de4fe5367da3817 **
+  ** SNAPSHOT build @c575ba4f0844c3aa788e98826e4c078ea0f63cef **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -197,8 +197,10 @@ decades (0.7.1~146.gbpf1ccd1) quantal; urgency=low
   * Adding encoding properties debug
   * re-adding plot.jar...
   * Trying Plot.jar again
+  * Revert to not trying to set file.encoding.
+  * Detect and discard invalid incoming TCP data
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Wed, 10 Apr 2013 14:33:47 +0100
+ -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 18 Apr 2013 13:26:04 +0100
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 

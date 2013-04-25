@@ -731,7 +731,7 @@ C ST    - Corrected Surface Temperature   (deg C)
                 NVLWC=RL**2/TAS/2589/CAL(208,3)"""
         return nvlwc
         
-    def nevzorov_toal_water(self,data):
+    def nevzorov_total_water(self,data):
         icol=self.getdata('corcon01_nv_twc_icol',data)    
         vcol=self.getdata('corcon01_nv_twc_vref',data)    
         iref=self.getdata('corcon01_nv_twc_icol',data)    
@@ -847,7 +847,7 @@ C ST    - Corrected Surface Temperature   (deg C)
 
     def time_since_midnight(self,data):
         """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
-        raw = []
+        '''raw = []
         raw.append(self.getdata('corcon01_utc_time',data))
         raw.append(self.getdata('prtaft01_utc_time',data))
         raw.append(self.getdata('gindat01_utc_time',data)) 
@@ -857,13 +857,14 @@ C ST    - Corrected Surface Temperature   (deg C)
         dummy = raw[0] # because if they are all NaN, it should return NaN
         if len(raw[0]) >0: #i.e. it isn't the dummy pass
             #filter out NaNs
-            raw = [x for x in raw if not np.isnan(x[0])] 
+            raw = [x for x in raw if not np.isnan(x[0])] '''
         unixtime_at_midnight = time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
+        return self.getdata('utc_time',data) - unixtime_at_midnight
         #raw is an array, so subtracting an integer appears to be valid
-        if len(raw) >0:
+        '''if len(raw) >0:
             return raw[0] - unixtime_at_midnight
         else:
-            return dummy - unixtime_at_midnight #should be NaN
+            return dummy - unixtime_at_midnight #should be NaN'''
 
     def flight_number(self, data):
       """ Returns the flight code, failing over from one DLU to another"""
