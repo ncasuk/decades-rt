@@ -398,7 +398,7 @@ public void update(Graphics g)
     }
 
     public Font getfon(int factor,int style){
-       Font fon=new Font("Gill Sans MT",style,150/factor);
+       Font fon=new Font("SansSerif",style,150/factor);
        return fon;
     }
     
