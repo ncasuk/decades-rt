@@ -23,7 +23,8 @@ class DecadesTCPListener(Protocol):
       except KeyError: #i.e.file does not exist yet
          try: #try to create file 
             #self.outfiles[instrument][flightno] = open('/opt/decades/output/' + instrument +'_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S') +'_' + flightno,'w',mode=0444)
-            self.outfiles[instrument][flightno] = os.fdopen(os.open('/opt/decades/output/' + instrument +'_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S') +'_' + flightno, os.O_WRONLY | os.O_CREAT, 0544), 'w')
+            os.umask(0)
+            self.outfiles[instrument][flightno] = os.fdopen(os.open('/opt/decades/output/' + instrument +'_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S') +'_' + flightno, os.O_WRONLY | os.O_CREAT, 0644), 'w')
          except TypeError: 
             '''usually some incoming data corruption so 'instrument' and/or 'flightno'
             are not valid due to containing some NULL bytes; ignore data in that case'''
