@@ -2,6 +2,7 @@ from twisted.internet.protocol import Protocol
 from twisted.python import log
 from datetime import datetime
 from decades import DecadesDataProtocols
+import os
 
 class DecadesTCPListener(Protocol):
    dataProtocols = DecadesDataProtocols() 
@@ -21,7 +22,8 @@ class DecadesTCPListener(Protocol):
          self.outfiles[instrument][flightno].write(data)
       except KeyError: #i.e.file does not exist yet
          try: #try to create file 
-            self.outfiles[instrument][flightno] = open('/opt/decades/output/' + instrument +'_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S') +'_' + flightno,'w',mode=0444)
+            #self.outfiles[instrument][flightno] = open('/opt/decades/output/' + instrument +'_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S') +'_' + flightno,'w',mode=0444)
+            self.outfiles[instrument][flightno] = os.fdopen(os.open('/opt/decades/output/' + instrument +'_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S') +'_' + flightno, os.O_WRONLY | os.O_CREAT, 0544), 'w')
          except TypeError: 
             '''usually some incoming data corruption so 'instrument' and/or 'flightno'
             are not valid due to containing some NULL bytes; ignore data in that case'''
