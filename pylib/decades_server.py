@@ -107,29 +107,58 @@ class DecadesProtocol(basic.LineReceiver):
       #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), Wind speed, ms-1, 
       #log.msg(repr(self.der))
       statusdata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','gin_heading','static_pressure','pressure_height_kft','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle','gin_latitude','gin_longitude','flight_number'], '=id','ORDER BY id DESC LIMIT 1')
-      #self.cursor.execute("SELECT id, id AS dercount, GREATEST(gindat01_heading_gin,-1.0) AS gindat01_heading_gin FROM mergeddata WHERE uppbbr01_utc_time IS NOT NULL AND corcon01_utc_time IS NOT NULL AND aerack01_utc_time IS NOT NULL AND lowbbr01_utc_time IS NOT NULL ORDER BY id DESC LIMIT 1;")
       #(self.derindex, dercount, gindat01_heading_gin) = self.cursor.fetchone()
-      (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
-      self.sendLine(struct.pack(self.status_struct_fmt,
-		   1,
-		   self.derindex,
-		   dercount,
-		   statusdata['time_since_midnight'],
-		   statusdata['gin_heading'],
-		   statusdata['static_pressure'],
-		   statusdata['pressure_height_kft'],
-		   statusdata['true_air_speed'],
-		   float(self.stat_output_format.format(statusdata['deiced_true_air_temp_c'][0])),
-		   float(self.stat_output_format.format(statusdata['dew_point'][0])),
-		   statusdata['gin_wind_speed'],
-		   statusdata['wind_angle'],
-		   statusdata['gin_latitude'],
-		   statusdata['gin_longitude'],
-		   statusdata['flight_number'][0][0],
-		   statusdata['flight_number'][0][1],
-		   statusdata['flight_number'][0][2],
-		   statusdata['flight_number'][0][3]
-      ))
+      try: 
+         (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
+         self.sendLine(struct.pack(self.status_struct_fmt,
+		      1,
+		      self.derindex,
+		      dercount,
+		      statusdata['time_since_midnight'],
+		      statusdata['gin_heading'],
+		      statusdata['static_pressure'],
+		      statusdata['pressure_height_kft'],
+		      statusdata['true_air_speed'],
+		      float(self.stat_output_format.format(statusdata['deiced_true_air_temp_c'][0])),
+		      float(self.stat_output_format.format(statusdata['dew_point'][0])),
+		      statusdata['gin_wind_speed'],
+		      statusdata['wind_angle'],
+		      statusdata['gin_latitude'],
+		      statusdata['gin_longitude'],
+		      statusdata['flight_number'][0][0],
+		      statusdata['flight_number'][0][1],
+		      statusdata['flight_number'][0][2],
+		      statusdata['flight_number'][0][3]
+         ))
+      except IndexError:
+         '''This is probably a data shortage, so try again on minimal PRTAFT-only stuff'''
+         log.msg('Data shortage, retrying with PRTAFT-only')
+         statusdata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','flight_number','pressure_height_kft','static_pressure'], '=id','ORDER BY id DESC LIMIT 1')
+         log.msg(statusdata)
+         (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
+         self.sendLine(struct.pack(self.status_struct_fmt,
+		      1,
+		      self.derindex,
+		      dercount,
+		      statusdata['time_since_midnight'],
+            0.0,
+		      statusdata['static_pressure'],
+		      statusdata['pressure_height_kft'],
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+		      statusdata['flight_number'][0][0],
+		      statusdata['flight_number'][0][1],
+		      statusdata['flight_number'][0][2],
+		      statusdata['flight_number'][0][3]
+         ))
+         
+          
+         
       #log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
    
    def time_seconds_past_midnight(self):
