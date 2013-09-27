@@ -1,8 +1,17 @@
 #!/usr/bin/python
 #Produces fake 1-second data to test Decades-Server.py
-#Presently produces data 
-#515 Time from Midnight (s)
-#520 Deiced True Air Temp (K)
+import argparse
+
+#Parse arguments
+parser = argparse.ArgumentParser(description='Data simulator for DECADES testing. It defaults to simulating all the DLUs, but you can limit it to a subset using the --DLU option.')
+
+DLUs_list  = ['CORCON', 'GINDAT', 'PRTAFT', 'UPPBBR', 'LOWBBR', 'AERACK']
+
+#allows choice of DLUs on the command line, defaults to all of them
+parser.add_argument('--DLU','--dlu', nargs='*', choices=DLUs_list, default=DLUs_list, help="Which DLU(s) you wish to simulate. (e.g. CORCON, GINDAT) Defaults to all of them.", metavar='DLUNAME')
+
+args = parser.parse_args()
+
 import psycopg2, datetime, time, math, random
 from decades import DecadesDataProtocols
 from database import get_database
@@ -15,13 +24,13 @@ cursor.execute('TRUNCATE TABLE mergeddata;')
 cursor.execute('ALTER SEQUENCE mergeddata_id_seq RESTART WITH 1;')
 conn.commit()
 while 1:
-            #time.sleep(1)
             seconds_since_midnight = (datetime.datetime.now() - datetime.datetime(datetime.datetime.now().year,datetime.datetime.now().month,datetime.datetime.now().day)).seconds
             timestamp = int(math.floor(time.time()))
             flightnum = 'SIMU'
-            
+           
+            fakedata =  {}
             #create dictionary of fieldnames => simulated value for each DLU
-            prtaft_fakedata = {
+            fakedata['PRTAFT'] = {
                'utc_time':timestamp,
                'flight_num':flightnum,
                'pressure_alt':int(1000 + (50 * math.sin(timestamp/4))), #average 10kft
@@ -29,7 +38,7 @@ while 1:
                'deiced_temp_flag':True if timestamp%2 else False, #alternates between true and false
                'rad_alt':int(random.normalvariate(10000,400))
             }
-            corcon_fakedata = {
+            fakedata['CORCON'] = {
                'utc_time':timestamp,
                'flight_num':flightnum,
                'di_temp':int(23000 + (1204 * math.sin(timestamp/3))),
@@ -37,7 +46,7 @@ while 1:
                'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
                'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3)))
             }
-            uppbbr_fakedata = {
+            fakedata['UPPBBR'] = {
                'utc_time':timestamp,
                'flight_num':flightnum,
                'radiometer_1_sig':int(random.normalvariate(5000,100)),
@@ -46,7 +55,7 @@ while 1:
                'radiometer_3_sig':int(random.normalvariate(50000,10000)),
                'radiometer_3_zero':int(random.normalvariate(50000,10000))
             }
-            gindat_fakedata = {
+            fakedata['GINDAT'] = {
                'utc_time':timestamp,
                'flight_num':flightnum,
                'latitude_gin':(52.07 + 10*math.sin(math.radians(timestamp*3))), #A circle centred on Cranfield
@@ -59,27 +68,14 @@ while 1:
                'velocity_down_gin':int(6 * math.cos(timestamp*3)),
                'altitude_gin':int(1000 + (50 * math.sin(timestamp/4))),  #average 10kft
             }
-            aerack_fakedata = {
+            fakedata['AERACK'] = {
                'utc_time':timestamp,
                'flight_num':flightnum
             }
-            lowbbr_fakedata = {
+            fakedata['LOWBBR'] = {
                'utc_time':timestamp,
                'flight_num':flightnum
             }
-            time.sleep(0.16)
-            dataProtocols.add_data(cursor, prtaft_fakedata, 'prtaft01')
-            time.sleep(0.17)
-            dataProtocols.add_data(cursor, corcon_fakedata, 'corcon01')
-            time.sleep(0.17)
-            dataProtocols.add_data(cursor, gindat_fakedata, 'gindat01')
-            time.sleep(0.17)
-            dataProtocols.add_data(cursor, uppbbr_fakedata, 'uppbbr01')
-            time.sleep(0.16)
-            dataProtocols.add_data(cursor, lowbbr_fakedata, 'lowbbr01')
-            time.sleep(0.17)
-            dataProtocols.add_data(cursor, aerack_fakedata, 'aerack01')
-            
-            #cursor.execute('INSERT INTO mergeddata (' + ", ".join(fakedata.keys()) + ') VALUES (' + ", ".join(['%s'] * len(fakedata)) + ')', fakedata.values()) 
-            #conn.commit()
-
+            for DLU in args.DLU:
+               time.sleep(random.gauss(0.15,0.03)) #makes "random" gaps between data
+               dataProtocols.add_data(cursor, fakedata[DLU], DLU +'01')
