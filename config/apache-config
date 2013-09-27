@@ -2,6 +2,7 @@
 	ServerAdmin webmaster@localhost
 	ServerName septic
 	ServerAlias fish
+   ServerAlias decades-test
 
 	DocumentRoot /usr/local/lib/decades/web
 	<Directory />
@@ -25,8 +26,8 @@
 		allow from all
 	</Directory>
 
-	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
-	<Directory "/usr/lib/cgi-bin">
+	WSGIScriptAlias /live/ /home/eardkdw/work/decades-rt/live/
+	<Directory "/home/eardkdw/work/decades-rt/live">
 		AllowOverride None
 		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
 		Order allow,deny
