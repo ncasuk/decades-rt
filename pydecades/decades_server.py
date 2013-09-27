@@ -131,25 +131,25 @@ class DecadesProtocol(basic.LineReceiver):
 		      statusdata['flight_number'][0][3]
          ))
       except IndexError:
-         '''This is probably a data shortage, so try again on minimal PRTAFT-only stuff'''
-         log.msg('Data shortage, retrying with PRTAFT-only')
-         statusdata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','flight_number','pressure_height_kft','static_pressure'], '=id','ORDER BY id DESC LIMIT 1')
+         '''This is probably a data shortage, so try again on minimal PRTAFT/GINDAT-only stuff'''
+         log.msg('Data shortage, retrying with PRTAFT/GINDAT-only')
+         statusdata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
          (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
          self.sendLine(struct.pack(self.status_struct_fmt,
 		      1,
 		      self.derindex,
 		      dercount,
 		      statusdata['time_since_midnight'],
-            0.0,
+		      statusdata['gin_heading'],
 		      statusdata['static_pressure'],
 		      statusdata['pressure_height_kft'],
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
+            float('NaN'),
+            float('NaN'),
+            float('NaN'),
+            float('NaN'),
+            float('NaN'),
+		      statusdata['gin_latitude'],
+		      statusdata['gin_longitude'],
 		      statusdata['flight_number'][0][0],
 		      statusdata['flight_number'][0][1],
 		      statusdata['flight_number'][0][2],
