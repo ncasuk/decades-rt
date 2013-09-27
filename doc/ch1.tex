@@ -17,15 +17,19 @@ Locate the decades-listener process, and kill it:
 \texttt{ \$ sudo kill `sudo cat /var/run/decades-listener.pid`}
 
 \subsection{Start the database simulator}
-Change directory to the decades pylib dir:
+Change directory to the decades dir:
 
-\texttt{ \$ cd /usr/local/lib/decades/pylib/}
+\texttt{ \$ cd /usr/local/lib/decades}
 
 Start the database simulator:
 
-\texttt{ \$ ./database-simulator.py }
+\texttt{ \$ ./pylib/database-simulator.py }
 
-This replaces the UDP Listener element with simulated data.
+This replaces the UDP Listener element with simulated data. You can also limit the number of DLUs simulated. Run:
+
+\texttt{ \$ ./pylib/database-simulator.py --help }
+
+for information.
 
 \subsection{Run clients}
 On a machine connected to same network as the tanks, go to
