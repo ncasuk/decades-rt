@@ -119,6 +119,10 @@ def clean():
    local('find . -maxdepth 1 -name \*.changes -exec rm {} \;')
    local(' rm -rf decades-20[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
 
+def docs():
+   with lcd('doc'):
+      local('make %(prj_name)s-manual.pdf' % env)
+
 def Plot_jar():
    '''Creates the JAR file for the display applicaton'''
    with lcd('Horace/web/plot/plot'):
