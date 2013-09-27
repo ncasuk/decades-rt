@@ -3,6 +3,8 @@ import rt_data
 from datetime import datetime
 import time
 
+from twisted.python import log
+
 class derived(rt_data.rt_data):
     """ A collection of the processing routines for realtime in flight data """
     def pressure_height_feet(self,data):
@@ -867,14 +869,14 @@ C ST    - Corrected Surface Temperature   (deg C)
             return dummy - unixtime_at_midnight #should be NaN'''
 
     def flight_number(self, data):
-      """ Returns the flight code, failing over from one DLU to another"""
+      """ Returns the flight code from the PRTAFT"""
       code = []
-      code.append(self.getdata('corcon01_flight_num',data))
+      #code.append(self.getdata('corcon01_flight_num',data))
       code.append(self.getdata('prtaft01_flight_num',data))
-      code.append(self.getdata('gindat01_flight_num',data)) 
-      code.append(self.getdata('aerack01_flight_num',data))
-      code.append(self.getdata('lowbbr01_flight_num',data)) 
-      code.append(self.getdata('uppbbr01_flight_num',data)) 
+      #code.append(self.getdata('gindat01_flight_num',data)) 
+      #code.append(self.getdata('aerack01_flight_num',data))
+      #code.append(self.getdata('lowbbr01_flight_num',data)) 
+      #code.append(self.getdata('uppbbr01_flight_num',data)) 
       if len(code[0]) ==1: #i.e. it isn't the dummy pass
          #filter out NaNs
          code = [x for x in code if isinstance(x[0], str)] 
