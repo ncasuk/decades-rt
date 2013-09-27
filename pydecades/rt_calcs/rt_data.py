@@ -92,7 +92,7 @@ class rt_data(object):
         if len(instruments) >0:
             not_null_part = ' AND %s' % '_utc_time IS NOT NULL AND '.join(instruments) + '_utc_time IS NOT NULL'
         #self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s AND ' + ' IS NOT NULL AND '.join(names) + ' IS NOT NULL ')% selection, )
-        log.msg(fieldname_part + ('FROM mergeddata WHERE id %s %s %s')% (selection, not_null_part, order) )
+        #log.msg(fieldname_part + ('FROM mergeddata WHERE id %s %s %s')% (selection, not_null_part, order) )
         self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s %s %s')% (selection, not_null_part, order) )
         ans={}
         data={}

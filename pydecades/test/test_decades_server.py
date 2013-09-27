@@ -1,5 +1,5 @@
-from pylib.decades_server import DecadesFactory, DecadesProtocol
-from pylib.database import get_database
+from pydecades.decades_server import DecadesFactory, DecadesProtocol
+from pydecades.database import get_database
 from twisted.trial import unittest
 from twisted.test import proto_helpers
 import os, struct, exceptions
@@ -9,7 +9,7 @@ from ConfigParser import SafeConfigParser
 
 class DecadesProtocolTestCase(unittest.TestCase):
    def setUp(self):
-      factory = DecadesFactory(get_database(), "../pylib/rt_calcs/HOR_CALIB.DAT")
+      factory = DecadesFactory(get_database(), "../pydecades/rt_calcs/HOR_CALIB.DAT")
       self.proto = factory.buildProtocol('128.0.0.1')
 
    def test_stat(self):
@@ -41,7 +41,7 @@ def test_parameters(param_id, function):
 
 #create one test function per Parameter entry in decades.ini
 parser = SafeConfigParser()
-config = parser.read(['/etc/decades/decades.ini','pylib/decades.ini'])
+config = parser.read(['/etc/decades/decades.ini','pydecades/decades.ini'])
 for (code, function) in parser.items('Parameters'):
    if code != "513": #flight_number is not called for plotting, and would fail as it doesn't return a float
       test_method = test_parameters(code, function)

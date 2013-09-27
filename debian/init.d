@@ -12,7 +12,7 @@
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 #don't change these here; change them in /etc/default/decades
-listenerpidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pylib/ listenerfile=/etc/decades/decades-listener.tac listenerlogfile=/var/log/decades/decades-listener.log
+listenerpidfile=/var/run/decades-listener.pid rundir=/usr/local/lib/decades/pydecades/ listenerfile=/etc/decades/decades-listener.tac listenerlogfile=/var/log/decades/decades-listener.log
 serverpidfile=/var/run/decades-server.pid rundir=/var/lib/decades/ serverfile=/etc/decades/decades-server.tac serverlogfile=/var/log/decades/decades-server.log
 tcplistenerpidfile=/var/run/decades-tcplistener.pid tcplistenerfile=/etc/decades/decades-tcp-listener.tac tcplistenerlogfile=/var/log/decades/decades-tcplistener.log
 serverbalancerpidfile=/var/run/decades-serverbalancer.pid serverbalancerfile=/etc/decades/decades-server-balancer.tac serverbalancerlogfile=/var/log/decades/decades-serverbalancer.log

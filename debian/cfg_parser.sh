@@ -23,6 +23,6 @@ cfg.parser ()
     ini[${#ini[*]} + 1]='}'    # add the last brace
     eval "$(echo "${ini[*]}")" # eval the result
 }
-#cfg.parser './pylib/decades.ini' DECADES_
+#cfg.parser './pydecades/decades.ini' DECADES_
 #cfg.section.Servers
 #seq $DECADES_slave_base_port $(($DECADES_slave_base_port+$DECADES_slaves-1))

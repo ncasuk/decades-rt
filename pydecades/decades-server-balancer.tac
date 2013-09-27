@@ -1,4 +1,4 @@
-# You can manually run this .tac file directly in the pylib directory:
+# You can manually run this .tac file directly in the pydecades directory:
 #    twistd --rundir=.. -ny decades-server-balancer.tac
 
 """
@@ -14,7 +14,7 @@ sys.path.append("/usr/local/lib/decades") #add deploy python dir to Python path
 import os
 from twisted.application import service, internet
 from twisted.web import static, server
-from pylib.decades_server_balancer import Balancer
+from pydecades.decades_server_balancer import Balancer
 
 from ConfigParser import SafeConfigParser
 

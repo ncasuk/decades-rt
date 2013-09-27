@@ -32,14 +32,14 @@ class DecadesProtocol(basic.LineReceiver):
    der = []
    status_struct_fmt = ">bhh11f4c" # big-endian, byte, short, short, 11 floats, 4 characters
    #para_request_fmt = ">ii" # big-endian, int (starttime), int (endtime), plus some number of parameters
-   def __init__(self, conn, calfile="pylib/rt_calcs/HOR_CALIB.DAT"):
+   def __init__(self, conn, calfile="pydecades/rt_calcs/HOR_CALIB.DAT"):
        '''Takes a database connection, and creates a NamedTuple cursor (allowing us to
          access the results by fieldname *or* index'''
        self.cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
        self.rtlib = rt_derive.derived(self.cursor,calfile) #class processing the cals & producing "real" values
        self.parano = {}
        self.parser = SafeConfigParser()
-       self.config = self.parser.read(['/etc/decades/decades.ini','pylib/decades.ini'])
+       self.config = self.parser.read(['/etc/decades/decades.ini','pydecades/decades.ini'])
        for (code, function) in self.parser.items('Parameters'):
          self.parano[int(code)] = function
          
@@ -134,7 +134,6 @@ class DecadesProtocol(basic.LineReceiver):
          '''This is probably a data shortage, so try again on minimal PRTAFT-only stuff'''
          log.msg('Data shortage, retrying with PRTAFT-only')
          statusdata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','flight_number','pressure_height_kft','static_pressure'], '=id','ORDER BY id DESC LIMIT 1')
-         log.msg(statusdata)
          (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
          self.sendLine(struct.pack(self.status_struct_fmt,
 		      1,
@@ -186,7 +185,7 @@ def main():# Listen for TCP:1500
                            database = "inflightdata")
    conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
-   reactor.listenTCP(1500, DecadesFactory(conn,"pylib/rt_calcs/HOR_CALIB.DAT"))
+   reactor.listenTCP(1500, DecadesFactory(conn,"pydecades/rt_calcs/HOR_CALIB.DAT"))
    reactor.run()
 
 if __name__ == '__main__':

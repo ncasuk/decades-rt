@@ -23,12 +23,12 @@ install-stamp: build-stamp
 	# Add here commands to install the package into debian/tmp.
 	mkdir -p debian/decades/etc/init.d
 	mkdir -p debian/decades/etc/default
-	cp pylib/decades-listener.tac debian/decades/etc/decades
-	cp pylib/decades-tcp-listener.tac debian/decades/etc/decades
-	cp pylib/decades-server.tac debian/decades/etc/decades
-	cp pylib/decades-server-balancer.tac debian/decades/etc/decades
-	cp pylib/decades-gin.tac debian/decades/etc/decades
-	cp pylib/decades.ini debian/decades/etc/decades
+	cp pydecades/decades-listener.tac debian/decades/etc/decades
+	cp pydecades/decades-tcp-listener.tac debian/decades/etc/decades
+	cp pydecades/decades-server.tac debian/decades/etc/decades
+	cp pydecades/decades-server-balancer.tac debian/decades/etc/decades
+	cp pydecades/decades-gin.tac debian/decades/etc/decades
+	cp pydecades/decades.ini debian/decades/etc/decades
 	cp debian/init.d debian/decades/etc/init.d/decades
 	cp debian/cronjob debian/decades/etc/cron.daily/decades
 	cp debian/default debian/decades/etc/default/decades
@@ -36,7 +36,7 @@ install-stamp: build-stamp
 	cp debian/README.Debian debian/decades/usr/share/doc/decades/
 	cp debian/cfg_parser.sh debian/decades/usr/local/bin
 	cp config/apache-config debian/decades/etc/apache2/sites-enabled/decades
-	cp -rp pylib debian/decades/usr/local/lib/decades/
+	cp -rp pydecades debian/decades/usr/local/lib/decades/
 	cp -rp Horace/web debian/decades/usr/local/lib/decades/
 	cp dataformats/*  debian/decades/opt/decades/dataformats/
 	touch debian/decades/usr/share/decades/package-installed

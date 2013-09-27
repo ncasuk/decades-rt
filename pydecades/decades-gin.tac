@@ -16,8 +16,8 @@ sys.path.append("/usr/local/lib/decades") #add deploy python dir to Python path
 import os
 from twisted.application import service, internet
 from twisted.web import static, server
-from pylib.decades_gin_forward import GINClientFactory
-from pylib.database import get_database
+from pydecades.decades_gin_forward import GINClientFactory
+from pydecades.database import get_database
 
 from ConfigParser import SafeConfigParser
 

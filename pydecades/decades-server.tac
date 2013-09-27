@@ -14,15 +14,15 @@ sys.path.append("/usr/local/lib/decades") #add deploy python dir to Python path
 import os
 from twisted.application import service, internet
 from twisted.web import static, server
-from pylib.decades_server import DecadesFactory
-from pylib.database import get_database
+from pydecades.decades_server import DecadesFactory
+from pydecades.database import get_database
 
 def getDecadesServerService():
     """
     Return a service suitable for creating an application object.
     """
     conn = get_database()
-    return internet.TCPServer(int(os.environ['DECADESPORT']), DecadesFactory(conn,'pylib/rt_calcs/HOR_CALIB.DAT'))
+    return internet.TCPServer(int(os.environ['DECADESPORT']), DecadesFactory(conn,'pydecades/rt_calcs/HOR_CALIB.DAT'))
 
 # this is the core part of any tac file, the creation of the root-level
 # application object
