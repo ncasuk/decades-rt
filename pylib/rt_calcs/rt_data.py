@@ -21,8 +21,8 @@ class rt_data(object):
         if(rawdata==None):
             rawdata={}
         for name in names:
-            #ans[name]=self.getdata(name,(rawdata,selection))
-            ans[name]=self.getdata(name,rawdata)
+            ans[name]=self.getdata(name,(rawdata,selection))
+            #ans[name]=self.getdata(name,rawdata)
         return ans
 
     def derive_data_alt(self,names,selection,order=" ORDER BY id"):
@@ -70,7 +70,7 @@ class rt_data(object):
                 return np.array([])
  
     def getdata_fromdatabase(self,name,selection):
-        """ Dummy routine to read one parameter from database"""
+        """ Reads one parameter from database"""
         fieldname_part = 'SELECT %s ' % name 
         self.database.execute(fieldname_part + 'FROM mergeddata WHERE id %s AND %s IS NOT NULL ORDER BY id' % (selection, name) )
         #print self.database.query
@@ -80,7 +80,7 @@ class rt_data(object):
         return np.array(data[name],dtype='float')
             
     def getbunchofdata_fromdatabase(self,names,selection,order=' ORDER BY id'):
-        """ Dummy routine to read several parameters from database"""
+        """ Reads several parameters from database"""
         fieldname_part = 'SELECT %s ' % ', '.join(names)
         #gets a set of the "names" list's entry's first 8 characters
         #sets are unique so removes duplicates
