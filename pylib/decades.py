@@ -24,7 +24,7 @@ class DecadesDataProtocols():
    def available(self):
       return self.protocols.keys()
 
-   def create_table(self, protocol_name, cursor, suffix='test_'):
+   def create_table(self, protocol_name, cursor, suffix='_test'):
       #returns a suitable (Postgres)SQL CREATE TABLE command for a named protocol
       tablename = (protocol_name.lower() + suffix)
       s = 'CREATE TABLE %s (' % tablename
