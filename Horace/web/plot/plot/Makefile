@@ -30,7 +30,7 @@ JAVADOC         = javadoc
 JAR             = fastjar
 
 # Build flags
-JAVAC_FLAGS     = 
+JAVAC_FLAGS     = -Xlint
 JAVADOC_FLAGS   = -version -author
 JAR_FLAGS       = cvf0
 JIKES_DEP_FLAG	= +M
