@@ -106,58 +106,80 @@ class DecadesProtocol(basic.LineReceiver):
       #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
       #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), Wind speed, ms-1, 
       #log.msg(repr(self.der))
-      statusdata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','gin_heading','static_pressure','pressure_height_kft','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle','gin_latitude','gin_longitude','flight_number'], '=id','ORDER BY id DESC LIMIT 1')
+      prtgindata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
+      #get corcon separately so gin/prt stuff is independant of it.
+      corcondata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '=id','ORDER BY id DESC LIMIT 1')
       #(self.derindex, dercount, gindat01_heading_gin) = self.cursor.fetchone()
-      try: 
-         (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
-         self.sendLine(struct.pack(self.status_struct_fmt,
+      if(corcondata['time_since_midnight'] and abs(corcondata['derindex'] - prtgindata['derindex']) < 10):
+         (self.derindex, dercount) = (prtgindata['derindex'], prtgindata['derindex'])
+         outline = (struct.pack(self.status_struct_fmt,
 		      1,
 		      self.derindex,
 		      dercount,
-		      statusdata['time_since_midnight'],
-		      statusdata['gin_heading'],
-		      statusdata['static_pressure'],
-		      statusdata['pressure_height_kft'],
-		      statusdata['true_air_speed'],
-		      float(self.stat_output_format.format(statusdata['deiced_true_air_temp_c'][0])),
-		      float(self.stat_output_format.format(statusdata['dew_point'][0])),
-		      statusdata['gin_wind_speed'],
-		      statusdata['wind_angle'],
-		      statusdata['gin_latitude'],
-		      statusdata['gin_longitude'],
-		      statusdata['flight_number'][0][0],
-		      statusdata['flight_number'][0][1],
-		      statusdata['flight_number'][0][2],
-		      statusdata['flight_number'][0][3]
+		      prtgindata['time_since_midnight'],
+		      prtgindata['gin_heading'],
+		      prtgindata['static_pressure'],
+		      prtgindata['pressure_height_kft'],
+		      corcondata['true_air_speed'],
+		      float(self.stat_output_format.format(corcondata['deiced_true_air_temp_c'][0])),
+		      float(self.stat_output_format.format(corcondata['dew_point'][0])),
+		      corcondata['gin_wind_speed'],
+		      corcondata['wind_angle'],
+		      prtgindata['gin_latitude'],
+		      prtgindata['gin_longitude'],
+		      prtgindata['flight_number'][0][0],
+		      prtgindata['flight_number'][0][1],
+		      prtgindata['flight_number'][0][2],
+		      prtgindata['flight_number'][0][3]
          ))
-      except IndexError:
-         '''This is probably a data shortage, so try again on minimal PRTAFT/GINDAT-only stuff'''
+      elif (prtgindata['time_since_midnight']):
+         '''This is probably a data shortage, so only return minimal PRTAFT/GINDAT-only stuff'''
          log.msg('Data shortage, retrying with PRTAFT/GINDAT-only')
-         statusdata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
-         (self.derindex, dercount) = (statusdata['derindex'], statusdata['derindex'])
-         self.sendLine(struct.pack(self.status_struct_fmt,
+         (self.derindex, dercount) = (prtgindata['derindex'], prtgindata['derindex'])
+         outline = (struct.pack(self.status_struct_fmt,
 		      1,
 		      self.derindex,
 		      dercount,
-		      statusdata['time_since_midnight'],
-		      statusdata['gin_heading'],
-		      statusdata['static_pressure'],
-		      statusdata['pressure_height_kft'],
+		      prtgindata['time_since_midnight'],
+		      prtgindata['gin_heading'],
+		      prtgindata['static_pressure'],
+		      prtgindata['pressure_height_kft'],
             float('NaN'),
             float('NaN'),
             float('NaN'),
             float('NaN'),
             float('NaN'),
-		      statusdata['gin_latitude'],
-		      statusdata['gin_longitude'],
-		      statusdata['flight_number'][0][0],
-		      statusdata['flight_number'][0][1],
-		      statusdata['flight_number'][0][2],
-		      statusdata['flight_number'][0][3]
+		      prtgindata['gin_latitude'],
+		      prtgindata['gin_longitude'],
+		      prtgindata['flight_number'][0][0],
+		      prtgindata['flight_number'][0][1],
+		      prtgindata['flight_number'][0][2],
+		      prtgindata['flight_number'][0][3]
+         ))
+      else:
+         log.msg('No data, send null response')
+         outline = (struct.pack(self.status_struct_fmt,
+		      1,
+		      self.derindex,
+		      self.derindex,
+		      float('NaN'),
+		      float('NaN'),
+		      float('NaN'),
+		      float('NaN'),
+		      float('NaN'),
+		      float('NaN'),
+		      float('NaN'),
+		      float('NaN'),
+		      float('NaN'),
+		      float('NaN'),
+		      float('NaN'),
+		      '#',
+		      '#',
+		      '#',
+		      '#',
          ))
          
-          
-         
+      self.sendLine(outline)    
       #log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
    
    def time_seconds_past_midnight(self):
