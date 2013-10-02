@@ -40,7 +40,7 @@ install-stamp: build-stamp
 	#Files needed to be web-visible
 	mkdir -p debian/decades/var/www/decades/plot
 	mkdir -p debian/decades/var/www/decades-live
-	cp Horace/web/plot/Plot.jar Horace/web/plot/plot.html Horace/web/plot/Parano.txt debian/decades/var/www/decades/plot/
+	cp Horace/web/plot/Plot.jar Horace/web/plot/plot.html Horace/web/plot/Parano.txt Horace/web/plot/map_data.dat Horace/web/plot/overlay.txt debian/decades/var/www/decades/plot/
 	cp -rp live/* debian/decades/var/www/decades-live/
 
 	cp dataformats/*  debian/decades/opt/decades/dataformats/
