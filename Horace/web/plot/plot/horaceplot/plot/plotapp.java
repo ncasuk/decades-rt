@@ -289,10 +289,10 @@ public void update(Graphics g)
         gr.setFont(getfon(factor,Font.BOLD));
         gr.drawString(hdr.toString(),200/factor,200/factor);
         hdr=new StringBuffer().append("Heading ");
-        hdr.append((int)HC.status[1]).append(" deg  Speed ");
-        hdr.append((int)HC.status[4]).append(" knots  Height ");
-        hdr.append(HC.status[3]).append("kft   Press ");
-        hdr.append((int)HC.status[2]).append("mb");
+        hdr.append(String.format("%.0f",HC.status[1])).append(" deg  Speed ");
+        hdr.append(String.format("%.0f",HC.status[4])).append(" knots  Height ");
+        hdr.append(String.format("%.0f",HC.status[3])).append("kft   Press ");
+        hdr.append(String.format("%.0f",HC.status[2])).append("mb");
         gr.setFont(getfon(factor,Font.PLAIN));
         gr.drawString(hdr.toString(),200/factor,400/factor);
         Properties properties = System.getProperties();
@@ -314,13 +314,12 @@ public void update(Graphics g)
 		hdr.append("Lat ").append(LatLong(HC.status[9],"NS"));
 		hdr.append("Long ").append(LatLong(HC.status[10],"EW"));
 		hdr.append("  Wind ");
-        hdr.append((int)HC.status[7]).append(" ms-1/ ");
-        hdr.append((int)HC.status[8]).append(" deg");
+        hdr.append(String.format("%.1f",HC.status[7])).append(" ms-1/ ");
+        hdr.append(String.format("%.0f",HC.status[8])).append(" deg");
         gr.drawString(hdr.toString(),200/factor,600/factor);
         hdr=new StringBuffer().append("Temp ");
         hdr.append(HC.status[5]).append("C  Dewpoint ");
-        hdr.append(HC.status[6]).append("C Encoding: ");
-        hdr.append(properties.getProperty("file.encoding"));
+        hdr.append(HC.status[6]).append("C");
         gr.drawString(hdr.toString(),200/factor,800/factor);
         if(bufferim!=null)g.drawImage(bufferim,0,0,this);
         }

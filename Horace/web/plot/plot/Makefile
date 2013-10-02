@@ -27,7 +27,7 @@ MODE_DIRS       = 2755
 # Build programs
 JAVAC           = javac -source 1.6 -target 1.6 
 JAVADOC         = javadoc
-JAR             = jar
+JAR             = fastjar
 
 # Build flags
 JAVAC_FLAGS     = 
