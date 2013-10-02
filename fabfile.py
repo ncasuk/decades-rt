@@ -128,9 +128,5 @@ def Plot_jar():
    with lcd('Horace/web/plot/plot'):
       local('make jar && cp Plot.jar ..') 
    with lcd('Horace/web/plot'):
-      local('jarsigner Plot.jar fish2')
-      local('jarsigner choices.jar fish2')
-      local('jarsigner Plot.jar septic')
-      local('jarsigner choices.jar septic')
-      local('jarsigner Plot.jar test')
-      local('jarsigner choices.jar test')
+      local('jarsigner Plot.jar fish2 septic test')
+      local('jarsigner choices.jar fish2 septic test')
