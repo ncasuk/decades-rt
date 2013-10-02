@@ -29,6 +29,7 @@ public class mapplot extends zoomplot  implements java.awt.event.ItemListener
     Vector areas;
     Vector places;
     String mapdata;
+    private static final long serialVersionUID = 8561575;
     float[] maprange=new float[4];
 //    float[][] planeshape={{0,8},{1,5},{4,3},
 //                          {1,3},{1,1},{2,0},
@@ -295,10 +296,18 @@ public class mapplot extends zoomplot  implements java.awt.event.ItemListener
             DataInputStream mapdat=new DataInputStream(mapurl.openStream());
             boolean reading=true;
             try{
+					 /*These ones are ignored!*/
                 maprange[0]=(float)mapdat.readShort();
                 maprange[1]=(float)mapdat.readShort();
                 maprange[2]=(float)mapdat.readShort();
                 maprange[3]=(float)mapdat.readShort();
+					 /*Just start with the whole globe*/
+					 /*ranges are 100xlat, and 100xlong
+						0=Lonmin, 1=latmin, 2=Lonmax, 3=latmax */
+                maprange[0]=(float)-18000;
+                maprange[1]=(float)-9000;
+                maprange[2]=(float)18000;
+                maprange[3]=(float)9000;
             }catch(IOException ioe){reading=false;}
             while(reading){
             try{
