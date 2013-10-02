@@ -10,7 +10,7 @@ import horaceplot.stringutl;
  * Applet form for choosing parameters to plot
  * 
  * @author Dave Tiddeman
- * @version 1
+ * @version 1.1
  */
 
 public class choices extends Applet
@@ -21,6 +21,7 @@ public class choices extends Applet
      * 
      * @see paralist
      */
+    private static final long serialVersionUID = 4517345;
     public paralist pl;
     public int minpara=1;
     public int maxpara,pni;
@@ -40,8 +41,8 @@ public class choices extends Applet
 	java.awt.Label[] label=new Label[maxp+1];
 	java.awt.Button[] delbutton=new Button[maxp];
 //	java.awt.Button addbutton;
-	java.awt.Color backgr=new Color((int)24,(int)111,(int)77);
-	java.awt.Color foregr=new Color((int)228,(int)242,(int)59);
+	java.awt.Color backgr=new Color(24,111,77);
+	java.awt.Color foregr=new Color(228,242,59);
 
 	/**
 	 * Read in Parameter info and make form
