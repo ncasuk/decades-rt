@@ -37,7 +37,11 @@ install-stamp: build-stamp
 	cp debian/cfg_parser.sh debian/decades/usr/local/bin
 	cp config/apache-config debian/decades/etc/apache2/sites-enabled/decades
 	cp -rp pydecades debian/decades/usr/local/lib/decades/
-	cp -rp Horace/web debian/decades/usr/local/lib/decades/
+	#Files needed to be web-visible
+	mkdir -p debian/decades/var/www/decades/plot
+	cp Horace/web/plot/Plot.jar Horace/web/plot/plot.html Horace/web/plot/Parano.txt debian/decades/var/www/decades/plot/
+	cp -rp live Horace/web/plot/plot.html debian/decades/var/www/decades-live/
+
 	cp dataformats/*  debian/decades/opt/decades/dataformats/
 	touch debian/decades/usr/share/decades/package-installed
 	touch install-stamp

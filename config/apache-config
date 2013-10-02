@@ -4,18 +4,12 @@
 	ServerAlias fish
    ServerAlias decades-test
 
-	DocumentRoot /usr/local/lib/decades/web
+	DocumentRoot /var/www/decades/
 	<Directory />
 		Options FollowSymLinks
 		AllowOverride None
 	</Directory>
-	<Directory /var/www/>
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride None
-		Order allow,deny
-		allow from all
-	</Directory>
-	<Directory /usr/local/lib/decades/web>
+	<Directory /var/www/decades/>
 		Options Indexes FollowSymLinks MultiViews ExecCGI
       #CheckSpelling On
 		AddHandler cgi-script .cgi
@@ -26,8 +20,8 @@
 		allow from all
 	</Directory>
 
-	WSGIScriptAlias /live/ /home/eardkdw/work/decades-rt/live/
-	<Directory "/home/eardkdw/work/decades-rt/live">
+	WSGIScriptAlias /live/ /var/www/decades-live/
+	<Directory "/var/www/decades-live/">
 		AllowOverride None
 		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
 		Order allow,deny
