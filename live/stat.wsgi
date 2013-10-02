@@ -70,18 +70,18 @@ div#statblock p{
 
  
    #get stat data (taken directly from pydecades/decades_server.py) 
-   prtgindata = rtlib.derive_data_alt(['utc_time','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
+   prtgindata = rtlib.derive_data_alt(['time_since_midnight','utc_time','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
    #get corcon separately so gin/prt stuff is independant of it.
-   corcondata = rtlib.derive_data_alt(['utc_time','derindex','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '=id','ORDER BY id DESC LIMIT 1')
+   corcondata = rtlib.derive_data_alt(['time_since_midnight','utc_time','derindex','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '=id','ORDER BY id DESC LIMIT 1')
 
    #open output div 
    output = '<div id="statblock">' 
-   if(corcondata['utc_time'] and abs(corcondata['derindex'] - prtgindata['derindex']) < 10):
+   if(corcondata['time_since_midnight'] and abs(corcondata['derindex'] - prtgindata['derindex']) < 10):
       output = output + '<p>Flight %s %s</p>' % (prtgindata['flight_number'][0],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
       output = output + ('<p>Heading %.0f° Speed %.0fkts Height %.0fkft Pressure %.0fmb</p>' % (prtgindata['gin_heading'],corcondata['true_air_speed'], prtgindata['pressure_height_kft'], prtgindata['static_pressure']))
       output = output + ('<p>Lat %.0f°%.0f\'%.2f" Long %.0f°%.0f\'%.2f" Wind %.1fms¯¹ / %.0f°</p>' % tuple(deg_to_dms(prtgindata['gin_latitude']) + deg_to_dms(prtgindata['gin_longitude']) + [corcondata['gin_wind_speed'],corcondata['wind_angle']] ))
       output = output + ('<p>Temp %.1f°C Dewpoint %.1f°C</p>' % (corcondata['deiced_true_air_temp_c'],corcondata['dew_point']))
-   elif (prtgindata['utc_time']):
+   elif (prtgindata['time_since_midnight']):
       output = '<p>Flight %s %s</p>' % (prtgindata['flight_number'][0],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
       output = output + ('<p>Heading %.0f° Speed %.0fkts Height %.0fkft Pressure %.0fmb</p>' % (prtgindata['gin_heading'],float('NaN'), prtgindata['pressure_height_kft'], prtgindata['static_pressure']))
       output = output + ('<p>Lat %.0f°%.0f\'%.2f" Long %.0f°%.0f\'%.2f" Wind %.1fms¯¹ / %.0f°</p>' % tuple(deg_to_dms(prtgindata['gin_latitude']) + deg_to_dms(prtgindata['gin_longitude']) + [float('NaN'),float('NaN')] ))

@@ -847,8 +847,8 @@ C ST    - Corrected Surface Temperature   (deg C)
         c=self.cals['CAL154']
         return c[0]+c[1]*raw 
 
-    def utc_time(self,data):
-        return self.getdata('utc_time',data)
+    #def utc_time(self,data):
+    #    return self.getdata('utc_time',data)
 
     def time_since_midnight(self,data):
         """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
