@@ -66,7 +66,7 @@ public class plotapp extends Applet implements java.awt.event.MouseListener
                    try{
                      String s=this.getCodeBase().toString();
                      mapdata=s.substring
-                       (0,s.lastIndexOf("/"))+"/map_data.dat";
+                       (0,s.lastIndexOf("/"))+"/map_data.dat.gz";
                    }catch(Exception e){}
                 }
                 System.out.println(mapdata);

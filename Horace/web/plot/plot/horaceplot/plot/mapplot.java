@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.*;
 import java.io.*;
 import java.net.*;
+import java.util.zip.GZIPInputStream;
 /**
  * Reads in map data and draws track plot.
  * 
@@ -293,7 +294,7 @@ public class mapplot extends zoomplot  implements java.awt.event.ItemListener
         bitsofLand=new Vector();  
         try{
             URL mapurl=new URL(mapdata);
-            DataInputStream mapdat=new DataInputStream(mapurl.openStream());
+            DataInputStream mapdat=new DataInputStream(new GZIPInputStream(mapurl.openStream()));
             boolean reading=true;
             try{
 					 /*These ones are ignored!*/
