@@ -23,37 +23,37 @@ public class tphiplot extends zoomplot
      * Constant
      */
     
-    private final double L=(double)2.5e6;
+    private final double L=2.5e6;
 
     /**
      * Constant
      */
-    private final double RV=(double)461.0;
+    private final double RV=461.0;
 
     /**
      * Constant
      */
-    private final double RD=(double)287.0;
+    private final double RD=287.0;
 
     /**
      * Constant
      */
-    private final double CP=(double)1.01e3;
+    private final double CP=1.01e3;
 
     /**
      * Constant
      */
-    private final double KELV=(double)273.15;
+    private final double KELV=273.15;
 
     /**
      * Constant
      */
-    private final double K=(double)0.286;
+    private final double K=0.286;
 
     /**
      * Constant
      */
-    private final double MA=(double)300.0;
+    private final double MA=300.0;
 
     /**
      * Constant
@@ -63,10 +63,10 @@ public class tphiplot extends zoomplot
     5.0,6.0,7.0,8.0, 9.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0,    
      24.0, 28.0, 32.0, 36.0, 40.0, 44.0, 48.0, 52.0, 56.0, 60.0, 68.0, 
      80.0};
-     private double TempLine=(double)10.0;
-     private double SALRLine=(double)1.0;
-     private double ThetaLine=(double)10.0;
-     private double PressLine=(double)50.0;
+     private double TempLine=10.0;
+     private double SALRLine=1.0;
+     private double ThetaLine=10.0;
+     private double PressLine=50.0;
      private final char ctheta=952;
      private final char cdegree=176;
 
