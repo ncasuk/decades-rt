@@ -230,10 +230,10 @@ public abstract class zoomplot extends java.awt.Canvas
           
           
     public void drawCircle(Graphics g,float x,float y,float r){
-        float topx=(float)(x-r);
-        float topy=(float)(y+r);
-        float botx=(float)(x+r);
-        float boty=(float)(y-r);
+        float topx=(x-r);
+        float topy=(y+r);
+        float botx=(x+r);
+        float boty=(y-r);
         Dimension d1=convert(topx,topy);
         Dimension d2=convert(botx,boty);
         d2.width-=d1.width;
