@@ -9,7 +9,7 @@ import java.awt.*;
  * A list of parameters
  * 
  * @author Dave Tiddeman
- * @version 1
+ * @version 1.1
  */
 
 public class paralist
