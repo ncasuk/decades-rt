@@ -10,7 +10,7 @@ import horaceplot.stringutl;
  * Applet form for choosing parameters to plot
  * 
  * @author Dave Tiddeman
- * @version 1.1
+ * @version 1.1t
  */
 
 public class choices extends Applet
@@ -21,7 +21,7 @@ public class choices extends Applet
      * 
      * @see paralist
      */
-    private static final long serialVersionUID = 4517345;
+    private static final long serialVersionUID = 11L;
     public paralist pl;
     public int minpara=1;
     public int maxpara,pni;

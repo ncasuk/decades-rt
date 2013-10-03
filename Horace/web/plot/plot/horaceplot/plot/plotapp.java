@@ -16,6 +16,7 @@ import java.util.Properties;
 
 public class plotapp extends Applet implements java.awt.event.MouseListener
 {
+ private static final long serialVersionUID = 11L;
  String plottype,sstart,sstop;
  int[] paras,cols,syms;
  Dimension d;
@@ -33,7 +34,7 @@ public class plotapp extends Applet implements java.awt.event.MouseListener
 // java.awt.Color backg=new Color((int)12,(int)33,(int)116);
 // java.awt.Color foreg=new Color((int)228,(int)242,(int)59);
  java.awt.Color backg=Color.white;
- java.awt.Color foreg=new Color((int)12,(int)33,(int)116);
+ java.awt.Color foreg=new Color(12,33,116);
 // Image logoImage,logoImage2;
  Image offScreenBuffer;
  public plotconn HC;
@@ -174,17 +175,17 @@ public class plotapp extends Applet implements java.awt.event.MouseListener
 	}	
 
         
- 	public float getxmax(){return (float)plot1.xmax; }
-	public float getxmin(){return (float)plot1.xmin; }
-	public float getymax(){return (float)plot1.ymax; }
-	public float getymin(){return (float)plot1.ymin; }
+ 	public float getxmax(){return plot1.xmax; }
+	public float getxmin(){return plot1.xmin; }
+	public float getymax(){return plot1.ymax; }
+	public float getymin(){return plot1.ymin; }
 
     public String getzooms(){
         StringBuffer sb=new StringBuffer();
-        sb.append((float)plot1.xmax).append(',');
-        sb.append((float)plot1.xmin).append(',');
-        sb.append((float)plot1.ymax).append(',');
-        sb.append((float)plot1.ymin);
+        sb.append(plot1.xmax).append(',');
+        sb.append(plot1.xmin).append(',');
+        sb.append(plot1.ymax).append(',');
+        sb.append(plot1.ymin);
         return sb.toString();
     }
     
