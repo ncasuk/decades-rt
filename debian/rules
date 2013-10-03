@@ -29,6 +29,7 @@ install-stamp: build-stamp
 	cp pydecades/decades-server-balancer.tac debian/decades/etc/decades
 	cp pydecades/decades-gin.tac debian/decades/etc/decades
 	cp pydecades/decades.ini debian/decades/etc/decades
+	cp config/Display_Parameters_ver1.1.csv debian/decades/etc/decades
 	cp debian/init.d debian/decades/etc/init.d/decades
 	cp debian/cronjob debian/decades/etc/cron.daily/decades
 	cp debian/default debian/decades/etc/default/decades

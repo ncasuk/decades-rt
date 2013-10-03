@@ -21,6 +21,7 @@
 	</Directory>
 
 	WSGIScriptAlias /live/ /var/www/decades-live/
+   WSGIScriptAlias /plot/Parano.txt /var/www/decades-live/parano.wsgi
 	<Directory "/var/www/decades-live/">
 		AllowOverride None
 		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
