@@ -20,14 +20,14 @@ public class paralist
      * 
      * @see para
      */
-    public Vector Paras;
+    public Vector<Object> Paras;
 
 	/**
 	 * Creates a new list
 	 * 
 	 */
     public paralist(){
-        Paras=new Vector();
+        Paras=new Vector<Object>();
     }
 	/**
 	 * Reads in a list of parameters from a file
@@ -72,7 +72,7 @@ public class paralist
  */
     public void Addparas(URL textfile,int ind0,
     int ind1,int ind2,int ind3,int ind4,int ind5,String unit){
-        if(Paras==null)Paras=new Vector();
+        if(Paras==null)Paras=new Vector<Object>();
             String Line;
             try{
                 System.out.println(textfile);
@@ -119,7 +119,7 @@ public class paralist
 
 public void makechoice(Choice c){
      para f;
-     for (Enumeration e = Paras.elements() ; e.hasMoreElements() ;) {
+     for (Enumeration<Object> e = Paras.elements() ; e.hasMoreElements() ;) {
         f=(para)e.nextElement();
         c.add(f.toString());
      }
@@ -130,7 +130,7 @@ public void makechoice(Choice c){
  */
 public void makelist(java.awt.List c){
      para f;
-     for (Enumeration e = Paras.elements() ; e.hasMoreElements() ;) {
+     for (Enumeration<Object> e = Paras.elements() ; e.hasMoreElements() ;) {
         f=(para)e.nextElement();
         c.add(f.toString());
      }
@@ -221,7 +221,7 @@ public int getIndex(int Pnum){
     int index=0;
     int i=0;
     para f;
-     for (Enumeration e = Paras.elements() ; e.hasMoreElements() ;) {
+     for (Enumeration<Object> e = Paras.elements() ; e.hasMoreElements() ;) {
         f=(para)e.nextElement();
         if(f.number==Pnum)index=i;
         i++;
