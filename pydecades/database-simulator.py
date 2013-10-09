@@ -5,7 +5,7 @@ import argparse
 #Parse arguments
 parser = argparse.ArgumentParser(description='Data simulator for DECADES testing. It defaults to simulating all the DLUs, but you can limit it to a subset using the --DLU option.')
 
-DLUs_list  = ['CORCON', 'GINDAT', 'PRTAFT', 'UPPBBR', 'LOWBBR', 'AERACK']
+DLUs_list  = ['CORCON', 'GINDAT', 'PRTAFT', 'UPPBBR', 'LOWBBR', 'AERACK','TWCDAT']
 
 #allows choice of DLUs on the command line, defaults to all of them
 parser.add_argument('--DLU','--dlu', nargs='*', choices=DLUs_list, default=DLUs_list, help="Which DLU(s) you wish to simulate. (e.g. CORCON, GINDAT) Defaults to all of them.", metavar='DLUNAME')
@@ -58,8 +58,10 @@ while 1:
             fakedata['GINDAT'] = {
                'utc_time':timestamp,
                'flight_num':flightnum,
-               'latitude_gin':(52.07 + 10*math.sin(math.radians(timestamp*3))), #A circle centred on Cranfield
-               'longitude_gin':(-0.61 + 10*math.cos(math.radians(timestamp*3))),
+               'latitude_gin':(13.47 + 5*math.sin(math.radians(timestamp*3))), #A circle centred on capital of Guam
+               #'latitude_gin':(52.07 + 5*math.sin(math.radians(timestamp*3))), #A circle centred on capital of Cranfield
+               'longitude_gin':(144.75 + 10*math.cos(math.radians(timestamp*3))),
+               #'longitude_gin':(-0.61 + 10*math.cos(math.radians(timestamp*3))),
                'heading_gin':(360-((timestamp*3) % 360)),
                'roll_gin':int(random.normalvariate(0,5)),
                'pitch_gin':int(random.normalvariate(0,5)),
@@ -75,6 +77,11 @@ while 1:
             fakedata['LOWBBR'] = {
                'utc_time':timestamp,
                'flight_num':flightnum
+            }
+            fakedata['TWCDAT'] = {
+               'utc_time':timestamp,
+               'flight_num':flightnum,
+               'twc_detector':random.normalvariate(120,50)
             }
             for DLU in args.DLU:
                time.sleep(random.gauss(0.15,0.03)) #makes "random" gaps between data
