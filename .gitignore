@@ -25,4 +25,5 @@ doc/*.d
 doc/*.run
 doc/*.fls
 doc/*.toc
+doc/*.temp
 doc/*.cookie
