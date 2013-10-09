@@ -305,10 +305,10 @@ public class mapplot extends zoomplot  implements java.awt.event.ItemListener
 					 /*Just start with the whole globe*/
 					 /*ranges are 100xlat, and 100xlong
 						0=Lonmin, 1=latmin, 2=Lonmax, 3=latmax */
-                maprange[0]=(float)-18000;
+                /*maprange[0]=(float)-18000;
                 maprange[1]=(float)-9000;
                 maprange[2]=(float)18000;
-                maprange[3]=(float)9000;
+                maprange[3]=(float)9000;*/
             }catch(IOException ioe){reading=false;}
             while(reading){
             try{
