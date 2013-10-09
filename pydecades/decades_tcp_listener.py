@@ -30,7 +30,7 @@ class DecadesTCPListener(Protocol):
          try: #try to create file 
             os.umask(0)
             dt = datetime.utcnow()
-            outpath = os.path.join(self.output_dir,dt.strftime('%Y'), dt.strftime('%m'))
+            outpath = os.path.join(self.output_dir,dt.strftime('%Y'), dt.strftime('%m'), dt.strftime('%d'))
             mkpath(outpath, mode=self.output_create_mode + 0111) #acts like "mkdir -p" so if exists returns a success (+0111 adds executable bit as they are dirs)
 
             outfile = os.path.join(outpath,instrument + '_'+dt.strftime('%Y%m%d_%H%M%S') +'_' + flightno)
