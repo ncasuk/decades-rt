@@ -123,6 +123,7 @@ def docs():
    with lcd('doc'):
       local('make %(prj_name)s-manual.pdf' % env)
 
+@runs_once
 def Plot_jar():
    '''Creates the JAR file for the display applicaton'''
    with lcd('Horace/web/plot/plot'):
