@@ -91,8 +91,8 @@ div#statblock p{
    #close output div
    output = output + '</div>'
    
-   start_response('200 OK', [('Content-Type', 'application/xhtml+xml;charset=utf-8')])
-   yield template % ('DECADES Status', output)
+   start_response('200 OK', [('Content-Type', 'text/html;charset=utf-8')])
+   yield output
 
    
       
