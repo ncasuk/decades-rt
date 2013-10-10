@@ -68,8 +68,6 @@ def setup():
    
 @runs_once
 def create_deb():
-   #local('tar zcv --transform=\'s$pylib$/opt/decades/pylib$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz pylib' % env)
-   #local('tar zcv --transform=\'s$Horace$/opt/decades/Horace$\' -f %(prj_name)s-%(timestamp)s.orig.tar.gz Horace' % env)
    local('mkdir %(prj_name)s-%(timestamp)s' % env)
    local('git checkout-index --prefix=%(prj_name)s-%(timestamp)s/ -a' % env)
    local('git-dch %(dchopts)s --auto --git-author' % env) #adds latest commit details to a snapshot version
@@ -97,12 +95,12 @@ def deploy_deb(debname=False):
 
 def test():
    '''runs all the unit tests'''
-   local('trial pylib')
+   local('trial pydecades')
 
 def unit_test_parameter(paramname):
    '''runs a unit test for a single parameter, e.g vertical_vorticity. 
    Usage: fab unit_test_parameter:<parametername>'''
-   local('trial pylib.test.test_decades_server.DecadesProtocolTestCase.test_%s' % paramname)
+   local('trial pydecades.test.test_decades_server.DecadesProtocolTestCase.test_%s' % paramname)
 
 def deploy():   
    Plot_jar()
