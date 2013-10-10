@@ -33,42 +33,6 @@ def application(environ, start_response):
    calfile = "/usr/local/lib/decades/pydecades/rt_calcs/HOR_CALIB.DAT"
    rtlib = rt_derive.derived(cur, calfile)
 
-   #Basic template for well-formed XHTML output (note '%s' for string subbing later)
-   template = '''<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-<title>%s</title>
-<style>
-body {
-   font-family: sans-serif;
-   background-color: #186f4d;
-   color: white;
-}
-div#statblock {
-   width: 30em;
-   padding: 0.75em;
-   background-color: white;
-   margin-left: auto;
-   margin-right: auto;
-}
-div#statblock p{
-   color: #0C2174;
-   padding: 0;
-   margin-top: 0;
-   margin-right: 0;
-   margin-bottom: 0.2em;
-   margin-left: 0.25em;
-}
-</style>
-</head>
-<body>
-%s
-</body>
-</html>'''
-
- 
    #get stat data (taken directly from pydecades/decades_server.py) 
    prtgindata = rtlib.derive_data_alt(['time_since_midnight','utc_time','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
    #get corcon separately so gin/prt stuff is independant of it.
