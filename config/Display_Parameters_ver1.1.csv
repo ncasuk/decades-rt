@@ -1,5 +1,5 @@
 ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,Visible?
-515,time_from_midnight,TIME FROM MIDNIGHT,(secs)
+515,time_since_midnight,TIME FROM MIDNIGHT,(secs)
 516,indicated_air_speed,INDICATED AIR SPEED,(ms-1)
 517,true_air_speed,TRUE AIR SPEED,(knots)
 518,mach_no,MACH NO,(-)

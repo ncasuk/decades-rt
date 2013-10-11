@@ -3,16 +3,13 @@
 '''produces a Parano.txt-type file on-the-fly based on the
 Display Parameters csv file '''
 
-#CSV reader
+#Standard python modules for config and date/time functions
+from pydecades.configparser import DecadesConfigParser
+from datetime import datetime
 import csv
 
-#Standard python modules for config and date/time functions
-from ConfigParser import SafeConfigParser
-from datetime import datetime
-
 def application(environ, start_response):
-	parser = SafeConfigParser()
-	config = parser.read(['/etc/decades/decades.ini','/usr/local/lib/decades/pydecades/decades.ini'])
+	parser = DecadesConfigParser()
 	parameters_file = parser.get('Config','parameters_file')
 	output = 'PARANO.TXT - Derived parameter numbers for HORACE                      ' + datetime.utcnow().strftime('%d/%m/%Y') + '\n'
 	output = output + ''' 

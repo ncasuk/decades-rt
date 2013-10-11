@@ -17,15 +17,13 @@ import math
 from datetime import datetime, timedelta
 import struct
 from rt_calcs import rt_derive
-from ConfigParser import SafeConfigParser
-
-#from decades_file import DecadesFile
-#logfile
-#log.startLogging(file('/var/log/decades-server/' + 'decades_' + datetime.now().strftime('%Y-%m-%d_%H:%M:%S') + '.log', 'w'))
+from pydecades.configparser import DecadesConfigParser
 
 #class to handle Decades events
 class DecadesProtocol(basic.LineReceiver):
-   '''Python version of the HORACE server - to work with DECADES'''
+   '''Python version of the HORACE server - to work with DECADES system. Responds to two commands:
+         STAT (returns basic status data e.g. lat/long, heading etc.)
+         PARA (Returns requested parameters)'''
    delimiter = "" #Java DatInputStream does not have a delimiter between lines
    derindex = 0
    stat_output_format = "{0:.2f}"   #Format string for those output variables that are displayed unmodified in STAT lines 2 d.p at present
@@ -37,9 +35,8 @@ class DecadesProtocol(basic.LineReceiver):
          access the results by fieldname *or* index'''
        self.cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
        self.rtlib = rt_derive.derived(self.cursor,calfile) #class processing the cals & producing "real" values
+       self.parser = DecadesConfigParser()
        self.parano = {}
-       self.parser = SafeConfigParser()
-       self.config = self.parser.read(['/etc/decades/decades.ini','pydecades/decades.ini'])
        for (code, function) in self.parser.items('Parameters'):
          self.parano[int(code)] = function
          
