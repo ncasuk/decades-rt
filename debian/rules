@@ -1,70 +1,62 @@
 #!/usr/bin/make -f
+DH_VERBOSE=1
+DEB_BUILD_OPTIONS=nocheck
+PACKAGE = $(shell dh_listpackages)
 
-export DH_COMPAT=5
+PYTHON2=$(shell pyversions -vr)
+#PYTHON3=$(shell py3versions -vr)
 
-build: build-stamp
-build-stamp:
-	dh_testdir
-	touch build-stamp
+# Prevent setuptools/distribute from accessing the internet.
+export http_proxy = http://127.0.0.1:9
 
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp install-stamp
-	dh_clean
+%:
+	dh $@ --with python2
 
-install: install-stamp
-install-stamp: build-stamp
-	dh_testdir
-	dh_testroot
-	dh_clean -k
-	dh_installdirs
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+test-python%:
+	python$* setup.py test -vv
 
+override_dh_auto_test: $(PYTHON2:%=test-python%) $(PYTHON3:%=test-python%)
+endif
+
+build-python%:
+	python$* setup.py build
+
+override_dh_auto_build: $(PYTHON3:%=build-python%)
+	dh_auto_build
+
+install-python%:
+	python$* setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb
+
+override_dh_auto_install: $(PYTHON3:%=install-python%)
+	cp pydecades/$(PACKAGE)-listener.tac debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp pydecades/$(PACKAGE)-tcp-listener.tac debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp pydecades/$(PACKAGE)-server.tac debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp pydecades/$(PACKAGE)-server-balancer.tac debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp pydecades/$(PACKAGE)-gin.tac debian/$(PACKAGE)/etc/$(PACKAGE)
 	# Add here commands to install the package into debian/tmp.
-	mkdir -p debian/decades/etc/init.d
-	mkdir -p debian/decades/etc/default
-	cp pydecades/decades-listener.tac debian/decades/etc/decades
-	cp pydecades/decades-tcp-listener.tac debian/decades/etc/decades
-	cp pydecades/decades-server.tac debian/decades/etc/decades
-	cp pydecades/decades-server-balancer.tac debian/decades/etc/decades
-	cp pydecades/decades-gin.tac debian/decades/etc/decades
-	cp config/decades.ini debian/decades/etc/decades
-	cp config/Display_Parameters_ver1.1.csv debian/decades/etc/decades
-	cp debian/init.d debian/decades/etc/init.d/decades
-	cp debian/cronjob debian/decades/etc/cron.daily/decades
-	cp debian/default debian/decades/etc/default/decades
-	cp debian/copyright debian/decades/usr/share/doc/decades/
-	cp debian/README.Debian debian/decades/usr/share/doc/decades/
-	cp debian/cfg_parser.sh debian/decades/usr/local/bin
-	cp config/apache-config debian/decades/etc/apache2/sites-enabled/decades
-	cp -rp pydecades debian/decades/usr/local/lib/decades/
+	mkdir -p debian/$(PACKAGE)/etc/init.d
+	mkdir -p debian/$(PACKAGE)/etc/default
+	cp config/$(PACKAGE).ini debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp config/Display_Parameters_ver1.1.csv debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp debian/init.d debian/$(PACKAGE)/etc/init.d/$(PACKAGE)
+	cp debian/cronjob debian/$(PACKAGE)/etc/cron.daily/$(PACKAGE)
+	cp debian/default debian/$(PACKAGE)/etc/default/$(PACKAGE)
+	cp debian/copyright debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)/
+	cp debian/README.Debian debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)/
+	cp debian/cfg_parser.sh debian/$(PACKAGE)/usr/bin
+	cp config/apache-config debian/$(PACKAGE)/etc/apache2/sites-enabled/$(PACKAGE)
 	#Files needed to be web-visible
-	mkdir -p debian/decades/var/www/decades/plot
-	mkdir -p debian/decades/var/www/decades-live
-	cp Horace/web/plot/Plot.jar Horace/web/plot/plot.html Horace/web/plot/Parano_old.txt Horace/web/plot/map_data.dat.gz Horace/web/plot/overlay.txt debian/decades/var/www/decades/plot/
-	cp -rp live/* debian/decades/var/www/decades-live/
+	cp Horace/web/plot/Plot.jar Horace/web/plot/plot.html Horace/web/plot/Parano_old.txt Horace/web/plot/map_data.dat.gz Horace/web/plot/overlay.txt debian/$(PACKAGE)/var/www/$(PACKAGE)/plot/
+	cp -rp live/* debian/$(PACKAGE)/var/www/$(PACKAGE)-live/
+	cp dataformats/*  debian/$(PACKAGE)/opt/$(PACKAGE)/dataformats/
+	dh_auto_install
+   
 
-	cp dataformats/*  debian/decades/opt/decades/dataformats/
-	touch debian/decades/usr/share/decades/package-installed
-	touch install-stamp
+#override_dh_installchangelogs:
+#	dh_installchangelogs -k foo/NEWS.rst
 
-binary-arch: build install
-
-binary-indep: build install
-	dh_testdir
-	dh_testroot
-	dh_strip
-	dh_compress
-	dh_installchangelogs
-	dh_python2
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-source diff:                                                                  
-	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf build
+	rm -rf *.egg-info

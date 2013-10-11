@@ -95,7 +95,7 @@ def deploy_deb(debname=False):
 
 def test():
    '''runs all the unit tests'''
-   local('trial pydecades')
+   local('sudo python setup.py test')
 
 def unit_test_parameter(paramname):
    '''runs a unit test for a single parameter, e.g vertical_vorticity. 
@@ -116,6 +116,7 @@ def clean():
    local('find . -maxdepth 1 -name \*.build -exec rm {} \;')
    local('find . -maxdepth 1 -name \*.changes -exec rm {} \;')
    local(' rm -rf decades-20[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
+
 
 def docs():
    with lcd('doc'):

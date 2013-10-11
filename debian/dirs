@@ -8,8 +8,9 @@ opt/decades/output
 var/lib/decades
 usr/share/doc/decades
 usr/share/decades
-usr/local/lib/decades
-usr/local/bin
+usr/lib/decades
+usr/bin
 var/log/decades
 var/www/decades
+var/www/decades/plot
 var/www/decades-live

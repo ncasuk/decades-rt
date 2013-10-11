@@ -1,8 +1,16 @@
 #ignore vim swap files
 .*.swp
+#logfiles, pidfiled
+*.log
+*.pid
 #ignore compiled python files
 *.pyc
+#python depends created by setup.py
+setuptools_trial*/
 #ignore DEB packaging files
+build/
+build-stamp
+install-stamp
 *.deb
 *.dsc
 *.build
@@ -27,3 +35,8 @@ doc/*.fls
 doc/*.toc
 doc/*.temp
 doc/*.cookie
+#Horace
+Horace/web/plot/Makefile.old
+Horace/web/js
+Horace/web/css
+Horace/web/plot/plot/Plot.jar
