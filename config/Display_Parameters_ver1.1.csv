@@ -112,5 +112,4 @@ ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,
 677,gin_acc_long,ACC LONG (GIN),(m s-2)
 678,gin_acc_trans,ACC TRANS (GIN),(m s-2)
 679,gin_acc_down,ACC DOWN (GIN),(m s-2)
-680,vertical_vorticity,VERTICAL VORTICITY,(s-1)
 900,twc_detector,TWC DETECTOR,(arb)

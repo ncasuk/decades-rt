@@ -332,26 +332,6 @@ class derived(rt_data.rt_data):
         """Radar height (ft)"""
         return self.getdata('prtaft01_rad_alt',data)/4.0
 
-    def vertical_vorticity(self,data):
-        """
-! VERVORT - vertical vorticity
-! Planetary vorticity 2*omega*sin(lat) omega=2pi/24hrs
-! (2*2*pi/24*60*60)*sin(lat) = pi*sin(lat)/4*60*60
-      RVV=3.14159*SIND(DERIVE(ISEC,150))/21600.0
-! Vertical vorticity = dv/dx-du/dy+f
-! dv/dx  = v1-v0/(dx/dt)*dt
-! du/dy  = u1-u0/(dy/dt)*dt
-! ((v1-v0)/(dx/dt)-(u1-u0)/(dy/dt))/dt + f  ! dt = 3s
-      IF(ABS(DERIVE(ISEC,154)).GT.0.0) 
-     &  RVV=RVV+(RV-ROLDV)/(DERIVE(ISEC,154)*3.0)
-      IF(ABS(DERIVE(ISEC,153)).GT.0.0)
-     &  RVV=RVV-(RU-ROLDU)/(DERIVE(ISEC,153)*3.0)
-      ROLDU=RU
-      ROLDV=RV
-      DERIVE(ISEC,168)=RVV
-"""
-        return None
-        
     def upper_pyranometer_clear_flux(self,data):
         ''' not sure why only CAL081[1] is used and not CAL081[0], but his is what HOR_CALCS did '''
         c=self.cals['CAL081'] 
