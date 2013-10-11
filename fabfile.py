@@ -95,7 +95,7 @@ def deploy_deb(debname=False):
 
 def test():
    '''runs all the unit tests'''
-   local('sudo python setup.py test')
+   local('python setup.py test')
 
 def unit_test_parameter(paramname):
    '''runs a unit test for a single parameter, e.g vertical_vorticity. 
