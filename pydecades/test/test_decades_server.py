@@ -5,7 +5,7 @@ from twisted.test import proto_helpers
 import os, struct, exceptions
 
 from twisted.python import log
-from ConfigParser import SafeConfigParser
+from pydecades.configparser import DecadesConfigParser
 
 class DecadesProtocolTestCase(unittest.TestCase):
    def setUp(self):
@@ -40,8 +40,7 @@ def test_parameters(param_id, function):
    return arbitrary_parameter_function
 
 #create one test function per Parameter entry in decades.ini
-parser = SafeConfigParser()
-config = parser.read(['/etc/decades/decades.ini','pydecades/decades.ini'])
+parser = DecadesConfigParser()
 for (code, function) in parser.items('Parameters'):
    if code != "513": #flight_number is not called for plotting, and would fail as it doesn't return a float
       test_method = test_parameters(code, function)
