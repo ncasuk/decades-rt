@@ -90,7 +90,7 @@ def deploy_deb(debname=False):
       #installs all dependencies
       #sudo('aptitude -y install `dpkg --info %s | grep Depends | awk -F ":" \'{print $2}\' | sed -e "s/,/ /g"`' % debname)
       sudo('dpkg -i %s' % debname) 
-		sudo('apt-get -y install -f') # to handle dependencies
+      sudo('apt-get -y install -f') # to handle dependencies
    else:
       print('No deb filename specified')
 
