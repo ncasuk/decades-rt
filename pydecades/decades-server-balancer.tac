@@ -9,21 +9,18 @@ The important part of this, the part that makes it a .tac file, is
 the final root-level section, which sets up the object called 'application'
 which twistd will look for
 """
-import sys
-sys.path.append("/usr/local/lib/decades") #add deploy python dir to Python path
 import os
 from twisted.application import service, internet
 from twisted.web import static, server
 from pydecades.decades_server_balancer import Balancer
 
-from ConfigParser import SafeConfigParser
+from pydecades.configparser import DecadesConfigParser
 
 def getDecadesServerBalancerService():
     """
     Return a load-balancer service to manage n instances of decades-server.
     """
-    parser = SafeConfigParser()
-    config = parser.read(['/etc/decades/decades.ini','decades.ini'])
+    parser = DecadesConfigParser()
     port = int(parser.get('Servers','port'))
     servers = []
     base_port = int(parser.get('Servers','slave_base_port'))
