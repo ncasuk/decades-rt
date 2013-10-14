@@ -29,6 +29,7 @@ def deg_to_dms(deg):
 
 def application(environ, start_response):
    conn = get_database()
+   cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
    parser = DecadesConfigParser()
    calfile = parser.get('Config','calfile')
    rtlib = rt_derive.derived(cur, calfile)
