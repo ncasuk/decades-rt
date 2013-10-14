@@ -8,5 +8,4 @@ setup(name='pydecades',
       author='Dan Walker & Dave Tiddeman',
       author_email='daniel.walker@ncas.ac.uk',
       packages=['pydecades', 'pydecades.rt_calcs'],
-		setup_requires=['setuptools_trial'],
      )
