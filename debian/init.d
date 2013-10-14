@@ -21,7 +21,7 @@ ginpidfile=/var/run/decades-gin.pid ginfile=/etc/decades/decades-gin.tac ginlogf
 [ -r /etc/default/decades ] && . /etc/default/decades
 
 #Load config file
-. /usr/local/bin/cfg_parser.sh
+. /usr/bin/cfg_parser.sh
 cfg.parser '/etc/decades/decades.ini' DECADES_
 cfg.section.Servers
 SLAVEPORTS=`seq $DECADES_slave_base_port $(($DECADES_slave_base_port+$DECADES_slaves-1))`
