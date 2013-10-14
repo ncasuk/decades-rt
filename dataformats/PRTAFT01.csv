@@ -22,5 +22,3 @@ wow_flag,boolean,1,"a boolean flag to indicate whether the aircraft is on the gr
 heimann_calib_flag,boolean,1,"a boolean flag to indicate whether the Heimann is performing a calibration"
 jci140_signal,signed_int,6,"the raw data in counts taken from the Fwd Core Console JCI static monitor, static signal"
 jci140_range,signed_int,6,"the raw data in counts taken from the Fwd Core console JCI static monitor range/alarm signal"
-arinc_data,double_float,11,"newest arinc data word (only used for testing purposes)"
-alt_sign,boolean,1,"used for testing only and denotes the sign of the arinc altitude data (0=positive, 1=negative)"
