@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8:
 '''Flight Manager's console'''
-import sys
-sys.path.append("/usr/local/lib/decades")
-
 #templating
 from jinja2 import Environment, FileSystemLoader
 
@@ -23,6 +20,6 @@ def application(environ, start_response):
          title=title,
          script='''var refreshId = setInterval(function() {
      $('#statcontainer').load('/live/stat.wsgi');
-}, 500);''',
+}, 1000);''',
          body='<div id="statcontainer"></div>'
             ).encode('utf-8')
