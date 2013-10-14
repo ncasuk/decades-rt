@@ -106,7 +106,7 @@ def deploy():
    Plot_jar()
    debname=create_deb()
    deploy_deb(debname=debname)
-   #sudo('a2enmod speling')
+   sudo('a2enmod wsgi')
    sudo('service apache2 restart')
 
 def clean():
