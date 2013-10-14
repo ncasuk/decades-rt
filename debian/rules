@@ -39,6 +39,7 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 	mkdir -p debian/$(PACKAGE)/etc/default
 	cp config/$(PACKAGE).ini debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp config/Display_Parameters_ver1.1.csv debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp config/HOR_CALIB.DAT debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp debian/init.d debian/$(PACKAGE)/etc/init.d/$(PACKAGE)
 	cp debian/cronjob debian/$(PACKAGE)/etc/cron.daily/$(PACKAGE)
 	cp debian/default debian/$(PACKAGE)/etc/default/$(PACKAGE)
