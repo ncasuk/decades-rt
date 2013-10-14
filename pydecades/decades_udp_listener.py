@@ -46,21 +46,21 @@ class MulticastServerUDP(DatagramProtocol):
       '''reads an incoming UDP datagram, splits it up, INSERTs into database'''
       data = csv.reader([datagram]).next() #assumes only one record
       #copies data into a dictionary
-      dictdata = dict(zip(self.dataProtocols.fields(data[0][1:]), data)) 
+      dictdata = dict(zip(self.dataProtocols.fields(data[0].lstrip('$')), data)) 
       print dictdata
-      self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), )).lower())
-      squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0][1:]][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0][1:]], ', '.join(self.dataProtocols.fields(data[0][1:])))
+      self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), )).lower())
+      squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0].lstrip('$')], ', '.join(self.dataProtocols.fields(data[0].lstrip('$'))))
       processed= []
       for each in data:
          if each == '':
             processed.append(None)
          else:
             processed.append(each)
-      if len(data)==len(self.dataProtocols.fields(data[0][1:])):
+      if len(data)==len(self.dataProtocols.fields(data[0].lstrip('$'))):
          self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed)
-         log.msg("Insert into %s successful" % data[0][1:])
+         log.msg("Insert into %s successful" % data[0].lstrip('$'))
       else:
-         log.err("ERROR: Insert into %s failed, mismatched number of fields (%i, expecting %i)" % (data[0][1:], len(data), len(self.dataProtocols.fields(data[0][1:]))))
+         log.err("ERROR: Insert into %s failed, mismatched number of fields (%i, expecting %i)" % (data[0].lstrip('$'), len(data), len(self.dataProtocols.fields(data[0].lstrip('$')))))
       #self.conn.commit();
   
 
