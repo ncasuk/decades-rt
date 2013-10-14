@@ -16,7 +16,7 @@ from pydecades.database import get_database
 from pydecades.rt_calcs import rt_derive
 
 #Standard python modules for config and date/time functions
-from ConfigParser import SafeConfigParser
+from pydecades.configparser import DecadesConfigParser
 from datetime import datetime, timedelta
 
 def deg_to_dms(deg):
@@ -29,8 +29,8 @@ def deg_to_dms(deg):
 
 def application(environ, start_response):
    conn = get_database()
-   cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-   calfile = "/usr/local/lib/decades/pydecades/rt_calcs/HOR_CALIB.DAT"
+   parser = DecadesConfigParser()
+   calfile = parser.get('Config','calfile')
    rtlib = rt_derive.derived(cur, calfile)
 
    #get stat data (taken directly from pydecades/decades_server.py) 
