@@ -1,0 +1,29 @@
+<html>
+<title>Update Fltsumm</title>
+<script>
+function check(){
+  back=true;
+  n=document.form1.name1.value;
+  q=['','Dave Tiddeman','Maureen Smith','Nick Jackson']
+  for (var i=0;i<q.length;i++){
+    if(q[i]==n)back=false;
+  }
+  if(back){
+    window.history.back();
+  }else{
+    window.location.href="flts2.html";
+  }
+}
+</script>
+
+<body bgcolor="#0C2174" text="#E4F23B" link="#FFFFFF">
+<h4>Update Flight Summary</h4>
+<br>
+<form name="form1" onSubmit="return false;">
+What is your name ?
+<input type="text" size="30" name="name1">
+<input type="button" value="OK" onClick="check();">
+</form>
+</bodY>
+
+</html>

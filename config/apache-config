@@ -22,6 +22,8 @@
 
 	WSGIScriptAlias /live/ /var/www/decades-live/
    WSGIScriptAlias /plot/Parano.txt /var/www/decades-live/parano.wsgi
+   WSGIScriptAlias /plot/FLTSUMM /var/www/decades-live/flightmanager.wsgi
+   SetEnv JinjaTemplates /var/www/decades-live/templates
 	<Directory "/var/www/decades-live/">
 		AllowOverride None
 		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
