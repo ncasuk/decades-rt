@@ -8,6 +8,6 @@ XS-Python-Version: current
 
 Package: decades
 Architecture: all
-Depends: ${python:Depends}, python, python-twisted-core, python-twisted, python-psycopg2, python-numpy, libapache2-mod-wsgi, python-jinja2
+Depends: ${python:Depends}, python, python-twisted-core, python-twisted, python-psycopg2, python-numpy, libapache2-mod-wsgi, python-jinja2, python-webpy
 X-Python-Version: 2.6
 Description: DECADES servers and user-facing intranet pages
