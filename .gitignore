@@ -18,6 +18,15 @@ install-stamp
 *.tar.gz
 *.class
 *.CLASS
+debian/decades.*.debhelper
+pydecades.egg-info
+debian/decades.substvars
+debian/decades/etc/
+debian/decades/opt/
+debian/decades/usr/
+debian/decades/var/
+debian/rules.old
+dist/
 #ignore temp dirs
 pylib/_trial_temp
 _trial_temp
