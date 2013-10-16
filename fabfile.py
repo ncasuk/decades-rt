@@ -65,7 +65,8 @@ def setup():
       sudo('psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"',user="postgres")
       sudo('createdb -O inflight inflightdata', user="postgres")
       sudo('createlang plpgsql inflightdata',user="postgres")
-   
+      #CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, unfinished boolean default 'f');
+ 
 @runs_once
 def create_deb():
    local('mkdir %(prj_name)s-%(timestamp)s' % env)
@@ -127,11 +128,5 @@ def Plot_jar():
    '''Creates the JAR file for the display applicaton'''
    with lcd('Horace/web/plot/plot'):
       local('make jar')
-      local('jarsigner Plot.jar fish2')
       local('jarsigner Plot.jar septic')
-      local('jarsigner Plot.jar test')
       local('cp Plot.jar ..') 
-   with lcd('Horace/web/plot'):
-      local('jarsigner choices.jar fish2')
-      local('jarsigner choices.jar septic')
-      local('jarsigner choices.jar test')

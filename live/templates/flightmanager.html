@@ -1,0 +1,13 @@
+{% extends "layouts/default.html" %}
+{% block script %}{{ script }}{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+{% block body %}
+$def with (entries)
+<table id="summary">
+$for entry in entries:
+    <tr><td id="s$todo.id">$entry.event</td></tr>
+</table>
+{{ body }}
+{% endblock %}

@@ -10,6 +10,7 @@ urls = {
 }
 
 app= web.application(urls, locals())   
+db = web.database(dbn='postgres', user='username', pw='password', db='dbname')
 
 #Libraries to access the PostgreSQL database
 import psycopg2 
@@ -26,7 +27,6 @@ from datetime import datetime, timedelta
 import csv, os
 
 title = '''Flight Manager's console'''
-
 def render_template(template_name, **context):
     extensions = context.pop('extensions', [])
     globals = context.pop('globals', {})
@@ -52,9 +52,13 @@ class flightmanager:
 
       #get calibrated data from DB as required
       results = rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft'],'=id','ORDER BY id DESC LIMIT 1')
-      
-      return render_template('template.html',
+
+      #get existing summary entries
+      entries = db.select('summary', where='summary.flight_number = '.results['flight_number'][0])
+       
+      return render_template('flightmanager.html',
             title=title,
+            entries=entries,
             script='''
    $(document).ready(function() {
       $('#actionselect').change(
