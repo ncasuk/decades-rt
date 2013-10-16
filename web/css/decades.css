@@ -1,0 +1,20 @@
+body {
+   font-family: sans-serif;
+   background-color: #186f4d;
+   color: white;
+}
+div#statblock {
+   width: 30em;
+   padding: 0.75em;
+   background-color: white;
+   margin-left: auto;
+   margin-right: auto;
+}
+div#statblock p{
+   color: #0C2174;
+   padding: 0;
+   margin-top: 0;
+   margin-right: 0;
+   margin-bottom: 0.2em;
+   margin-left: 0.25em;
+}
