@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{% block head %}
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title>{{ title }}</title>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript">
+{% block script %}{% endblock %}
+</script>
+{% endblock %}
+<style>
+body {
+   font-family: sans-serif;
+   background-color: #186f4d;
+   color: white;
+}
+div#statblock {
+   width: 30em;
+   padding: 0.75em;
+   background-color: white;
+   margin-left: auto;
+   margin-right: auto;
+}
+div#statblock p{
+   color: #0C2174;
+   padding: 0;
+   margin-top: 0;
+   margin-right: 0;
+   margin-bottom: 0.2em;
+   margin-left: 0.25em;
+}
+</style>
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>
