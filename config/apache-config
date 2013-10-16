@@ -1,3 +1,4 @@
+# vi: syntax=apache ft=apache
 <VirtualHost *:80>
 	ServerAdmin webmaster@localhost
 	ServerName septic
@@ -20,9 +21,9 @@
 		allow from all
 	</Directory>
 
-	WSGIScriptAlias /live/ /var/www/decades-live/
-   WSGIScriptAlias /plot/Parano.txt /var/www/decades-live/parano.wsgi
-   WSGIScriptAlias /plot/FLTSUMM /var/www/decades-live/flightmanager.wsgi
+	WSGIScriptAlias /live/ /var/www/decades-live/live.wsgi/
+   WSGIScriptAlias /plot/Parano.txt /var/www/decades-live/live.wsgi/parano
+   #WSGIScriptAlias /plot/FLTSUMM /var/www/decades-live/flightmanager.wsgi
    SetEnv JinjaTemplates /var/www/decades-live/templates
 	<Directory "/var/www/decades-live/">
 		AllowOverride None
