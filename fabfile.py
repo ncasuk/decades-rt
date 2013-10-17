@@ -5,6 +5,7 @@
 # modified for fabric 0.9/1.0
 #from __future__ import with_statement # needed for python 2.5
 from fabric.api import *
+from fabric.utils import warn
 import time, os, glob
 
 # globals
@@ -109,6 +110,11 @@ def deploy():
    deploy_deb(debname=debname)
    sudo('a2enmod wsgi')
    sudo('service apache2 restart')
+   pg_timezone = sudo('psql -tc "SHOW TIME ZONE" | head -n1',user="postgres").strip()
+   if(pg_timezone != 'UTC'):
+      #raise WARNING that postgres is not correctly configured 
+      warn('Postgresql timezone is ' + pg_timezone + '. Set it to UTC in postgresql.conf')
+      
 
 def clean():
    local('find . -maxdepth 1 -name \*.tar.gz -exec rm {} \;')
@@ -118,7 +124,7 @@ def clean():
    local('find . -maxdepth 1 -name \*.changes -exec rm {} \;')
    local(' rm -rf decades-20[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
    with lcd('Horace/web/plot/plot'):
-      local('make clean')
+      local('make clean') #cleans compiled Java files
 
 
 def docs():
