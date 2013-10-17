@@ -58,9 +58,9 @@ while 1:
             fakedata['GINDAT'] = {
                'utc_time':timestamp,
                'flight_num':flightnum,
-               'latitude_gin':(13.47 + 5*math.sin(math.radians(timestamp*3))), #A circle centred on capital of Guam
+               'latitude_gin':(0.0 + 5*math.sin(math.radians(timestamp*3))), #A circle centred on capital of Guam
                #'latitude_gin':(52.07 + 5*math.sin(math.radians(timestamp*3))), #A circle centred on capital of Cranfield
-               'longitude_gin':(144.75 + 10*math.cos(math.radians(timestamp*3))),
+               'longitude_gin':(0.0 + 10*math.cos(math.radians(timestamp*3))),
                #'longitude_gin':(-0.61 + 10*math.cos(math.radians(timestamp*3))),
                'heading_gin':(360-((timestamp*3) % 360)),
                'roll_gin':int(random.normalvariate(0,5)),
