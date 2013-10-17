@@ -181,6 +181,7 @@ if((plottype=="mxplot")&&(parameters.substring(0,4)=="515,")){
 }
 w1.document.write("<applet code='horaceplot.plot.plotapp.class' archive='Plot.jar'");
 w1.document.writeln(" width='600' height='"+hgt+"' mayscript>");
+w1.document.writeln("<param name='permissions' value='sandbox' \/>");
 w1.document.writeln("<param name='plottype' value='"+plottype+"'>");
 w1.document.writeln("<param name='parameters' value='"+parameters+"'>");
 w1.document.writeln("<param name='start' value='"+starttime+"'>");
@@ -284,6 +285,7 @@ document.writeln('<center>');
 document.write("<applet code='horaceplot.plot.plotapp.class' archive='Plot.jar'");
 document.writeln(" width='500' height='100' mayscript>");
 document.writeln("<param name='plottype' value='table'>");
+document.writeln("<param name='permissions' value='sandbox' \/>");
 document.writeln("<param name='parameters' value=''>");
 document.writeln("<param name='normalfactor' value='10'>");
 document.writeln("<\/applet>");
@@ -315,6 +317,7 @@ document.writeln('onclick="splot();"> plot parameters as ');
 document.writeln('<input type="text" name="plotname" value="'+plots[0].name+'">');
 document.write('<applet code="horaceplot.choices.choices.class" archive="Plot.jar"');
 document.writeln(' width="550" height="'+height+'">');
+document.writeln("<param name='permissions' value='sandbox' \/>");
 document.writeln('<param name="names" value="'+paras+'">');
 document.writeln('<param name="paras" value="'+defpara+'">');
 document.writeln('<param name="colours" value="'+colours+'">');

@@ -253,21 +253,24 @@ public class mapplot extends zoomplot  implements java.awt.event.ItemListener
             drawString(g,qlx,(float)l/(float)ddlx,sb.toString());}
             drawLine(g,xmin,(float)l/(float)ddlx,xmax,(float)l/(float)ddlx);}
 		g.setColor(Color.cyan);
-		for(int l=((int)((xmin-10)/10))*10*ddly;l<(ddly*xmax);l+=10){
+		for(int l=((int)((xmin-10)/10))*10*ddly;l<(ddly*xmax);l+=10) {
 			StringBuffer sb=new StringBuffer().append(DFy.format((float)(Math.abs(l))/ddly));                       
 			if(l>0){sb.append("E");}
 			if(l<0){sb.append("W");}
 			drawString(g,(float)l/(float)ddly,qly,sb.toString());
-			drawLine(g,(float)l/(float)ddly,ymin,(float)l/(float)ddly,ymax);}
-		for(int l=((int)((ymin-10)/10))*10*ddlx;l<(ddlx*ymax);l+=10){
+			drawLine(g,(float)l/(float)ddly,ymin,(float)l/(float)ddly,ymax);
+      }
+		for(int l=((int)((ymin-10)/10))*10*ddlx;l<(ddlx*ymax);l+=10) {
 			StringBuffer sb=new StringBuffer().append(DFx.format((float)(Math.abs(l))/ddlx));
 			if(l>0){sb.append("N");}
 			if(l<0){sb.append("S");}
 			drawString(g,qlx,(float)l/(float)ddlx,sb.toString());
-			drawLine(g,xmin,(float)l/(float)ddlx,xmax,(float)l/(float)ddlx);}
+			drawLine(g,xmin,(float)l/(float)ddlx,xmax,(float)l/(float)ddlx);
+      }
+      System.out.println("Done horizontal lines");
 		g.setColor(Color.blue);	
 		n=places.size();
-		for(int f=0;f<n;f++){
+		for(int f=0;f<n;f++) {
           drawPoint(g,((place)places.elementAt(f)).Lon,((place)places.elementAt(f)).Lat,X);
 		  drawString(g,((place)places.elementAt(f)).Lon,((place)places.elementAt(f)).Lat," "+((place)places.elementAt(f)).Name);
 		}
@@ -297,19 +300,14 @@ public class mapplot extends zoomplot  implements java.awt.event.ItemListener
             DataInputStream mapdat=new DataInputStream(new GZIPInputStream(mapurl.openStream()));
             boolean reading=true;
             try{
-					 /*These ones are ignored!*/
+					 /*Just start with the whole globe*/
                 maprange[0]=(float)mapdat.readShort();
                 maprange[1]=(float)mapdat.readShort();
                 maprange[2]=(float)mapdat.readShort();
                 maprange[3]=(float)mapdat.readShort();
-					 /*Just start with the whole globe*/
-					 /*ranges are 100xlat, and 100xlong
-						0=Lonmin, 1=latmin, 2=Lonmax, 3=latmax */
-                /*maprange[0]=(float)-18000;
-                maprange[1]=(float)-9000;
-                maprange[2]=(float)18000;
-                maprange[3]=(float)9000;*/
+                System.out.println("WATCH: " + maprange[2] + "," + maprange[0] + " to " + maprange[3] + "," + maprange[1]);
             }catch(IOException ioe){reading=false;}
+            System.out.println("WATCH: " + reading);
             while(reading){
             try{
             short np=mapdat.readShort();
@@ -323,10 +321,11 @@ public class mapplot extends zoomplot  implements java.awt.event.ItemListener
             bitsofLand.addElement(c);
             }catch(IOException ioe){
                 reading=false;
+                System.out.println("WATCH: IOException " + ioe + " after " + bitsofLand.size() + " bitsOfLand");
                 mapdat.close();
             }
             }
-        }catch(Exception e){}
+        }catch(Exception e){ System.out.println("WATCH: Exception " + e); }
         places=new Vector();
         areas=new Vector();
         try{ 

@@ -5,7 +5,7 @@ import java.awt.*;
 import java.applet.*;
 import java.io.*;
 import horaceplot.stringutl;
-import java.util.Properties;
+//import java.util.Properties;
 
 /**
  * The applet that produces the plots.
@@ -296,7 +296,7 @@ public void update(Graphics g)
         hdr.append(String.format("%.0f",HC.status[2])).append("mb");
         gr.setFont(getfon(factor,Font.PLAIN));
         gr.drawString(hdr.toString(),200/factor,400/factor);
-        Properties properties = System.getProperties();
+//        Properties properties = System.getProperties();
         hdr=new StringBuffer();
 //        hdr.append("Lat ");
 //        StringBuffer l=new StringBuffer();

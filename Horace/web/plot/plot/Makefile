@@ -25,14 +25,14 @@ MODE_FILES      = 444
 MODE_DIRS       = 2755
 
 # Build programs
-JAVAC           = javac -source 1.6 -target 1.6 
+JAVAC           = javac 
 JAVADOC         = javadoc
 JAR             = fastjar
 
 # Build flags
 JAVAC_FLAGS     = -Xlint
 JAVADOC_FLAGS   = -version -author
-JAR_FLAGS       = -m manifest -cvf0
+JAR_FLAGS       = -cv0 -m manifest -f
 JIKES_DEP_FLAG	= +M
 
 # ------------------------------------------------------------------- #

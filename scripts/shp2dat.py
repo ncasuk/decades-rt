@@ -14,7 +14,7 @@ import struct
 sf = shapefile.Reader(infile)
 shapes = sf.shapes()
 out = open(outfile,'w')
-out.write(struct.pack('>hhhh',-18000,18000,-9000,9000))
+out.write(struct.pack('>hhhh',-18000,-9000,18000,9000))
 for shape in shapes:
    #max short is 32767, so chunk the shape points with 1pt overlap
    chunks=[shape.points[x:x+32761] for x in xrange(0, len(shape.points), 32760)]
