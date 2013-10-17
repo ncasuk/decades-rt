@@ -13,4 +13,6 @@ usr/bin
 var/log/decades
 var/www/decades
 var/www/decades/plot
+var/www/decades/css
+var/www/decades/js
 var/www/decades-live
