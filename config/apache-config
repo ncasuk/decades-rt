@@ -5,9 +5,11 @@
 	ServerAlias fish
    ServerAlias 192.168.101.108
    ServerAlias 192.168.101.110
+   ServerAlias 10.0.2.2
    ServerAlias decades-test
 
 	DocumentRoot /var/www/decades/
+
 	<Directory />
 		Options FollowSymLinks
 		AllowOverride None
