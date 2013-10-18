@@ -70,4 +70,13 @@ div#statblock p{
 td.num {
    text-align: right;
 }
-
+p#csvfile {
+   text-align: right;
+}
+p#csvfile a, p#csvfile a:visited {
+   color: white;
+   text-decoration: none;
+}
+p#csvfile a:hover {
+   color: #0C2174;
+}

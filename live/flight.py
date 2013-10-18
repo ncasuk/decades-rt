@@ -26,6 +26,7 @@ from datetime import datetime, timedelta
 from pytz import timezone
 
 import csv, os
+from cStringIO import StringIO
 
 title = '''Flight Manager's console'''
 
@@ -66,22 +67,32 @@ class flight:
    
    def GET(self,path):
       '''Displays current flight summary entries and form to add more'''
-      web.header('Content-Type','text/html; charset=utf-8', unique=True) 
 
-      #get calibrated data from DB as required
-      results = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft'],'=id','ORDER BY id DESC LIMIT 1')
-
-      #get existing summary entries
-      entries = self.db.select('summary', {'flight_number':results['flight_number'][0] }, where='summary.flight_number = $flight_number', order='summary.start DESC')
-      
-     
 		#do explicit check that path is one of expected values 
-      if path in ('manager', 'summary', 'csv', 'events'): 
-      	return render_template('flight'+path+'.html',
-            title=title,
-            entries=entries,
-       	).encode('utf-8')
-      else:
+      if path in ('manager', 'summary', 'events','csv'): 
+         #get calibrated data from DB as required
+         results = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft'],'=id','ORDER BY id DESC LIMIT 1')
+
+         #get existing summary entries
+         entries = self.db.select('summary', {'flight_number':results['flight_number'][0] }, where='summary.flight_number = $flight_number', order='summary.start DESC')
+     
+         if path == 'csv': #CSV outputs as a file to download
+            web.header('Content-Type', 'text/csv')
+            web.header('Content-Disposition', 'attachment;filename={}-summary.csv'.format( results['flight_number'][0]))
+
+            csv_file = StringIO()
+            csv_writer = csv.writer(csv_file)
+            csv_writer.writerow(['Event','Start','Start Hdg / °','Start Hgt / kft','Start Lat / °','Start Long / °', 'Stop', 'Stop Hdg / °','Stop Hgt / kft','Stop Lat / °',' Stop Long / °', 'Comment'])
+            for entry in entries:
+               csv_writer.writerow([entry.event, entry.start, entry.start_heading, entry.start_height, entry.start_latitude, entry.start_longitude, entry.stop, entry.stop_heading, entry.stop_height, entry.stop_latitude, entry.stop_longitude, entry.comment])
+            return csv_file.getvalue()
+         else: #the rest are all HTML and v. similar
+            web.header('Content-Type','text/html; charset=utf-8', unique=True) 
+            return render_template('flight'+path+'.html',
+               title=title,
+               entries=entries,
+            ).encode('utf-8')
+      else: #not an accepted path, so 404
 			raise web.notfound()
    
    def POST(self,path):
