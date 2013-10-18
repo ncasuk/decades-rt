@@ -6,7 +6,7 @@ import web
 from jinja2 import Environment,FileSystemLoader
 
 urls = {
-   '', 'flightmanager'
+   "/(.+)", 'flight'
 }
 
 app= web.application(urls, locals())   
@@ -51,7 +51,7 @@ def render_template(template_name, **context):
     #jinja_env.update_template_context(context)
     return jinja_env.get_template(template_name).render(context)
 
-class flightmanager:
+class flight:
    def __init__(self):
       self.parser = DecadesConfigParser()
 
@@ -63,7 +63,7 @@ class flightmanager:
       self.calfile = self.parser.get('Config','calfile')
       self.rtlib = rt_derive.derived(self.cur, self.calfile)
    
-   def GET(self):
+   def GET(self,path):
       '''Displays current flight summary entries and form to add more'''
       web.header('Content-Type','text/html; charset=utf-8', unique=True) 
 
@@ -74,12 +74,12 @@ class flightmanager:
       entries = self.db.select('summary', {'flight_number':results['flight_number'][0] }, where='summary.flight_number = $flight_number', order='summary.start DESC')
       
        
-      return render_template('flightmanager.html',
+      return render_template('flight'+path+'.html',
             title=title,
             entries=entries,
        ).encode('utf-8')
    
-   def POST(self):
+   def POST(self,path):
       '''Takes POSTed variables, processes them and returns a HTTP 303 See Other status. 
          (i.e. uses the PRG Pattern see: http://en.wikipedia.org/wiki/Post/Redirect/Get )'''
       #get details of POSTed form

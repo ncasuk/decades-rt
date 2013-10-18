@@ -1,0 +1,70 @@
+{% extends "layouts/default.html" %}
+{% block script %}
+<script type="text/javascript">
+   $(document).ready(function() {
+      $('#actionselect').change(
+         function() {
+            $('#event').val($('#actionselect').val());
+            if($('#actionselect option:selected').parent().attr('id') != 'actionselect')
+            {
+               //sets the Status select with the (default) type of the action
+               $('#status').val($('#actionselect option:selected').parent().attr('id'))
+            }
+            else
+            {
+               //default to instant
+               $('#status').val('instant');
+            }
+            if($('#actionselect option:selected').attr('class') == 'exclusive')
+            {
+               $('#exclusive').val('True');
+            }
+            else
+            {
+               $('#exclusive').val('False');
+            }
+         }
+   )
+   });
+   var refreshId = setInterval(function() {
+      $('#statcontainer').load('/live/stat');
+   }, 1000);
+</script>
+{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+{% block body %}
+<div id="statcontainer"></div>
+<div id="flightsummary">
+{% block manageform %}{% endblock %}
+<table summary="Flight Summary Events" id="summary">
+   <tr><th>Event</th><th>Start</th><th>Hdg</th><th>Hgt</th><th>Lat</th><th>Long</th><th>Stop</th><th>Hdg</th><th>Hgt</th><th>Lat</th><th>Long</th><th/><th>comment</th></tr>
+{% for entry in entries %}
+    <tr id="entry_{{ entry.id }}">
+      <td>{{ entry.event }}</td>
+      <td>{{ entry.start.strftime('%H:%M:%S') }}</td>
+      <td>{{ "%d°"|format(entry.start_heading) }}</td>
+      <td>{{ "%.2fkft"|format(entry.start_height) }}</td>
+      <td>{{ entry.start_latitude|latitude }}</td>
+      <td>{{ entry.start_longitude|longitude }}</td>
+   {% if entry.finished and entry.stop != None %}
+      <td>{{ entry.stop.strftime('%H:%M:%S')  }}</td>
+      <td>{{ "%d°"|format(entry.stop_heading) }}</td>
+      <td>{{ "%.2fkft"|format(entry.stop_height) }}</td>
+      <td>{{ entry.stop_latitude|latitude }}</td>
+      <td>{{ entry.stop_longitude|longitude }}</td>
+   {% else %}
+      <td colspan="5" class="ghost">&nbsp;</td>
+   {% endif %}
+   {% if not(entry.finished) and entry.ongoing %}
+      <td><form name="form_{{ entry.id }}" action="" method="post"><input type="hidden" name="id" value="{{ entry.id }}" /><input type="submit" name="submit" value="stop" /></form></td>
+   {% else %}
+      <td>&nbsp;</td>
+   {% endif %}
+      <td>{{ entry.comment if entry.comment != None  }}</td>
+    </tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}
