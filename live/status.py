@@ -35,6 +35,7 @@ class status:
 
    def GET(self):
       web.header('Content-Type','text/html; charset=utf-8', unique=True) 
+      web.header('Cache-control', 'no-cache')
       conn = get_database()
       cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
       parser = DecadesConfigParser()

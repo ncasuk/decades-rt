@@ -76,6 +76,7 @@ class flight:
          #get existing summary entries
          entries = self.db.select('summary', {'flight_number':results['flight_number'][0] }, where='summary.flight_number = $flight_number', order='summary.start DESC')
      
+         web.header('Cache-control', 'no-cache')
          if path == 'csv': #CSV outputs as a file to download
             web.header('Content-Type', 'text/csv')
             web.header('Content-Disposition', 'attachment;filename={}-summary.csv'.format( results['flight_number'][0]))
