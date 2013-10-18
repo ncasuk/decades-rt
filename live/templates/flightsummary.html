@@ -26,9 +26,12 @@
          }
    )
    });
-   var refreshId = setInterval(function() {
+   var refreshStat = setInterval(function() {
       $('#statcontainer').load('/live/stat');
    }, 1000);
+   var refreshEvent = setInterval(function() {
+      $('#eventscontainer').load('/live/flight/events');
+   }, 7500);
 </script>
 {% endblock %}
 {% block head %}
@@ -38,33 +41,6 @@
 <div id="statcontainer"></div>
 <div id="flightsummary">
 {% block manageform %}{% endblock %}
-<table summary="Flight Summary Events" id="summary">
-   <tr><th>Event</th><th>Start</th><th>Hdg</th><th>Hgt</th><th>Lat</th><th>Long</th><th>Stop</th><th>Hdg</th><th>Hgt</th><th>Lat</th><th>Long</th><th/><th>comment</th></tr>
-{% for entry in entries %}
-    <tr id="entry_{{ entry.id }}">
-      <td>{{ entry.event }}</td>
-      <td>{{ entry.start.strftime('%H:%M:%S') }}</td>
-      <td>{{ "%d°"|format(entry.start_heading) }}</td>
-      <td>{{ "%.2fkft"|format(entry.start_height) }}</td>
-      <td>{{ entry.start_latitude|latitude }}</td>
-      <td>{{ entry.start_longitude|longitude }}</td>
-   {% if entry.finished and entry.stop != None %}
-      <td>{{ entry.stop.strftime('%H:%M:%S')  }}</td>
-      <td>{{ "%d°"|format(entry.stop_heading) }}</td>
-      <td>{{ "%.2fkft"|format(entry.stop_height) }}</td>
-      <td>{{ entry.stop_latitude|latitude }}</td>
-      <td>{{ entry.stop_longitude|longitude }}</td>
-   {% else %}
-      <td colspan="5" class="ghost">&nbsp;</td>
-   {% endif %}
-   {% if not(entry.finished) and entry.ongoing %}
-      <td><form name="form_{{ entry.id }}" action="" method="post"><input type="hidden" name="id" value="{{ entry.id }}" /><input type="submit" name="submit" value="stop" /></form></td>
-   {% else %}
-      <td>&nbsp;</td>
-   {% endif %}
-      <td>{{ entry.comment if entry.comment != None  }}</td>
-    </tr>
-{% endfor %}
-</table>
+<div id="eventscontainer">{% include "flightevents.html" %}</div>
 </div>
 {% endblock %}

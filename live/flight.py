@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8:
+# vim: set tabstop=3: set expandtab
 '''Flight Manager's console'''
 import web
 #templating
@@ -73,15 +74,22 @@ class flight:
       #get existing summary entries
       entries = self.db.select('summary', {'flight_number':results['flight_number'][0] }, where='summary.flight_number = $flight_number', order='summary.start DESC')
       
-       
-      return render_template('flight'+path+'.html',
+     
+		#do explicit check that path is one of expected values 
+      if path in ('manager', 'summary', 'csv', 'events'): 
+      	return render_template('flight'+path+'.html',
             title=title,
             entries=entries,
-       ).encode('utf-8')
+       	).encode('utf-8')
+      else:
+			raise web.notfound()
    
    def POST(self,path):
       '''Takes POSTed variables, processes them and returns a HTTP 303 See Other status. 
          (i.e. uses the PRG Pattern see: http://en.wikipedia.org/wiki/Post/Redirect/Get )'''
+      #only for manager
+      if path != 'manager':
+         raise web.notfound()
       #get details of POSTed form
       action = web.input()
      
