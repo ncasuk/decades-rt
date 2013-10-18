@@ -64,32 +64,24 @@ class flightmanager:
       self.rtlib = rt_derive.derived(self.cur, self.calfile)
    
    def GET(self):
+      '''Displays current flight summary entries and form to add more'''
       web.header('Content-Type','text/html; charset=utf-8', unique=True) 
 
       #get calibrated data from DB as required
       results = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft'],'=id','ORDER BY id DESC LIMIT 1')
 
       #get existing summary entries
-      entries = self.db.select('summary', {'flight':results['flight_number'][0] }, where='summary.flight_number = $flight', order='summary.start DESC')
+      entries = self.db.select('summary', {'flight_number':results['flight_number'][0] }, where='summary.flight_number = $flight_number', order='summary.start DESC')
       
        
       return render_template('flightmanager.html',
             title=title,
             entries=entries,
-            script='''
-   $(document).ready(function() {
-      $('#actionselect').change(
-         function() {
-            $('#event').val($('#actionselect').val());
-         }
-   )
-   });
-   var refreshId = setInterval(function() {
-      $('#statcontainer').load('/live/stat');
-   }, 1000);'''
        ).encode('utf-8')
    
    def POST(self):
+      '''Takes POSTed variables, processes them and returns a HTTP 303 See Other status. 
+         (i.e. uses the PRG Pattern see: http://en.wikipedia.org/wiki/Post/Redirect/Get )'''
       #get details of POSTed form
       action = web.input()
      
@@ -99,9 +91,23 @@ class flightmanager:
       #uses fromtimestamp rather than utcfromtimestamp as we want the result to be TZ-aware 
       with self.db.transaction():
          if(action.submit=='start'):
-            db_res = self.db.insert('summary', flight_number=prtgindata['flight_number'][0], start=datetime.fromtimestamp(prtgindata['utc_time'], timezone('utc')), start_heading=int(prtgindata['gin_heading']), start_latitude=float(prtgindata['gin_latitude']), start_longitude=float(prtgindata['gin_longitude']), start_height=float(prtgindata['pressure_height_kft']), comment=action.comment, event=action.event, finished=(action.status == 'instant'))
+            if(action.exclusive == 'True'):
+               #only one exclusive event can run at a time 
+               #get ids of other open exclusive events
+               unfinished_exclusives = self.db.select('summary', {'exclusive':True, 'finished':False, 'ongoing':True, 'flight_number':prtgindata['flight_number'][0]}, where='exclusive=$exclusive AND ongoing=$ongoing AND flight_number=$flight_number', what='id' )
+               #close them
+               for unfinished in unfinished_exclusives:
+                  self._stop(unfinished.id, prtgindata)
+            #start new action
+            db_res = self.db.insert('summary', flight_number=prtgindata['flight_number'][0], start=datetime.fromtimestamp(prtgindata['utc_time'], timezone('utc')), start_heading=int(prtgindata['gin_heading']), start_latitude=float(prtgindata['gin_latitude']), start_longitude=float(prtgindata['gin_longitude']), start_height=float(prtgindata['pressure_height_kft']), comment=action.comment, event=action.event, ongoing=(action.status == 'ongoing'), finished=(action.status == 'instant'), exclusive=(action.exclusive == 'True'))
          elif(action.submit=='stop' and action.id):
-            db_res = self.db.update('summary', 'summary.id=$id', {'id':action.id},stop=datetime.fromtimestamp(prtgindata['utc_time'], timezone('utc')),stop_heading=int(prtgindata['gin_heading']), stop_latitude=float(prtgindata['gin_latitude']), stop_longitude=float(prtgindata['gin_longitude']), stop_height=float(prtgindata['pressure_height_kft']), finished=True)
+               
+            self._stop(action.id, prtgindata)
         
       #reload page (PRG pattern)
       raise web.seeother(web.ctx.homedomain + web.ctx.homepath + web.ctx.path,absolute=True)
+
+   def _stop(self, actionid, prtgindata):
+      '''Stops & finishes an unfinished entry in the summary table'''
+      db_res = self.db.update('summary', 'summary.id=$id', {'id':int(actionid)},stop=datetime.fromtimestamp(prtgindata['utc_time'], timezone('utc')),stop_heading=int(prtgindata['gin_heading']), stop_latitude=float(prtgindata['gin_latitude']), stop_longitude=float(prtgindata['gin_longitude']), stop_height=float(prtgindata['pressure_height_kft']), finished=True)
+      

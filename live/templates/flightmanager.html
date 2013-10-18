@@ -1,5 +1,31 @@
 {% extends "layouts/default.html" %}
-{% block script %}{{ script }}{% endblock %}
+{% block script %}
+<script type="text/javascript">
+   $(document).ready(function() {
+      $('#actionselect').change(
+         function() {
+            $('#event').val($('#actionselect').val());
+            if($('#actionselect option:selected').parent().attr('id') != 'actionselect')
+            {
+               //sets the Status select with the (default) type of the action
+               $('#status').val($('#actionselect option:selected').parent().attr('id'))
+            }
+            if($('#actionselect option:selected').attr('class') == 'exclusive')
+            {
+               $('#exclusive').val('True');
+            }
+            else
+            {
+               $('#exclusive').val('False');
+            }
+         }
+   )
+   });
+   var refreshId = setInterval(function() {
+      $('#statcontainer').load('/live/stat');
+   }, 1000);
+</script>
+{% endblock %}
 {% block head %}
    {{ super() }}
 {% endblock %}
@@ -9,15 +35,24 @@
    <form name="add_summary" action="" method="post">
       <select id="actionselect">
          <option value="">..</option>
-         <option>Run</option>
-         <option>Profile</option>
-         <option>Orbit</option>
+         <optgroup id="instant" label="Instantaneous">
+            <option>Startup</option>
+            <option>T/O</option>
+            <option>Landing</option>
+            <option>Shutdown</option>
+         </optgroup>
+         <optgroup id="ongoing" label="Ongoing Actions">
+            <option class="exclusive">Run</option>
+            <option class="exclusive">Profile</option>
+            <option class="exclusive">Orbit</option>
+         </optgroup>
       </select>
       <input type="text" size="20" name="event" id="event" />
-      <select name="status" onChange="optione();">
+      <select id="status" name="status">
          <option value="ongoing">Ongoing Action</option>
          <option value="instant">Instantaneous Action</option>
       </select>
+      <input type="hidden" value="False" id="exclusive" name="exclusive" />
       <label for="comment">Comment</label>
       <input type="text" size="30" id="comment" name="comment" />
       <input type="submit" name="submit" value="start" />
