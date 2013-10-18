@@ -1,7 +1,29 @@
 body {
-   font-family: sans-serif;
+   font-family: Arial, sans-serif;
    background-color: #186f4d;
    color: white;
+}
+div#logocontainer {
+   float:left;
+   padding:1.0em; 
+}
+h1#logo
+{
+   font-family: 'Titillium Maps',  Arial, sans-serif;
+   font-size:2.5em;
+   line-height:1.0em;
+   font-weight:normal;
+   margin-top:0;
+   font-style:italic;
+}
+#logo span.header1
+{
+   font-family: arial,sans-serif;
+   font-size:0.28em;
+   display:block;
+   top:0em;
+   line-height:0.8em;
+   font-style:normal;
 }
 .ghost {
    background-color: #ccc;
