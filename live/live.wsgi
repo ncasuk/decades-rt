@@ -2,13 +2,13 @@
 import web
 import sys
 sys.path.append('/var/www/decades-live')
-import status, flightmanager, parano
+import status, flight, parano
         
 urls = (
    '/hello/(.*)', 'hello',
    '/stat', status.app,
    '/parano', parano.app,
-   '/flightmanager', flightmanager.app   
+   '/flight', flight.app   
 )
 app = web.application(urls, globals(), autoreload=False)
 application = app.wsgifunc()
