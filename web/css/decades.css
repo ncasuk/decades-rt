@@ -6,6 +6,10 @@ body {
 .ghost {
    background-color: #ccc;
 }
+div#statcontainer {
+   min-height: 7em;
+   margin-bottom: 0.4em;
+}
 div#statblock {
    width: 30em;
    padding: 0.75em;

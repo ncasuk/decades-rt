@@ -70,7 +70,7 @@ class flightmanager:
       results = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft'],'=id','ORDER BY id DESC LIMIT 1')
 
       #get existing summary entries
-      entries = self.db.select('summary', {'flight':results['flight_number'][0] }, where='summary.flight_number = $flight')
+      entries = self.db.select('summary', {'flight':results['flight_number'][0] }, where='summary.flight_number = $flight', order='summary.start DESC')
       
        
       return render_template('flightmanager.html',
@@ -103,5 +103,5 @@ class flightmanager:
          elif(action.submit=='stop' and action.id):
             db_res = self.db.update('summary', 'summary.id=$id', {'id':action.id},stop=datetime.fromtimestamp(prtgindata['utc_time'], timezone('utc')),stop_heading=int(prtgindata['gin_heading']), stop_latitude=float(prtgindata['gin_latitude']), stop_longitude=float(prtgindata['gin_longitude']), stop_height=float(prtgindata['pressure_height_kft']), finished=True)
         
-      #reload page via GET
-      raise web.seeother('')
+      #reload page (PRG pattern)
+      raise web.seeother(web.ctx.homedomain + web.ctx.homepath + web.ctx.path,absolute=True)

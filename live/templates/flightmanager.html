@@ -6,7 +6,23 @@
 {% block body %}
 <div id="statcontainer"></div>
 <div id="flightsummary">
-<table id="summary">
+   <form name="add_summary" action="" method="post">
+      <select id="actionselect">
+         <option value="">..</option>
+         <option>Run</option>
+         <option>Profile</option>
+         <option>Orbit</option>
+      </select>
+      <input type="text" size="20" name="event" id="event" />
+      <select name="status" onChange="optione();">
+         <option value="ongoing">Ongoing Action</option>
+         <option value="instant">Instantaneous Action</option>
+      </select>
+      <label for="comment">Comment</label>
+      <input type="text" size="30" id="comment" name="comment" />
+      <input type="submit" name="submit" value="start" />
+   </form>
+<table summary="Flight Summary Events" id="summary">
    <tr><th>Event</th><th>Start</th><th>Hdg</th><th>Hgt</th><th>Lat</th><th>Long</th><th>Stop</th><th>Hdg</th><th>Hgt</th><th>Lat</th><th>Long</th><th/><th>comment</th></tr>
 {% for entry in entries %}
     <tr id="entry_{{ entry.id }}">
@@ -26,7 +42,7 @@
       <td colspan="5" class="ghost">&nbsp;</td>
    {% endif %}
    {% if not(entry.finished) and entry.ongoing %}
-      <td><form name="form_{{ entry.id }}" method="post"><input type="hidden" name="id" value="{{ entry.id }}" /><input type="submit" name="submit" value="stop" /></form></td>
+      <td><form name="form_{{ entry.id }}" action="" method="post"><input type="hidden" name="id" value="{{ entry.id }}" /><input type="submit" name="submit" value="stop" /></form></td>
    {% else %}
       <td>&nbsp;</td>
    {% endif %}
@@ -34,21 +50,5 @@
     </tr>
 {% endfor %}
 </table>
-   <form name="add_summary" action="/live/flightmanager" method="post">
-      <select id="actionselect">
-         <option />
-         <option>Run</option>
-         <option>Profile</option>
-         <option>Orbit</option>
-      </select>
-      <input type="text" size="20" name="event" id="event" />
-      <select name="status" onChange="optione();">
-         <option value="ongoing">Ongoing Action</option>
-         <option value="instant">Instantaneous Action</option>
-      </select>
-      <label for="comment">Comment</label>
-      <input type="text" size="30" id="comment" name="comment" />
-      <input type="submit" name="submit" value="start" />
-   </form>
 </div>
 {% endblock %}
