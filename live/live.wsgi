@@ -5,6 +5,9 @@ sys.path.append('/var/www/decades-live')
 import status, flight, parano
 from render_helper import render_template
 
+#To get server data
+import platform; 
+        
 urls = (
    '/index', 'index',
    '/stat', status.app,
@@ -19,7 +22,7 @@ class index:
     def GET(self):
         web.header('Content-Type','text/html; charset=utf-8', unique=True) 
         return render_template('index.html',
-           title=web.ctx.host,
+           title='DECADES on ' + platform.node(),
         ).encode('utf-8')
 
 if __name__ == "__main__":
