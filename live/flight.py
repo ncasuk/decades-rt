@@ -79,7 +79,7 @@ class flight:
          web.header('Cache-control', 'no-cache')
          if path == 'csv': #CSV outputs as a file to download
             web.header('Content-Type', 'text/csv')
-            web.header('Content-Disposition', 'attachment;filename={}-summary.csv'.format( results['flight_number'][0]))
+            web.header('Content-Disposition', 'attachment;filename=FLTSUM01' + datetime.utcnow().strftime('_%Y%m%d_%H%M%S_') + '{}-summary.csv'.format( results['flight_number'][0]))
 
             csv_file = StringIO()
             csv_writer = csv.writer(csv_file)
