@@ -277,8 +277,21 @@ class derived(rt_data.rt_data):
         lwc[ind]=jw[ind]*77.2/tas[ind]
         return lwc
 
+    def twc_sample_temperature(self,data):    
+        c=self.cals['CAL072']
+        Traw=self.getdata('twcdat01_twc_samp_temp',data)
+        T=c[0]+Traw*c[1]
+        return T
 
     def total_water_content(self,data):    
+        c=self.cals['CAL070']
+        raw=self.getdata('twcdat01_twc_detector',data)
+        T=self.getdata('twc_sample_temperature',data)
+        P=self.getdata('static_pressure',data)
+        ans=T*(c[0]+raw*c[1])/P
+        return ans
+
+    '''def total_water_content(self,data):    
         """ TWC   - total water content (g kg-1)
       IF (IV12(74,1).NE.4095) THEN
         TDRS=FLOAT(IV12(72,1))                     
@@ -317,7 +330,7 @@ class derived(rt_data.rt_data):
         vp=T2*S-oxycor
         vmr=vp/(P2-vp)
         mmr=622.0*vmr
-        return mmr
+        return mmr'''
         
     def dew_point_total_water(self,data):
         #TWCDP - Dewpoint from Total Water Content  (deg C)

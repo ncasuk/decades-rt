@@ -13,6 +13,8 @@ CAL014 3  0.416,0.0330,3.23E-10,		Cabin pressure (mb)
 CAL023 3  -245.89,1.092E-2,2.36E-8,		Non de-iced temperature (deg C)
 CAL042 2  0,1.35E-4,       			Johnson Williams  (g m-3)
 CAL058 2  -78.46,0.00419,           	General Eastern Hygrometer   (C)
+CAL070 2  0,1,                      TWC Detector Scaling
+CAL072 2  3.9565E+2,1.5437E-02,     TWC Sample Temp
 CAL081 2  2.16,0.0497,   			Upper pyran clear sig & zero (W m-2)
 CAL082 2  0.389,0.0293,     			Upper pyran red   sig & zero (W m-2)
 CAL083 2  -1467,0.0947,     			Upper pyrge       sig & zero (W m-2)
