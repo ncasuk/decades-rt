@@ -18,6 +18,8 @@ tcplistenerpidfile=/var/run/decades-tcplistener.pid tcplistenerfile=/etc/decades
 serverbalancerpidfile=/var/run/decades-serverbalancer.pid serverbalancerfile=/etc/decades/decades-server-balancer.tac serverbalancerlogfile=/var/log/decades/decades-serverbalancer.log
 ginpidfile=/var/run/decades-gin.pid ginfile=/etc/decades/decades-gin.tac ginlogfile=/var/log/decades/decades-gin.log
 
+umask=022
+
 [ -r /etc/default/decades ] && . /etc/default/decades
 
 #Load config file
@@ -37,6 +39,7 @@ case "$1" in
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$tcplistenerpidfile \
                --rundir=$rundir \
+               --umask=$umask \
                --logfile=$tcplistenerlogfile \
                --python=$tcplistenerfile
         echo "."	
@@ -44,6 +47,7 @@ case "$1" in
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$listenerpidfile \
                --rundir=$rundir \
+               --umask=$umask \
                --logfile=$listenerlogfile \
                --python=$listenerfile
         echo "."	
@@ -53,6 +57,7 @@ case "$1" in
             DECADESPORT=$DECADESPORT start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$serverpidfile${DECADESPORT} \
                --rundir=$rundir \
+               --umask=$umask \
                --logfile=$serverlogfile${DECADESPORT} \
                --python=$serverfile
             echo "."	
@@ -61,6 +66,7 @@ case "$1" in
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$serverbalancerpidfile \
                --rundir=$rundir \
+               --umask=$umask \
                --logfile=$serverbalancerlogfile \
                --python=$serverbalancerfile
         echo "."	
@@ -69,6 +75,7 @@ case "$1" in
         start-stop-daemon --start --quiet --exec /usr/bin/twistd -- \
                --pidfile=$ginpidfile \
                --rundir=$rundir \
+               --umask=$umask \
                --logfile=$ginlogfile \
                --python=$ginfile
         echo "."	
