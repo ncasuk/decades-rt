@@ -55,12 +55,12 @@ class status:
          output = output + (u'<p>Lat %.0f°%.0f\'%.2f" Long %.0f°%.0f\'%.2f" Wind %.1fms¯¹ / %.0f°</p>' % tuple(self.deg_to_dms(prtgindata['gin_latitude']) + self.deg_to_dms(prtgindata['gin_longitude']) + [corcondata['gin_wind_speed'],corcondata['wind_angle']] ))
          output = output + (u'<p>Temp %.1f°C Dewpoint %.1f°C</p>' % (corcondata['deiced_true_air_temp_c'],corcondata['dew_point']))
       elif (prtgindata['time_since_midnight']):
-         output = u'<p>Flight %s %s</p>' % (prtgindata['flight_number'][0],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
+         output = output + u'<p>Flight %s %s</p>' % (prtgindata['flight_number'][0],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
          output = output + (u'<p>Heading %.0f° Speed %.0fkts Height %.0fkft Pressure %.0fmb</p>' % (prtgindata['gin_heading'],float('NaN'), prtgindata['pressure_height_kft'], prtgindata['static_pressure']))
          output = output + (u'<p>Lat %.0f°%.0f\'%.2f" Long %.0f°%.0f\'%.2f" Wind %.1fms¯¹ / %.0f°</p>' % tuple(self.deg_to_dms(prtgindata['gin_latitude']) + self.deg_to_dms(prtgindata['gin_longitude']) + [float('NaN'),float('NaN')] ))
          output = output + (u'<p>Temp %.1f°C Dewpoint %.1f°C</p>' % (float('NaN'),float('NaN')))
       else:
-         output = u'<p>Flight ####</p>' 
+         output = output + u'<p>Flight ####</p>' 
       #close output div
       output = output + u'</div>'
    
