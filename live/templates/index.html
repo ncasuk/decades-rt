@@ -1,0 +1,11 @@
+{% extends "layouts/default.html" %}
+{% block body %}
+<div id="index">
+   <h2>Welcome to {{ title }}</h2>
+   <ul class="menu" id="index">
+      <li><a href="/plot/plot.html">Derived data</a></li>
+      <li><a href="/live/flight/summary">Flight summary</a></li>
+      <li><a href="/live/flight/manager">Flight management</a></li>
+   </ul>  
+</div>
+{% endblock %}

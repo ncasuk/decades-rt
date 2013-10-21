@@ -28,6 +28,9 @@ h1#logo
 .ghost {
    background-color: #ccc;
 }
+div#index {
+   clear: left;
+}
 div#statcontainer {
    min-height: 7em;
    margin-bottom: 0.4em;
@@ -73,10 +76,12 @@ td.num {
 p#csvfile {
    text-align: right;
 }
-p#csvfile a, p#csvfile a:visited {
+a, a:visited {
    color: white;
-   text-decoration: none;
 }
-p#csvfile a:hover {
+a:hover {
    color: #0C2174;
+}
+ul.menu {
+   margin-left: 5em;
 }
