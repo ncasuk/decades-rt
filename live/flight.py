@@ -3,8 +3,6 @@
 # vim: set tabstop=3: set expandtab
 '''Flight Manager's console'''
 import web
-#templating
-from jinja2 import Environment,FileSystemLoader
 
 urls = {
    "/(.+)", 'flight'
@@ -25,33 +23,13 @@ from pydecades.database import get_database
 from datetime import datetime, timedelta
 from pytz import timezone
 
-import csv, os
+import csv
+
 from cStringIO import StringIO
 
+from render_helper import render_template, latitude, longitude
+
 title = '''Flight Manager's console'''
-
-def latitude(value):
-   value=float(value)
-   return ("%.2f" % abs(value)) + ('S' if value <0 else 'N')
-
-def longitude(value):
-   value=float(value)
-   return ("%.2f" % abs(value)) + ('W' if value <0 else 'E')
-
-def render_template(template_name, **context):
-    extensions = context.pop('extensions', [])
-    globals = context.pop('globals', {})
-
-    jinja_env = Environment(
-            loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates')),
-            extensions=extensions,
-            )
-    jinja_env.filters['latitude'] = latitude
-    jinja_env.filters['longitude'] = longitude
-    jinja_env.globals.update(globals)
-
-    #jinja_env.update_template_context(context)
-    return jinja_env.get_template(template_name).render(context)
 
 class flight:
    def __init__(self):
@@ -114,7 +92,7 @@ class flight:
             if(action.exclusive == 'True'):
                #only one exclusive event can run at a time 
                #get ids of other open exclusive events
-               unfinished_exclusives = self.db.select('summary', {'exclusive':True, 'finished':False, 'ongoing':True, 'flight_number':prtgindata['flight_number'][0]}, where='exclusive=$exclusive AND ongoing=$ongoing AND flight_number=$flight_number', what='id' )
+               unfinished_exclusives = self.db.select('summary', {'exclusive':True, 'finished':False, 'ongoing':True, 'flight_number':prtgindata['flight_number'][0]}, where='exclusive=$exclusive AND ongoing=$ongoing AND flight_number=$flight_number AND finished=$finished', what='id' )
                #close them
                for unfinished in unfinished_exclusives:
                   self._stop(unfinished.id, prtgindata)
