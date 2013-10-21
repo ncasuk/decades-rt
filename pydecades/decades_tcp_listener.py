@@ -28,14 +28,23 @@ class DecadesTCPListener(Protocol):
          self.factory.outfiles[instrument][flightno].write(data)
       except KeyError: #i.e.file does not exist yet
          try: #try to create file 
-            os.umask(0)
+            os.umask(022)
             dt = datetime.utcnow()
             outpath = os.path.join(self.output_dir,dt.strftime('%Y'), dt.strftime('%m'), dt.strftime('%d'))
             mkpath(outpath, mode=self.output_create_mode + 0111) #acts like "mkdir -p" so if exists returns a success (+0111 adds executable bit as they are dirs)
 
             outfile = os.path.join(outpath,instrument + '_'+dt.strftime('%Y%m%d_%H%M%S') +'_' + flightno)
             log.msg('Creating output file ' + outfile)
-            self.factory.outfiles[instrument][flightno] = os.fdopen(os.open(outfile, os.O_WRONLY | os.O_CREAT, self.output_create_mode), 'w')
+            #self.factory.outfiles[instrument][flightno] = os.fdopen(os.open(outfile, os.O_WRONLY | os.O_CREAT, self.output_create_mode), 'w')
+            self.factory.outfiles[instrument][flightno] = open(outfile, 'w')
+            #update list-of-latest files
+            with open(os.path.join(self.output_dir,'latest'),'w') as latest:#overwrites each time
+               #latest.write(instrument+': '+ outfile)
+               for each in self.factory.outfiles:
+                  if flightno in self.factory.outfiles[each]:
+                     log.msg(flightno, each)
+                     latest.write(each+': ' + repr((self.factory.outfiles[each][flightno]).name) +'\r\n')
+ 
          except TypeError: 
             '''usually some incoming data corruption so 'instrument' and/or 'flightno'
             are not valid due to containing some NULL bytes; ignore data in that case'''
