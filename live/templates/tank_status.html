@@ -1,0 +1,14 @@
+{% extends "layouts/default.html" %}
+{% block body %}
+<div id="tank_status">
+{% for section in statuses %}
+<h2>{{ section }}</h2>
+<dl>
+   {% for key in statuses[section] %}
+  <dt>{{ key }}</dt> 
+      <dd>{{ statuses[section][key] }}</dd>
+   {% endfor %}
+</dl>
+{% endfor %}
+</div>
+{% endblock %}

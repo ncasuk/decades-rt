@@ -4,12 +4,11 @@ from datetime import datetime
 import os
 from distutils.dir_util import mkpath
 
-from ConfigParser import SafeConfigParser
+from pydecades.configparser import DecadesConfigParser
 
 class DecadesTCPListener(Protocol):
    #outfiles = {} #dictonary of output files.
-   parser = SafeConfigParser()
-   config = parser.read(['/etc/decades/decades.ini','decades.ini'])
+   parser = DecadesConfigParser()
    
    def __init__(self):
       self.output_dir = self.parser.get('Config','output_dir')
@@ -37,17 +36,18 @@ class DecadesTCPListener(Protocol):
             log.msg('Creating output file ' + outfile)
             #self.factory.outfiles[instrument][flightno] = os.fdopen(os.open(outfile, os.O_WRONLY | os.O_CREAT, self.output_create_mode), 'w')
             self.factory.outfiles[instrument][flightno] = open(outfile, 'w')
-            #update list-of-latest files
-            with open(os.path.join(self.output_dir,'latest'),'w') as latest:#overwrites each time
-               #latest.write(instrument+': '+ outfile)
-               for each in self.factory.outfiles:
-                  if flightno in self.factory.outfiles[each]:
-                     log.msg(flightno, each)
-                     latest.write(each+': ' + repr((self.factory.outfiles[each][flightno]).name) +'\r\n')
  
          except TypeError: 
             '''usually some incoming data corruption so 'instrument' and/or 'flightno'
             are not valid due to containing some NULL bytes; ignore data in that case'''
             log.msg('Invalid TCP data, discarding')
+      #update list-of-latest files
+      with open(os.path.join(self.output_dir,'latest'),'w') as latest:#overwrites each time
+         #latest.write(instrument+': '+ outfile)
+         for each in self.factory.outfiles:
+            if flightno in self.factory.outfiles[each]:
+               latest.write(each+': ' + ((self.factory.outfiles[each][flightno]).name) +'\r\n')
+            else:
+               latest.write(each+': ' + 'MISSING' +'\r\n')
             
 
