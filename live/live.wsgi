@@ -65,7 +65,7 @@ class tank_status:
             
         results = self.rtlib.derive_data_alt(['time_since_midnight','flight_number'],'=id','ORDER BY id DESC LIMIT 1')
         try:
-            statuses['Tank']['Flight'] = str(results['flight_number'][0])
+            statuses['Tank']['Flight'] = str(results['flight_number'])
         except IndexError:
             pass #ignore it, it's not been set yet
         
