@@ -17,6 +17,7 @@ class derived(rt_data.rt_data):
         feet=self.getdata('pressure_height_feet',data) 
         return feet*0.3048
     def static_pressure(self,data):
+        '''Static pressure in millibars'''
         feet=self.getdata('pressure_height_feet',data)
         return 1013.25*(1-6.87535e-6*feet)**5.2561
     def indicated_air_speed_knts(self,data):
