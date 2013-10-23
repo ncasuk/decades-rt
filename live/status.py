@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8:
-'''An example of using WSGI with the DECADES python library. 
-This provides the same functionality as the Java Plot.jar
-in Status mode'''
 
 import web
 
@@ -25,6 +22,9 @@ from pydecades.configparser import DecadesConfigParser
 from datetime import datetime, timedelta
 
 class status:
+   '''An example of using WSGI with the DECADES python library. 
+   This provides the same functionality as the Java Plot.jar
+   in Status mode'''
    def deg_to_dms(self, deg):
       '''Converts decimal degrees into a degrees/minutes/seconds list'''
       d = int(deg)
