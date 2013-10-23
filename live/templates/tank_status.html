@@ -1,14 +1,33 @@
 {% extends "layouts/default.html" %}
 {% block body %}
 <div id="tank_status">
-{% for section in statuses %}
-<h2>{{ section }}</h2>
+<h2>Tank data</h2>
 <dl>
-   {% for key in statuses[section] %}
+   {% for key in statuses['Tank'] %}
   <dt>{{ key }}</dt> 
-      <dd>{{ statuses[section][key] }}</dd>
+      <dd class="{{ 'error' if statuses['Tank'][key] ==None }}">{{ statuses['Tank'][key] }}</dd>
    {% endfor %}
 </dl>
-{% endfor %}
+<h2>Processes</h2>
+<dl>
+   {% for key in statuses['Process'] %}
+  <dt>{{ key }}</dt> 
+      <dd class="{{ 'error' if not(statuses['Process'][key]) }}">{{ statuses['Process'][key] }}</dd>
+   {% endfor %}
+</dl>
+<h2>TCP Data</h2>
+<dl>
+   {% for key in statuses['TCP'] %}
+  <dt>{{ key }}</dt> 
+      <dd class="{% if (statuses['TCP'][key][1] ==None or (curtime - statuses['TCP'][key][1]) > critical_s) %}error{% elif ((curtime - statuses['TCP'][key][1]) > warning_s) %}warning{% endif %}">{{ statuses['TCP'][key][1]|humanise_timestamp }}, {{ statuses['TCP'][key][0] }} of {{ statuses['TCP'][key][2]|default('N/A') }} bytes</dd>
+   {% endfor %}
+</dl>
+<h2>UDP Data</h2>
+<dl>
+   {% for key in statuses['UDP'] %}
+  <dt>{{ key }}</dt> 
+      <dd class="{% if not(statuses['UDP'][key]) or ((curtime - statuses['UDP'][key]) > critical_s) %}error{% elif (curtime - statuses['UDP'][key]) > warning_s %}warning{% endif %}">{{ statuses['UDP'][key]|humanise_timestamp }}</dd>
+   {% endfor %}
+</dl>
 </div>
 {% endblock %}

@@ -103,3 +103,9 @@ dd {
    margin: 0 0 0 16em;
    padding: 0 0 0.5em 0;
 }
+.error {
+   background-color: red;
+}
+.warning {
+   background-color: #FF7E00;
+}

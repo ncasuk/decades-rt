@@ -17,6 +17,9 @@ from pydecades.configparser import DecadesConfigParser
 from pydecades.rt_calcs import rt_derive
 from pydecades.database import get_database
 
+from datetime import datetime
+from pytz import timezone
+
 #to encode
 import json
 
@@ -105,6 +108,9 @@ class tank_status:
             return render_template('tank_status.html',
                title=platform.node() + 'Tank Status ',
                statuses=statuses,
+               curtime=float(datetime.now(timezone('utc')).strftime('%s')),
+               warning_s=10.0,
+               critical_s=30.0
             ).encode('utf-8')
         elif filetype in ['txt','ini']:
             web.header('Content-Type', 'text/plain')
@@ -117,14 +123,9 @@ class tank_status:
             return output
          
         else:
-            web.notfound()
+            raise web.notfound()
             
          
-            
-      
-
-
-
 if __name__ == "__main__":
     app.run()
 
