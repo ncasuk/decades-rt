@@ -35,13 +35,13 @@ while 1:
                'flight_num':flightnum,
                'pressure_alt':int(1000 + (50 * math.sin(timestamp/4))), #average 10kft
                'ind_air_speed':int(9600 + (10 * math.cos(timestamp*4))), #average 300kts
-               'deiced_temp_flag':True if timestamp%2 else False, #alternates between true and false
+               'deiced_temp_flag':True, #alternates between true and false
                'rad_alt':int(random.normalvariate(10000,400))
             }
             fakedata['CORCON'] = {
                'utc_time':timestamp,
                'flight_num':flightnum,
-               'di_temp':int(23000 + (1204 * math.sin(timestamp/3))),
+               'di_temp':int(240000 + (9000 * math.sin(timestamp/3))),
                'ge_dew':int(39371 + (1204 * math.cos(timestamp/3))),
                'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
                'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3)))
