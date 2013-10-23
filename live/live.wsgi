@@ -2,7 +2,7 @@
 import web
 import sys
 sys.path.append('/var/www/decades-live')
-import status, flight, parano
+import status, flight, parano, avaps
 from render_helper import render_template
 
 #Libraries to access the PostgreSQL database
@@ -26,6 +26,7 @@ import json
 urls = (
    '/index', 'index',
    '/stat', status.app,
+   '/avaps', avaps.app,
    '/parano', parano.app,
    '/flight', flight.app,   
    '/tank_status\.(.*)', 'tank_status'
