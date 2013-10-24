@@ -136,5 +136,6 @@ def Plot_jar():
    '''Creates the JAR file for the display applicaton'''
    with lcd('Horace/web/plot/plot'):
       local('make jar')
-      local('jarsigner Plot.jar septic')
+      #sign jar if and only if it isn't signed
+      local('jarsigner -verify -strict Plot.jar || jarsigner Plot.jar septic')
       local('cp Plot.jar ..') 
