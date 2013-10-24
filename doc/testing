@@ -31,3 +31,8 @@ Running a local copy of decades-server
 ======================================
 In work directory:
 DECADESPORT=1500 twistd --pidfile=server.pid -ny pylib/decades-server.tac
+
+Forwarding incoming TCP packets
+===============================
+
+ssh -R 192.168.101.110:3502:129.11.85.226:3502 fish
