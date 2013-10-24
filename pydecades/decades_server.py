@@ -49,6 +49,8 @@ class DecadesProtocol(basic.LineReceiver):
       log.msg(line)
 
    def rawDataReceived(self, data):
+      '''Deals with incoming requests from the HORACE java applet - ignores
+         any requests not starting with STAT or PARA'''
       if data[0:4] == "STAT":
          self.writeStatus()
       if data[0:4] == "PARA":
@@ -71,7 +73,7 @@ class DecadesProtocol(basic.LineReceiver):
 
          if para[2] == -1:
             #it wants all up to latest data point
-            returndata = self.rtlib.derive_data_alt(paralist, '> %i' % para[1])
+            returndata = self.rtlib.derive_data_alt(paralist, '>= %i' % para[1])
          else:
             #in this case there is a specific range it wants
             returndata = self.rtlib.derive_data_alt(paralist, 'BETWEEN %i AND %i' % (para[1],para[2]))
