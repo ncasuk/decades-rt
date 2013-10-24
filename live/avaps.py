@@ -27,8 +27,8 @@ from pytz import timezone
 import json
 
 class avaps:
-   '''Produces the ASCII data in the format required by the NCAR AVAPS system 
-      (see NCAR AVAPS Interface Control Document: 
+   '''Produces the data required by the NCAR AVAPS system as JSON for conversion
+      later  (see NCAR AVAPS Interface Control Document: 
       http://www.eol.ucar.edu/isf/facilities/dropsonde/AVAPS_Interface_RevC.html )'''
    def GET(self):
       '''Usage: via web.py, e.g. http://fish/live/avaps'''
