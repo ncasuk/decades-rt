@@ -66,7 +66,11 @@ class DecadesTCPListener(Protocol):
 
             outfile = os.path.join(outpath,instrument + '_'+dt.strftime('%Y%m%d_%H%M%S') +'_' + flightno)
             log.msg('Creating output file ' + outfile)
-            self.factory.outfiles[instrument][flightno] = open(outfile, 'w')
+            try:
+               self.factory.outfiles[instrument][flightno] = open(outfile, 'w')
+            except KeyError:
+               #instrument hasn't a CSV file describing it for UDP
+               self.factory.outfiles[instrument] = {} 
             #write data
             self.factory.outfiles[instrument][flightno].write(data)
  
