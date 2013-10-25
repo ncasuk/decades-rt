@@ -3,6 +3,10 @@ from twisted.internet import reactor
 from twisted.internet.protocol import Protocol, ReconnectingClientFactory, ServerFactory
 from twisted.python import log
 from datetime import datetime
+import os
+from distutils.dir_util import mkpath
+
+from pydecades.configparser import DecadesConfigParser
 
 class Proxy(Protocol):
    noisy = True
@@ -45,9 +49,18 @@ class GINClient(Proxy):
 
     peer = None
     serverFactory = GINServerFactory
+    parser = DecadesConfigParser()
 
     def __init__(self):
-        self.outfile = open('/opt/decades/output/gindat_'+datetime.utcnow().strftime('%Y%m%d_%H%M%S')+'.bin','a')
+        self.output_dir = self.parser.get('Config','output_dir')
+        #interprets the mode as an octal int
+        self.output_create_mode = int(self.parser.get('Config','output_create_mode'),8)
+        os.umask(022)
+        dt = datetime.utcnow()
+        outpath = os.path.join(self.output_dir,dt.strftime('%Y'), dt.strftime('%m'), dt.strftime('%d'))
+        mkpath(outpath, mode=self.output_create_mode + 0111) #acts like "mkdir -p" so if exists returns a success (+0111 adds executable bit as they are dirs)
+        
+        self.outfile = open(os.path.join(outpath,'GINDAT01_' + datetime.utcnow().strftime('%Y%m%d_%H%M%S')+'.bin'),'a')
     
     def connectionMade(self):
         log.msg( "Connected to GIN")
@@ -57,6 +70,7 @@ class GINClient(Proxy):
     
     def dataReceived(self, data):
         self.outfile.write(data)
+        self.outfile.flush()
         if(self.peer):
             self.peer.transport.write(data)
 
