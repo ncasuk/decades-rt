@@ -1,7 +1,7 @@
 from twisted.internet.protocol import Protocol
 from twisted.python import log
 from datetime import datetime
-import os
+import os, struct
 from distutils.dir_util import mkpath
 
 from pydecades.configparser import DecadesConfigParser
@@ -9,6 +9,9 @@ from pydecades.configparser import DecadesConfigParser
 class DecadesTCPListener(Protocol):
    #outfiles = {} #dictonary of output files.
    parser = DecadesConfigParser()
+   __buffer = ''
+   ''' Length, in bytes, of the required header of incoming TCP data'''
+   header_length = 13
    
    def __init__(self):
       self.output_dir = self.parser.get('Config','output_dir')
@@ -17,6 +20,35 @@ class DecadesTCPListener(Protocol):
       log.msg('Initialising protocol')
             
    def dataReceived(self, data):
+      '''reconstitutes a possibly-fragmented incoming TCP record'''
+
+      self.__buffer = self.__buffer + data
+      if len(self.__buffer) <= self.header_length:
+         #incomplete, and still in the header; wait for more data
+         return
+      
+      #Decode packet length
+      (packet_length, ) = struct.unpack('>I',self.__buffer[9:self.header_length])
+      log.msg('%s %s arrived, %s is full length' % (self.__buffer[1:9], len(data), packet_length+self.header_length))
+      #split buffer into expected size chunks
+      chunks = [self.__buffer[i:i+packet_length+self.header_length] for i in range(0, len(self.__buffer), packet_length+self.header_length)]
+      while chunks:
+         line = chunks.pop()
+         if(len(line) == packet_length+self.header_length):
+            self.complete_record(line)
+            #strip that line from the buffer
+            self.__buffer = "".join(chunks)
+         elif (len(line) < packet_length+self.header_length):
+            #it's trailing incomplete data
+            log.msg('Buffered %s bytes' % len(line))
+            self.__buffer = line
+         else:
+            #should never happen...
+            raise ValueError
+ 
+   #used to be the dataReceived method, above 
+   def complete_record(self, data):
+      '''gets the instrument name & flight number, and passes it to the write function'''
       instrument=data[1:9] #e.g PRTAFT01
       flightno=data[20:24] # e.g. XXXX, SIMU, B751
       log.msg('TCP data from ' + instrument + ' ' + flightno)
@@ -34,8 +66,9 @@ class DecadesTCPListener(Protocol):
 
             outfile = os.path.join(outpath,instrument + '_'+dt.strftime('%Y%m%d_%H%M%S') +'_' + flightno)
             log.msg('Creating output file ' + outfile)
-            #self.factory.outfiles[instrument][flightno] = os.fdopen(os.open(outfile, os.O_WRONLY | os.O_CREAT, self.output_create_mode), 'w')
             self.factory.outfiles[instrument][flightno] = open(outfile, 'w')
+            #write data
+            self.factory.outfiles[instrument][flightno].write(data)
  
          except TypeError: 
             '''usually some incoming data corruption so 'instrument' and/or 'flightno'
