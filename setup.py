@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='pydecades',
-      version='0.7.3',
+      version='0.9.0',
       description='Python DECADES functions',
       author='Dan Walker & Dave Tiddeman',
       author_email='daniel.walker@ncas.ac.uk',
