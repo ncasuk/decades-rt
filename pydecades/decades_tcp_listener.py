@@ -57,6 +57,7 @@ class DecadesTCPListener(Protocol):
    def writedata(self, data, instrument, flightno):
       try:
          self.factory.outfiles[instrument][flightno].write(data)
+         self.factory.outfiles[instrument][flightno].flush()
       except KeyError: #i.e.file does not exist yet
          try: #try to create file 
             os.umask(022)
@@ -73,6 +74,8 @@ class DecadesTCPListener(Protocol):
                self.factory.outfiles[instrument] = {} 
             #write data
             self.factory.outfiles[instrument][flightno].write(data)
+            self.factory.outfiles[instrument][flightno].flush()
+            
  
          except TypeError: 
             '''usually some incoming data corruption so 'instrument' and/or 'flightno'
