@@ -72,6 +72,7 @@ class DecadesTCPListener(Protocol):
             except KeyError:
                #instrument hasn't a CSV file describing it for UDP
                self.factory.outfiles[instrument] = {} 
+               self.factory.outfiles[instrument][flightno] = open(outfile, 'w')
             #write data
             self.factory.outfiles[instrument][flightno].write(data)
             self.factory.outfiles[instrument][flightno].flush()
