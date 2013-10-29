@@ -11,7 +11,7 @@ import psycopg2.extras
 from collections import namedtuple # so we can used namedtuple cursors
 
 #To get server data
-import platform, os, os.path, glob
+import platform, os, os.path, glob, subprocess
 from pydecades.decades import DecadesDataProtocols
 from pydecades.configparser import DecadesConfigParser
 from pydecades.rt_calcs import rt_derive
@@ -40,7 +40,7 @@ class index:
         web.header('Content-Type','text/html; charset=utf-8', unique=True) 
         return render_template('index.html',
            title='DECADES on ' + platform.node(),
-        ).encode('utf-8')
+        )
 
 class tank_status:
    dataProtocols = DecadesDataProtocols() 
@@ -58,7 +58,8 @@ class tank_status:
         statuses = {} #dictionary
         #tank name (e.g. fish or septic)
         statuses['Tank'] =  {}
-        statuses['Tank']['name'] = platform.node()
+        statuses['Tank']['Name'] = platform.node()
+        statuses['Tank']['Temp'] = subprocess.check_output("sensors")
         #get PTPD status
         try:
             with open('/var/log/ptpd/ptpd-stats.log','r') as ptpdstats:
