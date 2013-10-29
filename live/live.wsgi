@@ -39,7 +39,7 @@ class index:
     def GET(self):
         web.header('Content-Type','text/html; charset=utf-8', unique=True) 
         return render_template('index.html',
-           title='DECADES on ' + platform.node(),
+           title=' ' + platform.node(),
         )
 
 class tank_status:
@@ -108,7 +108,7 @@ class tank_status:
         elif filetype == 'html':
             web.header('Content-Type','text/html; charset=utf-8', unique=True) 
             return render_template('tank_status.html',
-               title=platform.node() + 'Tank Status ',
+               title=platform.node() + ' Tank Status',
                statuses=statuses,
                curtime=float(datetime.now(timezone('utc')).strftime('%s')),
                warning_s=10.0,
