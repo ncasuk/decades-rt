@@ -812,9 +812,11 @@ C ST    - Corrected Surface Temperature   (deg C)
         return c[0]+c[1]*raw 
 
     def teco_ozone_mixing_ratio(self,data):
-        raw=self.getdata('CHEM:teco_ozone',data)  # What raw signal ?
-        c=self.cals['CAL100']
-        return c[0]+c[1]*raw 
+        '''Returns raw signal from TEIOZO instrument'''
+        return self.getdata('teiozo01_conc',data)
+        #raw=self.getdata('CHEM:teco_ozone',data)  # What raw signal ?
+        #c=self.cals['CAL100']
+        #return c[0]+c[1]*raw 
         
     def aqd_no(self,data):
         raw=self.getdata('CHEM:aqdno',data)  # What raw signal ?
@@ -837,9 +839,12 @@ C ST    - Corrected Surface Temperature   (deg C)
         return c[0]+c[1]*raw 
         
     def co_mixing_ratio(self,data):
-        raw=self.getdata('CHEM:co',data)  # What raw signal ?
-        c=self.cals['CAL154']
-        return c[0]+c[1]*raw 
+        '''Passes through the Aerolaser model 5002 reading'''
+        return self.getdata('al52co01_conc',data)
+        
+        #raw=self.getdata('CHEM:co',data)  # What raw signal ?
+        #c=self.cals['CAL154']
+        #return c[0]+c[1]*raw 
 
     def time_since_midnight(self,data):
         """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
