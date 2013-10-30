@@ -3,7 +3,7 @@ from twisted.internet import reactor
 from twisted.internet.protocol import Protocol, ReconnectingClientFactory, ServerFactory
 from twisted.python import log
 from datetime import datetime
-import os
+import os, json
 from distutils.dir_util import mkpath
 
 from pydecades.configparser import DecadesConfigParser
@@ -71,6 +71,18 @@ class GINClient(Proxy):
     def dataReceived(self, data):
         self.outfile.write(data)
         self.outfile.flush()
+        #try to update 'latest' file for status page
+        try:
+           current = open(os.path.join(self.output_dir,'latest'),'r')
+           latest_array = json.load(current)
+           current.close()
+        except (IOError, ValueError): #file does not exist or is unreadable
+           latest_array = {} #empty Dict 
+        with open(os.path.join(self.output_dir,'latest'),'w') as latest:#overwrites each time
+           latest_array['GINDAT01'] = self.outfile.name
+           #write JSON
+           json.dump(latest_array,latest)
+
         if(self.peer):
             self.peer.transport.write(data)
 

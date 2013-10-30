@@ -1,7 +1,7 @@
 from twisted.internet.protocol import Protocol
 from twisted.python import log
 from datetime import datetime
-import os, struct
+import os, struct, json
 from distutils.dir_util import mkpath
 
 from pydecades.configparser import DecadesConfigParser
@@ -83,12 +83,16 @@ class DecadesTCPListener(Protocol):
             are not valid due to containing some NULL bytes; ignore data in that case'''
             log.msg('Invalid TCP data, discarding')
       #update list-of-latest files
+      try:
+         current = open(os.path.join(self.output_dir,'latest'),'r')
+         latest_array = json.load(current)
+         current.close()
+      except (IOError, ValueError): #file does not exist or is unreadable
+         latest_array = {} #empty Dict 
       with open(os.path.join(self.output_dir,'latest'),'w') as latest:#overwrites each time
-         #latest.write(instrument+': '+ outfile)
-         for each in self.factory.outfiles:
-            if flightno in self.factory.outfiles[each]:
-               latest.write(each+': ' + ((self.factory.outfiles[each][flightno]).name) +'\r\n')
-            else:
-               latest.write(each+': ' + 'MISSING' +'\r\n')
+         latest_array[instrument] = (self.factory.outfiles[instrument][flightno]).name
+         #write JSON
+         json.dump(latest_array,latest)
+
             
 

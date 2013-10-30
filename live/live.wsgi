@@ -83,13 +83,10 @@ class tank_status:
             statuses['Process'][os.path.basename(each).replace('.pid','')] = os.path.exists('/proc/' + pid[0])
         statuses['TCP'] = {}
         with open(os.path.join(self.output_dir,'latest'),'r') as latest:
-            for line in latest:
-               l = line.split(': ')
-               if l[1].strip() == 'MISSING':
-                  statuses['TCP'][l[0]] = ['MISSING',None, None]
-               else:
-                  fileinfo = os.stat(l[1].strip())
-                  statuses['TCP'][l[0]] = [l[1].strip(), fileinfo.st_mtime, fileinfo.st_size]
+            latest_array = json.load(latest)
+            for each in latest_array:
+               fileinfo = os.stat(latest_array[each])
+               statuses['TCP'][each] = [latest_array[each], fileinfo.st_mtime, fileinfo.st_size]
             
         #UDP data
         statuses['UDP'] = {}
@@ -111,8 +108,8 @@ class tank_status:
                title=platform.node() + ' Tank Status',
                statuses=statuses,
                curtime=float(datetime.now(timezone('utc')).strftime('%s')),
-               warning_s=10.0,
-               critical_s=30.0
+               warning_s=30.0,
+               critical_s=60.0
             ).encode('utf-8')
         elif filetype in ['txt','ini']:
             web.header('Content-Type', 'text/plain')
