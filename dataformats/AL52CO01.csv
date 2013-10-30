@@ -1,0 +1,35 @@
+field,type,max_chars,description
+$AL52CO01,text,8,Identifies which device created the packet (Aerolaser model 5002)
+packet_length,unsigned_int,3,the length of the packet (not including all characters up-to the comma which follows this number)
+utc_time,unsigned_int,10,the valid time for this packet (usually 1 second behind actual time)
+ptp_sync,boolean,1,"indication of whether the CRIO is successfully synchronised to PTP time ( 1 = synced, 0 = not-synced )"
+crio_temp,unsigned_int,3,equals the internal bench temperature of the device
+flight_num,text,5,"indicates the flight number for this packet ( an ""empty"" string here indicates that the CRIO hasn't been assigned a flight number )"
+crio_fpga_run,boolean,1,"indicates whether the FPGA code is running ( a value toggling e.g. 1-0-1-0…etc shows running code, fixed value = non running )"
+crio_rtc_run,boolean,1,"indicates whether the realtime code is running ( a value toggling e.g. 1-0-1-0…etc shows running code, fixed value = non running )"
+crio_status,boolean,1,"- currently unused but for future use (boolean, therefore 0,1 )"
+crio_UDP_num,unsigned_int,6,this number starts @ zero and increments with each UDP packet - used for verification of packet stream
+crio_aux_out1,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
+crio_aux_out2,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
+crio_aux_out3,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
+conc,unsigned_int,8,Reading in signed decimal for CO Signal (ppb)
+counts,unsigned_int,8,PMT raw count rate (Hz)
+sens,unsigned_int,5,Detector sensitivity (Hz/ppb)
+zero,unsigned_int,5,Detector background (Hz)
+lampflow,unsigned_int,5,Plasma lamp CO2/Argon MFC flowrate (sccm)
+lamptemp,unsigned_int,5,Plasma lamp temperature (°c)
+monoflow,unsigned_int,5,Monochromator N2 MFC flowrate (sccm)
+monotemp,unsigned_int,5,Monochromator N2 temperature (°c)
+monopress,unsigned_int,4,Monochromator N2 pressure (bar);  Honeywell Press Transducer model SA
+cellpress,unsigned_int,5,Fluorescence cell vacuum (Torr)
+calpress,unsigned_int,4,CO/air calibrant gas pressure (bar); Honeywell Press Transducer model SA
+temppmt,unsigned_int,5,PMT temperature (°c)
+err,text,6,ERR_XX where XX is the error code
+calstatus,boolean,1,Calibration status of device
+calvalve,boolean,1,Calibration valve status (solenoid internal to device)
+zerovalve,boolean,1,Zeroing valve status (solenoid internal to device)
+lamppress,unsigned_int,4,Plasma lamp CO2/Argon pressure (bar); Sensortechnics Press Transducer model: CTU9100AM1.  Logged with PCLJ AIN2 (not RS232)
+lamppresscontent,unsigned_int,4,Plasma lamp CO2/Argon content pressure (bar); Wika Pressure Transmitter model A-10. Logged with PCLJ AIN3
+monopresscontent,unsigned_int,4,Monochromator N2 content pressure (bar); Wika Pressure Transmitter model A-10. Logged with PCLJ AIN4
+calpresscontent,unsigned_int,4,CO/air calibrant gas content pressure (bar); Wika Pressure Transmitter model A-10. Logged with PCLJ AIN5
+vacvalve,boolean,1,MKS Cv16 vacuum isolation control valve (0=vacuum off; 1=vacuum on); Controlled by PCLJ EIO5
