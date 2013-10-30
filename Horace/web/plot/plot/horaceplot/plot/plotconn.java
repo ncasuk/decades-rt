@@ -229,12 +229,12 @@ public Vector data=new Vector();
     try{
         getStatus();
         if(start>0){
-            start=derindex-(((int)status[0]-start)/3);
+            start=derindex-(((int)status[0]-start));
             if(start<0)start=1;
             if(start>derindex)start=derindex;
         }
         if(stop>0){
-            stop=derindex-(((int)status[0]-stop)/3);
+            stop=derindex-(((int)status[0]-stop));
             if(stop<start)stop=start;
             if(stop>derindex)stop=derindex;
         }
