@@ -83,12 +83,16 @@ class DecadesTCPListener(Protocol):
             are not valid due to containing some NULL bytes; ignore data in that case'''
             log.msg('Invalid TCP data, discarding')
       #update list-of-latest files
+      latest_array = {} #Start with 'Missing' Entries
+      for each in self.factory.outfiles:
+         latest_array[each] = 'MISSING'
+
       try:
          current = open(os.path.join(self.output_dir,'latest'),'r')
-         latest_array = json.load(current)
+         latest_array.update(json.load(current)) #file overrules MISSINGs
          current.close()
       except (IOError, ValueError): #file does not exist or is unreadable
-         latest_array = {} #empty Dict 
+         pass;
       with open(os.path.join(self.output_dir,'latest'),'w') as latest:#overwrites each time
          latest_array[instrument] = (self.factory.outfiles[instrument][flightno]).name
          #write JSON

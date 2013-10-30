@@ -85,8 +85,11 @@ class tank_status:
         with open(os.path.join(self.output_dir,'latest'),'r') as latest:
             latest_array = json.load(latest)
             for each in latest_array:
-               fileinfo = os.stat(latest_array[each])
-               statuses['TCP'][each] = [latest_array[each], fileinfo.st_mtime, fileinfo.st_size]
+               if latest_array[each] != 'MISSING':
+                  fileinfo = os.stat(latest_array[each])
+                  statuses['TCP'][each] = [latest_array[each], fileinfo.st_mtime, fileinfo.st_size]
+               else:
+                  statuses['TCP'][each] = ['MISSING', None, None]
             
         #UDP data
         statuses['UDP'] = {}
