@@ -10,6 +10,27 @@ CAL003 1  0.847,                    	Upwash factor *
 CAL004 1  1.000,                    	TAS correction factor *
 CAL010 3  -250.03,1.105E-3,-2.19E-12, 	De-iced temperature (deg C)
 CAL014 3  2.758,0.03293,-2.463E-10,		Cabin pressure (mb)
+CAL101 1  3.29E-4,                     Nevzerov cal
+CAL102 1  -6.82E-2,                    Nevzerov cal
+CAL103 1  3.29E-4,                     Nevzerov cal
+CAL104 1  -6.82E-2,                    Nevzerov cal
+CAL105 1  3.29E-4,                     Nevzerov cal
+CAL106 1  -6.82E-2,                    Nevzerov cal
+CAL107 1  3.29E-4,                     Nevzerov cal
+CAL108 1  -6.82E-2,                    Nevzerov cal
+CAL109 1  3.29E-4,                     Nevzerov cal
+CAL110 1  -6.82E-2,                    Nevzerov cal
+CAL111 1  3.29E-4,                     Nevzerov cal
+CAL112 1  -6.82E-2,                    Nevzerov cal
+CAL113 1  3.29E-4,                     Nevzerov cal
+CAL114 1  -6.82E-2,                    Nevzerov cal
+CAL115 1  3.29E-4,                     Nevzerov cal
+CAL116 1  -6.82E-2,                    Nevzerov cal
+CAL117 1  0.7,                        K_TWC
+CAL118 1  1.65,                        K_LWC
+CAL120 1  2589.0,                      energy required for heating and evaporating drops J/g
+CAL121 1  0.3e-4,                      Area LWC collector (m2)
+CAL122 1  0.5e-4,                      Area TWC collector (m2)
 CAL023 3  -243.17,9.99E-4,2.05E-10,		Non de-iced temperature (deg C)
 CAL042 2  0,1.538E-4,       			Johnson Williams  (g m-3)
 CAL058 2  -78.46,0.00421,           	General Eastern Hygrometer   (C)
