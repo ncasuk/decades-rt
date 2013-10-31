@@ -42,13 +42,13 @@ class DecadesTCPListener(Protocol):
          elif (len(line) < packet_length+self.header_length):
             #it's trailing incomplete data
             if(self.INSTRUMENT.match(self.__buffer[0:9])):
-               #valid, keep it
+               #(probably) valid, keep it
                log.msg('Buffered %s bytes' % len(line))
                self.__buffer = line
             else:
                log.msg('Discarded %s bytes' % len(line))
-               #Raises an error, should also drop TCP connection to console
-               # so stream from it starts "clean"
+               #Raises an error, Also drops TCP connection to console
+               # so stream from it restarts "clean"
                raise ValueError(repr(self.__buffer))
          else:
             #should never happen...
