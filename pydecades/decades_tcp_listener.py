@@ -47,9 +47,11 @@ class DecadesTCPListener(Protocol):
                self.__buffer = line
             else:
                log.msg('Discarded %s bytes' % len(line))
-               #Raises an error, Also drops TCP connection to console
+               #Drops TCP connection to console
                # so stream from it restarts "clean"
-               raise ValueError(repr(self.__buffer))
+               log.msg(repr(line))
+               self.transport.loseConnection()
+               #raise ValueError(repr(self.__buffer))
          else:
             #should never happen...
             raise ValueError
