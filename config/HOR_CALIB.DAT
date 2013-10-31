@@ -8,9 +8,9 @@ CAL001 1  0.2,                      	Deiced heating correction (deg C)*
 CAL002 1  0.985,                    	Temperature recovery factor *
 CAL003 1  0.847,                    	Upwash factor *
 CAL004 1  1.000,                    	TAS correction factor *
-CAL010 3  -237.48,1.030E-3,1.37E-10, 	De-iced temperature (deg C)
+CAL010 3  -250.03,1.105E-3,-2.19E-12, 	De-iced temperature (deg C)
 CAL014 3  2.758,0.03293,-2.463E-10,		Cabin pressure (mb)
-CAL023 3  -234.01,9.984E-4,2.0400E-10,		Non de-iced temperature (deg C)
+CAL023 3  -243.17,9.99E-4,2.05E-10,		Non de-iced temperature (deg C)
 CAL042 2  0,1.538E-4,       			Johnson Williams  (g m-3)
 CAL058 2  -78.46,0.00421,           	General Eastern Hygrometer   (C)
 CAL070 2  0,1,                TWC Detector Scaling
@@ -23,7 +23,7 @@ CAL091 2  1.493,0.04304,     			Lower pyran clear sig & zero (W m-2)
 CAL092 2  0.7718,0.02668,   			Lower pyran red   sig & zero (W m-2)
 CAL093 2  -534.02,0.03432,    		Lower pyrge       sig & zero (W m-2)
 CAL099 2  133.782,-0.006017,     		Lower pyrge temp (deg C)
-CAL141 2  -49.84,0.00319,        		Heimann temp (C)
+CAL141 2  -15.45,0.00303,        		Heimann temp (C)
 CAL142 2  -22.30,0.00192,        		Heimann calibrator temp (C)
 CAL175 2  -150.0,0.0229,              	Nephelometer pressure *
 CAL176 2  -50.,7.63E-3,               	Nephelometer temperature *
