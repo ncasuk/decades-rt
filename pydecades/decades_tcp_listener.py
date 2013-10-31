@@ -1,7 +1,7 @@
 from twisted.internet.protocol import Protocol
 from twisted.python import log
 from datetime import datetime
-import os, struct, json
+import os, struct, json, re
 from distutils.dir_util import mkpath
 
 from pydecades.configparser import DecadesConfigParser
@@ -12,6 +12,7 @@ class DecadesTCPListener(Protocol):
    __buffer = ''
    ''' Length, in bytes, of the required header of incoming TCP data'''
    header_length = 13
+   INSTRUMENT = re.compile('\$[A-Z0-9]{8}') #e.g. "$CORCON01"
    
    def __init__(self):
       self.output_dir = self.parser.get('Config','output_dir')
@@ -40,8 +41,15 @@ class DecadesTCPListener(Protocol):
             self.__buffer = "".join(chunks)
          elif (len(line) < packet_length+self.header_length):
             #it's trailing incomplete data
-            log.msg('Buffered %s bytes' % len(line))
-            self.__buffer = line
+            if(self.INSTRUMENT.match(self.__buffer[0:9])):
+               #valid, keep it
+               log.msg('Buffered %s bytes' % len(line))
+               self.__buffer = line
+            else:
+               log.msg('Discarded %s bytes' % len(line))
+               #Raises an error, should also drop TCP connection to console
+               # so stream from it starts "clean"
+               raise ValueError(repr(self.__buffer))
          else:
             #should never happen...
             raise ValueError
