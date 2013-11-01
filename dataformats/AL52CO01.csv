@@ -12,24 +12,17 @@ crio_UDP_num,unsigned_int,6,this number starts @ zero and increments with each U
 crio_aux_out1,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
 crio_aux_out2,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
 crio_aux_out3,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
-conc,unsigned_int,8,Reading in signed decimal for CO Signal (ppb)
-counts,unsigned_int,8,PMT raw count rate (Hz)
-sens,unsigned_int,5,Detector sensitivity (Hz/ppb)
-zero,unsigned_int,5,Detector background (Hz)
-lampflow,unsigned_int,5,Plasma lamp CO2/Argon MFC flowrate (sccm)
-lamptemp,unsigned_int,5,Plasma lamp temperature (°c)
-monoflow,unsigned_int,5,Monochromator N2 MFC flowrate (sccm)
-monotemp,unsigned_int,5,Monochromator N2 temperature (°c)
-monopress,unsigned_int,4,Monochromator N2 pressure (bar);  Honeywell Press Transducer model SA
-cellpress,unsigned_int,5,Fluorescence cell vacuum (Torr)
-calpress,unsigned_int,4,CO/air calibrant gas pressure (bar); Honeywell Press Transducer model SA
-temppmt,unsigned_int,5,PMT temperature (°c)
+conc,single float,8,Reading in signed decimal for CO Signal (ppb)
+counts,single float,8,PMT raw count rate (Hz)
+sens,single float,5,Detector sensitivity (Hz/ppb)
+zero,single float,5,Detector background (Hz)
+lampflow,single float,5,Plasma lamp CO2/Argon MFC flowrate (sccm)
+lamptemp,single float,5,Plasma lamp temperature (°c)
+monoflow,single float,5,Monochromator N2 MFC flowrate (sccm)
+monotemp,single float,5,Monochromator N2 temperature (°c)
+monopress,single float,4,Monochromator N2 pressure (bar);  Honeywell Press Transducer model SA
+cellpress,single float,5,Fluorescence cell vacuum (Torr)
+calpress,single float,4,CO/air calibrant gas pressure (bar); Honeywell Press Transducer model SA
+temppmt,single float,5,PMT temperature (°c)
 err,text,6,ERR_XX where XX is the error code
 calstatus,boolean,1,Calibration status of device
-calvalve,boolean,1,Calibration valve status (solenoid internal to device)
-zerovalve,boolean,1,Zeroing valve status (solenoid internal to device)
-lamppress,unsigned_int,4,Plasma lamp CO2/Argon pressure (bar); Sensortechnics Press Transducer model: CTU9100AM1.  Logged with PCLJ AIN2 (not RS232)
-lamppresscontent,unsigned_int,4,Plasma lamp CO2/Argon content pressure (bar); Wika Pressure Transmitter model A-10. Logged with PCLJ AIN3
-monopresscontent,unsigned_int,4,Monochromator N2 content pressure (bar); Wika Pressure Transmitter model A-10. Logged with PCLJ AIN4
-calpresscontent,unsigned_int,4,CO/air calibrant gas content pressure (bar); Wika Pressure Transmitter model A-10. Logged with PCLJ AIN5
-vacvalve,boolean,1,MKS Cv16 vacuum isolation control valve (0=vacuum off; 1=vacuum on); Controlled by PCLJ EIO5
