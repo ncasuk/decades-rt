@@ -48,6 +48,8 @@ class MulticastServerUDP(DatagramProtocol):
       #copies data into a dictionary
       dictdata = dict(zip(self.dataProtocols.fields(data[0].lstrip('$')), data)) 
       self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), )).lower())
+      #adds to separate individual-instrument tables; no longer needed, 
+      #although it does provide a good error-check in the logs. DW 2013-11-01
       squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0].lstrip('$')], ', '.join(self.dataProtocols.fields(data[0].lstrip('$'))))
       processed= []
       for each in data:
