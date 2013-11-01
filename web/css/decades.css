@@ -16,6 +16,9 @@ h1#logo
    margin-top:0;
    font-style:italic;
 }
+#logo a {
+   text-decoration: none;
+}
 #logo span.header1
 {
    font-family: arial,sans-serif;
