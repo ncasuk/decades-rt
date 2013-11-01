@@ -12,12 +12,12 @@ crio_UDP_num,unsigned_int,6,this number starts @ zero and increments with each U
 crio_aux_out1,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
 crio_aux_out2,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
 crio_aux_out3,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
-conc,single float,8,Reading in signed engineering unit (ppb) for Ozone Signal
-benchtemp,single float,5,Bench temperature (degC) used in instrument calculations (temperature compensation is on)
-press,single float,5,Absorption cell pressure reading (mmHg) used in instrument calculation (pressure compensation on)
+conc,single_float,8,Reading in signed engineering unit (ppb) for Ozone Signal
+benchtemp,single_float,5,Bench temperature (degC) used in instrument calculations (temperature compensation is on)
+press,single_float,5,Absorption cell pressure reading (mmHg) used in instrument calculation (pressure compensation on)
 cellAint,unsigned_int,6,Lamp A intensity (Hz)
 cellBint,unsigned_int,6,Lamp B intensity (Hz)
-FlowA,single float,5,Sample flow in cell A (L per min)
-FlowB,single float,5,Sample flow in cell B (L per min)
-lamptemp,single float,5,Lamp temperature (degC)
+FlowA,single_float,5,Sample flow in cell A (L per min)
+FlowB,single_float,5,Sample flow in cell B (L per min)
+lamptemp,single_float,5,Lamp temperature (degC)
 flag,text,8,"Status of the device, including alarms in 8 Hex digits"

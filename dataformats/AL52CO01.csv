@@ -12,17 +12,17 @@ crio_UDP_num,unsigned_int,6,this number starts @ zero and increments with each U
 crio_aux_out1,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
 crio_aux_out2,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
 crio_aux_out3,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
-conc,single float,8,Reading in signed decimal for CO Signal (ppb)
-counts,single float,8,PMT raw count rate (Hz)
-sens,single float,5,Detector sensitivity (Hz/ppb)
-zero,single float,5,Detector background (Hz)
-lampflow,single float,5,Plasma lamp CO2/Argon MFC flowrate (sccm)
-lamptemp,single float,5,Plasma lamp temperature (°c)
-monoflow,single float,5,Monochromator N2 MFC flowrate (sccm)
-monotemp,single float,5,Monochromator N2 temperature (°c)
-monopress,single float,4,Monochromator N2 pressure (bar);  Honeywell Press Transducer model SA
-cellpress,single float,5,Fluorescence cell vacuum (Torr)
-calpress,single float,4,CO/air calibrant gas pressure (bar); Honeywell Press Transducer model SA
-temppmt,single float,5,PMT temperature (°c)
+conc,single_float,8,Reading in signed decimal for CO Signal (ppb)
+counts,single_float,8,PMT raw count rate (Hz)
+sens,single_float,5,Detector sensitivity (Hz/ppb)
+zero,single_float,5,Detector background (Hz)
+lampflow,single_float,5,Plasma lamp CO2/Argon MFC flowrate (sccm)
+lamptemp,single_float,5,Plasma lamp temperature (°c)
+monoflow,single_float,5,Monochromator N2 MFC flowrate (sccm)
+monotemp,single_float,5,Monochromator N2 temperature (°c)
+monopress,single_float,4,Monochromator N2 pressure (bar);  Honeywell Press Transducer model SA
+cellpress,single_float,5,Fluorescence cell vacuum (Torr)
+calpress,single_float,4,CO/air calibrant gas pressure (bar); Honeywell Press Transducer model SA
+temppmt,single_float,5,PMT temperature (°c)
 err,text,6,ERR_XX where XX is the error code
 calstatus,boolean,1,Calibration status of device
