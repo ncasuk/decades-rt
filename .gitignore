@@ -44,6 +44,8 @@ doc/*.fls
 doc/*.toc
 doc/*.temp
 doc/*.cookie
+doc/*.bbl
+doc/*.blg
 #Horace
 Horace/web/plot/Makefile.old
 Horace/web/js
