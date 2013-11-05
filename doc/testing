@@ -1,6 +1,6 @@
 Listening to the UDP multicast port using socat:
 
-socat UDP4-RECV:50001,ip-add-membership=225.0.0.0:eth0 -
+socat UDP4-RECV:50001,ip-add-membership=239.1.4.6:eth0 -
 
 Suggested .ssh/config stanza:
 Host septic
@@ -12,7 +12,7 @@ Port 2222
 The LocalForward line sets up the TCP channel for the below.
 
 Forwarding UDP:50001 to tcp:15111 (e.g. so it can be forwarded over ssh) (run on server, e.g. septic)
-socat tcp4-listen:15111 UDP4-RECV:50001,ip-add-membership=225.0.0.0:eth0
+socat tcp4-listen:15111 UDP4-RECV:50001,ip-add-membership=239.1.4.6:eth0
 
 connecting tcp:15111  to be available to a listener on UDP:50001 (run on local machine)
 socat -T15 udp4-sendto:localhost:50001,reuseaddr tcp:localhost:15111
