@@ -8,7 +8,7 @@
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor, error
 from twisted.internet.defer import Deferred 
-import psycopg2, csv, psycopg2.extensions, time
+import psycopg2, csv, psycopg2.extensions, time, _csv
 from decades import DecadesDataProtocols
 from twisted.python import log 
 
@@ -49,26 +49,28 @@ class MulticastServerUDP(DatagramProtocol):
          
     def datagramReceived(self, datagram, address):
       '''reads an incoming UDP datagram, splits it up, INSERTs into database'''
-      data = csv.reader([datagram]).next() #assumes only one record
-      #copies data into a dictionary
-      dictdata = dict(zip(self.dataProtocols.fields(data[0].lstrip('$')), data)) 
-      self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), )).lower())
-      #adds to separate individual-instrument tables; no longer needed, 
-      #although it does provide a good error-check in the logs. DW 2013-11-01
-      squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0].lstrip('$')], ', '.join(self.dataProtocols.fields(data[0].lstrip('$'))))
-      processed= []
-      for each in data:
-         if each == '':
-            processed.append(None)
+      try:
+         data = csv.reader([datagram]).next() #assumes only one record
+         #copies data into a dictionary
+         dictdata = dict(zip(self.dataProtocols.fields(data[0].lstrip('$')), data)) 
+         self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), )).lower())
+         #adds to separate individual-instrument tables; no longer needed, 
+         #although it does provide a good error-check in the logs. DW 2013-11-01
+         squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0].lstrip('$')], ', '.join(self.dataProtocols.fields(data[0].lstrip('$'))))
+         processed= []
+         for each in data:
+            if each == '':
+               processed.append(None)
+            else:
+               processed.append(each)
+         if len(data)==len(self.dataProtocols.fields(data[0].lstrip('$'))):
+            self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed)
+            log.msg("Insert into %s successful" % data[0].lstrip('$'))
          else:
-            processed.append(each)
-      if len(data)==len(self.dataProtocols.fields(data[0].lstrip('$'))):
-         self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed)
-         log.msg("Insert into %s successful" % data[0].lstrip('$'))
-      else:
-         log.err("ERROR: Insert into %s failed, mismatched number of fields (%i, expecting %i)" % (data[0].lstrip('$'), len(data), len(self.dataProtocols.fields(data[0].lstrip('$')))))
-         log.err(dictdata)
-      #self.conn.commit();
+            log.err("ERROR: Insert into %s failed, mismatched number of fields (%i, expecting %i)" % (data[0].lstrip('$'), len(data), len(self.dataProtocols.fields(data[0].lstrip('$')))))
+            log.err(dictdata)
+      except _csv.Error:
+         log.msg('CSV failed to unpack', datagram)
   
 
 # Note that the join function is picky about having a unique object
