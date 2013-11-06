@@ -9,6 +9,7 @@ class DecadesDataProtocols():
    tables = {} #list of protocol_name to current tablename
    protocol_versions = {} #Dictionary of protocol:version pairs. Version is mtime at present
    field_types_map = {'boolean':'boolean', 'signed_int':'integer', 'single_float':'real', 'double_float':'real','float':'real', 'text':'varchar', 'unsigned_int':'int'} # maps CSV protocol file "types" to PostgreSQL field types (postgreSQL does not have unsigned values)
+   new_table_count = 0
    
    def __init__(self):
       dirList=glob.glob(os.path.join(self.location,'*.csv'))
@@ -45,6 +46,7 @@ class DecadesDataProtocols():
          #doesn't exist, create table
          log.msg('Creating table %s' % tablename)
          cursor.execute(s)
+         self.new_table_count += 1 #increment new table
          log.msg('Creating index %s_time_index' % tablename)
          cursor.execute(create_index_query)
          return cursor.connection.commit()
@@ -72,7 +74,7 @@ class DecadesDataProtocols():
       cursor.execute('DROP VIEW IF EXISTS scratchdata')
       cursor.execute(squirrel + join_clause)
       cursor.execute('DROP TABLE IF EXISTS mergeddata')
-      cursor.execute('CREATE TABLE mergeddata AS SELECT * FROM scratchdata LIMIT 0')
+      cursor.execute('CREATE TABLE mergeddata AS SELECT * FROM scratchdata ')
       cursor.execute('ALTER TABLE mergeddata DROP COLUMN id')
       cursor.execute('ALTER TABLE mergeddata ADD COLUMN utc_time INT PRIMARY KEY')
       cursor.execute('ALTER TABLE mergeddata ADD COLUMN id SERIAL UNIQUE')

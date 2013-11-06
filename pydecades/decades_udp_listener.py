@@ -33,8 +33,13 @@ class MulticastServerUDP(DatagramProtocol):
         '''Creates tables as required, starts the listener'''
         for proto in self.dataProtocols.available():
             self.dataProtocols.create_table(proto, self.cursor, '_' + self.dataProtocols.protocol_versions[proto])
-        log.msg('CREATE VIEW')
-        self.dataProtocols.create_view(self.cursor)
+   
+        if self.dataProtocols.new_table_count > 0:
+            #one of the dataformat files has been updated, recreate merge table
+            log.msg('Recreating mergeddata table')
+            self.dataProtocols.create_view(self.cursor)
+        else:
+            log.msg('Reusing existing mergeddata table')
       
         # Join a specific multicast group, which is the IP we will respond to
         r = RetryingCall(self.transport.joinGroup, '239.1.4.6')
