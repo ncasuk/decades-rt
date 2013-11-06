@@ -70,7 +70,8 @@ class MulticastServerUDP(DatagramProtocol):
             log.err("ERROR: Insert into %s failed, mismatched number of fields (%i, expecting %i)" % (data[0].lstrip('$'), len(data), len(self.dataProtocols.fields(data[0].lstrip('$')))))
             log.err(dictdata)
       except _csv.Error:
-         log.msg('CSV failed to unpack', datagram)
+         log.msg('CSV failed to unpack')
+         log.msg(datagram)
   
 
 # Note that the join function is picky about having a unique object
