@@ -50,7 +50,7 @@ class MulticastServerUDP(DatagramProtocol):
     def datagramReceived(self, datagram, address):
       '''reads an incoming UDP datagram, splits it up, INSERTs into database'''
       try:
-         data = csv.reader([datagram]).next() #assumes only one record
+         data = csv.reader([datagram.replace('\x00','')]).next() #assumes only one record, strips NULL
          #copies data into a dictionary
          dictdata = dict(zip(self.dataProtocols.fields(data[0].lstrip('$')), data)) 
          self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), )).lower())
