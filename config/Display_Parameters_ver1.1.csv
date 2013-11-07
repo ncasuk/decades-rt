@@ -114,3 +114,5 @@ ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,
 701,prtaft01_jci140_range,CORE STATIC RANGE,(counts)
 702,zeus0001_zeus_efield,ZEUS STATIC SENSOR,(counts)
 900,twcdat01_twc_detector,TWC DETECTOR,(arb)
+901,wvss2a01_vmr,WVSS2A VMR,(ppm)
+902,wvss2b01_vmr,WVSS2B VMR,(ppm)

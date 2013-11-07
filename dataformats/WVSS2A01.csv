@@ -1,0 +1,7 @@
+field,type,max_chars,description
+$WVSS2A01,text,8,"this is the identifier for the start of the WVSS2 UDP packet"
+utc_time,>unsigned_int,10,"the valid time for this packet"
+utc_time_msec,>unsigned_int,3,"the time offset in milliseconds for this packet"
+vmr,>float,8,"VMR (ppm)"
+press,>float,6,"Pressure(hPa)"
+temp,>float,6,"Temperature(C)"
