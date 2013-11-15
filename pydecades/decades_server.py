@@ -103,7 +103,6 @@ class DecadesProtocol(basic.LineReceiver):
       #test status line
       #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), GIN heading/degrees (float), static pressure millibars (float), Pressure height/feet (float), True air speed (float), True air temp de-iced (float), Dew point - General Eastern (float), Indicated wind speed (float), Indicated wind angle (float), Latitude from GIN (float), Longitude from GIN (float), flight number (4-character code, ASCII)
       #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
-      #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), Wind speed, ms-1, 
       #log.msg(repr(self.der))
       prtgindata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
       #get corcon separately so gin/prt stuff is independant of it.
@@ -113,8 +112,8 @@ class DecadesProtocol(basic.LineReceiver):
          (self.derindex, dercount) = (prtgindata['derindex'], prtgindata['derindex'])
          outline = (struct.pack(self.status_struct_fmt,
 		      1,
-		      self.derindex,
-		      dercount,
+		      self.derindex % 32768,
+		      dercount if(dercount < 32768) else 32767,
 		      prtgindata['time_since_midnight'],
 		      prtgindata['gin_heading'],
 		      prtgindata['static_pressure'],
@@ -137,8 +136,8 @@ class DecadesProtocol(basic.LineReceiver):
          (self.derindex, dercount) = (prtgindata['derindex'], prtgindata['derindex'])
          outline = (struct.pack(self.status_struct_fmt,
 		      1,
-		      self.derindex,
-		      dercount,
+		      self.derindex % 32768,
+		      dercount if(dercount < 32768) else 32767,
 		      prtgindata['time_since_midnight'],
 		      prtgindata['gin_heading'],
 		      prtgindata['static_pressure'],
@@ -159,8 +158,8 @@ class DecadesProtocol(basic.LineReceiver):
          log.msg('No data, send null response')
          outline = (struct.pack(self.status_struct_fmt,
 		      1,
-		      self.derindex,
-		      self.derindex,
+		      self.derindex % 32768,
+		      self.derindex if(self.derindex < 32768) else 32767,
 		      float('NaN'),
 		      float('NaN'),
 		      float('NaN'),
