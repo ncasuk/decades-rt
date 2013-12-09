@@ -6,6 +6,7 @@
 <title>Plot</title>
 <style type="text/css">
 body {   font-family: "Arial Unicode MS", sans-serif; }
+div.savebox { clear: both; }
 </style>
 <script type="text/javascript" language="JavaScript">
 //<![CDATA[ 
@@ -312,9 +313,9 @@ document.writeln(' <select name="select2" onchange="differenttimes();">');
   }
   document.write("<option>All<\/option>");
 document.writeln('<\/select><p>');
-document.writeln('<br \/><input type="button" value="Save" ');
+document.writeln('<div class="savebox"><input type="button" value="Save" ');
 document.writeln('onclick="splot();"> plot parameters as ');
-document.writeln('<input type="text" name="plotname" value="'+plots[0].name+'">');
+document.writeln('<input type="text" name="plotname" value="'+plots[0].name+'"></div>');
 document.write('<applet code="horaceplot.choices.choices.class" archive="Plot.jar"');
 document.writeln(' width="550" height="'+height+'">');
 document.writeln("<param name='permissions' value='sandbox' \/>");
