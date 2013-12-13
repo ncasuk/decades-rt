@@ -15,7 +15,7 @@ public class plotconn extends horaceplot.horconn implements Runnable
 private Thread CDthread;
 private boolean b;
 public byte mapstatus;
-public short derindex,dercount;
+public int derindex,dercount;
 public String flightnumber;
 public final int nstatus=11;
 public float[] status=new float[nstatus];
@@ -188,8 +188,8 @@ public Vector data=new Vector();
    
    public void readStatus() throws IOException{
        mapstatus=reader.readByte();
-       derindex=reader.readShort();
-       dercount=reader.readShort();
+       derindex=reader.readInt();
+       dercount=reader.readInt();
        for(int i=0;i<nstatus;i++){
          status[i]=reader.readFloat();
        }

@@ -28,7 +28,7 @@ class DecadesProtocol(basic.LineReceiver):
    derindex = 0
    stat_output_format = "{0:.2f}"   #Format string for those output variables that are displayed unmodified in STAT lines 2 d.p at present
    der = []
-   status_struct_fmt = ">bhh11f4c" # big-endian, byte, short, short, 11 floats, 4 characters
+   status_struct_fmt = ">bii11f4c" # big-endian, byte, int, int, 11 floats, 4 characters
    #para_request_fmt = ">ii" # big-endian, int (starttime), int (endtime), plus some number of parameters
    def __init__(self, conn, calfile="pydecades/rt_calcs/HOR_CALIB.DAT"):
        '''Takes a database connection, and creates a NamedTuple cursor (allowing us to
@@ -112,8 +112,8 @@ class DecadesProtocol(basic.LineReceiver):
          (self.derindex, dercount) = (prtgindata['derindex'], prtgindata['derindex'])
          outline = (struct.pack(self.status_struct_fmt,
 		      1,
-		      self.derindex % 32768,
-		      dercount if(dercount < 32768) else 32767,
+		      self.derindex,
+		      dercount,
 		      prtgindata['time_since_midnight'],
 		      prtgindata['gin_heading'],
 		      prtgindata['static_pressure'],
@@ -136,8 +136,8 @@ class DecadesProtocol(basic.LineReceiver):
          (self.derindex, dercount) = (prtgindata['derindex'], prtgindata['derindex'])
          outline = (struct.pack(self.status_struct_fmt,
 		      1,
-		      self.derindex % 32768,
-		      dercount if(dercount < 32768) else 32767,
+		      self.derindex,
+		      dercount,
 		      prtgindata['time_since_midnight'],
 		      prtgindata['gin_heading'],
 		      prtgindata['static_pressure'],
@@ -158,8 +158,8 @@ class DecadesProtocol(basic.LineReceiver):
          log.msg('No data, send null response')
          outline = (struct.pack(self.status_struct_fmt,
 		      1,
-		      self.derindex % 32768,
-		      self.derindex if(self.derindex < 32768) else 32767,
+		      self.derindex,
+		      self.derindex,
 		      float('NaN'),
 		      float('NaN'),
 		      float('NaN'),
