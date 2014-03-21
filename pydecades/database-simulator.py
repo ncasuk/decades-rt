@@ -18,6 +18,7 @@ from database import get_database
 
 conn = get_database()
 cursor = conn.cursor()
+#set up database if required
 dataProtocols = DecadesDataProtocols() 
 for proto in dataProtocols.available():
    dataProtocols.create_table(proto, cursor, '_' + dataProtocols.protocol_versions[proto])
