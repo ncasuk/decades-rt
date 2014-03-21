@@ -79,6 +79,7 @@ def setup_local_dev_environment():
       local('sudo -u postgres psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"')
       local('sudo -u postgres createdb -O inflight inflightdata')
       local('sudo -u postgres createlang plpgsql inflightdata')
+   local('sudo -u postgres psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" inflightdata' )
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s' % env)
    local('sudo a2ensite %(prj_name)s' % env)
    #link apache files to dev versions
