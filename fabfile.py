@@ -61,13 +61,65 @@ _annotate_hosts_with_ssh_config_info()
 def setup():
    '''ab initio setup'''
    sudo('apt-get -y install aptitude')
+   sudo('aptitude update')
    sudo('aptitude -y install postgresql') 
    with settings(warn_only=True): #already-exists errors ignored
       sudo('psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"',user="postgres")
       sudo('createdb -O inflight inflightdata', user="postgres")
       sudo('createlang plpgsql inflightdata',user="postgres")
       #CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default 't', ongoing boolean default 't', exclusive boolean default 'f');
- 
+
+def setup_local_dev_environment():
+   #Sets up a development environment on a Ubuntu install
+   local('sudo apt-get -y install aptitude')
+   #stuff to *run* the software (you will need to first "apt-get install fabric")
+   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted')
+   local('sudo a2enmod wsgi')
+   with settings(warn_only=True): #already-exists errors ignored
+      local('sudo -u postgres psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"')
+      local('sudo -u postgres createdb -O inflight inflightdata')
+      local('sudo -u postgres createlang plpgsql inflightdata')
+   local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s' % env)
+   local('sudo a2ensite %(prj_name)s' % env)
+   #link apache files to dev versions
+   local('sudo mkdir -p /var/www/%(prj_name)s/plot' % env)
+   local('sudo ln -nfs ${PWD}/web/css /var/www/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/web/js /var/www/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/Horace/web/plot/map_data.dat.gz /var/www/%(prj_name)s/plot' % env)
+   local('sudo ln -nfs ${PWD}/Horace/web/plot/overlay.txt /var/www/%(prj_name)s/plot' % env)
+   local('sudo ln -nfs ${PWD}/Horace/web/plot/Parano_old.txt /var/www/%(prj_name)s/plot' % env)
+   local('sudo ln -nfs ${PWD}/Horace/web/plot/plot.html /var/www/%(prj_name)s/plot' % env)
+   local('sudo ln -nfs ${PWD}/Horace/web/plot/Plot.jar /var/www/%(prj_name)s/plot' % env)
+   local('sudo ln -nfs ${PWD}/live /var/www/%(prj_name)s-live' % env)
+   local('sudo service apache2 reload' % env)
+   #python module
+   local('sudo python setup.py build')
+   local('sudo python setup.py install')
+   #runtime ini files
+   local('sudo mkdir -p /etc/decades')
+   local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/decades/' % env)
+   local('sudo ln -nfs ${PWD}/config/Display_Parameters_ver1.1.csv /etc/decades/' % env)
+   local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/decades/' % env)
+   #dataformats
+   local('sudo mkdir -p /opt/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/dataformats /opt/%(prj_name)s/' % env)
+   #make prj_name-test work resolve to localhost
+   #Could easily be changed; will only do it if
+   # it cannot already ping it
+   local('ping -c1 %(prj_name)s-test || echo "127.0.0.1 %(prj_name)s-test" | sudo tee -a /etc/hosts' % env)
+
+   print('''run the decades-server app:
+     DECADESPORT=1500 twistd -ny decades-server.tac
+   and maybe the DB simulator:
+     pydecades/database-simulator.py
+   and browse to:
+     http://decades-test/''')
+
+   print('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html')
+   #requirements to deploy
+   local('sudo aptitude install -y fastjar git-buildpackage debhelper')
+
+   
 @runs_once
 def create_deb():
    local('mkdir %(prj_name)s-%(timestamp)s' % env)

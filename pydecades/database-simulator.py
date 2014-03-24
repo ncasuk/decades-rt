@@ -17,9 +17,20 @@ from decades import DecadesDataProtocols
 from database import get_database
 
 conn = get_database()
-dataProtocols = DecadesDataProtocols() 
-#delete previous run
 cursor = conn.cursor()
+#set up database if required
+dataProtocols = DecadesDataProtocols() 
+for proto in dataProtocols.available():
+   dataProtocols.create_table(proto, cursor, '_' + dataProtocols.protocol_versions[proto])
+
+if dataProtocols.new_table_count > 0:
+   #one of the dataformat files has been updated, recreate merge table
+   print('Recreating mergeddata table')
+   dataProtocols.create_view(cursor)
+else:
+   print('Reusing existing mergeddata table')
+
+#delete previous run
 cursor.execute('TRUNCATE TABLE mergeddata;')
 cursor.execute('ALTER SEQUENCE mergeddata_id_seq RESTART WITH 1;')
 conn.commit()
