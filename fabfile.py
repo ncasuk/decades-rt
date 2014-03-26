@@ -97,10 +97,10 @@ def setup_local_dev_environment():
    local('sudo python setup.py build')
    local('sudo python setup.py install')
    #runtime ini files
-   local('sudo mkdir -p /etc/decades')
-   local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/decades/' % env)
-   local('sudo ln -nfs ${PWD}/config/Display_Parameters_ver1.1.csv /etc/decades/' % env)
-   local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/decades/' % env)
+   local('sudo mkdir -p /etc/%(prj_name)s' % env)
+   local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/config/Display_Parameters_ver1.1.csv /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/%(prj_name)s/' % env)
    #dataformats
    local('sudo mkdir -p /opt/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/dataformats /opt/%(prj_name)s/' % env)
