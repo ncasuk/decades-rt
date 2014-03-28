@@ -2,7 +2,7 @@
 import web
 import sys
 sys.path.append('/var/www/decades-live')
-import status, flight, parano, avaps
+import status, flight, parano, avaps, livejson
 from render_helper import render_template
 
 #Libraries to access the PostgreSQL database
@@ -27,9 +27,11 @@ urls = (
    '/index', 'index',
    '/stat', status.app,
    '/avaps', avaps.app,
+   '/livejson', livejson.app,
    '/parano', parano.app,
    '/flight', flight.app,   
-   '/tank_status\.(.*)', 'tank_status'
+   '/tank_status\.(.*)', 'tank_status',
+   '/livegraph', 'livegraph'
 )
 app = web.application(urls, globals(), autoreload=False)
 application = app.wsgifunc()
@@ -126,6 +128,10 @@ class tank_status:
          
         else:
             raise web.notfound()
+
+class livegraph:
+   def GET(self):
+      return render_template('livegraph.html')
             
          
 if __name__ == "__main__":
