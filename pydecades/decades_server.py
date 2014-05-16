@@ -16,7 +16,7 @@ import time
 import math
 from datetime import datetime, timedelta
 import struct
-from rt_calcs import rt_derive
+from rt_calcs import rt_derive,rt_data
 from pydecades.configparser import DecadesConfigParser
 
 #class to handle Decades events
@@ -25,17 +25,14 @@ class DecadesProtocol(basic.LineReceiver):
          STAT (returns basic status data e.g. lat/long, heading etc.)
          PARA (Returns requested parameters)'''
    delimiter = "" #Java DatInputStream does not have a delimiter between lines
-   derindex = 0
-   stat_output_format = "{0:.2f}"   #Format string for those output variables that are displayed unmodified in STAT lines 2 d.p at present
    der = []
-   status_struct_fmt = ">bii11f4c" # big-endian, byte, int, int, 11 floats, 4 characters
-   #para_request_fmt = ">ii" # big-endian, int (starttime), int (endtime), plus some number of parameters
-   def __init__(self, conn, calfile="pydecades/rt_calcs/HOR_CALIB.DAT"):
+   def __init__(self, conn, status, calfile="pydecades/rt_calcs/HOR_CALIB.DAT"):
        '''Takes a database connection, and creates a NamedTuple cursor (allowing us to
          access the results by fieldname *or* index'''
        self.cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
        self.rtlib = rt_derive.derived(self.cursor,calfile) #class processing the cals & producing "real" values
        self.parser = DecadesConfigParser()
+       self.status=status
        self.parano = {}
        for (code, function) in self.parser.items('Parameters'):
          self.parano[int(code)] = function
@@ -59,9 +56,8 @@ class DecadesProtocol(basic.LineReceiver):
          #log.msg("Incoming: " +  repr(para))
          self.writeStatus()
          #log.msg(">iiffff",-1,para[3],self.time_seconds_past_midnight(),274,self.time_seconds_past_midnight(),274)
-         #self.der.append([self.time_seconds_past_midnight(),274.1 + (5 * math.sin(self.time_seconds_past_midnight()))])
          #send integer: current max time-index
-         self.sendLine(struct.pack(">i",self.derindex))
+         self.sendLine(struct.pack(">i",self.status['derindex']))
          
        
          paralist = []
@@ -100,105 +96,27 @@ class DecadesProtocol(basic.LineReceiver):
          #self.sendLine('\x00@\x00\x00\x00@@\x00\x00')
 
    def writeStatus(self):
-      #test status line
-      #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), GIN heading/degrees (float), static pressure millibars (float), Pressure height/feet (float), True air speed (float), True air temp de-iced (float), Dew point - General Eastern (float), Indicated wind speed (float), Indicated wind angle (float), Latitude from GIN (float), Longitude from GIN (float), flight number (4-character code, ASCII)
-      #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
-      #log.msg(repr(self.der))
-      prtgindata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
-      #get corcon separately so gin/prt stuff is independant of it.
-      corcondata = self.rtlib.derive_data_alt(['time_since_midnight','derindex','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '=id','ORDER BY id DESC LIMIT 1')
-      #(self.derindex, dercount, gindat01_heading_gin) = self.cursor.fetchone()
-      if(corcondata['time_since_midnight'] and abs(corcondata['derindex'] - prtgindata['derindex']) < 10):
-         (self.derindex, dercount) = (prtgindata['derindex'], prtgindata['derindex'])
-         outline = (struct.pack(self.status_struct_fmt,
-		      1,
-		      self.derindex,
-		      dercount,
-		      prtgindata['time_since_midnight'],
-		      prtgindata['gin_heading'],
-		      prtgindata['static_pressure'],
-		      prtgindata['pressure_height_kft'],
-		      corcondata['true_air_speed'],
-		      float(self.stat_output_format.format(corcondata['deiced_true_air_temp_c'][0])),
-		      float(self.stat_output_format.format(corcondata['dew_point'][0])),
-		      corcondata['gin_wind_speed'],
-		      corcondata['wind_angle'],
-		      prtgindata['gin_latitude'],
-		      prtgindata['gin_longitude'],
-		      prtgindata['flight_number'][0][0],
-		      prtgindata['flight_number'][0][1],
-		      prtgindata['flight_number'][0][2],
-		      prtgindata['flight_number'][0][3]
-         ))
-      elif (prtgindata['time_since_midnight']):
-         '''This is probably a data shortage, so only return minimal PRTAFT/GINDAT-only stuff'''
-         log.msg('Data shortage, retrying with PRTAFT/GINDAT-only')
-         (self.derindex, dercount) = (prtgindata['derindex'], prtgindata['derindex'])
-         outline = (struct.pack(self.status_struct_fmt,
-		      1,
-		      self.derindex,
-		      dercount,
-		      prtgindata['time_since_midnight'],
-		      prtgindata['gin_heading'],
-		      prtgindata['static_pressure'],
-		      prtgindata['pressure_height_kft'],
-            float('NaN'),
-            float('NaN'),
-            float('NaN'),
-            float('NaN'),
-            float('NaN'),
-		      prtgindata['gin_latitude'],
-		      prtgindata['gin_longitude'],
-		      prtgindata['flight_number'][0][0],
-		      prtgindata['flight_number'][0][1],
-		      prtgindata['flight_number'][0][2],
-		      prtgindata['flight_number'][0][3]
-         ))
-      else:
-         log.msg('No data, send null response')
-         outline = (struct.pack(self.status_struct_fmt,
-		      1,
-		      self.derindex,
-		      self.derindex,
-		      float('NaN'),
-		      float('NaN'),
-		      float('NaN'),
-		      float('NaN'),
-		      float('NaN'),
-		      float('NaN'),
-		      float('NaN'),
-		      float('NaN'),
-		      float('NaN'),
-		      float('NaN'),
-		      float('NaN'),
-		      '#',
-		      '#',
-		      '#',
-		      '#',
-         ))
-         
-      self.sendLine(outline)    
-      #log.msg('STATus sent (derindex, dercount)' + str((self.derindex, dercount)))
-   
-   def time_seconds_past_midnight(self):
-      return time.time() - time.mktime(datetime.now().timetuple()[0:3]+(0,0,0,0,0,0))
+      #log.msg('STATUS',hex(id(self.status)))
+      self.status.checkStatus(self.rtlib)
+      self.sendLine(self.status.packed())    
+               
 
 class DecadesFactory(protocol.ServerFactory):
    _recvd = {}
-   def __init__(self, conn, calfile):
+   def __init__(self, conn,  calfile):
       self.conn = conn
       self.calfile = calfile
+      self.status=rt_data.rt_status()
       self.protocol = DecadesProtocol
    
    def buildProtocol(self,addr):
-      p = self.protocol(self.conn, self.calfile)
+      p = self.protocol(self.conn,self.status, self.calfile)
       p.factory = self
       return p
 
 
 def main():# Listen for TCP:1500
    log.startLogging(stdout)
-
    conn = psycopg2.connect (host = "localhost",
                            user = "inflight",
                            password = "wibble",
