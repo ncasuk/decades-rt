@@ -1,4 +1,4 @@
-field,type,num_of_bytes,bytes_per_data_point,representation,description
+field,type,max_chars,description
 $TWCDAT01,text,9,"this is the identifier for the start of the TWCDAT01 TCP packet"
 utc_time,>unsigned_int,10,"the valid time for this packet (usually 1 second behind actual time)"
 ptp_sync,boolean,1,"indication of whether the CRIO is successfully synchronised to PTP time ( 1 = synced, 0 = not-synced )"
