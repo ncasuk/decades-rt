@@ -81,15 +81,14 @@ class rt_data(object):
     def getdata_fromdatabase(self,name,selection,order=' ORDER BY id'):
         """ Reads one parameter from database"""
         fieldname_part = 'SELECT %s ' % name 
-        instrument = (filter(lambda a: a[9:] != 'flight_num',
-                     filter(lambda b: b[9:] != 'utc_time',
-                     filter(lambda c: c != 'utc_time',
-                     filter(lambda d: d != 'id',[name])))))
-        not_null_part=''
+        #instrument = (filter(lambda a: a[9:] != 'flight_num',
+        #             filter(lambda b: b[9:] != 'utc_time',
+        #             filter(lambda c: c != 'utc_time',
+        #             filter(lambda d: d != 'id',[name])))))
         #not_null_part = ' AND %s IS NOT NULL' % name
         #if(instrument):
         #    not_null_part = ' AND %s_utc_time IS NOT NULL' % instrument[0][0:8]
-        self.database.execute(fieldname_part + 'FROM mergeddata WHERE id %s %s %s' % (selection , not_null_part, order) )
+        self.database.execute('%s FROM mergeddata WHERE id %s %s' % (fieldname_part, selection , order) )
         data=np.reshape(np.array(self.database.fetchall()),-1)
         if(data.dtype=='O'):
             try:
@@ -206,11 +205,33 @@ class rt_status(dict):
 	       self['gin_longitude'],
 	       self['flight_number'])
 
-
     def checkStatus(self,rtlib):
         """ Updates once there is a new index (id ) """
-        #derind=rtlib.getdata_fromdatabase('id','>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
-        derind=rtlib.derive_data(['id'],'>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
+        derind=rtlib.getdata_fromdatabase('id','>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
+        if(derind):
+            rawdata={}
+            if(not(hasattr(self,'rawset'))):
+                self.rawset=rtlib.get_raw_required(self.paras)
+            for r in self.rawset:
+                rawdata[r]=rtlib.getdata_fromdatabase(r,'=id AND %s IS NOT NULL' % r,'ORDER BY id DESC LIMIT 1')
+            newdata=rtlib.derive_data(self.paras,'=id','ORDER BY id DESC LIMIT 1',rawdata=rawdata)
+            for k in self.paras:
+                try:
+                    self[k]=float(newdata[k][0])
+                except ValueError:
+                    self[k]=newdata[k][0]
+                except IndexError:
+                    if(k=='flight_number'):
+                        self[k]='####'
+                    elif(k!='derindex'):
+                        self[k]=float('NaN')
+        return self
+ 
+
+    def checkStatus_test(self,rtlib):
+        """ Updates once there is a new index (id ) """
+        derind=rtlib.getdata_fromdatabase('id','>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
+        #derind=rtlib.derive_data(['id'],'>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
         if(derind):
             newdata=rtlib.derive_data(self.paras,'=id','ORDER BY id DESC LIMIT 1')  
             for k in self.paras:
@@ -236,9 +257,9 @@ class rt_status(dict):
                 tx=max(prttime,gintime,cortime)-10
             except TypeError:
                 tx=0
-            if(prttime):self.prttime=prttime
-            if(cortime):self.cortime=cortime
-            if(gintime):self.gintime=gintime
+            if(prttime and prttime[0]==prttime[0]):self.prttime=prttime[0]
+            if(cortime and cortime[0]==cortime[0]):self.cortime=cortime[0]
+            if(gintime and gintime[0]==gintime[0]):self.gintime=gintime[0]
             paras=['time_since_midnight','derindex','utc_time']
             if(self.prttime>tx):
                 paras=paras+['flight_number','pressure_height_kft','static_pressure']
