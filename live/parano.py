@@ -5,7 +5,10 @@ Display Parameters csv file '''
 import web
 
 urls = {
-   '', 'parano'
+   #'', 'parano'
+   '\.(.+)', 'parameters'  #DO NOT CALL THIS CLASS 'parano'
+                           #it doesn't work. May be meaningful
+                           #elsewhere? - DW 2014-06-02
 }
 app= web.application(urls, locals())   
 
@@ -14,8 +17,8 @@ from pydecades.configparser import DecadesConfigParser
 from datetime import datetime
 import csv, operator
 
-class parano:
-   def GET(self):
+class parameters:
+   def GET(self, name):
       parser = DecadesConfigParser()
       parameters_file = parser.get('Config','parameters_file')
       output = 'PARANO.TXT - Derived parameter numbers for HORACE                      ' + datetime.utcnow().strftime('%d/%m/%Y') + '\n'
