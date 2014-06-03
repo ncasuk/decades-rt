@@ -22,6 +22,7 @@ from pytz import timezone
 
 #to encode
 import json
+import csv, operator
 
 urls = (
    '/index', 'index',
@@ -36,6 +37,7 @@ urls = (
 app = web.application(urls, globals(), autoreload=False)
 application = app.wsgifunc()
 
+#web.config.debug = False
 
 class index:        
     def GET(self):
@@ -131,7 +133,19 @@ class tank_status:
 
 class livegraph:
    def GET(self):
-      return render_template('livegraph.html')
+      parser = DecadesConfigParser()
+      parameters_file = parser.get('Config','parameters_file')
+      params = '';
+      #read CSV display parameters file
+      with open(parameters_file, 'r') as csvfile:
+         parameters = csv.DictReader(csvfile)   #uses first line as fieldnames
+         sortedparams = sorted(parameters, key=operator.itemgetter('DisplayText'))
+         for line in sortedparams:
+            params = params + '<option value="' + line['ParameterName'] + '">' + line['DisplayText'] + ' ' + (line['DisplayUnits']).strip('()') + '</option>'
+            
+      user_data = web.input(x="javascript_time",y0="deiced_true_air_temp_c", y1=None)
+      return render_template('livegraph.html', params=params, x=user_data.x, y0=user_data.y0)
+      #return '<h1>' + user_data.y0 + '</h1>'
             
          
 if __name__ == "__main__":

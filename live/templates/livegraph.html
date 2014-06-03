@@ -120,6 +120,13 @@
 		<p>You can update a chart periodically to get a real-time effect by using a timer to insert the new data in the plot and redraw it.</p>
 
 		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
+      <p>{{ x }} {{y0}}</p>
+      <form method="GET" action="livegraph">
+      <p><label for="x">X series</label><select id="x" name="x">{{ params }}</select></p>
+      <p><label for="y0">Y₀ series</label><select id="y0" name="y0">{{ params }}</select></p>
+      <p><label for="y1">Y₁ series</label><select id="y1" name="y1"><option />{{ params }}</select></p>
+      <input type="submit"/>
+      </form>
 
 	</div>
 
