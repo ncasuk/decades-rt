@@ -43,6 +43,8 @@ class parameters:
          output = {} #dictionary
          for line in sortedparams:
             output[line['ParameterName']] = line
+         #append 'javascript time' for livegraph
+         output['javascript_time'] = {'DisplayText': 'Time', 'DisplayUnits': 'UTC', 'ParameterName':'javascript_time'}
          return json.dumps(output) 
 
       else: #you want what?

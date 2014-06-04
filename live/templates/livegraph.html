@@ -10,11 +10,15 @@
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.time.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
 	<script type="text/javascript">
-
-	$(function() {
-
-		// We use an inline data source in the example, usually data would
-		// be fetched from a server
+   var paramlist;
+   $(document).ready(function() {
+      $.getJSON('parano.json', function(json){
+         paramlist = json;
+         //populate parameter choices
+         $.each(paramlist, function( index, item ) 
+         { 
+            $('#x, #y0, #y1').append(new Option(item.DisplayText + " " + item.DisplayUnits, item.ParameterName));
+         });
 
 		var data = [],
 			totalPoints = 300;
@@ -37,7 +41,7 @@
     $.ajax({
         url: "/live/livejson",
         dataType: 'json',
-        success: function(livejson) { data.push([livejson.javascript_time, livejson.deiced_true_air_temp_c]) },  //if success, call update()
+        success: function(livejson) { data.push([livejson.{{ x }}, livejson.{{ y0 }}]) },  //if success, call update()
         error: function(xhr, status, thrown) { alert(status + thrown); }
     });
 
@@ -74,15 +78,17 @@
 			yaxis: {
 			},
 			xaxis: {
-            mode: "time",
+         {% if x=='javascript_time': %}
+            mode: 'time',
             minTickSize: [1, "second"],
-            twelveHourClock: false
+            twelveHourClock: false 
+         {% endif %}
 			},
          yaxes: [{ 
             position: 'left',
-            axisLabel: 'Temperature / °C'
+            axisLabel: paramlist.{{ y0 }}.DisplayText + '/' + paramlist.{{ y0 }}.DisplayUnits 
          }],
-         xaxes: [{ axisLabel: 'Time (UTC)'}]
+         xaxes: [{ axisLabel: paramlist.{{ x }}.DisplayText + '/' + paramlist.{{ x }}.DisplayUnits}]
 		});
 
 		function update() {
@@ -103,6 +109,7 @@
 		$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
 	});
 
+      });
 	</script>
 </head>
 <body>
@@ -122,9 +129,9 @@
 		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
       <p>{{ x }} {{y0}}</p>
       <form method="GET" action="livegraph">
-      <p><label for="x">X series</label><select id="x" name="x">{{ params }}</select></p>
-      <p><label for="y0">Y₀ series</label><select id="y0" name="y0">{{ params }}</select></p>
-      <p><label for="y1">Y₁ series</label><select id="y1" name="y1"><option />{{ params }}</select></p>
+      <p><label for="x">X series</label><select id="x" name="x"></select></p>
+      <p><label for="y0">Y₀ series</label><select id="y0" name="y0"></select></p>
+      <p><label for="y1">Y₁ series</label><select id="y1" name="y1"><option /></select></p>
       <input type="submit"/>
       </form>
 

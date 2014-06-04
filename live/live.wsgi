@@ -133,7 +133,7 @@ class tank_status:
 
 class livegraph:
    def GET(self):
-      parser = DecadesConfigParser()
+      '''parser = DecadesConfigParser()
       parameters_file = parser.get('Config','parameters_file')
       params = '';
       #read CSV display parameters file
@@ -142,9 +142,10 @@ class livegraph:
          sortedparams = sorted(parameters, key=operator.itemgetter('DisplayText'))
          for line in sortedparams:
             params = params + '<option value="' + line['ParameterName'] + '">' + line['DisplayText'] + ' ' + (line['DisplayUnits']).strip('()') + '</option>'
+      '''
             
       user_data = web.input(x="javascript_time",y0="deiced_true_air_temp_c", y1=None)
-      return render_template('livegraph.html', params=params, x=user_data.x, y0=user_data.y0)
+      return render_template('livegraph.html', x=user_data.x, y0=user_data.y0)
       #return '<h1>' + user_data.y0 + '</h1>'
             
          
