@@ -29,6 +29,8 @@ import json
 
 class livejson:
    '''Produces the requested data as JSON for live display'''
+   default = ['pressure_height_m','static_pressure','gin_latitude','gin_track_angle','gin_longitude','gin_heading','gin_d_velocity','gin_altitude','gin_speed', 'true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle']
+   always = ['time_since_midnight','utc_time']
    def GET(self):
       '''Usage: via web.py, e.g. http://fish/live/livejson'''
       web.header('Content-Type','application/json; charset=utf-8', unique=True) 
@@ -38,9 +40,19 @@ class livejson:
       parser = DecadesConfigParser()
       calfile = parser.get('Config','calfile')
       rtlib = rt_derive.derived(cur, calfile)
+      user_data = web.input(para=[])
+      if len(user_data.para) == 0:
+         #no paras sent, send default
+         parameters = self.default
+      else:
+         parameters = filter(None,user_data.para) #strips empty entries
+
+      if 'javascript_time' in parameters:
+         parameters.remove('javascript_time')   #strips javascript time
+                                                #as it is computed below.
 
       #get data
-      data = rtlib.derive_data_alt(['time_since_midnight','utc_time','pressure_height_m','static_pressure','gin_latitude','gin_track_angle','gin_longitude','gin_heading','gin_d_velocity','gin_altitude','gin_speed', 'true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '=id','ORDER BY id DESC LIMIT 1')
+      data = rtlib.derive_data_alt(self.always + parameters, '=id','ORDER BY id DESC LIMIT 1')
       #each entry is a length=1 list, so flatten
       keylist = data.keys()
       for each in keylist:
