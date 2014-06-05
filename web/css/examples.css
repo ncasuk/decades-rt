@@ -95,3 +95,4 @@ input[type=checkbox] {
 .legend table {
 	border-spacing: 5px;
 }
+.axisLabels { color: black; }
