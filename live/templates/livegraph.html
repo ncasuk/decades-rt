@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Flot Examples: Real-time updates</title>
+	<title>XY Plots</title>
 	<link href="/css/examples.css" rel="stylesheet" type="text/css">
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
@@ -34,10 +34,10 @@
          //populate parameter choices
          $.each(paramlist, function( index, item ) 
          { 
-            $('select.yseries').append(new Option(item.DisplayText + " " + item.DisplayUnits, item.ParameterName));
+            $('#x, select.yseries').append(new Option(item.DisplayText + " " + item.DisplayUnits, item.ParameterName));
          });
          //sort parameter lists
-         $('select.yseries').sort_select_box();
+         $('#x, select.yseries').sort_select_box();
          $('#x').val('{{ x }}');
          {% for entry in y: %}
             $('#y{{ y.index(entry)}}').val('{{ entry }}');
@@ -51,6 +51,28 @@
 
       var YAxesUnits = [];
       window.YAxesOpts = [];
+      window.plotOptions = {
+			series: {
+				shadowSize: 0	// Drawing is faster without shadows
+			},
+			yaxis: {
+			},
+			xaxis: {
+         {% if x=='javascript_time': %}
+            mode: 'time',
+            minTickSize: [1, "second"],
+            twelveHourClock: false 
+         {% endif %}
+			},
+         yaxes: window.YAxesOpts, 
+         xaxes: [{ axisLabel: paramlist.{{ x }}.DisplayText + ' / ' + paramlist.{{ x }}.DisplayUnits}],
+         selection: {
+            mode: "xy",
+            color: '#186f4d',
+            shape: "round",
+            minSize: 20
+         }
+		};
 
 		function getData() {
 
@@ -106,6 +128,14 @@
          return ret
 		}
 
+      //resize to selection code
+      $("#placeholder").bind("plotselected", function (event, ranges) {
+         plot = $.plot("#placeholder", getData(),
+            $.extend(true, {}, window.plotOptions, {
+               xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+               })
+            );
+         });
 		// Set up the control widget
 
 		var updateInterval = 1000;
@@ -122,22 +152,8 @@
 			}
 		});
 
-		var plot = $.plot("#placeholder", getData(), {
-			series: {
-				shadowSize: 0	// Drawing is faster without shadows
-			},
-			yaxis: {
-			},
-			xaxis: {
-         {% if x=='javascript_time': %}
-            mode: 'time',
-            minTickSize: [1, "second"],
-            twelveHourClock: false 
-         {% endif %}
-			},
-         yaxes: window.YAxesOpts, 
-         xaxes: [{ axisLabel: paramlist.{{ x }}.DisplayText + ' / ' + paramlist.{{ x }}.DisplayUnits}]
-		});
+		var plot = $.plot("#placeholder", getData(), window.plotOptions
+      );
 
 		function update() {
 
@@ -163,14 +179,13 @@
          $('#YSeriesContainer').append('<p class=\"yseries">' + newHTML + '</p>');
       }
    )
-
       });
 	</script>
 </head>
 <body>
 
 	<div id="header">
-		<h2>Real-time updates</h2>
+		<h2>XY Plots</h2>
 	</div>
 
 	<div id="content">
