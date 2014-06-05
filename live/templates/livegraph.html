@@ -130,9 +130,16 @@
 
       //resize to selection code
       $("#placeholder").bind("plotselected", function (event, ranges) {
+         newYAxesRanges = [{ min: ranges.yaxis.from, max: ranges.yaxis.to }];
+         for (n=2; n <= window.YAxesOpts.length; n++)
+         {
+            //If only 1 Y-axis, should not be called
+            newYAxesRanges.push({ min: eval('ranges.y' + n + 'axis.from'), max: eval('ranges.y' + n + 'axis.to')})
+         }
          plot = $.plot("#placeholder", getData(),
             $.extend(true, {}, window.plotOptions, {
                xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+               yaxes: newYAxesRanges
                })
             );
          });
