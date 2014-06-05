@@ -144,8 +144,10 @@ class livegraph:
             params = params + '<option value="' + line['ParameterName'] + '">' + line['DisplayText'] + ' ' + (line['DisplayUnits']).strip('()') + '</option>'
       '''
             
-      user_data = web.input(x="javascript_time",y0="deiced_true_air_temp_c", y1='')
-      return render_template('livegraph.html', x=user_data.x, y0=user_data.y0, y1=user_data.y1)
+      user_data = web.input(x="javascript_time",y=["deiced_true_air_temp_c",''])
+      #HTML standard colours (except for white)
+      colours = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow']
+      return render_template('livegraph.html', x=user_data.x, y=user_data.y, colours=colours)
       #return '<h1>' + user_data.y0 + '</h1>'
             
          
