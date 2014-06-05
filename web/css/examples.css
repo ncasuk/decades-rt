@@ -1,5 +1,7 @@
 body {
 	font: 18px "Gill Sans MT",Helvetica, Arial, sans-serif;
+   background-color: #186f4d;
+   color: white;
 }
 
 a {	color: #069; }
