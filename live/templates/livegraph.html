@@ -96,7 +96,7 @@
             url: "/live/livejson",
             dataType: 'json',
             //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
-            data: jQuery.param({'para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
+            data: jQuery.param({'frm':'{{ frm }}','to':'{{ to }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
             success: function(livejson) {  // arbitrary number of y-series
             for(p=0; p < livejson.length; p++)
             {
@@ -208,10 +208,13 @@
 			<div id="chart" class="demo-chart"></div>
 		</div>
 
-		<p>You can update a chart periodically to get a real-time effect by using a timer to insert the new data in the plot and redraw it.</p>
 
 		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
       <form method="GET" action="livegraph">
+		<p>
+         <label for="frm">From:</label><input type="text" id="frm" name="frm" value="{{ frm }}"/>
+         <label for="to">To:</label><input type="text" id="to" name="to" value="{{ to }}"/>
+      </p>
       <p><label for="x">X series</label><select id="x" name="x"></select></p>
       <div id="YSeriesContainer">
       {% for entry in y: %}

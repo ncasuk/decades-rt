@@ -143,11 +143,12 @@ class livegraph:
          for line in sortedparams:
             params = params + '<option value="' + line['ParameterName'] + '">' + line['DisplayText'] + ' ' + (line['DisplayUnits']).strip('()') + '</option>'
       '''
-            
-      user_data = web.input(x="javascript_time",y=["deiced_true_air_temp_c"])
+           
+      #defaults to last 5 minutes of data 
+      user_data = web.input(x="javascript_time",y=["deiced_true_air_temp_c"],frm=int(datetime.now(timezone('utc')).strftime('%s'))-300,to=None)
       #HTML standard colours (except for white)
       colours = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow']
-      return render_template('livegraph.html', x=user_data.x, y=user_data.y, colours=colours)
+      return render_template('livegraph.html', x=user_data.x, y=user_data.y, colours=colours,frm=user_data.frm, to=user_data.to)
       #return '<h1>' + user_data.y0 + '</h1>'
             
          
