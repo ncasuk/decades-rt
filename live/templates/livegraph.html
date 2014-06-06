@@ -129,20 +129,24 @@
 		}
 
       //resize to selection code
-      $("#placeholder").bind("plotselected", function (event, ranges) {
+      $("#chart").bind("plotselected", function (event, ranges) {
          newYAxesRanges = [{ min: ranges.yaxis.from, max: ranges.yaxis.to }];
          for (n=2; n <= window.YAxesOpts.length; n++)
          {
             //If only 1 Y-axis, should not be called
             newYAxesRanges.push({ min: eval('ranges.y' + n + 'axis.from'), max: eval('ranges.y' + n + 'axis.to')})
          }
-         plot = $.plot("#placeholder", getData(),
+         plot = $.plot("#chart", getData(),
             $.extend(true, {}, window.plotOptions, {
                xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
                yaxes: newYAxesRanges
                })
             );
          });
+      //reset the chart to 'standard' autoranging when dblclicked
+      $('#chart').dblclick(function() {
+            plot = $.plot("#chart", getData(), window.plotOptions);
+      });
 		// Set up the control widget
 
 		var updateInterval = 1000;
@@ -159,7 +163,7 @@
 			}
 		});
 
-		var plot = $.plot("#placeholder", getData(), window.plotOptions
+		var plot = $.plot("#chart", getData(), window.plotOptions
       );
 
 		function update() {
@@ -198,7 +202,7 @@
 	<div id="content">
 
 		<div class="demo-container">
-			<div id="placeholder" class="demo-placeholder"></div>
+			<div id="chart" class="demo-chart"></div>
 		</div>
 
 		<p>You can update a chart periodically to get a real-time effect by using a timer to insert the new data in the plot and redraw it.</p>
