@@ -50,20 +50,26 @@ class livejson:
       if 'javascript_time' in parameters:
          parameters.remove('javascript_time')   #strips javascript time
                                                 #as it is computed below.
-
-      #get data
-      data = rtlib.derive_data_alt(self.always + parameters, '=id','ORDER BY id DESC LIMIT 1')
-      #each entry is a length=1 list, so flatten
+      if user_data.has_key('frm'):
+         #sanitise (coerce to INT)
+         frm = int(user_data.frm)
+         #get data
+         data = rtlib.derive_data_alt(self.always + parameters, '=id AND utc_time >=%s' % frm,'ORDER BY id')
+      else:
+         #get latest entry
+         data = rtlib.derive_data_alt(self.always + parameters, '=id','ORDER BY id DESC LIMIT 1')
       keylist = data.keys()
-      for each in keylist:
-         if np.isnan(data[each][0]):#don't return NaNs
-            del data[each] 
-         else:
-            data[each] = data[each][0] 
+      #loop over records, make each record self-contained
+      dataout = []
+      for n in range(0, len(data[keylist[0]])): 
+         dataout.append({})
+         for each in keylist:
+            if not(np.isnan(data[each][n])):#don't return NaNs
+               dataout[n][each] = data[each][n] 
+         #Javascript time is in whole milliseconds
+         dataout[n]['javascript_time'] = dataout[n]['utc_time']*1000
 
       #data['utc_time'] = datetime.fromtimestamp(data['utc_time'],timezone('utc')).strftime('%H:%M:%S') 
-      #Javascript time is in whole milliseconds
-      data['javascript_time'] = data['utc_time'] * 1000 
-      return json.dumps(data, allow_nan=False) #in *no particular order*
+      return json.dumps(dataout, allow_nan=False) #in *no particular order*
 
       

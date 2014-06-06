@@ -76,34 +76,37 @@
 
 		function getData() {
 
-      for(var j=0; j < data.length; j++)
-      {
-			if (data[j].length > totalPoints)
+         for(var j=0; j < data.length; j++)
          {
-				data[j] = data[j].slice(-totalPoints);
-         }
-         else
-         {
-            for (var k = data[j].length; k < data[j].length; ++k)
+			   if (data[j].length > totalPoints)
             {
-               data[j].push(undefined); //fill with nulls
+				   data[j] = data[j].slice(-totalPoints);
+            }
+            else
+            {
+               for (var k = data[j].length; k < data[j].length; ++k)
+               {
+                  data[j].push(undefined); //fill with nulls
+               }
             }
          }
-      }
-    $.ajaxSetup({ cache: false });
+         $.ajaxSetup({ cache: false });
  
-    $.ajax({
-        url: "/live/livejson",
-        dataType: 'json',
-        //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
-        data: jQuery.param({'para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
-        success: function(livejson) {  // arbitrary number of y-series
+         $.ajax({
+            url: "/live/livejson",
+            dataType: 'json',
+            //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
+            data: jQuery.param({'para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
+            success: function(livejson) {  // arbitrary number of y-series
+            for(p=0; p < livejson.length; p++)
+            {
 			   {% for entry in y: %}
-               data[{{y.index(entry)}}].push([livejson.{{ x }}, livejson.{{ entry }}]);
+               data[{{y.index(entry)}}].push([livejson[p].{{ x }}, livejson[p].{{ entry }}]);
             {% endfor %}
+            }
             },  //if success, call update()
-        error: function(xhr, status, thrown) { alert(status + thrown); }
-    });
+            error: function(xhr, status, thrown) { alert(status + thrown); }
+         });
 
 			// Zip the generated y values with the x values
 			/*var res = [];
@@ -147,8 +150,8 @@
       $('#chart').dblclick(function() {
             plot = $.plot("#chart", getData(), window.plotOptions);
       });
-		// Set up the control widget
 
+		// Set up the control widget
 		var updateInterval = 1000;
 		$("#updateInterval").val(updateInterval).change(function () {
 			var v = $(this).val();
