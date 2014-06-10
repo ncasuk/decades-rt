@@ -41,16 +41,18 @@
          $('#x').val('{{ x }}');
          {% for entry in y: %}
             $('#y{{ y.index(entry)}}').val('{{ entry }}');
+            $('#c{{ y.index(entry)}}').val('{{ c[y.index(entry)] }}');
          {% endfor %}
          
 
-		var data = [],totalPoints = 300;
+		var data = [],totalPoints = 1300;
 		{% for entry in y: %}
          data[{{ y.index(entry) }}] = [];
       {% endfor %}
 
       var YAxesUnits = [];
       window.YAxesOpts = [];
+      window.frm_epoch = {{ frm_epoch }};
       window.plotOptions = {
 			series: {
 				shadowSize: 0	// Drawing is faster without shadows
@@ -82,13 +84,13 @@
             {
 				   data[j] = data[j].slice(-totalPoints);
             }
-            else
+            /*else
             {
                for (var k = data[j].length; k < data[j].length; ++k)
                {
                   data[j].push(undefined); //fill with nulls
                }
-            }
+            }*/
          }
          $.ajaxSetup({ cache: false });
  
@@ -96,7 +98,7 @@
             url: "/live/livejson",
             dataType: 'json',
             //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
-            data: jQuery.param({'frm':'{{ frm }}','to':'{{ to }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
+            data: jQuery.param({'frm':window.frm_epoch,'to':'{{ to_epoch }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
             success: function(livejson) {  // arbitrary number of y-series
             for(p=0; p < livejson.length; p++)
             {
@@ -104,6 +106,8 @@
                data[{{y.index(entry)}}].push([livejson[p].{{ x }}, livejson[p].{{ entry }}]);
             {% endfor %}
             }
+            //set frm_epoch to most recent
+            window.frm_epoch = Math.round(data.slice(-1).utc_time); //Math.round approximated cast-as-int
             },  //if success, call update()
             error: function(xhr, status, thrown) { alert(status + thrown); }
          });
@@ -125,7 +129,7 @@
                //sets the opts for the yaxes, alternating between left and right
                window.YAxesOpts.push({ position: (YAxesUnits.length % 2)?"left":"right", show: true, axisLabel: paramlist.{{ entry }}.DisplayUnits});
             }
-            ret.push( {data: data[{{ y.index(entry) }}], label: paramlist.{{ entry }}.DisplayText, color: '{{ colours[y.index(entry)] }}', lines: { show: true }, yaxis: YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits) +1 });
+            ret.push( {data: data[{{ y.index(entry) }}], label: paramlist.{{ entry }}.DisplayText, color: '{{ c[y.index(entry)] }}', lines: { show: true }, yaxis: YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits) +1 });
          {% endfor %};
          
          return ret
@@ -179,7 +183,8 @@
 			setTimeout(update, updateInterval);
 		}
 
-		update();
+		setTimeout(update, updateInterval);
+		//update();
 
 		// Add the Flot version string to the footer
 
@@ -193,7 +198,12 @@
          $('#YSeriesContainer').append('<p class=\"yseries">' + newHTML + '</p>');
       }
    )
-      });
+      $('#minAgo').change(function() {
+         d = new Date();
+         d.setUTCMinutes(d.getMinutes() - $('#minAgo').val());
+         $('#frm').val(d.toUTCString().slice(17,25)); //i.e the time section
+       });
+   });
 	</script>
 </head>
 <body>
@@ -212,13 +222,28 @@
 		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
       <form method="GET" action="livegraph">
 		<p>
-         <label for="frm">From:</label><input type="text" id="frm" name="frm" value="{{ frm }}"/>
-         <label for="to">To:</label><input type="text" id="to" name="to" value="{{ to }}"/>
+         <label for="frm">From:</label><input type="text" id="frm" name="frm" />
+         <label for="to">To:</label><input type="text" id="to"  name="to"/>
+         <label for="minAgo"><select id="minAgo">
+            <option value="0">now</option>
+            <option value="5">5 mins ago</option>
+            <option value="10">10 mins ago</option>
+            <option value="15">15 mins ago</option>
+            <option value="20">20 mins ago</option>
+            <option value="25">25 mins ago</option>
+            <option value="30">30 mins ago</option>
+            <option value="35">35 mins ago</option>
+            <option value="40">40 mins ago</option>
+            <option value="45">45 mins ago</option>
+            <option value="50">50 mins ago</option>
+            <option value="55">55 mins ago</option>
+            <option value="60">60 mins ago</option>
+            </select>
       </p>
       <p><label for="x">X series</label><select id="x" name="x"></select></p>
       <div id="YSeriesContainer">
       {% for entry in y: %}
-         <p class="yseries"><label for="y{{ y.index(entry)}}">Y<sub>{{ y.index(entry)}}</sub> series</label><select class="yseries" id="y{{ y.index(entry)}}" name="y"></select><span onclick="$(this).parent().remove()" >[X]</span></p>
+         <p class="yseries"><label for="y{{ y.index(entry)}}">Y<sub>{{ y.index(entry)}}</sub> series</label><select class="yseries" id="y{{ y.index(entry)}}" name="y"></select><label for="colourUI">Colour:</label><select class="colourUI" id="c{{ y.index(entry)}}" name="c">{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select><span onclick="$(this).parent().remove()" >[X]</span></p>
       {% endfor %}
       </div>
       <input type="button" id="addYSeries" value="Add Y series"/>      

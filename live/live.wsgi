@@ -18,6 +18,8 @@ from pydecades.rt_calcs import rt_derive
 from pydecades.database import get_database
 
 from datetime import datetime
+from dateutil import parser
+from time import mktime
 from pytz import timezone
 
 #to encode
@@ -145,10 +147,26 @@ class livegraph:
       '''
            
       #defaults to last 5 minutes of data 
-      user_data = web.input(x="javascript_time",y=["deiced_true_air_temp_c"],frm=int(datetime.now(timezone('utc')).strftime('%s'))-300,to=None)
+      now = int(mktime(datetime.now().timetuple()))
       #HTML standard colours (except for white)
       colours = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow']
-      return render_template('livegraph.html', x=user_data.x, y=user_data.y, colours=colours,frm=user_data.frm, to=user_data.to)
+      user_data = web.input(x="javascript_time",y=["deiced_true_air_temp_c"],frm=None,to=None,c=colours)
+      if user_data.frm is not None and user_data.frm is not '':
+         try:
+            frm_epoch = int(mktime(parser.parse(user_data.frm + ' UTC').timetuple()))
+         except (AttributeError, ValueError):
+            frm_epoch = now 
+      else:
+         frm_epoch = now
+
+      if user_data.to is not None and user_data.to is not '':
+         try: 
+            to_epoch = int(mktime(parser.parse(user_data.to + ' UTC').timetuple()))
+         except (AttributeError, ValueError):
+            to_epoch = ''
+      else:
+         to_epoch = ''
+      return render_template('livegraph.html', x=user_data.x, y=user_data.y, c=user_data.c,frm_epoch=frm_epoch, to_epoch=to_epoch,colours=colours)
       #return '<h1>' + user_data.y0 + '</h1>'
             
          

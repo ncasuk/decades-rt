@@ -82,6 +82,9 @@ class livejson:
          for each in keylist:
             if not(np.isnan(data[each][n])):#don't return NaNs
                dataout[n][each] = data[each][n] 
+            else:
+               del dataout[n];
+               break; #go on to next entry
          #Javascript time is in whole milliseconds
          dataout[n]['javascript_time'] = dataout[n]['utc_time']*1000
 
