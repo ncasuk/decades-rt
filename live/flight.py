@@ -62,7 +62,7 @@ class flight:
             csv_file = StringIO()
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(['Event','Start','Start Hdg / °','Start Hgt / kft','Start Lat / °','Start Long / °', 'Stop', 'Stop Hdg / °','Stop Hgt / kft','Stop Lat / °',' Stop Long / °', 'Comment'])
-            for entry in entries:
+            for entry in sorted(entries, key=lambda e: e.start): #sorts by start
                csv_writer.writerow([entry.event, entry.start, entry.start_heading, entry.start_height, entry.start_latitude, entry.start_longitude, entry.stop, entry.stop_heading, entry.stop_height, entry.stop_latitude, entry.stop_longitude, entry.comment])
             return csv_file.getvalue()
          else: #the rest are all HTML and v. similar
