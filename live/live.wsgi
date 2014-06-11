@@ -146,8 +146,8 @@ class livegraph:
             params = params + '<option value="' + line['ParameterName'] + '">' + line['DisplayText'] + ' ' + (line['DisplayUnits']).strip('()') + '</option>'
       '''
            
-      #defaults to last 5 minutes of data 
-      now = int(mktime(datetime.now().timetuple()))
+      #defaults to from now
+      now = int(mktime(datetime.utcnow().timetuple()))
       #HTML standard colours (except for white)
       colours = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow']
       user_data = web.input(x="javascript_time",y=["deiced_true_air_temp_c"],frm=None,to=None,c=colours)

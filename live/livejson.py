@@ -52,7 +52,7 @@ class livejson:
                                                 #as it is computed below.
       conditions = '=id '
       orderby = 'ORDER BY id DESC LIMIT 1'
-      if user_data.has_key('to'):
+      if user_data.has_key('to') and user_data.to > '':
          try:
             #sanitise (coerce to INT)
             to = int(user_data.to)
@@ -62,16 +62,16 @@ class livejson:
             #can't be converted to integer, ignore
             pass;
 
-      if user_data.has_key('frm'):
+      if user_data.has_key('frm') and user_data.frm > '':
          try:
             #sanitise (coerce to INT)
             frm = int(user_data.frm)
             conditions = conditions + 'AND utc_time >=%s ' % frm 
-            orderby = 'ORDER BY id'
+            orderby = 'ORDER BY id LIMIT 36000' #i.e. 10 hrs
          except ValueError:
             #can't be converted to integer, ignore
             pass;
-      
+     
          #get data
       data = rtlib.derive_data_alt(self.always + parameters, conditions,orderby)
       keylist = data.keys()

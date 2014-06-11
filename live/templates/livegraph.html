@@ -107,7 +107,8 @@
             {% endfor %}
             }
             //set frm_epoch to most recent
-            window.frm_epoch = Math.round(data.slice(-1).utc_time); //Math.round approximated cast-as-int
+            //window.frm_epoch = isNaN(data.slice(-1).utc_time)?window.frm_epoch:Math.round(data.slice(-1).utc_time); //Math.round approximated cast-as-int
+            window.frm_epoch=data.slice(-1)[0].utc_time
             },  //if success, call update()
             error: function(xhr, status, thrown) { alert(status + thrown); }
          });
