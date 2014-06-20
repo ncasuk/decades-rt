@@ -53,7 +53,7 @@ while 1:
                'utc_time':timestamp,
                'flight_num':flightnum,
                'di_temp':int(240000 + (9000 * math.sin(timestamp/3))),
-               'ge_dew':int(39371 + (1204 * math.cos(timestamp/3))),
+               'ge_dew':int(15710 + (204 * math.cos(timestamp/3))),
                'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
                'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3)))
             }
