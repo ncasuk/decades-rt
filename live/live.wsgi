@@ -2,7 +2,7 @@
 import web
 import sys
 sys.path.append('/var/www/decades-live')
-import status, flight, parano, avaps, livejson, livegraph
+import status, flight, parano, avaps, livejson, chart
 from render_helper import render_template
 
 #Libraries to access the PostgreSQL database
@@ -33,7 +33,7 @@ urls = (
    '/parano', parano.app,
    '/flight', flight.app,   
    '/tank_status\.(.*)', 'tank_status',
-   '/livegraph', livegraph.app
+   '/chart', chart.app
 )
 app = web.application(urls, globals(), autoreload=False)
 application = app.wsgifunc()

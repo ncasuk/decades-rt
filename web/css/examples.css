@@ -99,3 +99,12 @@ sub {
    vertical-align: bottom;
    font-size: 60%;
 }
+.isotherm_label
+    {
+        font-size: 11px;
+        color: red;
+        padding: 4px;
+        margin-left: 2em;
+        opacity: 0.80;
+        transform:rotate(-45deg);
+    }
