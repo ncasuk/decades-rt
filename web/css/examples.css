@@ -99,12 +99,28 @@ sub {
    vertical-align: bottom;
    font-size: 60%;
 }
-.isotherm_label
-    {
+.isotherm_label, .theta_label, .isobar_label
+{
         font-size: 11px;
-        color: red;
         padding: 4px;
         margin-left: 2em;
         opacity: 0.80;
+}
+.isotherm_label
+    {
+        color: red;
         transform:rotate(-45deg);
+    }
+.theta_label
+    {
+        color: green;
+        transform:rotate(45deg);
+    }
+.isobar_label
+    {
+        color: blue;
+    }
+.salr_label
+    {
+        color: olive;
     }
