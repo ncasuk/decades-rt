@@ -10,6 +10,7 @@
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.time.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.selection.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.resize.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.symbol.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.labels.js"></script>
 	<script type="text/javascript">
@@ -353,7 +354,7 @@
                //sets the opts for the yaxes, alternating between left and right
                //window.YAxesOpts.push({ position: (YAxesUnits.length % 2)?"left":"right", show: false, axisLabel: paramlist.{{ entry }}.DisplayUnits});
             }
-            ret.push( {data: data[{{ y.index(entry) }}], label: paramlist.{{ entry }}.DisplayText, color: '{{ c[y.index(entry)] }}', lines: { show: true }, yaxis: YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits) +1 });
+            ret.push( {data: data[{{ y.index(entry) }}], label: paramlist.{{ entry }}.DisplayText, color: '{{ c[y.index(entry)] }}', points: { show: true, symbol: 'cross' }, yaxis: YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits) +1 });
          {% endfor %};
          //test overlay accuracy (draws a bright pink line 
          //along the 450hPa isobar between -40°C and -30°C)
