@@ -15,6 +15,14 @@
 	<script type="text/javascript">
    /* Loosely adapted from tephiplot.java by Dave Tiddeman
       Dan Walker 2014-06 */
+
+   //range of graph, in xy.
+   //1744,1649,1803,1693
+   //float xmx,float xmn,float ymx,float ymn
+   xMax=1744; //see tphixy to see how these relate to real values.
+   xMin=1649;
+   yMax=1803;
+   yMin=1693;
    
    //Tephiconstants
    MA=300.0;
@@ -201,8 +209,7 @@
 
    massmixes=[];
    massmix_labels=[];
-   prr =1000; //hPa
-   p = [200.0,prr+100.,prr]
+   p = [200.0,pressMax+100.,pressMax];
    for(ml=0;ml<massmixLines.length;ml++)
    {
       scratch = [];
@@ -262,9 +269,14 @@
 				shadowSize: 0	// Drawing is faster without shadows
 			},
 			yaxis: {
+            min: yMin,
+            max: yMax,
+            show: false
 			},
 			xaxis: {
-            show: true,
+            show: false,
+            min: xMin,
+            max: xMax
 			},
          yaxes: window.YAxesOpts, 
          selection: {
