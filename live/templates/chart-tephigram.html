@@ -41,6 +41,12 @@
    SALRMin=-40; //°C
    SALRMax=60; //°C
 
+   massmixLines=[0.001,0.002,0.005,0.01,0.02,
+    0.15,0.2,0.3,0.4,0.5,0.6,0.8,1.0,1.5,2.0,2.5,3.0,4.0,
+    5.0,6.0,7.0,8.0, 9.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0,
+     24.0, 28.0, 32.0, 36.0, 40.0, 44.0, 48.0, 52.0, 56.0, 60.0, 68.0,
+     80.0];
+
    /**
      * Converts temp and press coordinates to X and Y
      *
@@ -69,13 +75,13 @@
      * @return dT and dp
      */
    function SALRgrad(p,t1,dp, nostop){
-       //0.622 = Psychrometric constant ? - DW
+       
        t=t1+KELV;
        lsbc=(L/RV)*((1.0/KELV)-(1.0/t));
        rw=6.11*Math.exp(lsbc)*(0.622/p);
        lrwbt=(L*rw)/(RD*t);
        nume=((RD*t)/(CP*p))*(1.0+lrwbt);
-       deno=1.0+(lrwbt*((0.622*L)/(CP*t)));
+       deno=1.0+(lrwbt*((0.622*L)/(CP*t))); //magic 0.622 = Psychrometric constant ? - DW
        gradi=nume/deno;
        dt=(dp*gradi);
        if (((t1+dt)<(-50.0))&(!nostop)){
@@ -85,7 +91,26 @@
        return [dp,dt];
     }
 
-   //generates a series of isotherm lines. (2 pts each, as they're straight)
+   /**
+     * Mass mixing ratio
+     *
+     * @param p Pressure (array)
+     * @param mix Ratio
+     * @return Temperatures (array)
+     */
+
+    function massmix(p,mix){
+        t=[];
+        for(i=0;i<p.length;i++){
+          vapp=p[i]*(8.0/5.0)*(mix/1000.0); //magic 8/5
+          t[i]=1.0/((1.0/KELV)-((RV/L)*Math.log(vapp/6.11)))-KELV; //magic 6.11
+        }
+        return t;
+    }
+
+   //start background lines generation
+
+   //isotherm lines. (2 pts each, as they're straight)
    isotherms = [];
    isotherm_labels = [];
    t1=[-20.0,90.0];
@@ -173,6 +198,23 @@
          salr_labels.push([null]);
       }
    }
+
+   massmixes=[];
+   massmix_labels=[];
+   prr =1000; //hPa
+   p = [200.0,prr+100.,prr]
+   for(ml=0;ml<massmixLines.length;ml++)
+   {
+      scratch = [];
+      tt=massmix(p,massmixLines[ml]);
+      for(mi=0; mi<p.length;mi++)
+      {
+         scratch.push(tphixy(p[mi],tt[mi]));
+      }
+      massmixes.push(scratch);
+   }
+
+   //end background lines generation
    
    var paramlist;
    $.fn.sort_select_box = function(){
@@ -302,12 +344,17 @@
          //plot isobars
          for(q=0; q < isobars.length; q++)
          {
-            ret.push( {data:isobars[q], showLabels: true, labels: isobar_labels[q], labelPlacement: "left", labelClass: "isobar_label", color: 'blue', lines: {show: true, lineWidth: 1}} )
+            ret.push( {data:isobars[q], showLabels: true, labels: isobar_labels[q], labelPlacement: "left", labelClass: "isobar_label", color: 'black', lines: {show: true, lineWidth: 1}} )
          }
          //plotSALRs
          for(q=0; q < salrs.length; q++)
          {
             ret.push( {data:salrs[q], showLabels: true, labels: salr_labels[q], labelPlacement: "left", labelClass: "salr_label", color: 'olive', lines: {show: true, lineWidth: 1}} )
+         }
+         //plot Mass mix lines
+         for(q=0; q < massmixes.length; q++)
+         {
+            ret.push( {data:massmixes[q], showLabels: true, labels: massmix_labels[q], labelPlacement: "left", labelClass: "massmix_label", color: 'blue', lines: {show: true, lineWidth: 1}} );
          }
          
          return ret
