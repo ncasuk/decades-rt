@@ -65,6 +65,9 @@ input[type=checkbox] {
 }
 
 .demo-container {
+   position: relative;
+   left: 0px;
+   top: 0px;
 	box-sizing: border-box;
 	width: 95%;
 	height: 800px;
@@ -72,11 +75,11 @@ input[type=checkbox] {
 	margin: 15px auto 2% auto;
 	border: 1px solid #ddd;
 	background: #fff;
-	background: linear-gradient(#f6f6f6 0, #fff 50px);
+	/*background: linear-gradient(#f6f6f6 0, #fff 50px);
 	background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
 	background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
 	background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
-	background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
+	background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);*/
 	box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 	-o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 	-ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
@@ -84,13 +87,24 @@ input[type=checkbox] {
 	-webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
-.demo-chart {
+.demo-chart, .tephi {
 	width: 100%;
 	height: 100%;
 	font-size: 14px;
 	line-height: 1.2em;
 }
 
+div.tephi {
+   position: absolute;
+   left: 0px;
+   top: 0px;
+}
+#tephibackground {
+   z-index: 5;
+}
+#tephidata {
+   z-index: 25;
+}
 .legend table {
 	border-spacing: 5px;
 }

@@ -284,6 +284,7 @@
             max: yMax,
             show: false
 			},
+         grid: { backgroundColor: null }, //transparent
 			xaxis: {
             show: false,
             min: xMin,
@@ -298,7 +299,7 @@
          }
 		};
 
-		function getData(doBackground=false) {
+		function getData() {
 
          for(var j=0; j < data.length; j++)
          {
@@ -354,9 +355,16 @@
             }
             ret.push( {data: data[{{ y.index(entry) }}], label: paramlist.{{ entry }}.DisplayText, color: '{{ c[y.index(entry)] }}', lines: { show: true }, yaxis: YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits) +1 });
          {% endfor %};
-
-         if(doBackground === true)
+         //test overlay accuracy (draws a bright pink line 
+         //along the 450hPa isobar between -40°C and -30°C)
+         //ret.push( {data: [tphixy(450,-40), tphixy(450, -30)], color: 'fuchsia', lines: {show: true}});
+            
+         return ret
+      }
+      
+      function getBackground()
          {
+            ret = [];
             //plot isotherms
             for(q=0; q < isotherms.length; q++)
             {
@@ -382,20 +390,24 @@
             {
                ret.push( {data:massmixes[q], showLabels: true, labels: massmix_labels[q], labelPlacement: "left", labelClass: "massmix_label", color: 'blue', lines: {show: true, lineWidth: 1}} );
             }
+            return ret;
          }
-            
-         return ret
-		}
 
       //resize to selection code
-      $("#chart").bind("plotselected", function (event, ranges) {
+      $("#tephidata").bind("plotselected", function (event, ranges) {
          newYAxesRanges = [{ min: ranges.yaxis.from, max: ranges.yaxis.to }];
          for (n=2; n <= window.YAxesOpts.length; n++)
          {
             //If only 1 Y-axis, should not be called
             newYAxesRanges.push({ min: eval('ranges.y' + n + 'axis.from'), max: eval('ranges.y' + n + 'axis.to')})
          }
-         plot = $.plot("#chart", getData(true),
+         plot= $.plot("#tephidata", getData(),
+            $.extend(true, {}, window.plotOptions, {
+               xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+               yaxes: newYAxesRanges
+               })
+            );
+         plotbkgnd= $.plot("#tephibackground", getBackground(),
             $.extend(true, {}, window.plotOptions, {
                xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
                yaxes: newYAxesRanges
@@ -403,8 +415,9 @@
             );
          });
       //reset the chart to 'standard' autoranging when dblclicked
-      $('#chart').dblclick(function() {
-            plot = $.plot("#chart", getData(true), window.plotOptions);
+      $('#tephidata').dblclick(function() {
+            plot = $.plot("#tephidata", getData(), window.plotOptions);
+            plotbkgnd = $.plot("#tephibackground", getBackground(), window.plotOptions);
       });
 
 		// Set up the control widget
@@ -422,12 +435,12 @@
 			}
 		});
 
-		var plot = $.plot("#chart", getData(true), window.plotOptions
-      );
+		var plot = $.plot("#tephidata", getData(), window.plotOptions);
+		var plotbkgnd = $.plot("#tephibackground", getBackground(), window.plotOptions);
 
 		function update() {
 
-         series = getData(true); //don't draw the background lines
+         series = getData(); //don't draw the background lines
 			plot.setData(series);
 
          plot.setupGrid();
@@ -467,7 +480,8 @@
 	<div id="content">
 
 		<div class="demo-container">
-			<div id="chart" class="demo-chart"></div>
+			<div id="tephibackground" class="tephi"></div>
+			<div id="tephidata" class="tephi"></div>
 		</div>
 
 
