@@ -17,12 +17,12 @@
       Dan Walker 2014-06 */
 
    //range of graph, in xy.
-   //1744,1649,1803,1693
+   //1800,1600,1800,1673
    //float xmx,float xmn,float ymx,float ymn
-   xMax=1744; //see tphixy to see how these relate to real values.
-   xMin=1649;
-   yMax=1803;
-   yMin=1693;
+   xMax=1800; //see tphixy to see how these relate to real values.
+   xMin=1600;
+   yMax=1800;
+   yMin=1673;
    
    //Tephiconstants
    MA=300.0;
@@ -118,7 +118,7 @@
 
    //start background lines generation
 
-   //isotherm lines. (2 pts each, as they're straight)
+   //isotherm lines. (2 pts each, as they're straight, plus )
    isotherms = [];
    isotherm_labels = [];
    t1=[-20.0,90.0];
@@ -147,15 +147,26 @@
    isobar_labels = [];
    for(press=pressMax;press>=pressMin;press=press-PressLine)
    {
-      scratch=[]
+      scratch=[];
+      scratch_labels=[]; 
+      labelled= false;
       //iterate over 12 points to approximate curve
       for(i=0;i<12;i++)
       {
          temp=(10.0*i)-80.0;
          scratch.push(tphixy(press,temp)); 
+         if(scratch.slice(-1)[0][0] > xMin && !labelled)
+         {
+            scratch_labels.push(press+' mb');
+            labelled = true;
+         }
+         else
+         {
+            scratch_labels.push(null);
+         }
       }
       isobars.push(scratch);
-      isobar_labels.push([press+' mb']);
+      isobar_labels.push(scratch_labels);
    }
 
    //SALR LINES
@@ -287,7 +298,7 @@
          }
 		};
 
-		function getData() {
+		function getData(doBackground=false) {
 
          for(var j=0; j < data.length; j++)
          {
@@ -343,32 +354,36 @@
             }
             ret.push( {data: data[{{ y.index(entry) }}], label: paramlist.{{ entry }}.DisplayText, color: '{{ c[y.index(entry)] }}', lines: { show: true }, yaxis: YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits) +1 });
          {% endfor %};
-         //plot isotherms
-         for(q=0; q < isotherms.length; q++)
+
+         if(doBackground === true)
          {
-            ret.push( {data:isotherms[q], showLabels: true, labels: isotherm_labels[q], labelPlacement: "left", labelClass: "isotherm_label", color: 'red', lines: {show: true, lineWidth: 1}} )
+            //plot isotherms
+            for(q=0; q < isotherms.length; q++)
+            {
+               ret.push( {data:isotherms[q], showLabels: true, labels: isotherm_labels[q], labelPlacement: "left", labelClass: "isotherm_label", color: 'red', lines: {show: true, lineWidth: 1}} )
+            }
+            //plot thetas
+            for(q=0; q < thetas.length; q++)
+            {
+               ret.push( {data:thetas[q], showLabels: true, labels: theta_labels[q], labelPlacement: "left", labelClass: "theta_label", color: 'green', lines: {show: true, lineWidth: 1}} )
+            }
+            //plot isobars
+            for(q=0; q < isobars.length; q++)
+            {
+               ret.push( {data:isobars[q], showLabels: true, labels: isobar_labels[q], labelPlacement: "left", labelClass: "isobar_label", color: 'black', lines: {show: true, lineWidth: 1}} )
+            }
+            //plotSALRs
+            for(q=0; q < salrs.length; q++)
+            {
+               ret.push( {data:salrs[q], showLabels: true, labels: salr_labels[q], labelPlacement: "left", labelClass: "salr_label", color: 'olive', lines: {show: true, lineWidth: 1}} )
+            }
+            //plot Mass mix lines
+            for(q=0; q < massmixes.length; q++)
+            {
+               ret.push( {data:massmixes[q], showLabels: true, labels: massmix_labels[q], labelPlacement: "left", labelClass: "massmix_label", color: 'blue', lines: {show: true, lineWidth: 1}} );
+            }
          }
-         //plot thetas
-         for(q=0; q < thetas.length; q++)
-         {
-            ret.push( {data:thetas[q], showLabels: true, labels: theta_labels[q], labelPlacement: "left", labelClass: "theta_label", color: 'green', lines: {show: true, lineWidth: 1}} )
-         }
-         //plot isobars
-         for(q=0; q < isobars.length; q++)
-         {
-            ret.push( {data:isobars[q], showLabels: true, labels: isobar_labels[q], labelPlacement: "left", labelClass: "isobar_label", color: 'black', lines: {show: true, lineWidth: 1}} )
-         }
-         //plotSALRs
-         for(q=0; q < salrs.length; q++)
-         {
-            ret.push( {data:salrs[q], showLabels: true, labels: salr_labels[q], labelPlacement: "left", labelClass: "salr_label", color: 'olive', lines: {show: true, lineWidth: 1}} )
-         }
-         //plot Mass mix lines
-         for(q=0; q < massmixes.length; q++)
-         {
-            ret.push( {data:massmixes[q], showLabels: true, labels: massmix_labels[q], labelPlacement: "left", labelClass: "massmix_label", color: 'blue', lines: {show: true, lineWidth: 1}} );
-         }
-         
+            
          return ret
 		}
 
@@ -380,7 +395,7 @@
             //If only 1 Y-axis, should not be called
             newYAxesRanges.push({ min: eval('ranges.y' + n + 'axis.from'), max: eval('ranges.y' + n + 'axis.to')})
          }
-         plot = $.plot("#chart", getData(),
+         plot = $.plot("#chart", getData(true),
             $.extend(true, {}, window.plotOptions, {
                xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
                yaxes: newYAxesRanges
@@ -389,7 +404,7 @@
          });
       //reset the chart to 'standard' autoranging when dblclicked
       $('#chart').dblclick(function() {
-            plot = $.plot("#chart", getData(), window.plotOptions);
+            plot = $.plot("#chart", getData(true), window.plotOptions);
       });
 
 		// Set up the control widget
@@ -407,12 +422,12 @@
 			}
 		});
 
-		var plot = $.plot("#chart", getData(), window.plotOptions
+		var plot = $.plot("#chart", getData(true), window.plotOptions
       );
 
 		function update() {
 
-         series = getData();
+         series = getData(true); //don't draw the background lines
 			plot.setData(series);
 
          plot.setupGrid();
