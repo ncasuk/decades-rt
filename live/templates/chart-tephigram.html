@@ -13,6 +13,7 @@
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.symbol.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.labels.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.dashes.js"></script>
 	<script type="text/javascript">
    /* Loosely adapted from tephiplot.java by Dave Tiddeman
       Dan Walker 2014-06 */
@@ -389,7 +390,7 @@
             //plot Mass mix lines
             for(q=0; q < massmixes.length; q++)
             {
-               ret.push( {data:massmixes[q], showLabels: true, labels: massmix_labels[q], labelPlacement: "left", labelClass: "massmix_label", color: 'blue', lines: {show: true, lineWidth: 1}} );
+               ret.push( {data:massmixes[q], showLabels: true, labels: massmix_labels[q], labelPlacement: "left", labelClass: "massmix_label", color: 'blue', dashes: {show: true, lineWidth: 1, dashLength: [15]}} );
             }
             return ret;
          }
