@@ -85,10 +85,11 @@ class livejson:
             else:
                del dataout[n];
                break; #go on to next entry
-         #Javascript time is in whole milliseconds
-         dataout[n]['javascript_time'] = dataout[n]['utc_time']*1000
+         if(dataout[n]):
+            #Javascript time is in whole milliseconds
+            dataout[n]['javascript_time'] = dataout[n]['utc_time']*1000.0
+            dataout[n]['utc_time'] = float(dataout[n]['utc_time'])
 
       #data['utc_time'] = datetime.fromtimestamp(data['utc_time'],timezone('utc')).strftime('%H:%M:%S') 
       return json.dumps(dataout, allow_nan=False) #in *no particular order*
-
-      
+      #return repr(dataout)
