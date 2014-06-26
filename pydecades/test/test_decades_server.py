@@ -27,11 +27,11 @@ class DecadesProtocolTestCase(unittest.TestCase):
       self.proto.makeConnection(tr)
       self.proto.rawDataReceived(struct.pack(">4s5i", 'PARA',-1,-1,2,515,param_id))
       data = tr.value()
-      self.assertEqual(18,len(struct.unpack(self.proto.status_struct_fmt, data[0:53])),msg=function + " does not return the correct size of data from a STAT request") #PARA requests return a 53-byte STAT respose 
-      (derindex, size_upcoming) = struct.unpack('>2i',data[53:61])
-      #Assert returned data are of the correct length (53 bytes is length of STAT block)
+      self.assertEqual(18,len(struct.unpack(self.proto.status_struct_fmt, data[0:57])),msg=function + " does not return the correct size of data from a STAT request") #PARA requests return a 53-byte STAT respose 
+      (derindex, size_upcoming) = struct.unpack('>2i',data[57:65])
+      #Assert returned data are of the correct length (57 bytes is length of STAT block)
       #2 parameters so "2 * size_upcoming" is the size of the datablock 
-      self.assertEqual(len(data)-53,struct.calcsize('>ii'+str(2*size_upcoming)+'f'), msg=function + " does not return the correct size of data from a PARA request")
+      self.assertEqual(len(data)-57,struct.calcsize('>ii'+str(2*size_upcoming)+'f'), msg=function + " does not return the correct size of data from a PARA request")
 
 #Not part of testcase class; is a function that returns a function based on parameters
 def test_parameters(param_id, function):
