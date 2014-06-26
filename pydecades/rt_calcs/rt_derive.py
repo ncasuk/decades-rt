@@ -337,7 +337,7 @@ class derived(rt_data.rt_data):
         #TWCDP - Dewpoint from Total Water Content  (deg C)
         spr=self.getdata('static_pressure',data)
         twc_mmr=self.getdata('total_water_content',data)
-        DP=np.zeroes(len(spr))
+        DP=np.zeros(len(spr))
         ind=np.where(twc_mmr*spr>0)
         DP[ind]=5.42E3 / LOG(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
         return DP
