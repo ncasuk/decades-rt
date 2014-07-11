@@ -27,7 +27,7 @@ class DecadesTCPListener(Protocol):
       while len(self.__buffer) >= self.header_length:
           if self.INSTRUMENT.match(self.__buffer[0:9]):
               (packet_length, ) = struct.unpack('>I',self.__buffer[9:self.header_length])
-              if(len(self.__buffer)<self.header_length+packet_length:
+              if len(self.__buffer)<self.header_length+packet_length:
                   #Incomplete; wait for more data
                   log.msg('Buffered %s bytes' % len(self.__buffer))
                   return
