@@ -586,7 +586,7 @@ class derived(rt_data.rt_data):
         PTCH=np.deg2rad(self.getdata('gin_pitch',data))
         R=(np.sin(SZEN)*np.sin(SHDG)*np.sin(ROLL) -
            np.cos(SHDG)*np.sin(PTCH)*np.cos(ROLL)*np.sin(SZEN) +
-           np.cos(SZEN)*np.cos(PTCH)*np.sin(ROLL))
+           np.cos(SZEN)*np.cos(PTCH)*np.cos(ROLL))
         CORR=np.cos(SZEN)/R
         return CORR
 

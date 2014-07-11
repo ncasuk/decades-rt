@@ -34,7 +34,7 @@ class DecadesTCPListener(Protocol):
       #split buffer into expected size chunks
       chunks = [self.__buffer[i:i+packet_length+self.header_length] for i in range(0, len(self.__buffer), packet_length+self.header_length)]
       while chunks:
-         line = chunks.pop()
+         line = chunks.pop(0)
          if(len(line) == packet_length+self.header_length):
             self.complete_record(line)
             #strip that line from the buffer
