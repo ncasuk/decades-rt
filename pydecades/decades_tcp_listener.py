@@ -35,10 +35,10 @@ class DecadesTCPListener(Protocol):
                   self.complete_record(self.__buffer[:self.header_length+packet_length])
                   self.__buffer=self.__buffer[self.header_length+packet_length:]                  
           else:    
-              log.msg('Discarded %s bytes' % len(line))
+              log.msg('Discarded %s bytes' % len(self.__buffer))
               #Drops TCP connection to console
               # so stream from it restarts "clean"
-              log.msg(repr(line))
+              log.msg(repr(self.__buffer))
               self.transport.loseConnection()
           
  
