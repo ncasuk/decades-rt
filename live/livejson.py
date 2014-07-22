@@ -2,7 +2,7 @@
 # vim: set fileencoding=utf-8:
 '''An example of using WSGI with the DECADES python library. 
 This provides the same functionality as the Java Plot.jar
-in Status mode'''
+in Status mode by default, but can return any requested data'''
 
 import web
 
