@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Tephigram</title>
+	<link href="/css/examples.css" rel="stylesheet" type="text/css">
+	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
+	<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.time.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.resize.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.symbol.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.labels.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.dashes.js"></script>
+	<script type="text/javascript">
+   /* Loosely adapted from tephiplot.java by Dave Tiddeman
+      Dan Walker 2014-06 */
+
+   //range of graph, in xy.
+   //1800,1600,1800,1673
+   //float xmx,float xmn,float ymx,float ymn
+   xMax=1800; //see tphixy to see how these relate to real values.
+   xMin=1600;
+   yMax=1800;
+   yMin=1673;
+   
+   //Tephiconstants
+   MA=300.0;
+   KELV=273.15; //0°C in Kelvin, for conversions
+   K=0.286;
+   L=2.5e6; //magic number alert
+   RV=461.0; //magic number alert
+   RD=287.0; //magic number alert
+   CP=1.01e3; //magic number alert
+
+   TempLine=10.0; //isotherm spacing, in °C
+   isoThermMin=-80.0; //in °C 
+   isoThermMax=30.0; //in °C 
+
+   ThetaLine=10.0; //theta spacing, in °C
+   thetaMin=-20; //in °C
+   thetaMax=90; //in °C
+
+   PressLine=50.0; //isobar spacing, in hPa
+   pressMin=200; //hPa
+   pressMax=1100; //hPa
+
+   SALRLine=1.0;
+   SALRMin=-40; //°C
+   SALRMax=60; //°C
+
+   massmixLines=[0.001,0.002,0.005,0.01,0.02,
+    0.15,0.2,0.3,0.4,0.5,0.6,0.8,1.0,1.5,2.0,2.5,3.0,4.0,
+    5.0,6.0,7.0,8.0, 9.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0,
+     24.0, 28.0, 32.0, 36.0, 40.0, 44.0, 48.0, 52.0, 56.0, 60.0, 68.0,
+     80.0];
+
+   /**
+     * Converts temp and press coordinates to X and Y
+     *
+     * @param press Pressure
+     * @param temp Temperature
+     */
+    function tphixy(press,temp){
+        ans=[];
+        t=temp+KELV;
+        theta=t*(Math.pow((1000.0/press),K));
+        phi=Math.log(theta);
+        x=phi*MA+temp;
+        y=phi*MA-temp;
+        ans[0]=x;
+        ans[1]=y;
+        return ans;
+    }
+
+   /**
+     * Gradient of SALR line
+     *
+     * @param p Pressue, hPa
+     * @param t1 Temp, C
+     * @param dp Pressure change, hPa
+     * @param nostop no stop.
+     * @return dT and dp
+     */
+   function SALRgrad(p,t1,dp, nostop){
+       
+       t=t1+KELV;
+       lsbc=(L/RV)*((1.0/KELV)-(1.0/t));
+       rw=6.11*Math.exp(lsbc)*(0.622/p);
+       lrwbt=(L*rw)/(RD*t);
+       nume=((RD*t)/(CP*p))*(1.0+lrwbt);
+       deno=1.0+(lrwbt*((0.622*L)/(CP*t))); //magic 0.622 = Psychrometric constant ? - DW
+       gradi=nume/deno;
+       dt=(dp*gradi);
+       if (((t1+dt)<(-50.0))&(!nostop)){
+           dt=-50.0-t1;
+           dp=dt/gradi;
+       }
+       return [dp,dt];
+    }
+
+   /**
+     * Mass mixing ratio
+     *
+     * @param p Pressure (array)
+     * @param mix Ratio
+     * @return Temperatures (array)
+     */
+
+    function massmix(p,mix){
+        t=[];
+        for(i=0;i<p.length;i++){
+          vapp=p[i]*(8.0/5.0)*(mix/1000.0); //magic 8/5
+          t[i]=1.0/((1.0/KELV)-((RV/L)*Math.log(vapp/6.11)))-KELV; //magic 6.11
+        }
+        return t;
+    }
+
+   //start background lines generation
+
+   //isotherm lines. (2 pts each, as they're straight, plus )
+   isotherms = [];
+   isotherm_labels = [];
+   t1=[-20.0,90.0];
+   phm = [];
+   phm[0]=MA*Math.log(t1[0]+KELV);
+   phm[1]=MA*Math.log(t1[1]+KELV);
+   for(var T=isoThermMin; T < isoThermMax; T=T+TempLine)
+   {
+      isotherms.push([[phm[0]+T,phm[0]-T],[phm[1]+T,phm[1]-T]]);
+      isotherm_labels.push([T + '°C']);
+   }
+
+   //theta lines
+   thetas = [];
+   theta_labels = [];
+   t1=[-80.0,30.0];
+   for(var thet=thetaMin; thet < thetaMax; thet=thet+ThetaLine)
+   {
+      phm1=MA*Math.log(thet+KELV);
+      thetas.push([[phm1+t1[0],phm1-t1[0]],[phm1+t1[1],phm1-t1[1]]]);
+      theta_labels.push([null,thet + '°C']);
+   }
+
+   //isobars (curves, approxed by 12pts)
+   isobars = [];
+   isobar_labels = [];
+   for(press=pressMax;press>=pressMin;press=press-PressLine)
+   {
+      scratch=[];
+      scratch_labels=[]; 
+      labelled= false;
+      //iterate over 12 points to approximate curve
+      for(i=0;i<12;i++)
+      {
+         temp=(10.0*i)-80.0;
+         scratch.push(tphixy(press,temp)); 
+         if(scratch.slice(-1)[0][0] > xMin && !labelled)
+         {
+            scratch_labels.push(press+' mb');
+            labelled = true;
+         }
+         else
+         {
+            scratch_labels.push(null);
+         }
+      }
+      isobars.push(scratch);
+      isobar_labels.push(scratch_labels);
+   }
+
+   //SALR LINES
+   salrs=[];
+   salr_labels=[];
+   salrs_below=[];
+   salrbelow_labels=[];
+   dp_above=-5.0; //magic number alert!
+   dp_below=5.0; //magic number alert!
+   for (temp=SALRMin;temp<=SALRMax;temp=temp+SALRLine)
+   {
+      //above 1000hPa
+      scratch=[];
+      pr_old=1000;
+      t_old=temp
+      scratch.push(tphixy(pr_old,t_old));
+   
+      for(i=0;i<=198;i++){
+         scratch2=SALRgrad(pr_old,t_old,dp_above,false); 
+         t_old=t_old+scratch2[1];
+         pr_old=pr_old+scratch2[0]; 
+         scratch.push(tphixy(pr_old,t_old));
+      }
+      salrs.push(scratch);
+      //below 1000hPa (not labelled per source tphiplot.java)
+      //This is just the same as the "above 1000hPa", only with fewer
+      //points? - magic?
+      scratch_below=[];
+      pr_old=1000;
+      t_old=temp
+      scratch_below.push(tphixy(pr_old,t_old));
+      for(i=0;i<=48;i++)
+      {
+         scratch2=SALRgrad(pr_old,t_old,dp_below,false); 
+         t_old=t_old+scratch2[1];
+         pr_old=pr_old+scratch2[0]; 
+         scratch_below.push(tphixy(pr_old,t_old));
+      }
+      salrs.push(scratch_below);
+
+      //labels every 10°
+      if((temp % 10) == 0)
+      {
+         salr_labels.push([temp+'°θw']);
+      }
+      else
+      {
+         salr_labels.push([null]);
+      }
+   }
+
+   massmixes=[];
+   massmix_labels=[];
+   p = [200.0,pressMax+100.,pressMax];
+   for(ml=0;ml<massmixLines.length;ml++)
+   {
+      scratch = [];
+      tt=massmix(p,massmixLines[ml]);
+      for(mi=0; mi<p.length;mi++)
+      {
+         scratch.push(tphixy(p[mi],tt[mi]));
+      }
+      massmixes.push(scratch);
+   }
+
+   //end background lines generation
+   
+   var paramlist;
+   $.fn.sort_select_box = function(){
+    var my_options = $("#" + this.attr('id') + ' option');
+    my_options.sort(function(a,b) {
+        //case-insensitive options sort; replaces in-place
+        if (a.text.toUpperCase() > b.text.toUpperCase()) return 1;
+        else if (a.text.toUpperCase() < b.text.toUpperCase()) return -1;
+        else return 0
+    })
+      //replace with sorted my_options;
+      $(this).empty().append( my_options );
+
+      // clearing any selections
+      $("#"+this.attr('id')+" option").attr('selected', false);
+   }
+   $(document).ready(function() {
+      $.getJSON('/live/sondejson.parameters', function(json){
+         paramlist = json;
+         
+         //populate parameter choices
+         $.each(paramlist, function( index, item ) 
+         { 
+            $('#x, select.yseries').append(new Option(item.DisplayText + " " + item.DisplayUnits, item.ParameterName));
+         });
+         //sort parameter lists
+         $('#x, select.yseries').sort_select_box();
+         $('#x').val('{{ x }}');
+         {% for entry in y: %}
+            $('#y{{ y.index(entry)}}').val('{{ entry }}');
+            $('#c{{ y.index(entry)}}').val('{{ c[y.index(entry)] }}');
+         {% endfor %}
+         
+
+		var data = [],totalPoints = 3160;
+		{% for entry in y: %}
+         data[{{ y.index(entry) }}] = [];
+      {% endfor %}
+
+      var YAxesUnits = [];
+      window.YAxesOpts = [];
+      window.frm_epoch = {{ frm_epoch }};
+      window.plotOptions = {
+			series: {
+				shadowSize: 0	// Drawing is faster without shadows
+			},
+			yaxis: {
+            min: yMin,
+            max: yMax,
+            show: false
+			},
+         grid: { backgroundColor: null }, //transparent
+			xaxis: {
+            show: false,
+            min: xMin,
+            max: xMax
+			},
+         yaxes: window.YAxesOpts, 
+         selection: {
+            mode: "xy",
+            color: '#186f4d',
+            shape: "round",
+            minSize: 20
+         }
+		};
+
+		function getData() {
+
+         for(var j=0; j < data.length; j++)
+         {
+			   if (data[j].length > totalPoints)
+            {
+				   data[j] = data[j].slice(-totalPoints);
+            }
+            /*else
+            {
+               for (var k = data[j].length; k < data[j].length; ++k)
+               {
+                  data[j].push(undefined); //fill with nulls
+               }
+            }*/
+         }
+         $.ajaxSetup({ cache: false });
+ 
+         $.ajax({
+            url: "/live/sondejson",
+            dataType: 'json',
+            //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
+            data: jQuery.param({'frm':window.frm_epoch,'to':'{{ to_epoch }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
+            success: function(sondejson) {  // arbitrary number of y-series
+            for(p=0; p < sondejson.length; p++)
+            {
+			   {% for entry in y: %}
+               data[{{y.index(entry)}}].push(tphixy(sondejson[p].{{ x }}, sondejson[p].{{ entry }}));
+            {% endfor %}
+            }
+            //set frm_epoch to most recent
+            //window.frm_epoch = isNaN(data.slice(-1).utc_time)?window.frm_epoch:Math.round(data.slice(-1).utc_time); //Math.round approximated cast-as-int
+            window.frm_epoch=data.slice(-1)[0].utc_time
+            },  //if success, call update()
+            error: function(xhr, status, thrown) { alert(status + thrown); }
+         });
+
+			// Zip the generated y values with the x values
+			/*var res = [];
+			for (var i = 0; i < data.length; ++i) {
+				res.push(data[i]);
+			}
+			var res1 = [];
+			for (var i = 0; i < data.length; ++i) {
+				res1.push(data[i]);
+			}*/
+         ret= []
+			{% for entry in y: %} // arbitrary number of y-series
+            if(-1 == YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits))
+            {
+               YAxesUnits.push(paramlist.{{ entry }}.DisplayUnits);
+               //sets the opts for the yaxes, alternating between left and right
+               //window.YAxesOpts.push({ position: (YAxesUnits.length % 2)?"left":"right", show: false, axisLabel: paramlist.{{ entry }}.DisplayUnits});
+            }
+            ret.push( {data: data[{{ y.index(entry) }}], label: paramlist.{{ entry }}.DisplayText, color: '{{ c[y.index(entry)] }}', points: { show: true, symbol: 'cross' }, yaxis: YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits) +1 });
+         {% endfor %};
+         //test overlay accuracy (draws a bright pink line 
+         //along the 450hPa isobar between -40°C and -30°C)
+         //ret.push( {data: [tphixy(450,-40), tphixy(450, -30)], color: 'fuchsia', lines: {show: true}});
+            
+         return ret
+      }
+      
+      function getBackground()
+         {
+            ret = [];
+            //plot isotherms
+            for(q=0; q < isotherms.length; q++)
+            {
+               ret.push( {data:isotherms[q], showLabels: true, labels: isotherm_labels[q], labelPlacement: "left", labelClass: "isotherm_label", color: 'red', lines: {show: true, lineWidth: 1}} )
+            }
+            //plot thetas
+            for(q=0; q < thetas.length; q++)
+            {
+               ret.push( {data:thetas[q], showLabels: true, labels: theta_labels[q], labelPlacement: "left", labelClass: "theta_label", color: 'green', lines: {show: true, lineWidth: 1}} )
+            }
+            //plot isobars
+            for(q=0; q < isobars.length; q++)
+            {
+               ret.push( {data:isobars[q], showLabels: true, labels: isobar_labels[q], labelPlacement: "left", labelClass: "isobar_label", color: 'black', lines: {show: true, lineWidth: 1}} )
+            }
+            //plotSALRs
+            for(q=0; q < salrs.length; q++)
+            {
+               ret.push( {data:salrs[q], showLabels: true, labels: salr_labels[q], labelPlacement: "left", labelClass: "salr_label", color: 'olive', lines: {show: true, lineWidth: 1}} )
+            }
+            //plot Mass mix lines
+            for(q=0; q < massmixes.length; q++)
+            {
+               ret.push( {data:massmixes[q], showLabels: true, labels: massmix_labels[q], labelPlacement: "left", labelClass: "massmix_label", color: 'blue', dashes: {show: true, lineWidth: 1, dashLength: [15]}} );
+            }
+            return ret;
+         }
+
+      //resize to selection code
+      $("#tephidata").bind("plotselected", function (event, ranges) {
+         newYAxesRanges = [{ min: ranges.yaxis.from, max: ranges.yaxis.to }];
+         for (n=2; n <= window.YAxesOpts.length; n++)
+         {
+            //If only 1 Y-axis, should not be called
+            newYAxesRanges.push({ min: eval('ranges.y' + n + 'axis.from'), max: eval('ranges.y' + n + 'axis.to')})
+         }
+         plot= $.plot("#tephidata", getData(),
+            $.extend(true, {}, window.plotOptions, {
+               xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+               yaxes: newYAxesRanges
+               })
+            );
+         plotbkgnd= $.plot("#tephibackground", getBackground(),
+            $.extend(true, {}, window.plotOptions, {
+               xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+               yaxes: newYAxesRanges
+               })
+            );
+         });
+      //reset the chart to 'standard' autoranging when dblclicked
+      $('#tephidata').dblclick(function() {
+            plot = $.plot("#tephidata", getData(), window.plotOptions);
+            plotbkgnd = $.plot("#tephibackground", getBackground(), window.plotOptions);
+      });
+
+		// Set up the control widget
+		var updateInterval = 1000;
+		$("#updateInterval").val(updateInterval).change(function () {
+			var v = $(this).val();
+			if (v && !isNaN(+v)) {
+				updateInterval = +v;
+				if (updateInterval < 1000) {
+					updateInterval = 1000;
+				} else if (updateInterval > 300000) {
+					updateInterval = 300000;
+				}
+				$(this).val("" + updateInterval);
+			}
+		});
+
+		var plot = $.plot("#tephidata", getData(), window.plotOptions);
+		var plotbkgnd = $.plot("#tephibackground", getBackground(), window.plotOptions);
+
+		function update() {
+
+         series = getData(); //don't draw the background lines
+			plot.setData(series);
+
+         plot.setupGrid();
+			plot.draw();
+			setTimeout(update, updateInterval);
+		}
+
+		setTimeout(update, updateInterval);
+		//update();
+
+		// Add the Flot version string to the footer
+
+		$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
+	});
+      //function add extra series boxes.
+      $('#addYSeries').click(
+      function() {
+         existingSeries = $('select.yseries').length;
+         newHTML = $('p.yseries').html().replace(/y0/g,'y' + existingSeries).replace(/<sub>0<\/sub>/, '<sub>' + existingSeries + '</sub>')
+         $('#YSeriesContainer').append('<p class=\"yseries">' + newHTML + '</p>');
+      }
+   )
+      $('#minAgo').change(function() {
+         d = new Date();
+         d.setUTCMinutes(d.getMinutes() - $('#minAgo').val());
+         $('#frm').val(d.toUTCString().slice(17,25)); //i.e the time section
+       });
+   });
+	</script>
+</head>
+<body>
+
+	<div id="header">
+		<h2>Tephigram</h2>
+	</div>
+
+	<div id="content">
+
+		<div class="demo-container">
+			<div id="tephibackground" class="tephi"></div>
+			<div id="tephidata" class="tephi"></div>
+		</div>
+
+
+		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
+      <form method="GET" action="tephigram">
+		<p>
+         <label for="frm">From:</label><input type="text" id="frm" name="frm" />
+         <label for="to">To:</label><input type="text" id="to"  name="to"/>
+         <label for="minAgo"><select id="minAgo">
+            <option value="0">now</option>
+            <option value="5">5 mins ago</option>
+            <option value="10">10 mins ago</option>
+            <option value="15">15 mins ago</option>
+            <option value="20">20 mins ago</option>
+            <option value="25">25 mins ago</option>
+            <option value="30">30 mins ago</option>
+            <option value="35">35 mins ago</option>
+            <option value="40">40 mins ago</option>
+            <option value="45">45 mins ago</option>
+            <option value="50">50 mins ago</option>
+            <option value="55">55 mins ago</option>
+            <option value="60">60 mins ago</option>
+            </select>
+      </p>
+      <p><label for="x">X series</label><select id="x" name="x"></select></p>
+      <div id="YSeriesContainer">
+      {% for entry in y: %}
+         <p class="yseries"><label for="y{{ y.index(entry)}}">Y<sub>{{ y.index(entry)}}</sub> series</label><select class="yseries" id="y{{ y.index(entry)}}" name="y"></select><label for="colourUI">Colour:</label><select class="colourUI" id="c{{ y.index(entry)}}" name="c">{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select><span onclick="$(this).parent().remove()" >[X]</span></p>
+      {% endfor %}
+      </div>
+      <input type="button" id="addYSeries" value="Add Y series"/>      
+      <input type="submit"/>
+      </form>
+
+	</div>
+
+	<div id="footer">
+		Copyright &copy; 2007 - 2013 IOLA and Ole Laursen
+	</div>
+
+</body>
+</html>
