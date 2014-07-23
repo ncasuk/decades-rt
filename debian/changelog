@@ -1,6 +1,6 @@
-decades (0.7.3~2.gbp39624a) quantal; urgency=low
+decades (0.7.3~5.gbp95871a) quantal; urgency=low
 
-  ** SNAPSHOT build @39624a147e2b241dbd0299d7b5b6a50ea5fb8122 **
+  ** SNAPSHOT build @95871a802d7ccd6af02defc450bdd29e03ff75a2 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -1086,8 +1086,105 @@ decades (0.7.3~2.gbp39624a) quantal; urgency=low
   * use lstrip('$') instead of [1:] for flexibility
   * Config location updates
   * Version increment
+  * Does that automatically.
+  * Update repo copy.
+  * Dependencies. Again.
+  * Flight manager pre-alpha - add form
+  * Renamed to lowercase
+  * Switching from "raw" wsgi to webpy as improved DB
+  * Shifting DB config to main config file
+  * More debian autocreated files
+  * Adding webpy to depends
+  * Abstrcting layout from template
+  * Rapid config file change to allow for access via IP
+  * PRTAFT is canonical flight num source.
+  * Moving CSS into separate file
+  * Fixes post Java update; also shp2dat extents order
+  * Detect postgres' timezone and warn if not UTC.
+  * Flight summary code.
+  * Add python-tz for timezones dependency
+  * Deploy JS and CSS to web dir.
+  * JS & Css
+  * Fix
+  * Fix 303 reponse for Chrome; change display order
+  * Script -> template, exclusive actions
+  * Add FAAM logo.
+  * Separate manager and summary pages
+  * Change name of subapp
+  * manager/summary/events refactoring
+  * Table defn. note update
+  * Add ip of my test server
+  * CSV download & css for same
+  * Adding no-cache header (primarily for IE)
+  * TWC calfiles, methods, config
+  * Filename change
+  * Updated by AW on Fri 18th Oct 2013_  Please enter the commit message for your changes. Lines starting
+  * Correct output for incomplete returns
+  * Bugfix; not checking if they were already finished
+  * Index page; abstract render_template
+  * Title change
+  * Doc update
+  * Making PIDfiles world-readable
+  * using open() as have sorted umask; 'latest' file
+  * Tank status facility.
+  * Try and poke getdata fn
+  * Still debugging derive_data_alt
+  * And again
+  * Prettify tank status HTML page
+  * Moving comment for pyDoc purposes
+  * Add comment for static pressure method
+  * AVAPS output
+  * Changing SIMU temp to be more plausible.
+  * Adding note on forwarding TCP packets
+  * Only log full incoming data on error
+  * Comment to be more accurate
+  * Detect if JAR needs signing.
+  * Clean recompile.
+  * changing the handling of returned derindex
+  * Packet defragmentation code
+  * Increment version number
+  * docs update
+  * Also save incoming data from unknown instruments
+  * Add flushes; trap unknown instrument errors
+  * Retry opening file
+  * Change output file location to match rest.
+  * Add temp status; remove encode call as not needed
+  * Adding tank status and i15n test
+  * Tidying up, remove i15n test
+  * GIN "latest" updated; changing TCP ones for robustness
+  * Remove "/3" as DECADES is every second
+  * Adding new CSV dataformat files
+  * Deal with "float" types in input.
+  * Tidy up comment
+  * Mixing ratio corrections.
+  * Alerts on MISSING file in live.wsgi
+  * Updated TWC csv file
+  * Missing fieldname
+  * Attempts to verify trailing data.
+  * Tidy up Discard code
+  * Doesn't raise exceptions when discarding data
+  * Updated temps calibs from AlWo
+  * Nevzerov functions & cals.
+  * Updated by AW and CC
+  * Comment re: this bit not actually required
+  * Updated CSV files
+  * Correct type names
+  * Making logo a link to home page
+  * DB syncing notes, bib style update
+  * Corrected UDP multicast address
+  * Removed broken link. Calib filenow in config dir.
+  * Recover data post-restart IF dataformats unchanged
+  * Exception handling for dodgy CSV packets
+  * Log failed csv  unpack
+  * ZEUS UDP hacky fixes
+  * adding WVS
+  * Rolling dercount/derindex fix
+  * Doc update
+  * switch to explicit UTC
+  * Move savebox. (resolved bug #153)
+  * derindex/dercount to 4b Int rather than 2b Short
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Mon, 14 Oct 2013 16:02:52 +0100
+ -- Dan Walker <eardkdw@decades-dev>  Fri, 21 Mar 2014 14:45:51 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
