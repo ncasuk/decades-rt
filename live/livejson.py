@@ -29,6 +29,8 @@ import json
 
 class livejson:
    '''Produces the requested data as JSON for live display'''
+   default = ['pressure_height_m','static_pressure','gin_latitude','gin_track_angle','gin_longitude','gin_heading','gin_d_velocity','gin_altitude','gin_speed', 'true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle']
+   always = ['time_since_midnight','utc_time']
    def GET(self):
       '''Usage: via web.py, e.g. http://fish/live/livejson'''
       web.header('Content-Type','application/json; charset=utf-8', unique=True) 
@@ -38,20 +40,55 @@ class livejson:
       parser = DecadesConfigParser()
       calfile = parser.get('Config','calfile')
       rtlib = rt_derive.derived(cur, calfile)
+      user_data = web.input(para=[])
+      if len(user_data.para) == 0:
+         #no paras sent, send default
+         parameters = self.default
+      else:
+         parameters = filter(None,user_data.para) #strips empty entries
 
-      #get data
-      data = rtlib.derive_data_alt(['time_since_midnight','utc_time','pressure_height_m','static_pressure','gin_latitude','gin_track_angle','gin_longitude','gin_heading','gin_d_velocity','gin_altitude','gin_speed', 'true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '=id','ORDER BY id DESC LIMIT 1')
-      #each entry is a length=1 list, so flatten
+      if 'javascript_time' in parameters:
+         parameters.remove('javascript_time')   #strips javascript time
+                                                #as it is computed below.
+      conditions = '=id '
+      orderby = 'ORDER BY id DESC LIMIT 1'
+      if user_data.has_key('to') and user_data.to > '':
+         try:
+            #sanitise (coerce to INT)
+            to = int(user_data.to)
+            conditions = conditions + 'AND utc_time <=%s ' % to 
+            orderby = 'ORDER BY id'
+         except ValueError:
+            #can't be converted to integer, ignore
+            pass;
+
+      if user_data.has_key('frm') and user_data.frm > '':
+         try:
+            #sanitise (coerce to INT)
+            frm = int(user_data.frm)
+            conditions = conditions + 'AND utc_time >=%s ' % frm 
+            orderby = 'ORDER BY id LIMIT 36000' #i.e. 10 hrs
+         except ValueError:
+            #can't be converted to integer, ignore
+            pass;
+     
+         #get data
+      data = rtlib.derive_data_alt(self.always + parameters, conditions,orderby)
       keylist = data.keys()
-      for each in keylist:
-         if np.isnan(data[each][0]):#don't return NaNs
-            del data[each] 
-         else:
-            data[each] = data[each][0] 
+      #loop over records, make each record self-contained
+      dataout = []
+      for n in range(0, len(data[keylist[0]])): 
+         dataout.append({})
+         for each in keylist:
+            if not(np.isnan(data[each][n])):#don't return NaNs
+               dataout[n][each] = data[each][n] 
+            else:
+               del dataout[n];
+               break; #go on to next entry
+         #Javascript time is in whole milliseconds
+         dataout[n]['javascript_time'] = dataout[n]['utc_time']*1000
 
       #data['utc_time'] = datetime.fromtimestamp(data['utc_time'],timezone('utc')).strftime('%H:%M:%S') 
-      #Javascript time is in whole milliseconds
-      data['javascript_time'] = data['utc_time'] * 1000 
-      return json.dumps(data, allow_nan=False) #in *no particular order*
+      return json.dumps(dataout, allow_nan=False) #in *no particular order*
 
       

@@ -27,7 +27,7 @@
 
    Redirect /index.html /live/index
    WSGIScriptAlias /live/ /var/www/decades-live/live.wsgi/
-   WSGIScriptAlias /plot/Parano.txt /var/www/decades-live/live.wsgi/parano
+   WSGIScriptAlias /plot/Parano.txt /var/www/decades-live/live.wsgi/parano.txt
    #WSGIScriptAlias /plot/FLTSUMM /var/www/decades-live/flightmanager.wsgi
    SetEnv JinjaTemplates /var/www/decades-live/templates
 	<Directory "/var/www/decades-live/">
@@ -41,7 +41,7 @@
 
 	# Possible values include: debug, info, notice, warn, error, crit,
 	# alert, emerg.
-	LogLevel warn
+	LogLevel info
 
 	CustomLog /var/log/apache2/access.log combined
 

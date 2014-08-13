@@ -1,8 +1,7 @@
-* {	padding: 0; margin: 0; vertical-align: top; }
-
 body {
-	background: url(background.png) repeat-x;
-	font: 18px/1.5em "proxima-nova", Helvetica, Arial, sans-serif;
+	font: 18px "Gill Sans MT",Helvetica, Arial, sans-serif;
+   background-color: #186f4d;
+   color: white;
 }
 
 a {	color: #069; }
@@ -10,12 +9,12 @@ a:hover { color: #28b; }
 
 h2 {
 	margin-top: 15px;
-	font: normal 32px "omnes-pro", Helvetica, Arial, sans-serif;
+	font: normal 32px "Gill Sans MT",Helvetica, Arial, sans-serif;
 }
 
 h3 {
 	margin-left: 30px;
-	font: normal 26px "omnes-pro", Helvetica, Arial, sans-serif;
+	font: normal 26px "Gill Sans MT",Helvetica, Arial, sans-serif;
 	color: #666;
 }
 
@@ -52,7 +51,7 @@ input[type=checkbox] {
 }
 
 #content {
-	width: 880px;
+	width: 100%;
 	margin: 0 auto;
 	padding: 10px;
 }
@@ -67,8 +66,8 @@ input[type=checkbox] {
 
 .demo-container {
 	box-sizing: border-box;
-	width: 850px;
-	height: 450px;
+	width: 100%;
+	height: 800px;
 	padding: 20px 15px 15px 15px;
 	margin: 15px auto 30px auto;
 	border: 1px solid #ddd;
@@ -85,8 +84,8 @@ input[type=checkbox] {
 	-webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
-.demo-placeholder {
-	width: 100%;
+.demo-chart {
+	width: 99%;
 	height: 100%;
 	font-size: 14px;
 	line-height: 1.2em;
@@ -94,4 +93,9 @@ input[type=checkbox] {
 
 .legend table {
 	border-spacing: 5px;
+}
+.axisLabels { color: black; }
+sub {
+   vertical-align: bottom;
+   font-size: 60%;
 }
