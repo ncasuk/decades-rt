@@ -52,18 +52,30 @@ class MulticastServerUDP(DatagramProtocol):
       try:
          data = csv.reader([datagram.replace('\x00','')]).next() #assumes only one record, strips NULL
          #copies data into a dictionary
-         dictdata = dict(zip(self.dataProtocols.fields(data[0].lstrip('$')), data)) 
-         self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), )).lower())
+         inst=data[0].lstrip('$')
+         fields=self.dataProtocols.fields(inst)
+         dictdata = dict(zip(fields, data)) 
+         instname=self.dataProtocols.protocols[inst][0]['field'].lstrip('$')
+         print('TIME=',dictdata['utc_time'])
+         try:
+             if dictdata['utc_time']=='NOW':
+                 print('Replace time')
+                 dictdata['utc_time']='%i' % time.time()
+         except IndexError:
+             pass
+         self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (instname, )).lower())
          #adds to separate individual-instrument tables; no longer needed, 
          #although it does provide a good error-check in the logs. DW 2013-11-01
-         squirrel = 'INSERT INTO %s_%s (%s)' % (self.dataProtocols.protocols[data[0].lstrip('$')][0]['field'].lstrip('$'), self.dataProtocols.protocol_versions[data[0].lstrip('$')], ', '.join(self.dataProtocols.fields(data[0].lstrip('$'))))
+         squirrel = 'INSERT INTO %s_%s (%s)' % (instname, self.dataProtocols.protocol_versions[inst], ', '.join(fields))
+         print(squirrel)
          processed= []
-         for each in data:
-            if each == '':
+         for each in fields:
+            if dictdata[each] == '':
                processed.append(None)
             else:
-               processed.append(each)
-         if len(data)==len(self.dataProtocols.fields(data[0].lstrip('$'))):
+               processed.append(dictdata[each])
+         print(processed)
+         if len(data)==len(fields):
             self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed)
             log.msg("Insert into %s successful" % data[0].lstrip('$'))
          else:
