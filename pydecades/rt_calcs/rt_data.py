@@ -13,7 +13,6 @@ class rt_data(object):
                 der.append(d)
         self.derived=der   # list of derivations, empty unless subclassed
         self.database=database #python Cursor class (Named Tuple version)
-        self.database=database
         self.read_cal_const(calfile)
         
     def derive_data(self,names,selection,order=" ORDER BY id",rawdata=None):
@@ -149,6 +148,16 @@ class rt_data(object):
         self.cals['CALAOSS']=[-2.1887E-02,0.0000E-00,0.0000E0,5.7967E-02,-1.7229E-02,0.0000E0,0.9505E+0,0.0050E+0]
         self.cals['CALAOA']=[3.35361E-01,2.78277E-01,-5.73689E-01,-6.1619E-02,-5.2595E-02,1.0300E-01,1.0776E+0,-0.4126E+0]
         self.cals['CALTAS']=[0.9984E0]
+        try:
+            self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
+            utc=self.database.fetchone()
+            print(utc)
+            self.cals['MIDNIGHT']=86400*(utc.utc_time/86400)
+            print("Midnight from database") 
+        except Exception as e:
+            print(e)
+            self.cals['MIDNIGHT']=time.mktime(datetime.datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
+        print("self.cals[MIDNIGHT]=%i" % self.cals['MIDNIGHT'])
         return
 
     def read_cal_const(self,filename):
