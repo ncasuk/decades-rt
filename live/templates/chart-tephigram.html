@@ -251,7 +251,7 @@
       $("#"+this.attr('id')+" option").attr('selected', false);
    }
    $(document).ready(function() {
-      $.getJSON('/live/sondejson.parameters', function(json){
+      $.getJSON('/live/parano.json', function(json){
          paramlist = json;
          
          //populate parameter choices
@@ -268,7 +268,7 @@
          {% endfor %}
          
 
-		var data = [],totalPoints = 3160;
+		var data = [],totalPoints = 1300;
 		{% for entry in y: %}
          data[{{ y.index(entry) }}] = [];
       {% endfor %}
@@ -319,15 +319,15 @@
          $.ajaxSetup({ cache: false });
  
          $.ajax({
-            url: "/live/sondejson",
+            url: "/live/livejson",
             dataType: 'json',
             //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
             data: jQuery.param({'frm':window.frm_epoch,'to':'{{ to_epoch }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
-            success: function(sondejson) {  // arbitrary number of y-series
-            for(p=0; p < sondejson.length; p++)
+            success: function(livejson) {  // arbitrary number of y-series
+            for(p=0; p < livejson.length; p++)
             {
 			   {% for entry in y: %}
-               data[{{y.index(entry)}}].push(tphixy(sondejson[p].{{ x }}, sondejson[p].{{ entry }}));
+               data[{{y.index(entry)}}].push(tphixy(livejson[p].{{ x }}, livejson[p].{{ entry }}));
             {% endfor %}
             }
             //set frm_epoch to most recent
