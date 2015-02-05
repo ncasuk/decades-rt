@@ -18,6 +18,8 @@ from datetime import datetime, timedelta
 import struct
 from rt_calcs import rt_derive,rt_data
 from pydecades.configparser import DecadesConfigParser
+import numpy as np
+from pydecades.database import get_database
 
 #class to handle Decades events
 class DecadesProtocol(basic.LineReceiver):
@@ -26,17 +28,12 @@ class DecadesProtocol(basic.LineReceiver):
          PARA (Returns requested parameters)'''
    delimiter = "" #Java DatInputStream does not have a delimiter between lines
    der = []
-   def __init__(self, conn, status, calfile="pydecades/rt_calcs/HOR_CALIB.DAT"):
+   def __init__(self,rtlib,parano):
        '''Takes a database connection, and creates a NamedTuple cursor (allowing us to
          access the results by fieldname *or* index'''
        print("DECADES_server")
-       self.cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-       self.rtlib = rt_derive.derived(self.cursor,calfile) #class processing the cals & producing "real" values
-       self.parser = DecadesConfigParser()
-       self.status=status
-       self.parano = {}
-       for (code, function) in self.parser.items('Parameters'):
-         self.parano[int(code)] = function
+       self.parano = parano
+       self.rtlib=rtlib
          
       
    def connectionMade(self):
@@ -56,9 +53,8 @@ class DecadesProtocol(basic.LineReceiver):
          para = struct.unpack(formt,data)
          #log.msg("Incoming: " +  repr(para))
          self.writeStatus()
-         #log.msg(">iiffff",-1,para[3],self.time_seconds_past_midnight(),274,self.time_seconds_past_midnight(),274)
-         #send integer: current max time-index
-         self.sendLine(struct.pack(">i",self.status['derindex']))
+         #send integer: index = utc_time
+         self.sendLine(struct.pack(">i",self.rtlib.status['utc_time']))
          
        
          paralist = []
@@ -66,23 +62,28 @@ class DecadesProtocol(basic.LineReceiver):
             paralist.append(self.parano[paracode])
 
          if len(paralist) == 0:
-            paralist.append('id') #so that the no-data request returns correctly
+             #paralist.append('utc_time') #so that the no-data request returns correctly
+             returndata={}
 
-         if para[2] == -1:
-            #it wants all up to latest data point
-            returndata = self.rtlib.derive_data_alt(paralist, '>= %i' % para[1])
+         elif para[2] == -1:
+             #it wants all up to latest data point
+             returndata = self.rtlib.derive_data_alt(paralist, 'utc_time>= %i' % para[1])
          else:
-            #in this case there is a specific range it wants
-            returndata = self.rtlib.derive_data_alt(paralist, 'BETWEEN %i AND %i' % (para[1],para[2]))
-        
-         #log.msg(self.cursor.query) 
-         #returndata = self.cursor.fetchall()
-         #send integer of size of upcoming data
+             #in this case there is a specific range it wants
+             returndata = self.rtlib.derive_data_alt(paralist, 'utc_time BETWEEN %i AND %i' % (para[1],para[2]))
+         #Calculate size if returned data - make all parameter the same
          size_upcoming=0
-         if(len(para) > 4): #i.e. if any parameters were requested
-            size_upcoming = len(returndata[self.parano[para[4]]])
+         for each in returndata:
+             if(len(returndata[each])>size_upcoming):
+                 size_upcoming=len(returndata[each])
+         for each in returndata:
+             if(len(returndata[each])<size_upcoming):
+                 print 'missing some %s' % each
+                 returndata[each]=np.empty((size_upcoming,))
+                 returndata[each].fill(np.nan)
+
+         #send integer of size of upcoming data
          self.sendLine(struct.pack(">i",size_upcoming))
-         #log.msg(repr(len(returndata)))
          #log.msg('requesting data between %i and %i, returning %i datapoints' % (para[1],para[2],size_upcoming))
          #send each requested parameter separately
          for paracode in para[4:(4+para[3])]: #list of required fields
@@ -91,40 +92,35 @@ class DecadesProtocol(basic.LineReceiver):
                   self.sendLine(struct.pack(">f",each))
             
 
-         #log.msg(msg)
-         #self.derindex = self.derindex +1
-         #log.msg('\x00@\x00\x00\x00@@\x00\x00')
-         #self.sendLine('\x00@\x00\x00\x00@@\x00\x00')
 
    def writeStatus(self):
-      #log.msg('STATUS',hex(id(self.status)))
-      self.status.checkStatus(self.rtlib)
-      self.sendLine(self.status.packed())    
+      self.sendLine(self.rtlib.get_packed_status())    
                
 
 class DecadesFactory(protocol.ServerFactory):
    _recvd = {}
-   def __init__(self, conn,  calfile):
-      self.conn = conn
-      self.calfile = calfile
-      self.status=rt_data.rt_status()
+   def __init__(self):
       self.protocol = DecadesProtocol
+      conn=get_database()
+      parser = DecadesConfigParser()
+      self.parano={}
+      for (code, function) in parser.items('Parameters'):
+          self.parano[int(code)] = function
+      calfile = parser.get('Config','calfile')
+      cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+      self.rtlib=rt_derive.derived(cursor,calfile) #class processing the cals & producing "real" values
+      print 'Init factory'
    
    def buildProtocol(self,addr):
-      p = self.protocol(self.conn,self.status, self.calfile)
+      p = self.protocol(self.rtlib,self.parano)
       p.factory = self
       return p
 
 
 def main():# Listen for TCP:1500
    log.startLogging(stdout)
-   conn = psycopg2.connect (host = "localhost",
-                           user = "inflight",
-                           password = "wibble",
-                           database = "inflightdata")
-   conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
-   reactor.listenTCP(1500, DecadesFactory(conn,"pydecades/rt_calcs/HOR_CALIB.DAT"))
+   reactor.listenTCP(1500, DecadesFactory())
    reactor.run()
 
 if __name__ == '__main__':

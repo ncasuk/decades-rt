@@ -895,44 +895,21 @@ C ST    - Corrected Surface Temperature   (deg C)
         #return c[0]+c[1]*raw 
 
     def time_since_midnight(self,data):
-        """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
-        '''raw = []
-        raw.append(self.getdata('corcon01_utc_time',data))
-        raw.append(self.getdata('prtaft01_utc_time',data))
-        raw.append(self.getdata('gindat01_utc_time',data)) 
-        raw.append(self.getdata('aerack01_utc_time',data))
-        raw.append(self.getdata('lowbbr01_utc_time',data)) 
-        raw.append(self.getdata('uppbbr01_utc_time',data)) 
-        dummy = raw[0] # because if they are all NaN, it should return NaN
-        if len(raw[0]) >0: #i.e. it isn't the dummy pass
-            #filter out NaNs
-            raw = [x for x in raw if not np.isnan(x[0])] '''
-        
-        #unixtime_at_midnight = time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
+        ''' Subtracts calculated midnight time from current time '''
         unixtime_at_midnight = self.cals['MIDNIGHT']
+        '''
+        #Could calculate this every time
         try:
             self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
             utc=self.database.fetchone()
-            print(utc)
             unixtime_at_midnight=86400*(utc.utc_time/86400)
-            print("Midnight from database") 
         except Exception as e:
             print(e)
             unixtime_at_midnight=time.mktime(datetime.datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
-        print(unixtime_at_midnight)
-        print(self.getdata('utc_time',data))
+        '''
         return self.getdata('utc_time',data) - unixtime_at_midnight
-        #raw is an array, so subtracting an integer appears to be valid
-        '''if len(raw) >0:
-            return raw[0] - unixtime_at_midnight
-        else:
-            return dummy - unixtime_at_midnight #should be NaN'''
 
     def flight_number(self, data):
       """ Returns the flight code from the PRTAFT"""
       flightnum = self.getdata('prtaft01_flight_num',data)
-      return flightnum 
-        
-    def derindex(self,data):
-      return self.getdata('id',data)
-        
+      return flightnum         

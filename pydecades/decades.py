@@ -98,7 +98,7 @@ class DecadesDataProtocols():
       cursor.execute('DROP TABLE IF EXISTS mergeddata')
       cursor.execute(squirrel)
       cursor.execute('ALTER TABLE mergeddata ADD COLUMN utc_time INT PRIMARY KEY')
-      cursor.execute('ALTER TABLE mergeddata ADD COLUMN id INT UNIQUE')
+      #cursor.execute('ALTER TABLE mergeddata ADD COLUMN id INT UNIQUE')
       #cursor.execute('CREATE index ID ON mergeddata (utc_time)')
       cursor.execute('''CREATE OR REPLACE FUNCTION data_merge(sql_update TEXT, sql_insert TEXT) RETURNS VOID AS
 $$
@@ -150,7 +150,8 @@ LANGUAGE plpgsql;''')
                   print("SHOULD MAKE A NEW TABLE !!!!")
                   self.empty_table(cursor)
       sql_update = ('UPDATE mergeddata SET ' + ", ".join(sql_u) + ' WHERE utc_time=' + cursor.mogrify('%s', (data['utc_time'],)))
-      sql_insert = (cursor.mogrify('INSERT INTO mergeddata (' + ", ".join(sql_i[0]) + ',id, utc_time) VALUES (' + ('%s,' * len(sql_i[1])) + '%s,%s)',sql_i[1] +[data['utc_time'],data['utc_time']]))
+      #sql_insert = (cursor.mogrify('INSERT INTO mergeddata (' + ", ".join(sql_i[0]) + ',id, utc_time) VALUES (' + ('%s,' * len(sql_i[1])) + '%s,%s)',sql_i[1] +[data['utc_time'],data['utc_time']]))
+      sql_insert = (cursor.mogrify('INSERT INTO mergeddata (' + ", ".join(sql_i[0]) + ', utc_time) VALUES (' + ('%s,' * len(sql_i[1])) + '%s)',sql_i[1] +[data['utc_time']]))
       cursor.execute('SELECT data_merge($$' + sql_update + '$$, $$'+ sql_insert + '$$)')
    
 
