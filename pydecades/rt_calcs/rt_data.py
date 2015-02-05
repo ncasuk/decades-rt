@@ -13,7 +13,6 @@ class rt_data(object):
                 der.append(d)
         self.derived=der   # list of derivations, empty unless subclassed
         self.database=database #python Cursor class (Named Tuple version)
-        self.database=database
         self.read_cal_const(calfile)
         
     def derive_data(self,names,selection,order=" ORDER BY id",rawdata=None):
@@ -81,15 +80,14 @@ class rt_data(object):
     def getdata_fromdatabase(self,name,selection,order=' ORDER BY id'):
         """ Reads one parameter from database"""
         fieldname_part = 'SELECT %s ' % name 
-        instrument = (filter(lambda a: a[9:] != 'flight_num',
-                     filter(lambda b: b[9:] != 'utc_time',
-                     filter(lambda c: c != 'utc_time',
-                     filter(lambda d: d != 'id',[name])))))
-        not_null_part=''
+        #instrument = (filter(lambda a: a[9:] != 'flight_num',
+        #             filter(lambda b: b[9:] != 'utc_time',
+        #             filter(lambda c: c != 'utc_time',
+        #             filter(lambda d: d != 'id',[name])))))
         #not_null_part = ' AND %s IS NOT NULL' % name
         #if(instrument):
         #    not_null_part = ' AND %s_utc_time IS NOT NULL' % instrument[0][0:8]
-        self.database.execute(fieldname_part + 'FROM mergeddata WHERE id %s %s %s' % (selection , not_null_part, order) )
+        self.database.execute('%s FROM mergeddata WHERE id %s %s' % (fieldname_part, selection , order) )
         data=np.reshape(np.array(self.database.fetchall()),-1)
         if(data.dtype=='O'):
             try:
@@ -150,6 +148,16 @@ class rt_data(object):
         self.cals['CALAOSS']=[-2.1887E-02,0.0000E-00,0.0000E0,5.7967E-02,-1.7229E-02,0.0000E0,0.9505E+0,0.0050E+0]
         self.cals['CALAOA']=[3.35361E-01,2.78277E-01,-5.73689E-01,-6.1619E-02,-5.2595E-02,1.0300E-01,1.0776E+0,-0.4126E+0]
         self.cals['CALTAS']=[0.9984E0]
+        try:
+            self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
+            utc=self.database.fetchone()
+            print(utc)
+            self.cals['MIDNIGHT']=86400*(utc.utc_time/86400)
+            print("Midnight from database") 
+        except Exception as e:
+            print(e)
+            self.cals['MIDNIGHT']=time.mktime(datetime.datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
+        print("self.cals[MIDNIGHT]=%i" % self.cals['MIDNIGHT'])
         return
 
     def read_cal_const(self,filename):
@@ -206,13 +214,20 @@ class rt_status(dict):
 	       self['gin_longitude'],
 	       self['flight_number'])
 
-
-    def checkStatus(self,rtlib):
+    def checkStatus(self,rtlib,oldestdata=10):
         """ Updates once there is a new index (id ) """
-        #derind=rtlib.getdata_fromdatabase('id','>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
-        derind=rtlib.derive_data(['id'],'>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
+        derind=rtlib.getdata_fromdatabase('id','>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
         if(derind):
-            newdata=rtlib.derive_data(self.paras,'=id','ORDER BY id DESC LIMIT 1')  
+            rawdata={}
+            if(not(hasattr(self,'rawset'))):
+                self.rawset=rtlib.get_raw_required(self.paras)
+                self.rawset.remove('utc_time')
+            r='utc_time'
+            rawdata[r]=rtlib.getdata_fromdatabase(r,'=id AND %s IS NOT NULL' % r,'ORDER BY id DESC LIMIT 1')
+            t=rawdata[r][0]-oldestdata # Oldest data to display 10 secs ago.
+            for r in self.rawset:
+                rawdata[r]=rtlib.getdata_fromdatabase(r,'=id AND %s IS NOT NULL AND utc_time>%i' % (r,t),'ORDER BY id DESC LIMIT 1')
+            newdata=rtlib.derive_data(self.paras,'=id','ORDER BY id DESC LIMIT 1',rawdata=rawdata)
             for k in self.paras:
                 try:
                     self[k]=float(newdata[k][0])
@@ -224,79 +239,4 @@ class rt_status(dict):
                     elif(k!='derindex'):
                         self[k]=float('NaN')
         return self
-
-    def checkStatus_full(self,rtlib):
-        """ Updates once there is a new index (id ) """
-        derind=rtlib.getdata_fromdatabase('id','>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
-        if(derind):
-            prttime=rtlib.getdata_fromdatabase('prtaft01_utc_time','=id AND utc_time>%i' % self.prttime,'ORDER BY id DESC LIMIT 1')
-            gintime=rtlib.getdata_fromdatabase('gindat01_utc_time','=id AND utc_time>%i' % self.gintime,'ORDER BY id DESC LIMIT 1')
-            cortime=rtlib.getdata_fromdatabase('corcon01_utc_time','=id AND utc_time>%i' % self.cortime,'ORDER BY id DESC LIMIT 1')        
-            try:
-                tx=max(prttime,gintime,cortime)-10
-            except TypeError:
-                tx=0
-            if(prttime):self.prttime=prttime
-            if(cortime):self.cortime=cortime
-            if(gintime):self.gintime=gintime
-            paras=['time_since_midnight','derindex','utc_time']
-            if(self.prttime>tx):
-                paras=paras+['flight_number','pressure_height_kft','static_pressure']
-            if(self.gintime>tx):
-                paras=paras+['gin_heading','gin_latitude','gin_longitude']
-            if(self.cortime>tx):
-                paras=paras+['dew_point']
-                if(self.prttime>tx):
-                    paras=paras+['true_air_speed','deiced_true_air_temp_c']
-                    if(self.gintime>tx):
-                        paras=paras+['gin_wind_speed','wind_angle']
-        
-            if(len(paras)>3):
-                newdata=rtlib.derive_data_alt(paras,'=id','ORDER BY id DESC LIMIT 1')
-                for k in self.paras:
-                    if(k in paras):
-                        try:
-                            self[k]=float(newdata[k][0])
-                        except ValueError:
-                            self[k]=newdata[k][0]
-                    else:
-                        if(k=='flight_number'):
-                            self[p]='####'
-                        elif(k!='derindex'):
-                            self[k]=float('NaN')
-        return self
-
-    def checkStatus_likecurrent(self,rtlib):
-        #test status line
-        #mapstatus (integer), derindex (integer), dercount (integer), t/s past 00:00 (float), GIN heading/degrees (float), static pressure millibars (float), Pressure height/feet (float), True air speed (float), True air temp de-iced (float), Dew point - General Eastern (float), Indicated wind speed (float), Indicated wind angle (float), Latitude from GIN (float), Longitude from GIN (float), flight number (4-character code, ASCII)
-        #log.msg(self.status_struct_fmt,1,self.derindex,1,self.time_seconds_past_midnight(),1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,'T','E','S','T')
-        #log.msg(repr(self.der))
-        prtgindata = rtlib.derive_data_alt(['time_since_midnight','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
-        #get corcon separately so gin/prt stuff is independant of it.
-        corcondata = rtlib.derive_data_alt(['time_since_midnight','derindex','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '=id','ORDER BY id DESC LIMIT 1')
-        #(self.derindex, dercount, gindat01_heading_gin) = self.cursor.fetchone()
-        if(corcondata['time_since_midnight'] and abs(corcondata['derindex'] - prtgindata['derindex']) < 10):
-            for p in ['derindex','time_since_midnight','gin_heading','static_pressure',
-                      'pressure_height_kft','gin_latitude','gin_longitude']:
-                self[p]=float(prtgindata[p][0])
-            self['flight_number']=prtgindata['flight_number'][0]    
-            for c in ['true_air_speed','deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle']:
-                self[c]=float(corcondata[c][0])
-        elif (prtgindata['time_since_midnight']):
-            '''This is probably a data shortage, so only return minimal PRTAFT/GINDAT-only stuff'''
-            log.msg('Data shortage, retrying with PRTAFT/GINDAT-only')
-            for p in ['derindex','time_since_midnight','gin_heading','static_pressure',
-                      'pressure_height_kft','gin_latitude','gin_longitude']:
-                self[p]=float(prtgindata[p][0])
-            self['flight_number']=prtgindata['flight_number'][0]    
-            for c in ['true_air_speed','deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle']:
-                self[c]=float('NaN')
-        else:
-            log.msg('No data, send null response')
-            for p in self.paras:
-                if(p=='flight_number'):
-                    self[p]='####'
-                elif(p!='derindex'):
-                    self[p]=float('NaN')
-        return self         
-
+ 
