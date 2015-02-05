@@ -337,9 +337,9 @@ class derived(rt_data.rt_data):
         #TWCDP - Dewpoint from Total Water Content  (deg C)
         spr=self.getdata('static_pressure',data)
         twc_mmr=self.getdata('total_water_content',data)
-        DP=np.zeroes(len(spr))
+        DP=np.zeros(len(spr))
         ind=np.where(twc_mmr*spr>0)
-        DP[ind]=5.42E3 / LOG(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
+        DP[ind]=5.42E3 / np.log(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
         return DP
         
     def radar_height(self,data):
@@ -586,7 +586,7 @@ class derived(rt_data.rt_data):
         PTCH=np.deg2rad(self.getdata('gin_pitch',data))
         R=(np.sin(SZEN)*np.sin(SHDG)*np.sin(ROLL) -
            np.cos(SHDG)*np.sin(PTCH)*np.cos(ROLL)*np.sin(SZEN) +
-           np.cos(SZEN)*np.cos(PTCH)*np.sin(ROLL))
+           np.cos(SZEN)*np.cos(PTCH)*np.cos(ROLL))
         CORR=np.cos(SZEN)/R
         return CORR
 
