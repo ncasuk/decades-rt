@@ -50,14 +50,14 @@ class livejson:
       if 'javascript_time' in parameters:
          parameters.remove('javascript_time')   #strips javascript time
                                                 #as it is computed below.
-      conditions = '=id '
-      orderby = 'ORDER BY id DESC LIMIT 1'
+      conditions = ''
+      orderby = ' DESC LIMIT 1'
       if user_data.has_key('to') and user_data.to > '':
          try:
             #sanitise (coerce to INT)
             to = int(user_data.to)
-            conditions = conditions + 'AND utc_time <=%s ' % to 
-            orderby = 'ORDER BY id'
+            conditions = ' utc_time <=%s ' % to 
+            orderby = ''
          except ValueError:
             #can't be converted to integer, ignore
             pass;
@@ -66,8 +66,9 @@ class livejson:
          try:
             #sanitise (coerce to INT)
             frm = int(user_data.frm)
-            conditions = conditions + 'AND utc_time >=%s ' % frm 
-            orderby = 'ORDER BY id LIMIT 36000' #i.e. 10 hrs
+            if(conditions): conditions+=' AND '
+            conditions = conditions + ' utc_time >=%s ' % frm 
+            orderby = ' LIMIT 36000' #i.e. 10 hrs
          except ValueError:
             #can't be converted to integer, ignore
             pass;

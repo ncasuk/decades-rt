@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Cartesian plots</title>
+	<link href="/css/examples.css" rel="stylesheet" type="text/css">
+	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
+	<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.time.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.resize.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
+	<script type="text/javascript">
+   var paramlist;
+   $.fn.sort_select_box = function(){
+    var my_options = $("#" + this.attr('id') + ' option');
+    my_options.sort(function(a,b) {
+        //case-insensitive options sort; replaces in-place
+        if (a.text.toUpperCase() > b.text.toUpperCase()) return 1;
+        else if (a.text.toUpperCase() < b.text.toUpperCase()) return -1;
+        else return 0
+    })
+      //replace with sorted my_options;
+      $(this).empty().append( my_options );
+
+      // clearing any selections
+      $("#"+this.attr('id')+" option").attr('selected', false);
+   }
+   $(document).ready(function() {
+      $.getJSON('/live/parano.json', function(json){
+         paramlist = json;
+         
+         //populate parameter choices
+         $.each(paramlist, function( index, item ) 
+         { 
+            $('#x, select.yseries').append(new Option(item.DisplayText + " " + item.DisplayUnits, item.ParameterName));
+         });
+         //sort parameter lists
+         $('#x, select.yseries').sort_select_box();
+         $('#x').val('{{ x }}');
+         {% for entry in y: %}
+            $('#y{{ y.index(entry)}}').val('{{ entry }}');
+            $('#c{{ y.index(entry)}}').val('{{ c[y.index(entry)] }}');
+         {% endfor %}
+         
+
+		var data = [],totalPoints = 1300;
+		{% for entry in y: %}
+         data[{{ y.index(entry) }}] = [];
+      {% endfor %}
+
+      var YAxesUnits = [];
+      window.YAxesOpts = [];
+      window.frm_epoch = {{ frm_epoch }};
+      window.plotOptions = {
+			series: {
+				shadowSize: 0	// Drawing is faster without shadows
+			},
+			yaxis: {
+			},
+			xaxis: {
+         {% if x=='javascript_time': %}
+            mode: 'time',
+            minTickSize: [1, "second"],
+            twelveHourClock: false 
+         {% endif %}
+			},
+         yaxes: window.YAxesOpts, 
+         xaxes: [{ axisLabel: paramlist.{{ x }}.DisplayText + ' / ' + paramlist.{{ x }}.DisplayUnits}],
+         selection: {
+            mode: "xy",
+            color: '#186f4d',
+            shape: "round",
+            minSize: 20
+         }
+		};
+
+		function getData() {
+
+         for(var j=0; j < data.length; j++)
+         {
+			   if (data[j].length > totalPoints)
+            {
+				   data[j] = data[j].slice(-totalPoints);
+            }
+            /*else
+            {
+               for (var k = data[j].length; k < data[j].length; ++k)
+               {
+                  data[j].push(undefined); //fill with nulls
+               }
+            }*/
+         }
+         $.ajaxSetup({ cache: false });
+ 
+         $.ajax({
+            url: "/live/livejson",
+            dataType: 'json',
+            //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
+            data: jQuery.param({'frm':window.frm_epoch,'to':'{{ to_epoch }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
+            success: function(livejson) {  // arbitrary number of y-series
+            for(p=0; p < livejson.length; p++)
+            {
+			   {% for entry in y: %}
+               data[{{y.index(entry)}}].push([livejson[p].{{ x }}, livejson[p].{{ entry }}]);
+            {% endfor %}
+            }
+            //set frm_epoch to most recent
+            //window.frm_epoch = isNaN(data.slice(-1).utc_time)?window.frm_epoch:Math.round(data.slice(-1).utc_time); //Math.round approximated cast-as-int
+            window.frm_epoch=data.slice(-1)[0].utc_time
+            },  //if success, call update()
+            error: function(xhr, status, thrown) { alert(status + thrown); }
+         });
+
+			// Zip the generated y values with the x values
+			/*var res = [];
+			for (var i = 0; i < data.length; ++i) {
+				res.push(data[i]);
+			}
+			var res1 = [];
+			for (var i = 0; i < data.length; ++i) {
+				res1.push(data[i]);
+			}*/
+         ret= []
+			{% for entry in y: %} // arbitrary number of y-series
+            if(-1 == YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits))
+            {
+               YAxesUnits.push(paramlist.{{ entry }}.DisplayUnits);
+               //sets the opts for the yaxes, alternating between left and right
+               window.YAxesOpts.push({ position: (YAxesUnits.length % 2)?"left":"right", show: true, axisLabel: paramlist.{{ entry }}.DisplayUnits});
+            }
+            ret.push( {data: data[{{ y.index(entry) }}], label: paramlist.{{ entry }}.DisplayText, color: '{{ c[y.index(entry)] }}', lines: { show: true }, yaxis: YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits) +1 });
+         {% endfor %};
+         
+         return ret
+		}
+
+      //resize to selection code
+      $("#chart").bind("plotselected", function (event, ranges) {
+         newYAxesRanges = [{ min: ranges.yaxis.from, max: ranges.yaxis.to }];
+         for (n=2; n <= window.YAxesOpts.length; n++)
+         {
+            //If only 1 Y-axis, should not be called
+            newYAxesRanges.push({ min: eval('ranges.y' + n + 'axis.from'), max: eval('ranges.y' + n + 'axis.to')})
+         }
+         plot = $.plot("#chart", getData(),
+            $.extend(true, {}, window.plotOptions, {
+               xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+               yaxes: newYAxesRanges
+               })
+            );
+         });
+      //reset the chart to 'standard' autoranging when dblclicked
+      $('#chart').dblclick(function() {
+            plot = $.plot("#chart", getData(), window.plotOptions);
+      });
+
+		// Set up the control widget
+		var updateInterval = 1000;
+		$("#updateInterval").val(updateInterval).change(function () {
+			var v = $(this).val();
+			if (v && !isNaN(+v)) {
+				updateInterval = +v;
+				if (updateInterval < 1000) {
+					updateInterval = 1000;
+				} else if (updateInterval > 300000) {
+					updateInterval = 300000;
+				}
+				$(this).val("" + updateInterval);
+			}
+		});
+
+		var plot = $.plot("#chart", getData(), window.plotOptions
+      );
+
+		function update() {
+
+         series = getData();
+			plot.setData(series);
+
+         plot.setupGrid();
+			plot.draw();
+			setTimeout(update, updateInterval);
+		}
+
+		setTimeout(update, updateInterval);
+		//update();
+
+		// Add the Flot version string to the footer
+
+		$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
+	});
+      //function add extra series boxes.
+      $('#addYSeries').click(
+      function() {
+         existingSeries = $('select.yseries').length;
+         newHTML = $('p.yseries').html().replace(/y0/g,'y' + existingSeries).replace(/<sub>0<\/sub>/, '<sub>' + existingSeries + '</sub>')
+         $('#YSeriesContainer').append('<p class=\"yseries">' + newHTML + '</p>');
+      }
+   )
+      $('#minAgo').change(function() {
+         d = new Date();
+         d.setUTCMinutes(d.getMinutes() - $('#minAgo').val());
+         $('#frm').val(d.toUTCString().slice(17,25)); //i.e the time section
+       });
+   });
+	</script>
+</head>
+<body>
+
+	<div id="header">
+		<h2>Cartesian plots</h2>
+	</div>
+
+	<div id="content">
+
+		<div class="demo-container">
+			<div id="chart" class="demo-chart"></div>
+		</div>
+
+
+		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
+      <form method="GET" action="cartesian">
+		<p>
+         <label for="frm">From:</label><input type="text" id="frm" name="frm" />
+         <label for="to">To:</label><input type="text" id="to"  name="to"/>
+         <label for="minAgo"><select id="minAgo">
+            <option value="0">now</option>
+            <option value="5">5 mins ago</option>
+            <option value="10">10 mins ago</option>
+            <option value="15">15 mins ago</option>
+            <option value="20">20 mins ago</option>
+            <option value="25">25 mins ago</option>
+            <option value="30">30 mins ago</option>
+            <option value="35">35 mins ago</option>
+            <option value="40">40 mins ago</option>
+            <option value="45">45 mins ago</option>
+            <option value="50">50 mins ago</option>
+            <option value="55">55 mins ago</option>
+            <option value="60">60 mins ago</option>
+            </select>
+      </p>
+      <p><label for="x">X series</label><select id="x" name="x"></select></p>
+      <div id="YSeriesContainer">
+      {% for entry in y: %}
+         <p class="yseries"><label for="y{{ y.index(entry)}}">Y<sub>{{ y.index(entry)}}</sub> series</label><select class="yseries" id="y{{ y.index(entry)}}" name="y"></select><label for="colourUI">Colour:</label><select class="colourUI" id="c{{ y.index(entry)}}" name="c">{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select><span onclick="$(this).parent().remove()" >[X]</span></p>
+      {% endfor %}
+      </div>
+      <input type="button" id="addYSeries" value="Add Y series"/>      
+      <input type="submit"/>
+      </form>
+
+	</div>
+
+	<div id="footer">
+		Copyright &copy; 2007 - 2013 IOLA and Ole Laursen
+	</div>
+
+</body>
+</html>
