@@ -79,17 +79,14 @@ class livejson:
       #loop over records, make each record self-contained
       dataout = []
       for n in range(0, len(data[keylist[0]])): 
-         dataout.append({})
+         dataout.append({'javascript_time':data['utc_time'][n]*1000.0,'utc_time':float(data['utc_time'][n])})
+         #Javascript time is in whole milliseconds
          for each in keylist:
-            if not(np.isnan(data[each][n])):#don't return NaNs
-               dataout[n][each] = data[each][n] 
+            if (np.isfinite(data[each][n])):#don't return NaNs
+               dataout[-1][each] = data[each][n] 
             else:
-               del dataout[n];
+               del dataout[-1];
                break; #go on to next entry
-         if(dataout[n]):
-            #Javascript time is in whole milliseconds
-            dataout[n]['javascript_time'] = dataout[n]['utc_time']*1000.0
-            dataout[n]['utc_time'] = float(dataout[n]['utc_time'])
 
       #data['utc_time'] = datetime.fromtimestamp(data['utc_time'],timezone('utc')).strftime('%H:%M:%S') 
       return json.dumps(dataout, allow_nan=False) #in *no particular order*
