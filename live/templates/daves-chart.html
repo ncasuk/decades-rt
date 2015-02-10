@@ -30,47 +30,50 @@
       $("#"+this.attr('id')+" option").attr('selected', false);
    }
    $(document).ready(function() {
-      $.getJSON('/live/para_no.json', function(json){
-         paramlist = json;
+      $.getJSON('/live/para_no.json', function(paramlist){
+         //paramlist = json;
          
          //populate parameter choices
          $.each(paramlist, function( index, item ) 
          { 
-            $('#x, select.yseries').append(new Option(item.DisplayText + " " + item.DisplayUnits, item.ParameterName));
+            $('#x, select.parameters').append(new Option(item.DisplayText + " " + item.DisplayUnits, item.ParameterName));
          });
          //sort parameter lists
-         $('#x, select.yseries').sort_select_box();
-         $('#x').val('{{ x }}');
+         {% for entry in x: %}
+            $('#x{{ x.index(entry)}}').val('{{ entry }}');
+            $('#xcol{{ x.index(entry)}}').val('{{ c[x.index(entry)] }}');
+         {% endfor %}
          {% for entry in y: %}
             $('#y{{ y.index(entry)}}').val('{{ entry }}');
-            $('#c{{ y.index(entry)}}').val('{{ c[y.index(entry)] }}');
+            $('#ycol{{ y.index(entry)}}').val('{{ c[y.index(entry)] }}');
          {% endfor %}
          
 
-		var data = [],totalPoints = 1300,recentPoints=100;
-		{% for entry in y: %}
-         data[{{ y.index(entry) }}] = [];
+		var data = {},totalPoints = 1300,recentPoints=100;
+		{% for entry in dep: %}
+         data['{{ entry }}'] = [];
       {% endfor %}
-
       var YAxesUnits = [];
       window.YAxesOpts = [];
+      var XAxesUnits = [];
+      window.XAxesOpts = [];
       window.frm_epoch = {{ frm_epoch }};
       window.plotOptions = {
 			series: {
 				shadowSize: 0	// Drawing is faster without shadows
-                               ,resample:{maxpoints:totalPoints,recent:recentPoints}			
+                               ,resample:{maxpoints:totalPoints,recent:recentPoints,hidenull:true}			
                                  },
 			yaxis: {
 			},
 			xaxis: {
-         {% if x=='utc_time': %}
+         {% if x[0]=='utc_time': %}
             mode: 'time',
             minTickSize: [1, "second"],
             twelveHourClock: false 
          {% endif %}
 			},
          yaxes: window.YAxesOpts, 
-         xaxes: [{ axisLabel: paramlist.{{ x }}.DisplayText + ' / ' + paramlist.{{ x }}.DisplayUnits}],
+         xaxes: window.XAxesOpts,
 			zoom: {
 				interactive: false
 			},
@@ -84,43 +87,56 @@
             minSize: 20}
 		};
       function plotdata(){
-            ret= []
-			{% for entry in y: %} // arbitrary number of y-series
-            if(-1 == YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits))
+            ret= [] 
+            {% for nn,xx,yy in paras: %} // arbitrary number of series
+            if(-1 == YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits))
             {
-               YAxesUnits.push(paramlist.{{ entry }}.DisplayUnits);
+               YAxesUnits.push(paramlist.{{ yy }}.DisplayUnits);
                //sets the opts for the yaxes, alternating between left and right
-               window.YAxesOpts.push({ position: (YAxesUnits.length % 2)?"left":"right", show: true, axisLabel: paramlist.{{ entry }}.DisplayUnits});
+               window.YAxesOpts.push({ position: (YAxesUnits.length % 2)?"left":"right", show: true, axisLabel: paramlist.{{ yy }}.DisplayUnits});
+            }
+            if(-1 == XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits))
+            {
+               XAxesUnits.push(paramlist.{{ xx }}.DisplayUnits);
+               //sets the opts for the xaxes, alternating between top and bottom
+               window.XAxesOpts.push({ position: (XAxesUnits.length % 2)?"bottom":"top", show: true, axisLabel: paramlist.{{ xx }}.DisplayUnits});
             }
             
-            ret.push( {data: data[{{ y.index(entry) }}], label: paramlist.{{ entry }}.DisplayText, 
-                                color: '{{ c[y.index(entry)] }}', 
-                                lines: { show: true }, 
-                                yaxis: YAxesUnits.indexOf(paramlist.{{ entry }}.DisplayUnits) +1 });
+            ret.push( {data: data['{{ nn }}'], label: paramlist.{{ nn }}.DisplayText, 
+                                color: '{{ c[dep.index(nn)] }}', 
+                                lines: { show: true }, points:{show:false,radius:1},
+                                yaxis: YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 ,
+                                xaxis: XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits) +1 });
          {% endfor %};
        return ret;
        }
 
 		function getData() {
+          console.log('getData');
          $.ajaxSetup({ cache: false });
- 
          $.ajax({
             url: "/live/jsondata",
             dataType: 'json',
             //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
-            data: jQuery.param({'frm':window.frm_epoch,'to':'{{ to_epoch }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
+            data: jQuery.param({'frm':window.frm_epoch,'to':'{{ to_epoch }}',
+                                //'para':[{% for entry in x: %}'{{ entry }}', {% endfor %},{% for entry in y: %}'{{ entry }}', {% endfor %}]
+                                'para':[{% for entry in allparas: %}'{{ entry }}',{% endfor %}]
+                                }, true),
             success: function(livejson) {  // arbitrary number of y-series
-            for(p=0; p < livejson.{{x}}.length; p++)
+            if(livejson.{{x[0]}}.length){
+            for(p=0; p < livejson.{{x[0]}}.length; p++)
             {
-            {% for entry in y: %}
-               data[{{y.index(entry)}}].push([livejson.{{ x }}[p]{{mult}}, livejson.{{ entry }}[p]]);
+            //{% for entry in y: %}
+            //   data[{{y.index(entry)}}].push([livejson.{{ x[0] }}[p]{{mult}}, livejson.{{ entry }}[p]]);
+            //{% endfor %}
+            {% for nn,xx,yy in paras: %}
+               data['{{nn}}'].push([livejson.{{ xx }}[p]{{mult}}, livejson.{{ yy }}[p]]);
             {% endfor %}
             }
-            //set frm_epoch to most recent
-            //window.frm_epoch = isNaN(data.slice(-1).utc_time)?window.frm_epoch:Math.round(data.slice(-1).utc_time); //Math.round approximated cast-as-int
             plot.setData(plotdata());
             plot.setupGrid();
 	    plot.draw();
+            }
             if(!('{{to_epoch}}')){ 
                 if(livejson.utc_time.length>0){
                     window.frm_epoch=livejson.utc_time.slice(-1)[0]+1;
@@ -160,6 +176,12 @@ $.event.special.rightclick = {
 };
       $('#reset').click(function(){
             plot = $.plot("#chart", plotdata(), window.plotOptions);
+      });      
+      $('#hidenull').change(function(){ 
+          options=plot.getOptions();
+          options.series.resample.hidenull=$(this).is(':checked');
+          window.plotOptions.series.resample.hidenull= options.series.resample.hidenull;
+          plot.setData(plotdata());
       });
       $('#zoomtype').change(function(){ 
             options=plot.getOptions();
@@ -178,34 +200,44 @@ $.event.special.rightclick = {
             }
       });
       $(document).on("dblclick",'#chart',function() {
-            plot.getOptions().series.resample=window.plotOptions.series.resample;
-            plot.setData(plotdata());
+            //plot.getOptions().series.resample=window.plotOptions.series.resample;
+            //plot.setData(plotdata());
             plot.zoom();
       });
       $(document).on("rightclick", '#chart', function() {
-            plot.getOptions().series.resample=window.plotOptions.series.resample;
-            plot.setData(plotdata());
+            //plot.getOptions().series.resample=window.plotOptions.series.resample;
+            //plot.setData(plotdata());
             plot.zoomOut();
             return false;
       });
       $(document).keypress(function(event) {
-         console.log("keypress");
-         console.log(event);
-         if(event.keyCode==37){
-             plot.pan({left:-50});
+         console.log(event.key);
+         switch (event.key) {
+             case "+":
+               plot.zoom();
+               return false;
+             case "-":
+               plot.zoomOut();
+               return false;
          }
-         if(event.keyCode==38){
-             plot.pan({top:-50});
-         }
-         if(event.keyCode==39){
-             plot.pan({left:50});
-         }
-         if(event.keyCode==40){
-             plot.pan({top:50});
-         }
-         return false;
-      });
 
+      });
+      $(document).keydown(function(event) {
+         switch (event.keyCode) {
+             case 37:
+               plot.pan({left:-50});
+               return false;
+             case 38:
+               plot.pan({top:-50});
+               return false;
+             case 39:
+               plot.pan({left:50});
+               return false;
+             case 40:
+               plot.pan({top:50});
+               return false;
+         }
+      });
 		// Set up the control widget
 		var updateInterval = 1000;
 		$("#updateInterval").val(updateInterval).change(function () {
@@ -246,10 +278,11 @@ $.event.special.rightclick = {
                                 window.plotOptions.series.resample.recent=recentPoints;
 			}
 		});
+                {% if allparas|length>=2 %}
 		var plot = $.plot("#chart", plotdata(), window.plotOptions);
 
                 getData();
-
+                {% endif %}
 		// Add the Flot version string to the footer
 
 		$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
@@ -257,43 +290,100 @@ $.event.special.rightclick = {
       //function add extra series boxes.
       $('#addYSeries').click(
       function() {
-         existingSeries = $('select.yseries').length;
-         newHTML = $('p.yseries').html().replace(/y0/g,'y' + existingSeries).replace(/<sub>0<\/sub>/, '<sub>' + existingSeries + '</sub>')
-         $('#YSeriesContainer').append('<p class=\"yseries">' + newHTML + '</p>');
+         existingSeries = $('p.yparameters').length;
+         newHTML = $('p.yparameters').html().replace(/y0/g,'y' + existingSeries).replace(/<sub>0<\/sub>/, '<sub>' + existingSeries + '</sub>').replace('></span>','>[X]</span>');
+         $('#YSeriesContainer').append('<p class=\"yparameters">' + newHTML + '</p>');
+         col=$("select.ycolour:last")[0];
+         col.selectedIndex=Math.random()*col.options.length;
+         update_series();
       }
    )
+      $('#addXSeries').click(
+      function() {
+         existingSeries = $('p.xparameters').length;
+         newHTML = $('p.xparameters').html().replace(/x0/g,'x' + existingSeries).replace(/<sub>0<\/sub>/, '<sub>' + existingSeries + '</sub>').replace('></span>','>[X]</span>').replace('xcol0','xcol'+existingSeries);
+         $('#XSeriesContainer').append('<p class=\"xparameters">' + newHTML + '</p>');
+         col=$("select.xcolour:last")[0];
+         col.selectedIndex=Math.random()*col.options.length;
+         update_series();
+      }
+   )
+
       $('#minAgo').change(function() {
          d = new Date();
          d.setUTCMinutes(d.getMinutes() - $('#minAgo').val());
          $('#frm').val(d.toUTCString().slice(17,25)); //i.e the time section
        });
+      update_series();
    });
+      function update_series(){
+         if($('p.yparameters').length>1){
+             $('#addXSeries').hide();
+         }else{
+             $('#addXSeries').show();
+         }
+         if($('p.xparameters').length>1){
+             $('#addYSeries').hide();
+             for (x=0;x<$("select.xcolour").length;x++){
+                console.log($($("label.xname")[x]).html());
+                $("label.xname:eq("+x+")").html("X<sub>"+x+"</sub>");
+                $("select.xcolour:eq("+x+")").show();
+                $("select.xcolour:eq("+x+")").prop("disabled",false);
+                $("label.xcolour:eq("+x+")").show();
+             }
+             for (y=0;y<$("select.ycolour").length;y++){
+                $("label.yname:eq("+y+")").html("Y<sub>"+y+"</sub>");
+                $("select.ycolour:eq("+y+")").hide();
+                $("select.ycolour:eq("+y+")").prop("disabled",true);
+                $("label.ycolour:eq("+y+")").hide();
+             }
+         }else{
+             $('#addYSeries').show();
+             for (x=0;x<$("select.xcolour").length;x++){
+                $("label.xname:eq("+x+")").html("X<sub>"+x+"</sub>");
+                $("select.xcolour:eq("+x+")").hide();
+                $("select.xcolour:eq("+x+")").prop("disabled",true);
+                $("label.xcolour:eq("+x+")").hide();
+             }
+             for (y=0;y<$("select.ycolour").length;y++){
+                $("label.yname:eq("+y+")").html("Y<sub>"+y+"</sub>");
+                $("select.ycolour:eq("+y+")").show();
+                $("select.ycolour:eq("+y+")").prop("disabled",false);
+                $("label.ycolour:eq("+y+")").show();
+             }
+         }
+      }
+
+
 	</script>
 </head>
 <body>
 
 	<div id="header">
 		<h2>XY plots</h2>
-                <h2 id=extrastuff>???</h2>
 	</div>
 
 	<div id="content">
 
+                {% if allparas|length >= 2 %}
 		<div class="demo-container">
 			<div id="chart" class="demo-chart"></div>
 		</div>
+                {% endif %}
 
-           <p><input type="checkbox" id="zoomtype" checked /> Zoom <button id=reset>RESET</button></p>     
+           <p><input type="checkbox" id="zoomtype" checked /> Zoom 
+              <input type="checkbox" id="hidenull" checked /> Ignore nulls 
+              <button id=reset>RESET</button></p>     
 
-		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
+		<!--p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
 		<p>Number plotted points: <input id="totalPoints" type="text" value="" style="text-align: right; width:5em"> </p>
-		<p>Number recent points: <input id="recentPoints" type="text" value="" style="text-align: right; width:5em"> </p>
+		<p>Number recent points: <input id="recentPoints" type="text" value="" style="text-align: right; width:5em"> </p-->
 
           <form method="GET" action="xy">
 		<p>
          <label for="frm">From:</label><input type="text" id="frm" name="frm" />
          <label for="to">To:</label><input type="text" id="to"  name="to"/>
-         <label for="minAgo"><select id="minAgo">
+         <label for="minAgo"></label><select id="minAgo">
             <option value="0">now</option>
             <option value="5">5 mins ago</option>
             <option value="10">10 mins ago</option>
@@ -309,14 +399,25 @@ $.event.special.rightclick = {
             <option value="60">60 mins ago</option>
             </select>
       </p>
-      <p><label for="x">X series</label><select id="x" name="x"></select></p>
+      <div id="XSeriesContainer">
+      {% for entry in x: %}
+      <p class="xparameters"><label class="xname">X<sub>{{ x.index(entry)}}</sub> </label><select class="parameters" id="x{{ x.index(entry)}}" name="x"></select>
+         <label class="xcolour" hidden>Colour:</label><select id="xcol{{ x.index(entry)}}"  class="xcolour"  name="c" hidden disabled>{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select>
+         <span onclick="$(this).parent().remove();update_series();" >{% if x.index(entry)>0 %}[X]{% endif %}</span>
+      </p>
+      {% endfor %}
+      </div>      
+      <input type="button" id="addXSeries" value="Add X " />
       <div id="YSeriesContainer">
       {% for entry in y: %}
-         <p class="yseries"><label for="y{{ y.index(entry)}}">Y<sub>{{ y.index(entry)}}</sub> series</label><select class="yseries" id="y{{ y.index(entry)}}" name="y"></select><label for="colourUI">Colour:</label><select class="colourUI" id="c{{ y.index(entry)}}" name="c">{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select><span onclick="$(this).parent().remove()" >[X]</span></p>
+         <p class="yparameters"><label class="yname">Y<sub>{{ y.index(entry)}}</sub> </label>
+              <select class="parameters" id="y{{ y.index(entry)}}" name="y"></select>
+              <label class="ycolour">Colour:</label><select id="ycol{{ y.index(entry)}}" class="ycolour" name="c">{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select>
+              <span onclick="$(this).parent().remove();update_series();" >{% if y.index(entry)>0 %}[X]{% endif %}</span></p>
       {% endfor %}
       </div>
-      <input type="button" id="addYSeries" value="Add Y series"/>      
-      <input type="submit"/>
+      <input type="button" id="addYSeries" value="Add Y "/>      
+      <input type="submit" value="PLOT"/>
       </form>
 
 	</div>
