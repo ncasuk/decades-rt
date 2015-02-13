@@ -72,14 +72,14 @@ $.event.special.rightclick = {
                                           var x=axis.c2p(event.pageX - offset.left);
                                           axis.options.max=x+(axis.max-x)*scale
                                           axis.options.min=x-(x-axis.min)*scale
-                                          //plot.setupGrid();
+                                          plot.setupGrid();
                                           plot.draw();
                                         }
                                         if(axis.direction=="y"){
                                           var y=axis.c2p(event.pageY - offset.top);
                                           axis.options.max=y+(axis.max-y)*scale
                                           axis.options.min=y-(y-axis.min)*scale
-                                          //plot.setupGrid();
+                                          plot.setupGrid();
                                           plot.draw();
                                         }
                                         return false;
@@ -98,6 +98,7 @@ $.event.special.rightclick = {
                                         $(this).triggerHandler(mw,+1);
                                         return false;
 				})
+				.bind("click",function(event){plot.getOptions().axisnavigate.click(event,axis,plot);})
                                 ;
                 });
     }
@@ -105,7 +106,8 @@ $.event.special.rightclick = {
     var options = {
         axisnavigate: {
             zoom:"dblclick",
-            zoomout:"rightclick"
+            zoomout:"rightclick",
+	    click:null
             },
         zoom:{zoomout:"rightclick"}
     };
