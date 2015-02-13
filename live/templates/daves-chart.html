@@ -10,9 +10,11 @@
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.time.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.navigate.js"></script>
+        <script language="javascript" type="text/javascript" src="/js/jquery.event.drag.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.resize.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/jquery.flot.resample.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.simpleresample.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/jquery.flot.axisnavigate.js"></script>
 	<script type="text/javascript">
    var paramlist;
    $.fn.sort_select_box = function(){
@@ -39,6 +41,7 @@
             $('#x, select.parameters').append(new Option(item.DisplayText + " " + item.DisplayUnits, item.ParameterName));
          });
          //sort parameter lists
+         $('#x, select.parameters').sort_select_box();
          {% for entry in x: %}
             $('#x{{ x.index(entry)}}').val('{{ entry }}');
             $('#xcol{{ x.index(entry)}}').val('{{ c[x.index(entry)] }}');
@@ -49,7 +52,7 @@
          {% endfor %}
          
 
-		var data = {},totalPoints = 1300,recentPoints=100;
+		var data = {},totalPoints = 1000/{{ dep|count }};
 		{% for entry in dep: %}
          data['{{ entry }}'] = [];
       {% endfor %}
@@ -58,10 +61,17 @@
       var XAxesUnits = [];
       window.XAxesOpts = [];
       window.frm_epoch = {{ frm_epoch }};
+      //frm={{ frm }} frm_epoch={{ frm_epoch }} to={{ to }} to_epoch={{ to_epoch }} 
       window.plotOptions = {
 			series: {
 				shadowSize: 0	// Drawing is faster without shadows
-                               ,resample:{maxpoints:totalPoints,recent:recentPoints,hidenull:true}			
+                               ,simpleresample:{maxpoints:totalPoints,
+                                                hidenull:$('#hidenull').is(':checked')}
+                               ,points:{symbol:function (ctx, x, y, radius, shadow) {
+                ctx.rect(x - radius, y - radius, radius + radius, radius + radius);
+                                       },show:$('#points').is(':checked')
+                               }
+                               ,lines:{ show:$('#lines').is(':checked')}			
                                  },
 			yaxis: {
 			},
@@ -75,14 +85,14 @@
          yaxes: window.YAxesOpts, 
          xaxes: window.XAxesOpts,
 			zoom: {
-				interactive: false
+				interactive: $('#zoomtype').is(':not(:checked)')
 			},
 			pan: {
-				interactive: false
+				interactive: $('#zoomtype').is(':not(:checked)')
 			},
          selection:{
-            mode: "xy",
-            color: '#186f4d',
+            mode: $('#zoomtype').is(':checked') ? "xy" : null,
+            color: '#004400',
             shape: "round",
             minSize: 20}
 		};
@@ -104,15 +114,16 @@
             
             ret.push( {data: data['{{ nn }}'], label: paramlist.{{ nn }}.DisplayText, 
                                 color: '{{ c[dep.index(nn)] }}', 
-                                lines: { show: true }, points:{show:false,radius:1},
+                                lines: { show: $('#lines').is(':checked')}, points:{show:$('#points').is(':checked'),radius:0.5},
+                                simpleresample:{hidenull:$('#hidenull').is(':checked')},
                                 yaxis: YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 ,
                                 xaxis: XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits) +1 });
          {% endfor %};
        return ret;
        }
 
+
 		function getData() {
-          console.log('getData');
          $.ajaxSetup({ cache: false });
          $.ajax({
             url: "/live/jsondata",
@@ -124,18 +135,19 @@
                                 }, true),
             success: function(livejson) {  // arbitrary number of y-series
             if(livejson.{{x[0]}}.length){
-            for(p=0; p < livejson.{{x[0]}}.length; p++)
+           for(p=0; p < livejson.{{x[0]}}.length; p++)
             {
-            //{% for entry in y: %}
-            //   data[{{y.index(entry)}}].push([livejson.{{ x[0] }}[p]{{mult}}, livejson.{{ entry }}[p]]);
-            //{% endfor %}
             {% for nn,xx,yy in paras: %}
                data['{{nn}}'].push([livejson.{{ xx }}[p]{{mult}}, livejson.{{ yy }}[p]]);
             {% endfor %}
             }
-            plot.setData(plotdata());
-            plot.setupGrid();
-	    plot.draw();
+            if(plot){
+              plot.setData(plotdata());
+              plot.setupGrid();
+	      plot.draw();
+            }else{
+              plotit(window.plotOptions);
+            }
             }
             if(!('{{to_epoch}}')){ 
                 if(livejson.utc_time.length>0){
@@ -155,63 +167,81 @@
       //resize to selection code
       $("#chart").bind("plotselected", function (event, ranges) {
          newYAxesRanges = [{ min: ranges.yaxis.from, max: ranges.yaxis.to }];
+         newXAxesRanges = [{ min: ranges.xaxis.from, max: ranges.xaxis.to }];
          for (n=2; n <= window.YAxesOpts.length; n++)
          {
             //If only 1 Y-axis, should not be called
             newYAxesRanges.push({ min: eval('ranges.y' + n + 'axis.from'), max: eval('ranges.y' + n + 'axis.to')})
          }
-         plot = $.plot("#chart", plotdata(),
-            $.extend(true, {}, window.plotOptions, {
-               xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+         for (n=2; n <= window.XAxesOpts.length; n++)
+         {
+            //If only 1 Y-axis, should not be called
+            newXAxesRanges.push({ min: eval('ranges.x' + n + 'axis.from'), max: eval('ranges.x' + n + 'axis.to')})
+         }
+         plotit($.extend(true, {}, window.plotOptions, {
+               xaxes: newXAxesRanges,
                yaxes: newYAxesRanges
-               })
-            );
+               }));
          });
-
+/*
 $.event.special.rightclick = {
     bindType: "contextmenu",
     delegateType: "contextmenu"
     
 
 };
+*/
       $('#reset').click(function(){
-            plot = $.plot("#chart", plotdata(), window.plotOptions);
+            plotit(window.plotOptions);
       });      
+      $('#points').change(function(){ 
+          d=plot.getData();
+          for(s=0;s<d.length;s++){
+             d[s].points.show=$(this).is(':checked');
+          }
+          plot.draw();
+      });
+      $('#lines').change(function(){ 
+          d=plot.getData();
+          for(s=0;s<d.length;s++){
+             d[s].lines.show=$(this).is(':checked');
+          }
+          plot.draw();
+      });
       $('#hidenull').change(function(){ 
-          options=plot.getOptions();
-          options.series.resample.hidenull=$(this).is(':checked');
-          window.plotOptions.series.resample.hidenull= options.series.resample.hidenull;
           plot.setData(plotdata());
+          plot.setupGrid();
+          plot.draw();
       });
       $('#zoomtype').change(function(){ 
             options=plot.getOptions();
+            //save axes ranges
+            xaxes=[];yaxes=[];
+            for (axis in options.xaxes){
+               xaxes.push({min:options.xaxes[axis].min,max:options.xaxes[axis].max});
+            }
+            for (axis in options.yaxes){
+               yaxes.push({min:options.yaxes[axis].min,max:options.yaxes[axis].max});
+            }
             if($(this).is(':checked')){
-                options.selection.mode='xy';
-                options.pan.interactive=false;
                 window.plotOptions.selection.mode='xy';
                 window.plotOptions.pan.interactive=false;
-                plot = $.plot("#chart", plotdata(),options);
+                window.plotOptions.zoom.interactive=false;
+                plotit($.extend(true, {}, window.plotOptions, {
+               xaxes: xaxes,
+               yaxes: yaxes
+               }));
            }else{
-                options.selection.mode=null;
-                options.pan.interactive=true;
                 window.plotOptions.selection.mode=null;
                 window.plotOptions.pan.interactive=true;
-                plot = $.plot("#chart", plotdata(), options);
+                window.plotOptions.zoom.interactive=true;
+                plotit($.extend(true, {}, window.plotOptions, {
+               xaxes: xaxes,
+               yaxes: yaxes
+               }));
             }
       });
-      $(document).on("dblclick",'#chart',function() {
-            //plot.getOptions().series.resample=window.plotOptions.series.resample;
-            //plot.setData(plotdata());
-            plot.zoom();
-      });
-      $(document).on("rightclick", '#chart', function() {
-            //plot.getOptions().series.resample=window.plotOptions.series.resample;
-            //plot.setData(plotdata());
-            plot.zoomOut();
-            return false;
-      });
       $(document).keypress(function(event) {
-         console.log(event.key);
          switch (event.key) {
              case "+":
                plot.zoom();
@@ -240,54 +270,21 @@ $.event.special.rightclick = {
       });
 		// Set up the control widget
 		var updateInterval = 1000;
-		$("#updateInterval").val(updateInterval).change(function () {
-			var v = $(this).val();
-			if (v && !isNaN(+v)) {
-				updateInterval = +v;
-				if (updateInterval < 100) {
-					updateInterval = 100;
-				} else if (updateInterval > 300000) {
-					updateInterval = 300000;
-				}
-				$(this).val("" + updateInterval);
-			}
-		});
-		$("#totalPoints").val(totalPoints).change(function () {
-			var v = $(this).val();
-			if (v && !isNaN(+v)) {
-				totalPoints = +v;
-				if (totalPoints < 10) {
-					totalPoints = 10;
-				} else if (totalPoints > 86400) {
-					totalPoints = 86400;
-				}
-				$(this).val("" + totalPoints);
-                                window.plotOptions.series.resample.maxpoints=totalPoints;
-			}
-		});
-		$("#recentPoints").val(recentPoints).change(function () {
-			var v = $(this).val();
-			if (v && !isNaN(+v)) {
-				recentPoints = +v;
-				if (recentPoints < 1) {
-					recentPoints = 1;
-				} else if (recentPoints > 86400) {
-					recentPoints = 86400;
-				}
-				$(this).val("" + recentPoints);
-                                window.plotOptions.series.resample.recent=recentPoints;
-			}
-		});
                 {% if allparas|length>=2 %}
-		var plot = $.plot("#chart", plotdata(), window.plotOptions);
-
+                var plot;
                 getData();
+
+                function plotit(options){
+                    plot= $.plot("#chart", plotdata(), options);
+                }
+
                 {% endif %}
 		// Add the Flot version string to the footer
 
 		$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
 	});
       //function add extra series boxes.
+
       $('#addYSeries').click(
       function() {
          existingSeries = $('p.yparameters').length;
@@ -325,7 +322,6 @@ $.event.special.rightclick = {
          if($('p.xparameters').length>1){
              $('#addYSeries').hide();
              for (x=0;x<$("select.xcolour").length;x++){
-                console.log($($("label.xname")[x]).html());
                 $("label.xname:eq("+x+")").html("X<sub>"+x+"</sub>");
                 $("select.xcolour:eq("+x+")").show();
                 $("select.xcolour:eq("+x+")").prop("disabled",false);
@@ -362,7 +358,6 @@ $.event.special.rightclick = {
 	<div id="header">
 		<h2>XY plots</h2>
 	</div>
-
 	<div id="content">
 
                 {% if allparas|length >= 2 %}
@@ -371,8 +366,11 @@ $.event.special.rightclick = {
 		</div>
                 {% endif %}
 
-           <p><input type="checkbox" id="zoomtype" checked /> Zoom 
-              <input type="checkbox" id="hidenull" checked /> Ignore nulls 
+           <p>
+              <input type="checkbox" id="zoomtype" checked /> Selection Zoom 
+              <input type="checkbox" id="hidenull"  /> Ignore nulls 
+              <input type="checkbox" id="lines" checked /> Lines
+              <input type="checkbox" id="points" /> Points 
               <button id=reset>RESET</button></p>     
 
 		<!--p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
@@ -381,8 +379,8 @@ $.event.special.rightclick = {
 
           <form method="GET" action="xy">
 		<p>
-         <label for="frm">From:</label><input type="text" id="frm" name="frm" />
-         <label for="to">To:</label><input type="text" id="to"  name="to"/>
+         <label for="frm">From:</label><input type="text" id="frm" name="frm" value="{{frm}}"></input>
+         <label for="to">To:</label><input type="text" id="to"  name="to" value="{{to}}"></input>
          <label for="minAgo"></label><select id="minAgo">
             <option value="0">now</option>
             <option value="5">5 mins ago</option>
