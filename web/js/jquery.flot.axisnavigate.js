@@ -85,14 +85,14 @@ $.event.special.rightclick = {
                                         return false;
                                 })
                                 .bind(plot.getOptions().axisnavigate.zoomout,function(event){
-                                        mw=$.Event("mousewheel");
+                                        var mw=$.Event("mousewheel");
                                         mw.pageX=event.pageX;
                                         mw.pageY=event.pageY;
                                         $(this).triggerHandler(mw,-1);
                                         return false;
                                 })
 				.bind(plot.getOptions().axisnavigate.zoom,function (event) {
-                                        mw=$.Event("mousewheel");
+                                        var mw=$.Event("mousewheel");
                                         mw.pageX=event.pageX;
                                         mw.pageY=event.pageY;
                                         $(this).triggerHandler(mw,+1);

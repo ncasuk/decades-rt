@@ -166,14 +166,14 @@
 
       //resize to selection code
       $("#chart").bind("plotselected", function (event, ranges) {
-         newYAxesRanges = [{ min: ranges.yaxis.from, max: ranges.yaxis.to }];
-         newXAxesRanges = [{ min: ranges.xaxis.from, max: ranges.xaxis.to }];
+         var newYAxesRanges = [{ min: ranges.yaxis.from, max: ranges.yaxis.to }];
+         var newXAxesRanges = [{ min: ranges.xaxis.from, max: ranges.xaxis.to }];
          for (n=2; n <= window.YAxesOpts.length; n++)
          {
             //If only 1 Y-axis, should not be called
             newYAxesRanges.push({ min: eval('ranges.y' + n + 'axis.from'), max: eval('ranges.y' + n + 'axis.to')})
          }
-         for (n=2; n <= window.XAxesOpts.length; n++)
+         for (var n=2; n <= window.XAxesOpts.length; n++)
          {
             //If only 1 Y-axis, should not be called
             newXAxesRanges.push({ min: eval('ranges.x' + n + 'axis.from'), max: eval('ranges.x' + n + 'axis.to')})
@@ -214,9 +214,9 @@ $.event.special.rightclick = {
           plot.draw();
       });
       $('#zoomtype').change(function(){ 
-            options=plot.getOptions();
+            var options=plot.getOptions();
             //save axes ranges
-            xaxes=[];yaxes=[];
+            var xaxes=[];yaxes=[];
             for (axis in options.xaxes){
                xaxes.push({min:options.xaxes[axis].min,max:options.xaxes[axis].max});
             }

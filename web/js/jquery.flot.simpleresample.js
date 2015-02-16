@@ -23,7 +23,7 @@
     };
 
     function calcstep(series){
-        step=Math.floor(pointsindisplayarea(series)/(series.simpleresample.maxpoints));
+        var step=Math.floor(pointsindisplayarea(series)/(series.simpleresample.maxpoints));
         if(step<2)step=1;
         return step;
     }
@@ -33,9 +33,9 @@
         var d=series.data;
         var ps=series.datapoints.pointsize;
         points.length=0;
-        for(i=0;i<d.length;i++){
+        for(var i=0;i<d.length;i++){
            if((i % series.step)==0){
-              for(p=0;p<ps;p++){
+              for(var p=0;p<ps;p++){
                  if(d[i][p]!=null){
                     points.push(d[i][p]);
                  }else{  // remove point
@@ -43,7 +43,7 @@
                     if(series.simpleresample.hidenull){
                        break;
                     }else{  // Fill with null
-                       for(ni=0;ni<ps;ni++){
+                       for(var ni=0;ni<ps;ni++){
                           points.push(null)
                        }
                        break;
@@ -59,7 +59,7 @@
          (series.lastranges[0]!=series.xaxis.options.max)||
          (series.lastranges[0]!=series.yaxis.options.min)||
          (series.lastranges[0]!=series.yaxis.options.max)){
-          step=calcstep(series);
+          var step=calcstep(series);
           if(step!=series.step){
              series.lastranges=[series.xaxis.options.min,series.xaxis.options.max,
                                 series.yaxis.options.min,series.yaxis.options.max];
