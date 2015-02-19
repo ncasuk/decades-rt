@@ -9,6 +9,7 @@ import java.awt.event.*;
  * 
  * @author Dave tiddeman (dave.tiddeman@metoffice.gov.uk)
  * @version 1
+ * @version 1.1 Removes NaN values from plotting via convert method
  */
 
 public abstract class zoomplot extends java.awt.Canvas   
@@ -171,7 +172,7 @@ public abstract class zoomplot extends java.awt.Canvas
         int[] xx,yy;
         xx=new int[n];
         yy=new int[n];
-        convert(x,y,xx,yy,n);
+        n=convert(x,y,xx,yy,n);
         g.setPaintMode();
         g.fillPolygon(xx,yy,n);
     }
@@ -186,11 +187,15 @@ public abstract class zoomplot extends java.awt.Canvas
     }
     
     public void drawLine(Graphics g,float x1,float y1,float x2,float y2){
-        g.setPaintMode();
+    	try{
         Dimension d1=convert(x1,y1);
         Dimension d2=convert(x2,y2);
+        g.setPaintMode();
 //        g.drawLine(d1.width,d1.height,d2.width,d2.height);
         Clipping.drawLine(g,d1.width,d1.height,d2.width,d2.height,g.getClipBounds());
+    	}catch (IllegalArgumentException iae){
+    		
+    	}
     }
     
     public void drawDashedline(Graphics g,float[] x,float[] y,int dashes,int gaps){
@@ -199,7 +204,7 @@ public abstract class zoomplot extends java.awt.Canvas
         yy=new int[2];
         if(x.length>=2){
           g.setPaintMode();
-          convert(x,y,xx,yy,2);
+          if(convert(x,y,xx,yy,2)==2){
           float x2=xx[1];
           float y2=yy[1];
           float x1=xx[0];
@@ -225,11 +230,13 @@ public abstract class zoomplot extends java.awt.Canvas
             x1+=dx;
             y1+=dy;
           }
+          }
         }
     }
           
           
     public void drawCircle(Graphics g,float x,float y,float r){
+    	try{
         float topx=(x-r);
         float topy=(y+r);
         float botx=(x+r);
@@ -240,6 +247,10 @@ public abstract class zoomplot extends java.awt.Canvas
         d2.height-=d1.height;
         g.setPaintMode();
         g.drawOval(d1.width,d1.height,d2.width,d2.height);
+    	}catch (IllegalArgumentException iae){
+    		
+    	}
+
     }
     
     public void drawCircle(Graphics g,float r){
@@ -260,7 +271,7 @@ public abstract class zoomplot extends java.awt.Canvas
         int[] xx,yy;
         xx=new int[n];
         yy=new int[n];
-        convert(x,y,xx,yy,n);
+        n=convert(x,y,xx,yy,n);
         drawSome(g,xx,yy,style,n);
     }
         
@@ -283,11 +294,14 @@ public abstract class zoomplot extends java.awt.Canvas
         
         
     public void drawPoint(Graphics g,float x,float y,int style){
+    	try{
         Dimension d=convert(x,y);
  //       Graphics g=getGraphics();
         g.setPaintMode();
         drawShape(g,d.width,d.height,style);
-        
+    	}catch (IllegalArgumentException iae){
+        	
+        }
     }
 
     public void drawShape(Graphics g,int x,int y,int style){
@@ -312,30 +326,43 @@ public abstract class zoomplot extends java.awt.Canvas
     }   
         
     public void drawString(Graphics g,float x,float y,String s){
+    try{
         Dimension d=convert(x,y);
         g.setPaintMode();
         g.drawString(s,d.width,d.height);
+	}catch (IllegalArgumentException iae){
+		
+	}
     }
     
     
-    public void convert(float[] x,float[] y,int[] xx,int[] yy,int n){
+    public int convert(float[] x,float[] y,int[] xx,int[] yy,int n){
         double dx=((float)w)/(xmax-xmin);
         double dy=((float)h)/(ymax-ymin);
         double x1,y1;
+        int nn=0;
         for(int i=0;i<n;i++){
+        	if((x[i]==x[i])&&(y[i]==y[i])){
             x1=(dx*(double)(x[i]-xmin));
             y1=(dy*(double)(ymax-y[i]));
-            xx[i]=(int)x1+woff;
-            yy[i]=(int)y1+hoff;
+            xx[nn]=(int)x1+woff;
+            yy[nn]=(int)y1+hoff;
+            nn++;
+        	}
         }
+        return nn;
     }
-    public Dimension convert(float x,float y){
+    public Dimension convert(float x,float y) throws IllegalArgumentException{
+    	if((x!=x)||(y!=y)){
+    		throw new IllegalArgumentException("NaN");
+    	}else{
         double dx=((double)w)/(double)(xmax-xmin);
         double dy=((double)h)/(double)(ymax-ymin);
         int xx=(int)(dx*(x-xmin))+woff;
         int yy=(int)(dy*(ymax-y))+hoff;
         Dimension d=new Dimension(xx,yy);
         return d;
+    	}
     }
     
     public String getunits(int n){

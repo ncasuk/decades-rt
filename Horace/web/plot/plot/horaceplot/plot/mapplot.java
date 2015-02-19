@@ -164,11 +164,15 @@ public class mapplot extends zoomplot  implements java.awt.event.ItemListener
        g.setPaintMode();
        drawSome(g,xx,yy,symbols[i-1]);
        if(dodrawplane){
+    	      try{
               oldplane=drawplane(xx[xx.length-1],yy[yy.length-1],q.status[1]);
               g.setXORMode(Color.white);
 //              drawSome(g,oldplane[0],oldplane[1],-1,12);
 		      drawSome(g,oldplane[0],oldplane[1],-1,38);
               g.setPaintMode();
+    	      }catch (IllegalArgumentException iae){
+    	    	  
+    	      }
        }
               
     }
