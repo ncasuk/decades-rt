@@ -918,7 +918,7 @@ C ST    - Corrected Surface Temperature   (deg C)
             print("Midnight from database") 
         except Exception as e:
             print(e)
-            unixtime_at_midnight=time.mktime(datetime.datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
+            unixtime_at_midnight=time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
         print(unixtime_at_midnight)
         print(self.getdata('utc_time',data))
         return self.getdata('utc_time',data) - unixtime_at_midnight
