@@ -10,11 +10,12 @@
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.time.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.navigate.js"></script>
-        <script language="javascript" type="text/javascript" src="/js/jquery.event.drag.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.resize.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.simpleresample.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.axisnavigate.js"></script>
+        <script language="javascript" type="text/javascript" src="/js/jquery.event.drag.js"></script>
+        <script language="javascript" type="text/javascript" src="/js/jquery.mousewheel.js"></script>
 	<script type="text/javascript">
    var paramlist;
    $.fn.sort_select_box = function(){
@@ -32,13 +33,13 @@
       $("#"+this.attr('id')+" option").attr('selected', false);
    }
    $(document).ready(function() {
-      $.getJSON('/live/para_no.json', function(paramlist){
+      $.getJSON('/live/para_no.raw', function(paramlist){
          //paramlist = json;
          
          //populate parameter choices
          $.each(paramlist, function( index, item ) 
          { 
-            $('#x, select.parameters').append(new Option(item.DisplayText + " " + item.DisplayUnits, item.ParameterName));
+            $('#x, select.parameters').append(new Option(item.DisplayText + " (" + item.DisplayUnits+")", index));
          });
          //sort parameter lists
          $('#x, select.parameters').sort_select_box();
@@ -96,6 +97,7 @@
             shape: "round",
             minSize: 20}
 		};
+
       function plotdata(){
             ret= [] 
             {% for nn,xx,yy in paras: %} // arbitrary number of series
@@ -183,14 +185,7 @@
                yaxes: newYAxesRanges
                }));
          });
-/*
-$.event.special.rightclick = {
-    bindType: "contextmenu",
-    delegateType: "contextmenu"
-    
 
-};
-*/
       $('#reset').click(function(){
             plotit(window.plotOptions);
       });      
@@ -280,9 +275,9 @@ $.event.special.rightclick = {
 
                 {% endif %}
 		// Add the Flot version string to the footer
+	});
 
 		$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
-	});
       //function add extra series boxes.
 
       $('#addYSeries').click(

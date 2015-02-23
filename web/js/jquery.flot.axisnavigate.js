@@ -24,22 +24,34 @@ $.event.special.rightclick = {
 
 (function ($) {
 
-    function axisnavigation(plot,eventHolder){
-                if(plot.getOptions().zoom.zoomout){
-                  eventHolder.bind(plot.getOptions().zoom.zoomout,function(e){
-                     var c = plot.offset();
-                     c.left = e.pageX - c.left;
-                     c.top = e.pageY - c.top;
-                     plot.zoomOut({center:c});
-                     return false;
-                  });
-                }
-		$.each(plot.getAxes(), function (i, axis) {
+    function makedivs(plot){
+	$.each(plot.getAxes(), function (i, axis) {
 			if (!axis.show)return;
-                        var offset=plot.offset();
 			var box = axis.box;
+                        axis.navigationdiv=
+			$("<div class='axisTarget' style='position:absolute; left:" + box.left + "px; top:" + box.top + "px; width:" + box.width +  "px; height:" + box.height + "px'></div>");
+        });
+    }
 
-			$("<div class='axisTarget' style='position:absolute; left:" + box.left + "px; top:" + box.top + "px; width:" + box.width +  "px; height:" + box.height + "px'></div>")
+    function sizedivs(plot,canvascontext){
+        plot.axisdivs=[];
+	$.each(plot.getAxes(), function (i, axis) {
+	     if (!axis.show)return;
+	     var box = axis.box;
+             if('navigationdiv' in axis){
+                 $(axis.navigationdiv).css({left:box.left,
+                                         top:box.top, 
+                                         width:box.width,
+                                         height:box.height});
+             }
+        });
+    }
+
+    function bindevents(plot){
+        var offset=plot.offset();
+
+	$.each(plot.getAxes(), function (i, axis) {
+                                axis.navigationdiv
 				.data("axis.direction", axis.direction)
 				.data("axis.n", axis.n)
 				.css({ backgroundColor: "#0f0", opacity: 0, cursor: "pointer" })
@@ -100,14 +112,29 @@ $.event.special.rightclick = {
 				})
 				.bind("click",function(event){plot.getOptions().axisnavigate.click(event,axis,plot);})
                                 ;
-                });
+        });
+    }
+
+
+    function axisnavigation(plot,eventHolder){
+                if(plot.getOptions().zoom.zoomout){
+                  eventHolder.bind(plot.getOptions().zoom.zoomout,function(e){
+                     var c = plot.offset();
+                     c.left = e.pageX - c.left;
+                     c.top = e.pageY - c.top;
+                     plot.zoomOut({center:c});
+                     return false;
+                  });
+                }
+                makedivs(plot);
+                bindevents(plot);
     }
 
     var options = {
         axisnavigate: {
             zoom:"dblclick",
             zoomout:"rightclick",
-	    click:null
+	    click:function(){}
             },
         zoom:{zoomout:"rightclick"}
     };
@@ -115,6 +142,7 @@ $.event.special.rightclick = {
 
     function init(plot) {
         plot.hooks.bindEvents.push(axisnavigation);
+        plot.hooks.draw.push(sizedivs);
     }
 
     $.plot.plugins.push({

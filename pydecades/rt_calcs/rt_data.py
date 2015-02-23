@@ -30,6 +30,29 @@ class rt_data(object):
     def get_packed_status(self):
         return self.get_status().packed()
     
+    def get_available(self):
+        ans=[]
+        for para in self.derived:
+            rawset,rawmissing=self.get_raw_required([para])
+            if(len(rawmissing)==0):
+                ans.append(para)
+        return ans
+
+    def get_paranos(self):
+        avail=self.get_available()
+        lines={}
+        for p in avail:
+            lines[p]=dict(zip(['ParameterIdentifier','DisplayText','DisplayUnits','GroupId']
+                              ,self.__getattribute__(p).__doc__.split(",")))
+        return lines
+
+    def get_raw_paranos(self):
+        lines={}
+        for i,p in enumerate(self.columns):
+            lines[p]=dict(zip(['ParameterIdentifier','DisplayText','DisplayUnits','GroupId']
+                              ,[i,' '.join(p.upper().split('_')),'raw','raw']))
+        return lines
+
 
     def derive_data(self,names,where='',order='',rawdata=None):
         """Read in data and process in one go, using repeated database queries
@@ -81,7 +104,7 @@ class rt_data(object):
                 if(name in self.derived):
                     try:
                         data[0][name]=self.__getattribute__(name)(data)
-                    except IndexError:  # probably mismatched arrays
+                    except:  # probably mismatched arrays
                         data[0][name]=np.array([])
                 else:
                     if(name in self.columns):
@@ -97,7 +120,10 @@ class rt_data(object):
                 return self.cals[name]
             elif(name in self.derived):
                 data[0].update([name])
-                return self.__getattribute__(name)(data)
+                try:
+                    return self.__getattribute__(name)(data)
+                except:
+                    pass #some basic error
             else:
                 data[0].update([name])
                 return np.array([])
