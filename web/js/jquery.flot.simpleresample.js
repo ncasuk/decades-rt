@@ -23,34 +23,39 @@
     };
 
     function calcstep(series){
-        var step=Math.floor(pointsindisplayarea(series)/(series.simpleresample.maxpoints));
-        if(step<2)step=1;
+        var step=1;
+        if(series.simpleresample.maxpoints>0){
+            Math.floor(pointsindisplayarea(series)/(series.simpleresample.maxpoints));
+            if(step<2)step=1;
+        }
         return step;
     }
 
     function resample(series){
-        var points=series.datapoints.points;
-        var d=series.data;
-        var ps=series.datapoints.pointsize;
-        points.length=0;
-        for(var i=0;i<d.length;i++){
-           if((i % series.step)==0){
-              for(var p=0;p<ps;p++){
-                 if(d[i][p]!=null){
-                    points.push(d[i][p]);
-                 }else{  // remove point
-                    points.length=points.length-p;
-                    if(series.simpleresample.hidenull){
-                       break;
-                    }else{  // Fill with null
-                       for(var ni=0;ni<ps;ni++){
-                          points.push(null)
-                       }
-                       break;
+        if(series.simpleresample.maxpoints>0){
+            var points=series.datapoints.points;
+            var d=series.data;
+            var ps=series.datapoints.pointsize;
+            points.length=0;
+            for(var i=0;i<d.length;i++){
+                if((i % series.step)==0){
+                    for(var p=0;p<ps;p++){
+                        if(d[i][p]!=null){
+                            points.push(d[i][p]);
+                        }else{  // remove point
+                            points.length=points.length-p;
+                            if(series.simpleresample.hidenull){
+                                break;
+                            }else{  // Fill with null
+                                for(var ni=0;ni<ps;ni++){
+                                    points.push(null)
+                                }
+                                break;
+                            }
+                        }
                     }
-                 }
-              }
-           }
+                }
+            }
         }
     }
 
