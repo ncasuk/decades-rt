@@ -25,7 +25,7 @@
     function calcstep(series){
         var step=1;
         if(series.simpleresample.maxpoints>0){
-            Math.floor(pointsindisplayarea(series)/(series.simpleresample.maxpoints));
+            step=Math.floor(pointsindisplayarea(series)/(series.simpleresample.maxpoints));
             if(step<2)step=1;
         }
         return step;
