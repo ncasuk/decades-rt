@@ -8,12 +8,12 @@
 	<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.time.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.navigate.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.resize.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.simpleresample.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.axisnavigate.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
         <script language="javascript" type="text/javascript" src="/js/jquery.event.drag.js"></script>
         <script language="javascript" type="text/javascript" src="/js/jquery.mousewheel.js"></script>
 	<script type="text/javascript">
@@ -86,13 +86,13 @@
          yaxes: window.YAxesOpts, 
          xaxes: window.XAxesOpts,
 			zoom: {
-				interactive: $('#zoomtype').is(':not(:checked)')
+				interactive: true //$('#zoomtype').is(':not(:checked)')
 			},
 			pan: {
-				interactive: $('#zoomtype').is(':not(:checked)')
+				interactive: true //$('#zoomtype').is(':not(:checked)')
 			},
          selection:{
-            mode: $('#zoomtype').is(':checked') ? "xy" : null,
+            mode: 'xy', //$('#zoomtype').is(':checked') ? "xy" : null,
             color: '#004400',
             shape: "round",
             minSize: 20}
@@ -166,25 +166,16 @@
          });
 		}
 
-      //resize to selection code
       $("#chart").bind("plotselected", function (event, ranges) {
-         var newYAxesRanges = [{ min: ranges.yaxis.from, max: ranges.yaxis.to }];
-         var newXAxesRanges = [{ min: ranges.xaxis.from, max: ranges.xaxis.to }];
-         for (n=2; n <= window.YAxesOpts.length; n++)
-         {
-            //If only 1 Y-axis, should not be called
-            newYAxesRanges.push({ min: eval('ranges.y' + n + 'axis.from'), max: eval('ranges.y' + n + 'axis.to')})
-         }
-         for (var n=2; n <= window.XAxesOpts.length; n++)
-         {
-            //If only 1 Y-axis, should not be called
-            newXAxesRanges.push({ min: eval('ranges.x' + n + 'axis.from'), max: eval('ranges.x' + n + 'axis.to')})
-         }
-         plotit($.extend(true, {}, window.plotOptions, {
-               xaxes: newXAxesRanges,
-               yaxes: newYAxesRanges
-               }));
-         });
+	      $.each(plot.getAxes(), function (i, axis) {
+	          axis.options.min=eval('ranges.' + i + '.from')
+	          axis.options.max=eval('ranges.' + i + '.to')
+          });
+          plot.clearSelection(); 
+          plot.setupGrid();
+          plot.draw(); 
+      });
+
 
       $('#reset').click(function(){
             plotit(window.plotOptions);
@@ -208,34 +199,20 @@
           plot.setupGrid();
           plot.draw();
       });
-      $('#zoomtype').change(function(){ 
-            var options=plot.getOptions();
-            //save axes ranges
-            var xaxes=[];yaxes=[];
-            for (axis in options.xaxes){
-               xaxes.push({min:options.xaxes[axis].min,max:options.xaxes[axis].max});
-            }
-            for (axis in options.yaxes){
-               yaxes.push({min:options.yaxes[axis].min,max:options.yaxes[axis].max});
-            }
+      $('#zoomtype').change(function(){
             if($(this).is(':checked')){
-                window.plotOptions.selection.mode='xy';
-                window.plotOptions.pan.interactive=false;
-                window.plotOptions.zoom.interactive=false;
-                plotit($.extend(true, {}, window.plotOptions, {
-               xaxes: xaxes,
-               yaxes: yaxes
-               }));
+                plot.getOptions().selection.mode='xy';
+                plot.getOptions().pan.interactive=false;
+                //plot.getOptions().zoom.interactive=false;
            }else{
-                window.plotOptions.selection.mode=null;
-                window.plotOptions.pan.interactive=true;
-                window.plotOptions.zoom.interactive=true;
-                plotit($.extend(true, {}, window.plotOptions, {
-               xaxes: xaxes,
-               yaxes: yaxes
-               }));
+                plot.getOptions().selection.mode=null;
+                plot.getOptions().pan.interactive=true;
+                //plot.getOptions().zoom.interactive=true;
             }
-      });
+            plot.setupGrid();
+            plot.draw();
+            plot.rebindEvents();
+     });
       $(document).keypress(function(event) {
          switch (event.key) {
              case "+":
@@ -271,6 +248,12 @@
 
                 function plotit(options){
                     plot= $.plot("#chart", plotdata(), options);
+                    plot.getOptions().selection.mode=$('#zoomtype').is(':checked') ? "xy" : null;
+                    //plot.getOptions().zoom.interactive=$('#zoomtype').is(':not(:checked)');
+                    plot.getOptions().pan.interactive=$('#zoomtype').is(':not(:checked)');
+                    plot.setupGrid();
+                    plot.draw();
+                    plot.rebindEvents();
                 }
 
                 {% endif %}
@@ -368,9 +351,6 @@
               <input type="checkbox" id="points" /> Points 
               <button id=reset>RESET</button></p>     
 
-		<!--p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
-		<p>Number plotted points: <input id="totalPoints" type="text" value="" style="text-align: right; width:5em"> </p>
-		<p>Number recent points: <input id="recentPoints" type="text" value="" style="text-align: right; width:5em"> </p-->
 
           <form method="GET" action="xy">
 		<p>

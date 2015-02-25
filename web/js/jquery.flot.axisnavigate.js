@@ -4,6 +4,8 @@
   Replaces "contextmenu" with "rightclick"
 
   Mousewheel or events (zoom:dblclick, zoomout:rightclick) to zoom in and out, or drag axis.
+  
+  Exposes executeHooks, rebindEvents, getEventholder() to allow easier swapping between navigation modes.
 
   D.Tiddeman 13/2/2015
 
@@ -139,9 +141,19 @@ $.event.special.rightclick = {
         zoom:{zoomout:"rightclick"}
     };
 
+    function exposeInfo(plot,eventHolder){
+        plot.getEventholder=function(){return eventHolder;}
+        plot.executeHooks=exposeInfo.caller;
+        plot.rebindEvents=function(){
+            eventHolder.unbind();
+            plot.executeHooks(plot.hooks.bindEvents,[eventHolder]);
+        }
+    }
+       
 
     function init(plot) {
         plot.hooks.bindEvents.push(axisnavigation);
+        plot.hooks.bindEvents.push(exposeInfo);
         plot.hooks.draw.push(sizedivs);
     }
 
