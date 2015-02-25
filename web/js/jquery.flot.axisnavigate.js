@@ -144,9 +144,10 @@ $.event.special.rightclick = {
     function exposeInfo(plot,eventHolder){
         plot.getEventholder=function(){return eventHolder;}
         plot.executeHooks=exposeInfo.caller;
+        plot.bindEvents=exposeInfo.caller.caller;
         plot.rebindEvents=function(){
-            eventHolder.unbind();
-            plot.executeHooks(plot.hooks.bindEvents,[eventHolder]);
+            eventHolder.unbind();            
+            plot.bindEvents();
         }
     }
        
