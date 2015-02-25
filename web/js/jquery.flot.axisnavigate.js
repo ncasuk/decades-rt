@@ -26,26 +26,22 @@ $.event.special.rightclick = {
 
 (function ($) {
 
-    function makedivs(plot){
+    function makedivs(plot,canvascontext){
 	$.each(plot.getAxes(), function (i, axis) {
 			if (!axis.show)return;
 			var box = axis.box;
-                        axis.navigationdiv=
-			$("<div class='axisTarget' style='position:absolute; left:" + box.left + "px; top:" + box.top + "px; width:" + box.width +  "px; height:" + box.height + "px'></div>");
-        });
-    }
-
-    function sizedivs(plot,canvascontext){
-        plot.axisdivs=[];
-	$.each(plot.getAxes(), function (i, axis) {
-	     if (!axis.show)return;
-	     var box = axis.box;
              if('navigationdiv' in axis){
                  $(axis.navigationdiv).css({left:box.left,
                                          top:box.top, 
                                          width:box.width,
                                          height:box.height});
              }
+			 else{
+                        axis.navigationdiv=
+			$("<div class='axisTarget' style='position:absolute; left:" + box.left 
+			 + "px; top:" + box.top + "px; width:" + box.width +  "px; height:" + box.height + 
+			"px; background-color:#00ff00; opacity:0; cursor:pointer;'></div>");
+			}
         });
     }
 
@@ -53,10 +49,8 @@ $.event.special.rightclick = {
         var offset=plot.offset();
 
 	$.each(plot.getAxes(), function (i, axis) {
-                                axis.navigationdiv
-				.data("axis.direction", axis.direction)
-				.data("axis.n", axis.n)
-				.css({ backgroundColor: "#0f0", opacity: 0, cursor: "pointer" })
+	             axis.navigationdiv.unbind(); // in cae called previously
+                 axis.navigationdiv
 				.appendTo(plot.getPlaceholder())
 				.hover(
 					function () { $(this).css({ opacity: 0.10 }) },
@@ -155,7 +149,13 @@ $.event.special.rightclick = {
     function init(plot) {
         plot.hooks.bindEvents.push(axisnavigation);
         plot.hooks.bindEvents.push(exposeInfo);
-        plot.hooks.draw.push(sizedivs);
+        plot.hooks.draw.push(makedivs);
+        plot.hooks.shutdown.push(function(plot,eventHolder){
+            $.each(plot.getAxes(), function (i, axis) {
+                axis.navigationdiv.unbind();
+                axis.navigationdiv.remove();
+                });
+        });
     }
 
     $.plot.plugins.push({

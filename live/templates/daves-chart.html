@@ -53,16 +53,13 @@
          {% endfor %}
          
 
-		var data = {},totalPoints = 1000/{{ dep|count }};
-		{% for entry in dep: %}
-         data['{{ entry }}'] = [];
-      {% endfor %}
-      var YAxesUnits = [];
-      window.YAxesOpts = [];
-      var XAxesUnits = [];
-      window.XAxesOpts = [];
+		var data = {};
+		var plotdata = [];
+		var totalPoints = 1000/{{ dep|count }};
       window.frm_epoch = {{ frm_epoch }};
       //frm={{ frm }} frm_epoch={{ frm_epoch }} to={{ to }} to_epoch={{ to_epoch }} 
+      window.YAxesOpts = [];
+      window.XAxesOpts = [];
       window.plotOptions = {
 			series: {
 				shadowSize: 0	// Drawing is faster without shadows
@@ -86,21 +83,32 @@
          yaxes: window.YAxesOpts, 
          xaxes: window.XAxesOpts,
 			zoom: {
-				interactive: true //$('#zoomtype').is(':not(:checked)')
+				interactive: true 
 			},
 			pan: {
-				interactive: true //$('#zoomtype').is(':not(:checked)')
+				interactive: true 
 			},
          selection:{
-            mode: 'xy', //$('#zoomtype').is(':checked') ? "xy" : null,
+            mode: 'xy', 
             color: '#004400',
             shape: "round",
             minSize: 20}
 		};
 
-      function plotdata(){
-            ret= [] 
+      function set_plotoptions(){
+         for(var i=0;i<plotdata.length;i++){ // for all series            
+            plotdata[i].lines.show=$('#lines').is(':checked');
+            plotdata[i].points.show=$('#points').is(':checked');
+            plotdata[i].simpleresample.hidenull=$('#hidenull').is(':checked');
+         }
+       }
+
+      (function (){
+           // set up plot data and axe
+           var YAxesUnits = [];
+           var XAxesUnits = [];
             {% for nn,xx,yy in paras: %} // arbitrary number of series
+            data['{{ nn }}'] = [];
             if(-1 == YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits))
             {
                YAxesUnits.push(paramlist.{{ yy }}.DisplayUnits);
@@ -114,16 +122,17 @@
                window.XAxesOpts.push({ position: (XAxesUnits.length % 2)?"bottom":"top", show: true, axisLabel: paramlist.{{ xx }}.DisplayUnits});
             }
             
-            ret.push( {data: data['{{ nn }}'], label: paramlist.{{ nn }}.DisplayText, 
+            plotdata.push( {data: data['{{ nn }}'], label: paramlist.{{ nn }}.DisplayText, 
                                 color: '{{ c[dep.index(nn)] }}', 
-                                lines: { show: $('#lines').is(':checked')}, points:{show:$('#points').is(':checked'),radius:0.5},
-                                simpleresample:{hidenull:$('#hidenull').is(':checked')},
+                                lines: { show: true}, points:{show:false,radius:0.5},
+                                simpleresample:{hidenull:false},
                                 yaxis: YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 ,
                                 xaxis: XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits) +1 });
          {% endfor %};
-       return ret;
-       }
-
+         set_plotoptions();
+       })()
+       
+       
 
 		function getData() {
          $.ajaxSetup({ cache: false });
@@ -144,10 +153,11 @@
             {% endfor %}
             }
             if(plot){
-              plot.setData(plotdata());
+              plot.setData(plotdata);
               plot.setupGrid();
-	      plot.draw();
+	          plot.draw();
             }else{
+              set_plotoptions();
               plotit(window.plotOptions);
             }
             }
@@ -181,37 +191,27 @@
             plotit(window.plotOptions);
       });      
       $('#points').change(function(){ 
-          d=plot.getData();
-          for(s=0;s<d.length;s++){
-             d[s].points.show=$(this).is(':checked');
-          }
+          set_plotoptions();
+          plot.setData(plotdata);
           plot.draw();
       });
       $('#lines').change(function(){ 
-          d=plot.getData();
-          for(s=0;s<d.length;s++){
-             d[s].lines.show=$(this).is(':checked');
-          }
+          set_plotoptions();
+          plot.setData(plotdata);
           plot.draw();
       });
       $('#hidenull').change(function(){ 
-          plot.setData(plotdata());
+          set_plotoptions();
+          plot.setData(plotdata);
           plot.setupGrid();
           plot.draw();
       });
       $('#zoomtype').change(function(){
-            if($(this).is(':checked')){
-                plot.getOptions().selection.mode='xy';
-                plot.getOptions().pan.interactive=false;
-                //plot.getOptions().zoom.interactive=false;
-           }else{
-                plot.getOptions().selection.mode=null;
-                plot.getOptions().pan.interactive=true;
-                //plot.getOptions().zoom.interactive=true;
-            }
-            plot.setupGrid();
-            plot.draw();
-            plot.rebindEvents();
+           plot.getOptions().selection.mode=$('#zoomtype').val() ? "xy" : null;
+           plot.getOptions().pan.interactive=$('#zoomtype').val() != "xy" ;
+           plot.setupGrid();
+           plot.draw();
+           plot.rebindEvents();
      });
       $(document).keypress(function(event) {
          switch (event.key) {
@@ -247,10 +247,9 @@
                 getData();
 
                 function plotit(options){
-                    plot= $.plot("#chart", plotdata(), options);
-                    plot.getOptions().selection.mode=$('#zoomtype').is(':checked') ? "xy" : null;
-                    //plot.getOptions().zoom.interactive=$('#zoomtype').is(':not(:checked)');
-                    plot.getOptions().pan.interactive=$('#zoomtype').is(':not(:checked)');
+                    plot= $.plot("#chart", plotdata, options);
+                    plot.getOptions().selection.mode=$('#zoomtype').val() ? "xy" : null;
+                    plot.getOptions().pan.interactive=$('#zoomtype').val() != "xy";
                     plot.setupGrid();
                     plot.draw();
                     plot.rebindEvents();
@@ -345,7 +344,10 @@
                 {% endif %}
 
            <p>
-              <input type="checkbox" id="zoomtype" checked /> Selection Zoom 
+              <select id="zoomtype"> 
+                 <option value="xy">Select</option>
+                 <option value="">Pan</option>
+              </select> 
               <input type="checkbox" id="hidenull"  /> Ignore nulls 
               <input type="checkbox" id="lines" checked /> Lines
               <input type="checkbox" id="points" /> Points 
