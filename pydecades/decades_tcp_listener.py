@@ -27,7 +27,21 @@ class DecadesTCPListener(Protocol):
       self.__buffer = self.__buffer + data
       while len(self.__buffer) >= self.header_length:
           if self.INSTRUMENT.match(self.__buffer[0:9]):
-              (packet_length, ) = struct.unpack('>I',self.__buffer[9:self.header_length])
+              instrument=self.__buffer[0:9]
+              if(instrument not in self.factory.dataformats):
+                  self.factory.dataformats[instrument]=self.factory.defaultformat
+                  self.factory.dataformats[instrument]['name']=instrument[1:]
+              self.inst=self.factory.dataformats[instrument]
+              self.header_length=self.inst['utc_time'][0]
+              pl=self.inst['packet_length']
+              tl=self.inst['totalbytes']
+              (packet_length, ) =struct.unpack(pl[2],self.__buffer[pl[0]:pl[0]+pl[1]])
+              if(packet_length!=tl-self.header_length):
+                  log.msg('Length %i not what expected %i' % (packet_length,tl-self.header_length))
+                  if(tl==0):
+                      self.factory.dataformats[instrument]['totalbytes']=packet_length+self.header_length
+                      
+              #(packet_length, ) = struct.unpack('>I',self.__buffer[9:self.header_length])
               if len(self.__buffer)<self.header_length+packet_length:
                   #Incomplete; wait for more data
                   log.msg('Buffered %s bytes' % len(self.__buffer))
@@ -46,18 +60,23 @@ class DecadesTCPListener(Protocol):
    #used to be the dataReceived method, above 
    def complete_record(self, data):
       '''gets the instrument name & flight number, and passes it to the write function'''
-      instrument=data[1:9] #e.g PRTAFT01
-      flightno=data[20:24] # e.g. XXXX, SIMU, B751
-      log.msg('TCP data from ' + instrument + ' ' + flightno)
-      self.writedata(data, instrument, flightno)
+      if('flight_num' in self.inst):
+          fn=self.inst['flight_num']
+          (flightno,)=struct.unpack(fn[2],data[fn[0]:fn[0]+fn[1]])
+      else:
+          flightno='XXXX'
+      #flightno=data[20:24] # e.g. XXXX, SIMU, B751
+      log.msg('TCP data from ' + self.inst['name'] + ' ' + flightno)
+      self.writedata(data, flightno)
    
-   def writedata(self, data, instrument, flightno):
-      if(data[13:17]==' NOW'): # Deal with cases which don't include time, but require it ...
+   def writedata(self, data, flightno):
+      utc=self.inst['utc_time']
+      instrument=self.inst['name']
+      if(data[utc[0]:utc[0]+4]==' NOW'): # Deal with cases which don't include time, but require it ...
                                # string ' NOW' would be 6/03/1987 long before any 146 flights
-          data=data[:13]+struct.pack('>I',time.time())+data[17:]
-          if(data[17:19]=='ms'): # Optional millisecond fraction
-              data=data[:17]+struct.pack('>H',1000*(time.time() % 1))+data[19:]
-      print(struct.unpack('>I',data[13:17]))
+          data=data[:utc[0]]+struct.pack('>I',time.time())+data[utc[0]+4:]
+          if(data[utc[0]+4:utc[0]+6]=='ms'): # Optional millisecond fraction
+              data=data[:utc[0]+4]+struct.pack('>H',1000*(time.time() % 1))+data[utc[0]+6:]
       try:
          self.factory.outfiles[instrument][flightno].write(data)
          self.factory.outfiles[instrument][flightno].flush()
