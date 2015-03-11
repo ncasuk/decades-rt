@@ -56,7 +56,7 @@ class MulticastServerUDP(DatagramProtocol):
          inst=data[0].lstrip('$')
          fields=self.dataProtocols.fields(inst)
          if(len(data)!=len(fields)):
-             print('Wrong number of fields in %s expected %i got %i' % (inst,le
+             print('Wrong number of fields in %s expected %i got %i' % (inst,len(fields),len(data)))
              print(data)
              return
          dictdata = dict(zip(fields, data)) 
@@ -71,7 +71,7 @@ class MulticastServerUDP(DatagramProtocol):
             return # No time !
          try:
              dt=now-int(dictdata['utc_time'])
-             if abs(dt)>self.maxtimeerror:
+             if abs(dt)>self.maxTimeError:
                  log.msg('%s time out by %i s rejecting' % (data[0].lstrip('$'),dt))
                  return
          except Exception as e:
