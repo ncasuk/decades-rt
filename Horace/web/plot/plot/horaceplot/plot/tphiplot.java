@@ -233,13 +233,18 @@ public class tphiplot extends zoomplot
      */
     public float[] tphixy(double press,double temp){
         float[] ans=new float[2];
-        double t=temp+KELV;
-        double theta=t*(Math.pow((1000.0/press),K));
-        double phi=Math.log(theta);
-        double x=phi*MA+temp;
-        double y=phi*MA-temp;
-        ans[0]=(float)x;
-        ans[1]=(float)y;
+        if((press!=press)||(temp!=temp)){
+        	ans[0]=Float.NaN;
+        	ans[1]=Float.NaN;
+        }else{
+            double t=temp+KELV;
+            double theta=t*(Math.pow((1000.0/press),K));
+            double phi=Math.log(theta);
+            double x=phi*MA+temp;
+            double y=phi*MA-temp;
+            ans[0]=(float)x;
+            ans[1]=(float)y;
+        }
         return ans;
     }
 

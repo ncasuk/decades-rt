@@ -7,7 +7,7 @@ import java.applet.*;
  * Connection to the data server for plots.
  * 
  * @author Dave tiddeman (dave.tiddeman@metoffice.gov.uk)
- * @version 1
+ * @version 1.1 removes NaN values from max and min calc 3/2/2015
  */
 
 public class plotconn extends horaceplot.horconn implements Runnable
@@ -112,6 +112,10 @@ public Vector data=new Vector();
      if(first){
     maxs=new float[np];
     mins=new float[np];
+    for(int i=0;i<np;i++){
+    	maxs[i]=Float.NaN;
+    	mins[i]=Float.NaN;
+    }
      }
      synchronized(this){
         writeString("PARA");
@@ -144,22 +148,20 @@ public Vector data=new Vector();
           for(int inn=0;inn<nnx;inn++){
             float ax=reader.readFloat();
             ans[innn][inn]=ax;
-            if((inn==0)&first){
-                maxs[innn]=ax;
-                mins[innn]=ax;
-                if(innn==0){
+            if(ax==ax){
+            if(maxs[innn]!=maxs[innn]){
+            	maxs[innn]=ax;
+            	mins[innn]=ax;
+            	if(innn==0){
                     max0=ax;
                     min0=ax;
-                }
-                if(innn==1){
-                    max1=ax;
-                    min1=ax;
-                }
-                if(innn>1){   
-                  if(max1<ax)max1=ax;
-                  if(min1>ax)min1=ax;
-                }
-            }else{
+            	}else{
+            		if(max1!=max1){
+            			max1=ax;
+            			min1=ax;
+            		}
+            	}
+            }
                 if(time>-1){
                   if(maxs[innn]<ax)maxs[innn]=ax;
                   if(mins[innn]>ax)mins[innn]=ax;
@@ -172,7 +174,6 @@ public Vector data=new Vector();
                   }
                 }
             }
-            
           }
           }
      }

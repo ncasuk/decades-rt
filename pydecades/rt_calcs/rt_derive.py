@@ -339,7 +339,7 @@ class derived(rt_data.rt_data):
         twc_mmr=self.getdata('total_water_content',data)
         DP=np.zeros(len(spr))
         ind=np.where(twc_mmr*spr>0)
-        DP[ind]=5.42E3 / LOG(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
+        DP[ind]=5.42E3 / np.log(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
         return DP
         
     def radar_height(self,data):
@@ -907,7 +907,20 @@ C ST    - Corrected Surface Temperature   (deg C)
         if len(raw[0]) >0: #i.e. it isn't the dummy pass
             #filter out NaNs
             raw = [x for x in raw if not np.isnan(x[0])] '''
-        unixtime_at_midnight = time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
+        
+        #unixtime_at_midnight = time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
+        unixtime_at_midnight = self.cals['MIDNIGHT']
+        try:
+            self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
+            utc=self.database.fetchone()
+            print(utc)
+            unixtime_at_midnight=86400*(utc.utc_time/86400)
+            print("Midnight from database") 
+        except Exception as e:
+            print(e)
+            unixtime_at_midnight=time.mktime(datetime.datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
+        print(unixtime_at_midnight)
+        print(self.getdata('utc_time',data))
         return self.getdata('utc_time',data) - unixtime_at_midnight
         #raw is an array, so subtracting an integer appears to be valid
         '''if len(raw) >0:
