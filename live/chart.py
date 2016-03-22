@@ -8,7 +8,8 @@ from render_helper import render_template
 
 urls = (
     '/cartesian', 'cartesian',
-    '/tephigram', 'tephigram'
+    '/tephigram', 'tephigram',
+    '/','cartesian'
 )
 app= web.application(urls, locals())   
 
