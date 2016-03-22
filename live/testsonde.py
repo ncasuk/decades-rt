@@ -2,12 +2,12 @@
 # vim: set fileencoding=utf-8:
 '''An example of using WSGI with the DECADES python library. 
 This provides the same functionality as the Java Plot.jar
-in Status mode by default, but can return any requested data'''
+in Status mode'''
 
 import web
 
 urls = (
-    '', 'livejson'
+    '', 'sonde'
 )
 app= web.application(urls, locals())   
 
@@ -27,20 +27,15 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import json
 
-class livejson:
+class sonde:
    '''Produces the requested data as JSON for live display'''
-   default = ['pressure_height_m','static_pressure','gin_latitude','gin_track_angle','gin_longitude','gin_heading','gin_d_velocity','gin_altitude','gin_speed', 'true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle']
+   default = ['static_pressure','deiced_true_air_temp_c']
    always = ['time_since_midnight','utc_time']
+   sondefile = 'radiosonde-data-20130911_120120.tsv'
    def GET(self):
       '''Usage: via web.py, e.g. http://fish/live/livejson'''
       web.header('Content-Type','application/json; charset=utf-8', unique=True) 
       web.header('Cache-control', 'no-cache')
-      conn = get_database()
-      cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-      parser = DecadesConfigParser()
-      calfile = parser.get('Config','calfile')
-      rtlib = rt_derive.derived(cur, calfile)
-      user_data = web.input(para=[])
       if len(user_data.para) == 0:
          #no paras sent, send default
          parameters = self.default
@@ -73,20 +68,25 @@ class livejson:
             pass;
      
          #get data
-      data = rtlib.derive_data_alt(self.always + parameters, conditions,orderby)
+
+      fields = ['time','Pscl','T','RH','v','u','Height','P','TD','MR','DD','FF','AZ','Range','Lon','Lat','SpuKey','UsrKey','RadarH']
+      c = csv.reader(open(sondefile,'rb'),delimiter='\t',skipinitialspace=True)
       keylist = data.keys()
       #loop over records, make each record self-contained
       dataout = []
-      for n in range(0, len(data[keylist[0]])):
+      for n in range(0, len(data[keylist[0]])): 
          dataout.append({})
          for each in keylist:
             if not(np.isnan(data[each][n])):#don't return NaNs
-               dataout[n][each] = np.asscalar(data[each][n])
-            #else:
-            #   del dataout[n];
-            #   break; #go on to next entry
-         #Javascript time is in integer milliseconds
-         dataout[n]['javascript_time'] = dataout[n]['utc_time']*1000
+               dataout[n][each] = data[each][n] 
+            else:
+               del dataout[n];
+               break; #go on to next entry
+         if(dataout[n]):
+            #Javascript time is in whole milliseconds
+            dataout[n]['javascript_time'] = dataout[n]['utc_time']*1000.0
+            dataout[n]['utc_time'] = float(dataout[n]['utc_time'])
 
       #data['utc_time'] = datetime.fromtimestamp(data['utc_time'],timezone('utc')).strftime('%H:%M:%S') 
       return json.dumps(dataout, allow_nan=False) #in *no particular order*
+      #return repr(dataout)
