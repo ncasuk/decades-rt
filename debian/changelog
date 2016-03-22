@@ -1,6 +1,6 @@
-decades (0.7.3~7.gbp102868) quantal; urgency=low
+decades (0.7.3~8.gbpae6db6) quantal; urgency=low
 
-  ** SNAPSHOT build @102868c1d180c41f938af4a7fa61deb28c290106 **
+  ** SNAPSHOT build @ae6db6844e003b92281159c29056c96335e65e7a **
 
   [ Dan Walker ]
   ** SNAPSHOT build @cf08eeb1c55c0b94b174d31a4c7fe5817b4a2f44 **
@@ -1227,8 +1227,11 @@ decades (0.7.3~7.gbp102868) quantal; urgency=low
   * Calculate time_from_midnight using first time in database
 
   [ Dan Walker ]
+  * fix datetime call
+  * Subproject commit
+  * debian commits & genned jar
 
- -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 19 Feb 2015 15:08:29 +0000
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 19 Feb 2015 15:38:53 +0000
 
 decades (20120517110655ubuntu2~36.gbpec3104) quantal; urgency=low
 
