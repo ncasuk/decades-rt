@@ -35,7 +35,7 @@ urls = (
    '/flight', flight.app,   
    '/tank_status\.(.*)', 'tank_status',
    '/chart', chart.app,
-   '/livegraph', 'livegraph',
+   '/livegraph', chart.app, #alias for 'chart'
    '/sonde', testsonde.app
 )
 app = web.application(urls, globals(), autoreload=False)
