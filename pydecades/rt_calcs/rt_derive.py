@@ -913,14 +913,14 @@ C ST    - Corrected Surface Temperature   (deg C)
         try:
             self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
             utc=self.database.fetchone()
-            print(utc)
+            log.msg(utc)
             unixtime_at_midnight=86400*(utc.utc_time/86400)
-            print("Midnight from database") 
+            log.msg("Midnight from database") 
         except Exception as e:
             print(e)
             unixtime_at_midnight=time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
-        print(unixtime_at_midnight)
-        print(self.getdata('utc_time',data))
+        log.msg(unixtime_at_midnight)
+        log.msg(self.getdata('utc_time',data))
         return self.getdata('utc_time',data) - unixtime_at_midnight
         #raw is an array, so subtracting an integer appears to be valid
         '''if len(raw) >0:

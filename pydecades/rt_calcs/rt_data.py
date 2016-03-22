@@ -151,13 +151,13 @@ class rt_data(object):
         try:
             self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
             utc=self.database.fetchone()
-            print(utc)
+            log.msg(utc)
             self.cals['MIDNIGHT']=86400*(utc.utc_time/86400)
-            print("Midnight from database") 
+            log.msg("Midnight from database") 
         except Exception as e:
-            print(e)
+            log.msg(e)
             self.cals['MIDNIGHT']=time.mktime(datetime.datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
-        print("self.cals[MIDNIGHT]=%i" % self.cals['MIDNIGHT'])
+        log.msg("self.cals[MIDNIGHT]=%i" % self.cals['MIDNIGHT'])
         return
 
     def read_cal_const(self,filename):
