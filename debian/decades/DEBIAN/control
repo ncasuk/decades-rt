@@ -1,9 +1,9 @@
 Package: decades
-Version: 0.7.2~29.gbp2839c0
+Version: 0.7.3~4.gbp1547ae
 Architecture: all
 Maintainer: Dan Walker <D.K.D.Walker@leeds.ac.uk>
-Installed-Size: 1343
-Depends: python, python-twisted-core, python-twisted, python-psycopg2, python-numpy, libapache2-mod-wsgi, python-jinja2
+Installed-Size: 6539
+Depends: python2.7, python (>= 2.7.1-0ubuntu2), python (<< 2.8), python-twisted-core, python-twisted, python-psycopg2, python-numpy, libapache2-mod-wsgi, python-jinja2, python-webpy, python-tz
 Section: net
 Priority: extra
 Description: DECADES servers and user-facing intranet pages
