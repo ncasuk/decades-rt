@@ -2,11 +2,18 @@
 {% block body %}
 <div id="index">
    <h2>Welcome to {{ title }}</h2>
-   <ul class="menu" id="index">
+   <ul class="menu" id="index1">
       <li><a href="/plot/plot.html">Derived data</a></li>
       <li><a href="/live/flight/summary">Flight summary</a></li>
       <li><a href="/live/flight/manager">Flight management</a></li>
       <li><a href="/live/tank_status.html">Tank status</a></li>
    </ul>  
+   <h3>Experimental Plots</h3>
+   <p>These may well work, but it is not guaranteed! Feedback is welcome.</p>
+   <ul class="menu" id="index2">
+      <li><a href="/live/chart/cartesian">XY Plot (DanW)</a></li>
+      <li><a href="/live/daves_chart/xy">XY Plot (DaveT)</a></li>
+      <li><a href="/live/chart/tephigram">Live Tephigram</a></li>
+   </ul>
 </div>
 {% endblock %}
