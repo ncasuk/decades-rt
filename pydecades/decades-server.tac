@@ -13,20 +13,13 @@ import os
 from twisted.application import service, internet
 from twisted.web import static, server
 from pydecades.decades_server import DecadesFactory
-from pydecades.database import get_database
-
-from pydecades.configparser import DecadesConfigParser
 
 def getDecadesServerService():
     """
     Return a service suitable for creating an application object.
     """
-    conn = get_database()
-    parser = DecadesConfigParser()
-
-    calfile = parser.get('Config','calfile')
     
-    return internet.TCPServer(int(os.environ['DECADESPORT']), DecadesFactory(conn,calfile))
+    return internet.TCPServer(int(os.environ['DECADESPORT']), DecadesFactory())
 
 # this is the core part of any tac file, the creation of the root-level
 # application object

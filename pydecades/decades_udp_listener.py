@@ -23,7 +23,8 @@ class multicastJoinFailureTester(object):
       failure.trap(self.okErrs)
 
 class MulticastServerUDP(DatagramProtocol):
-    dataProtocols = DecadesDataProtocols() 
+    dataProtocols = DecadesDataProtocols()
+    maxTimeError=300 
     def __init__(self, conn):
         '''Takes a database connection, and creates a cursor'''
         self.conn = conn
@@ -54,27 +55,38 @@ class MulticastServerUDP(DatagramProtocol):
          #copies data into a dictionary
          inst=data[0].lstrip('$')
          fields=self.dataProtocols.fields(inst)
+         if(len(data)!=len(fields)):
+             log.msg('Wrong number of fields in %s expected %i got %i' % (inst,len(fields),len(data)))
+             log.msg(data)
+             return
          dictdata = dict(zip(fields, data)) 
          instname=self.dataProtocols.protocols[inst][0]['field'].lstrip('$')
-         print('TIME=',dictdata['utc_time'])
+         now=int(time.time())
          try:
              if dictdata['utc_time']=='NOW':
-                 print('Replace time')
-                 dictdata['utc_time']='%i' % time.time()
+                 log.msg('Replace time with %i' % now)
+                 dictdata['utc_time']='%i' % now
          except IndexError:
-             pass
+            log.msg('%s has no time rejecting' % data[0].lstrip('$'))
+            return # No time !
+         try:
+             dt=now-int(dictdata['utc_time'])
+             if abs(dt)>self.maxTimeError:
+                 log.msg('%s time out by %i s rejecting' % (data[0].lstrip('$'),dt))
+                 return
+         except Exception as e:
+             log.msg(str(e))
+             return
          self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (instname, )).lower())
          #adds to separate individual-instrument tables; no longer needed, 
          #although it does provide a good error-check in the logs. DW 2013-11-01
          squirrel = 'INSERT INTO %s_%s (%s)' % (instname, self.dataProtocols.protocol_versions[inst], ', '.join(fields))
-         print(squirrel)
          processed= []
          for each in fields:
             if dictdata[each] == '':
                processed.append(None)
             else:
                processed.append(dictdata[each])
-         print(processed)
          if len(data)==len(fields):
             self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed)
             log.msg("Insert into %s successful" % data[0].lstrip('$'))
