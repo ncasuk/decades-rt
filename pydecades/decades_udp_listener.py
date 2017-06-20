@@ -56,15 +56,15 @@ class MulticastServerUDP(DatagramProtocol):
          inst=data[0].lstrip('$')
          fields=self.dataProtocols.fields(inst)
          if(len(data)!=len(fields)):
-             print('Wrong number of fields in %s expected %i got %i' % (inst,len(fields),len(data)))
-             print(data)
+             log.msg('Wrong number of fields in %s expected %i got %i' % (inst,len(fields),len(data)))
+             log.msg(data)
              return
          dictdata = dict(zip(fields, data)) 
          instname=self.dataProtocols.protocols[inst][0]['field'].lstrip('$')
          now=int(time.time())
          try:
              if dictdata['utc_time']=='NOW':
-                 print('Replace time with %i' % now)
+                 log.msg('Replace time with %i' % now)
                  dictdata['utc_time']='%i' % now
          except IndexError:
             log.msg('%s has no time rejecting' % data[0].lstrip('$'))

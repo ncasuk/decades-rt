@@ -5,6 +5,7 @@
 	ServerAlias fish
    ServerAlias 192.168.101.108
    ServerAlias 192.168.101.110
+   ServerAlias 192.168.56.104
    ServerAlias 10.0.2.2
    ServerAlias decades-test
 

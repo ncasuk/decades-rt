@@ -1,0 +1,8 @@
+field,num_of_bytes,bytes_per_data_point,representation,description
+$WVSS2B01,9,9,text,"this is the identifier for the start of the WVSS2 TCP packet"
+packet_length,4,4,>signed_int,"the length of this packet (not including all bytes up-to and including this number)"
+utc_time,4,4,>unsigned_int,"the valid time for this packet"
+utc_time_msec,2,2,>unsigned_int,"millisecond time offset"
+ident,1,1,text,"Flush inlet WVSSII serial no. 0388"
+flight_num,4,4,text,"indicates the flight number for this packet ( an ""XXXX"" string here indicates that no flight number assigned)"
+serial_data,75,75,text,"Text string from instrument"

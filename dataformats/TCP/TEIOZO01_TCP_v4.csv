@@ -1,0 +1,16 @@
+field,num_of_bytes,bytes_per_data_point,representation,description
+$TEIOZO01,9,9,text,Identifies which device created the packet
+packet_length,4,4,>unsigned_int,the length of the packet (not including all characters up-to the comma which follows this number)
+utc_time,4,4,>unsigned_int,the valid time for this packet (usually 1 second behind actual time)
+ptp_sync,1,1,text,"indication of whether the CRIO is successfully synchronised to PTP time ( 1 = synced, 0 = not-synced )"
+crio_temp,2,2,>unsigned_int,equals the internal bench temperature (degC) of the device
+flight_num,4,4,text,"indicates the flight number for this packet ( an ""empty"" string here indicates that the CRIO hasn't been assigned a flight number )"
+conc,4,4,>single_float,Reading in signed engineering unit (ppb) for Ozone Signal
+benchtemp,4,4,>single_float,Bench temperature (degC) used in instrument calculations (temperature compensation is on)
+press,4,4,>single_float,Absorption cell pressure reading (mmHg) used in instrument calculation (pressure compensation on)
+cellAint,2,2,>unsigned_int,Lamp A intensity (Hz) - check unit
+cellBint,2,2,>unsigned_int,Lamp B intensity (Hz) - check unit
+FlowA,4,4,>single_float,Sample flow in cell A (L per min)
+FlowB,4,4,>single_float,Sample flow in cell B (L per min)
+lamptemp,4,4,>single_float,Lamp temperature (degC)
+flag,8,8,text,00000000 to FFFFFFFF 
