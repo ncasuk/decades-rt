@@ -18,3 +18,6 @@ Module and Classes
 .. automodule:: pydecades.rt_calcs.rt_derive
    :members:
 
+.. automodule:: pydecades.decades_server
+   :members:
+

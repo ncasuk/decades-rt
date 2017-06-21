@@ -24,8 +24,10 @@ from pydecades.database import get_database
 #class to handle Decades events
 class DecadesProtocol(basic.LineReceiver):
    '''Python version of the HORACE server - to work with DECADES system. Responds to two commands:
-         STAT (returns basic status data e.g. lat/long, heading etc.)
-         PARA (Returns requested parameters)'''
+
+       * ``STAT`` (returns basic status data e.g. lat/long, heading etc.)
+       * ``PARA`` (Returns requested parameters)'''
+
    delimiter = "" #Java DatInputStream does not have a delimiter between lines
    der = []
    def __init__(self,rtlib,parano):
