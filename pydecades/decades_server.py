@@ -29,7 +29,7 @@ class DecadesProtocol(basic.LineReceiver):
    def __init__(self, conn, status, calfile="pydecades/rt_calcs/HOR_CALIB.DAT"):
        '''Takes a database connection, and creates a NamedTuple cursor (allowing us to
          access the results by fieldname *or* index'''
-       print("DECADES_server")
+       log.msg("DECADES_server")
        self.cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
        self.rtlib = rt_derive.derived(self.cursor,calfile) #class processing the cals & producing "real" values
        self.parser = DecadesConfigParser()
