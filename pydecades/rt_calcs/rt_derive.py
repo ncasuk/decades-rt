@@ -230,8 +230,9 @@ class derived(rt_data.rt_data):
         rh[ind]=(6.112*np.exp((17.67*rd[ind])/(243.5+rd[ind])))/esbot
         return rh'''
     def relative_humidity(self,data):
-        '''536,RELATIVE HUMIDITY,%,derived'''
-        """Relative humidity (%)"""
+        '''536,RELATIVE HUMIDITY,%,derived
+
+        :rtype: float (Relative humidity (%))'''
         Td=self.getdata('dew_point',data)
         T=self.getdata('deiced_true_air_temp_c',data)
         RH=np.zeros(len(Td))

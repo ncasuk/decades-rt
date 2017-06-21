@@ -5,7 +5,7 @@ data_types_numpy = {'boolean':'bool', 'integer':'int', 'real':'float', 'characte
 
 class rt_data(object):
     """ Class to read extract data from database and perform calibrations for display
-        all the actual algorithms are in rt_derive.py"""
+        all the actual algorithms are in :class:`pydecades.rt_calcs.rt_derive.derived`"""
     def __init__(self,database,calfile='HOR_CALIB.DAT'):
         """ Initialise with database and reading in calibration constants""" 
         der=[]
@@ -66,8 +66,7 @@ class rt_data(object):
 
     def derive_data_alt(self,names,where='',order=''):
         """Alternative read in data and process.  Separated so that only one database query
-           ( Goes through the process twice - first with empty data array, then reads all raw data
-             before the second pass)"""
+           ( Goes through the process twice - first with empty data array, then reads all raw data before the second pass)"""
         rawset,rawmissing=self.get_raw_required(names)
         rawdata={}
         for name in rawmissing:
@@ -91,10 +90,13 @@ class rt_data(object):
 
     def getdata(self,name,data):
         """ Main routine for extracting data - decides whether it is 
-            . Already available
-            . Is a calibration constant
-            . Needs processing
-            . Needs to be extracted from database"""
+
+            * Already available
+            * Is a calibration constant
+            * Needs processing
+            * Needs to be extracted from database
+            
+            """
         try:
             if(data[0].has_key(name)):
                 return data[0][name]
@@ -226,10 +228,11 @@ class rt_data(object):
         return
 
     def read_cal_const(self,filename):
-        """ Reads in the constants file
+        """ Reads in the constants file.
+
             All calibrations must be named in 6 characters starting CAL
-            The current file format then has a single digit which tells how many numbers there are (n)
-            Followed by n comma seperated constants and an optional comment."""
+            The current file format then has a single digit which tells how many numbers there are (*n*)
+            Followed by *n* comma seperated constants and an optional comment."""
         f=open(filename)
         self.cals={}
         self.constants_not_in_file()
