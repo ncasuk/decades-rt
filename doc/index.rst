@@ -6,10 +6,20 @@
 DECADES-RT's documentation
 ==========================
 
+This is the operation and testing manual for the DECADES (Data Evaluation, Collection, Analysis, Display, End-use and Storage) system.
+
 Contents:
 
 .. toctree::
    :maxdepth: 2
+
+   testing.rst
+   comms-protocols.rst
+   adding-instruments.rst
+   using-decades.rst
+
+   db-syncing.rst
+   ch-development.rst
 
    code.rst
 
