@@ -40,5 +40,5 @@ Make the release and deploy:
 
 ``RELEASE=yes fab -H fish,septic deploy``
 
-You will be ofered the chance to edit the change log. Change the number
+You will be offered the chance to edit the change log. Change the number
 on the top line to match the release number.

@@ -20,6 +20,7 @@ Contents:
 
    db-syncing.rst
    ch-development.rst
+   dev-environment.rst
 
    code.rst
 
