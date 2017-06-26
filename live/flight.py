@@ -49,7 +49,7 @@ class flight:
 		#do explicit check that path is one of expected values 
       if path in ('manager', 'summary', 'events','csv'): 
          #get calibrated data from DB as required
-         results = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft'],'=id','ORDER BY id DESC LIMIT 1')
+         results = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft'],'','DESC LIMIT 1')
 
          #get existing summary entries
          entries = self.db.select('summary', {'flight_number':results['flight_number'][0] }, where='summary.flight_number = $flight_number', order='summary.start DESC')
@@ -84,7 +84,7 @@ class flight:
       action = web.input()
      
       #get location & time data 
-      prtgindata = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
+      prtgindata = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft','gin_latitude','gin_longitude','gin_heading'], '=id','DESC LIMIT 1')
      
       #uses fromtimestamp rather than utcfromtimestamp as we want the result to be TZ-aware 
       with self.db.transaction():

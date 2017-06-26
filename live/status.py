@@ -43,9 +43,9 @@ class status:
       rtlib = rt_derive.derived(cur, calfile)
 
       #get stat data (taken directly from pydecades/decades_server.py) 
-      prtgindata = rtlib.derive_data_alt(['time_since_midnight','utc_time','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '=id','ORDER BY id DESC LIMIT 1')
+      prtgindata = rtlib.derive_data_alt(['time_since_midnight','utc_time','derindex','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '','DESC LIMIT 1')
       #get corcon separately so gin/prt stuff is independant of it.
-      corcondata = rtlib.derive_data_alt(['time_since_midnight','utc_time','derindex','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '=id','ORDER BY id DESC LIMIT 1')
+      corcondata = rtlib.derive_data_alt(['time_since_midnight','utc_time','derindex','true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '','DESC LIMIT 1')
 
       #open output div 
       output = u'<div id="statblock">' 

@@ -56,7 +56,14 @@ class rt_data(object):
 
     def derive_data(self,names,where='',order='',rawdata=None):
         """Read in data and process in one go, using repeated database queries
-           ( must be sure that the selection doesn't vary )"""
+           ( must be sure that the selection doesn't vary )
+         :param names: list(-like) of strings
+         :param where: str, SQL `WHERE` clause
+         :param order: str, SQL `ORDER BY` clause, not including "ORDER BY utc_time" so should be somthing of the form `DESC LIMIT 1`
+
+         :returns: data values.
+         :rtype: Dictionary with keys being names parameter
+         """
         ans={}
         if(rawdata==None):
             rawdata={}
