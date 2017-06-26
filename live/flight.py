@@ -84,7 +84,7 @@ class flight:
       action = web.input()
      
       #get location & time data 
-      prtgindata = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft','gin_latitude','gin_longitude','gin_heading'], '=id','DESC LIMIT 1')
+      prtgindata = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft','gin_latitude','gin_longitude','gin_heading'], '','DESC LIMIT 1')
      
       #uses fromtimestamp rather than utcfromtimestamp as we want the result to be TZ-aware 
       with self.db.transaction():
