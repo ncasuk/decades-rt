@@ -9,4 +9,5 @@ def get_database():
                            database = parser.get('Database','database'))
     #turn off transactions so the incoming INSERTS do not interfere with each other
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) 
+    conn.set_client_encoding('UTF8')
     return conn
