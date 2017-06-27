@@ -1,7 +1,7 @@
 import numpy as np
 from twisted.python import log
 import time
-data_types_numpy = {'boolean':'bool', 'integer':'int', 'real':'float', 'character varying':'str'} # postgres "types" to Numpy array types
+data_types_numpy = {'boolean':'bool', 'integer':'int', 'real':'float', 'character varying':'U13'} # postgres "types" to Numpy array types
 
 class rt_data(object):
     """ Class to read extract data from database and perform calibrations for display
@@ -105,6 +105,13 @@ class rt_data(object):
             
             """
         try:
+            #use defined types. if known
+            empty_array = np.array([], dtype=self.columns[name])
+        except KeyError:
+            #defaults to float64
+            empty_array = np.array([])
+
+        try:
             if(data[0].has_key(name)):
                 return data[0][name]
             elif(self.cals.has_key(name)):
@@ -114,17 +121,17 @@ class rt_data(object):
                     try:
                         data[0][name]=self.__getattribute__(name)(data)
                     except:  # probably mismatched arrays
-                        data[0][name]=np.array([])
+                        data[0][name]=empty_array
                 else:
                     if(name in self.columns):
                         data[0][name]=self.getdata_fromdatabase(name,*data[1]) 
                     else:
-                        data[0][name]=np.array([])
+                        data[0][name]=empty_array
                 return data[0][name]               
         except AttributeError:
             # This is for the dummy run which puts the needed raw data into a set
             if(name in data[0]):
-                return np.array([])
+                return empty_array
             elif(name in self.cals):
                 return self.cals[name]
             elif(name in self.derived):
@@ -132,10 +139,11 @@ class rt_data(object):
                 try:
                     return self.__getattribute__(name)(data)
                 except:
+                    log.err()
                     pass #some basic error
             else:
                 data[0].update([name])
-                return np.array([])
+                return empty_array
  
     def getdata_fromdatabase(self,name,where='',order='',table='mergeddata'):
         """ Reads one parameter from database"""
@@ -158,8 +166,13 @@ class rt_data(object):
         return data
             
     def getbunchofdata_fromdatabase(self,names,where='',order='',table='mergeddata'):
-        """ Reads several parameters from database"""
+        """ Reads several parameters from database
+        :param names, list of strings of required fields
+        :param where, SQL WHERE clause (not including WHERE keyword)
+        :param order, SQL clause to follow `ORDER BY utc_time`, i.e. `DESC` or `ASC`
+        :param table SQL table to query. Defaults to `mergeddata`, and unlikely to need to be otherwise"""
         t1=time.time()
+        log.msg('Updating data for ' + repr(names))
         fieldname_part = 'SELECT %s ' % ', '.join(names)
         ord='ORDER BY utc_time '+order
         if(where):
@@ -187,6 +200,7 @@ class rt_data(object):
                 dt.append((name,self.columns[name]))            
             try:
                 data=np.array(fetched,dtype=dt)
+                log.msg('Data ' + repr(data))
             except TypeError:
                 try:
                     for i,d in enumerate(dt):
@@ -205,6 +219,8 @@ class rt_data(object):
             for name in names:
                 ans[name]=np.array([])
                
+        log.msg('Fetched data ' + repr(fetched))
+        log.msg('ANS data ' + repr(data))
         return ans
                     
     def constants_not_in_file(self):
