@@ -50,7 +50,7 @@ class status:
       #open output div 
       output = u'<div id="statblock">' 
       if(corcondata['time_since_midnight'] and abs(corcondata['derindex'] - prtgindata['derindex']) < 10):
-         output = output + u'<p>Flight %s %s</p>' % (prtgindata['flight_number'][0],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
+         output = output + u'<p>Flight %s %s</p>' % (prtgindata['flight_number'],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
          output = output + (u'<p>Heading %.0f° Speed %.0fkts Height %.0fkft Pressure %.0fmb</p>' % (prtgindata['gin_heading'],corcondata['true_air_speed'], prtgindata['pressure_height_kft'], prtgindata['static_pressure']))
          output = output + (u'<p>Lat %.0f°%.0f\'%.2f" Long %.0f°%.0f\'%.2f" Wind %.1fms¯¹ / %.0f°</p>' % tuple(self.deg_to_dms(prtgindata['gin_latitude']) + self.deg_to_dms(prtgindata['gin_longitude']) + [corcondata['gin_wind_speed'],corcondata['wind_angle']] ))
          output = output + (u'<p>Temp %.1f°C Dewpoint %.1f°C</p>' % (corcondata['deiced_true_air_temp_c'],corcondata['dew_point']))
