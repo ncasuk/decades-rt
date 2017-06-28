@@ -5,6 +5,47 @@ import time
 
 from twisted.python import log
 
+def vp2dp_buck(vp, p, temp):
+    """Water vapour to dew point conversion using the formula from the 
+    Buck CR2 hygrometer manual p19f. Returns the dew point in K.
+    
+    Input:
+      vp: vapour pressure in mb
+      p: air pressure in mbar
+      temp: air temperature in Kelvin
+
+    Output:
+      dew point temperature in K
+    
+    """
+    a, b, c, d = (6.1121, 18.678, 257.14, 234.5)
+    ef=1.0+10**-4*(2.2+p/10.*(0.0383+6.4*10**-5*(temp-273.15)*2))
+    s=np.log(vp/ef)-np.log(a)
+    result=d/2.0 * (b-s-((b-s)**2-4*c*s/d)**0.5)
+    return result+273.15
+
+
+def vp2fp_buck(vp, p, temp):
+    """Water vapour to frost point conversion using the formula from the 
+    Buck CR2 hygrometer manual p19f. Returns the dew point in K.
+    
+    Input:
+      vp: vapour pressure in mb
+      p: air pressure in mbar
+      temp: air temperature in Kelvin
+
+    Output:
+      frost point temperature in K
+    
+    """
+    a, b, c, d=(6.1115, 23.036, 279.82, 333.7)
+    ef=1.0+10**-4*(2.2+p/10.*(0.0383+6.4*10**-5*(temp-273.15)*2))
+    s=np.log(vp/ef)-np.log(a)
+    result=d/2.0 * (b-s-((b-s)**2-4*c*s/d)**0.5)
+    return result+273.15
+
+
+
 class derived(rt_data.rt_data):
     """ A collection of the processing routines for realtime in flight data """
     def pressure_height_feet(self,data):
@@ -861,7 +902,8 @@ C ST    - Corrected Surface Temperature   (deg C)
 
     def teco_ozone_mixing_ratio(self,data):
         '''Returns raw signal from TEIOZO instrument'''
-        return self.getdata('teiozo01_conc',data)
+        result = self.getdata('teiozo02_conc',data)
+        return result
         #raw=self.getdata('CHEM:teco_ozone',data)  # What raw signal ?
         #c=self.cals['CAL100']
         #return c[0]+c[1]*raw 
@@ -894,6 +936,36 @@ C ST    - Corrected Surface Temperature   (deg C)
         #c=self.cals['CAL154']
         #return c[0]+c[1]*raw 
 
+    def wvss2a_tdew(self,data):
+        """Dewpoint from WVSS2A (deg C)
+        
+        """    
+        p=self.getdata('wvss2a01_press',data)
+        vmr=self.getdata('wvss2a01_vmr',data)
+        temp=self.getdata('deiced_true_air_temp_k',data)
+    
+        wmr=vmr/1.6077
+        vp=wmr*p/(622*10**3+wmr)
+        dp=vp2dp_buck(vp, p, temp)
+        return dp-273.15
+    
+    
+    def wvss2b_tdew(self,data):
+        """Dewpoint from WVSS2B (deg C)
+    
+        """    
+        p=self.getdata('wvss2b01_press',data)
+        vmr=self.getdata('wvss2b01_vmr',data)
+        temp=self.getdata('deiced_true_air_temp_k',data)
+    
+        wmr=vmr/1.6077
+        vp=wmr*p/(622*10**3+wmr)
+        dp=vp2dp_buck(vp, p, temp)
+        return dp-273.15
+
+
+
+
     def time_since_midnight(self,data):
         """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
         '''raw = []
@@ -919,8 +991,7 @@ C ST    - Corrected Surface Temperature   (deg C)
         except Exception as e:
             print(e)
             unixtime_at_midnight=time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
-        log.msg(unixtime_at_midnight)
-        log.msg(self.getdata('utc_time',data))
+        log.msg(unixtime_at_midnight)        
         return self.getdata('utc_time',data) - unixtime_at_midnight
         #raw is an array, so subtracting an integer appears to be valid
         '''if len(raw) >0:
