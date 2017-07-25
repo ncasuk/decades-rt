@@ -58,8 +58,8 @@ class rt_data(object):
         """Read in data and process in one go, using repeated database queries
            ( must be sure that the selection doesn't vary )
          :param names: list(-like) of strings
-         :param where: str, SQL `WHERE` clause
-         :param order: str, SQL `ORDER BY` clause, not including "ORDER BY utc_time" so should be somthing of the form `DESC LIMIT 1`
+         :param where: str, SQL ``WHERE`` clause
+         :param order: str, SQL ``ORDER BY`` clause, not including ``ORDER BY utc_time`` so should be somthing of the form ``DESC LIMIT 1``
 
          :returns: data values.
          :rtype: Dictionary with keys being names parameter
@@ -167,10 +167,11 @@ class rt_data(object):
             
     def getbunchofdata_fromdatabase(self,names,where='',order='',table='mergeddata'):
         """ Reads several parameters from database
-        :param names, list of strings of required fields
-        :param where, SQL WHERE clause (not including WHERE keyword)
-        :param order, SQL clause to follow `ORDER BY utc_time`, i.e. `DESC` or `ASC`
-        :param table SQL table to query. Defaults to `mergeddata`, and unlikely to need to be otherwise"""
+
+        :param names: list of strings of required fields
+        :param where: SQL ``WHERE`` clause (not including ``WHERE`` keyword)
+        :param order: SQL clause to follow ``ORDER BY utc_time``, i.e. ``DESC`` or ``ASC``
+        :param table: SQL table to query. Defaults to ``mergeddata``, and unlikely to need to be otherwise"""
         t1=time.time()
         log.msg('Updating data for ' + repr(names))
         fieldname_part = 'SELECT %s ' % ', '.join(names)
