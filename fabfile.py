@@ -183,7 +183,7 @@ def clean():
 
 def docs():
    with lcd('doc'):
-      local('make %(prj_name)s-manual.pdf' % env)
+      local('make html' % env)
 
 @runs_once
 def Plot_jar():
