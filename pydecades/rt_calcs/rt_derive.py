@@ -1007,6 +1007,17 @@ C ST    - Corrected Surface Temperature   (deg C)
         '''588,CO MIXING RATIO,ppb,derived'''
         '''Passes through the Aerolaser model 5002 reading'''
         return self.getdata('al52co01_conc',data)
+
+    def seaprobe_ice_water_83(self,data):
+        '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
+         based on the sea_lwc083 reading'''
+        return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc083',data))
+
+    def seaprobe_ice_water_21(self,data):
+        '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
+         based on the sea_lwc021 reading'''
+        return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc021',data))
+
         
         #raw=self.getdata('CHEM:co',data)  # What raw signal ?
         #c=self.cals['CAL154']
