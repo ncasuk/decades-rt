@@ -45,6 +45,12 @@ class SeaUDP(DatagramProtocol):
         #                 "sea_021_v":10,"sea_021_i":11,"sea_021_t":12,"sea_cmp_v":14,"sea_cmp_i":15,"sea_cmp_t":16 }  # Raw parameters
         self.writeparas={"sea_twc":2,"sea_lwc083":4,"sea_lwc021":6 }
 
+        #details of UDP multicast group for sending SEA output in UDP packet
+        self.host = "239.1.4.6"
+        self.port = 50001
+
+
+
     def startProtocol(self):
         '''starts the listener'''
    
@@ -64,6 +70,7 @@ class SeaUDP(DatagramProtocol):
              if(abs(sea_time-t)>self.maxTimeError):
                  # datagram[3:26]=time.strftime(t,"%Y/%m/%d,%H:%M:%S",time.gmtime(t))+".{}".format(int((t % 1)*1000)) #replace time ?
                  pass #  What do you want to do if sea probe time is wrong ?
+             #sends pressure, temp, TAS back to SEAPROBE
              self.send_airdata(address,flight_data)
          if(data[0]=="d1"):
              #copies data into a dictionary
@@ -71,15 +78,17 @@ class SeaUDP(DatagramProtocol):
              for p in paras:
                  paras[p]=data[self.writeparas[p]]
              paras["utc_time"]=t
-             self.dataProtocols.add_data(self.cursor, paras,('%s' % (instname, )).lower())
+             print paras
+             self.dataProtocols.add_data(self.cursor, paras,('%s' % (self.instname, )).lower())
          self.writedata(flight_data['flight_number'][0],data) # write data to file
       except _csv.Error:
          log.msg('CSV failed to unpack')
          log.msg(datagram)
   
     def writedata(self, flightno, data):
+      '''Writes data to outputfile'''
       try:
-         self.outfiles[flightno].write(repr(data))
+         self.outfiles[flightno].write(repr(data) + "\n")
          self.outfiles[flightno].flush()
       except KeyError: #i.e.file does not exist yet
          try: #try to create file 
@@ -108,9 +117,10 @@ class SeaUDP(DatagramProtocol):
 
 
     def send_airdata(self,address,flight_data):
-        UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"],flight_data["deiced_true_air_temp_c"],flight_data["true_air_speed_ms"])
+        UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],flight_data["deiced_true_air_temp_c"][0],flight_data["true_air_speed_ms"][0])
+        #UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],17.4,20)
         log.msg(address, UDP_out)
-        self.transport.write(UDP_out, address)
+        self.transport.write(UDP_out, (address[0], 2110))
 
 def main():# Listen for UDP on 2100
    '''This function is only called if this file is executed directly
