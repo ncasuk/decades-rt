@@ -221,7 +221,6 @@ class rt_data(object):
                 ans[name]=np.array([])
                
         log.msg('Fetched data ' + repr(fetched))
-        log.msg('ANS data ' + repr(data))
         return ans
                     
     def constants_not_in_file(self):

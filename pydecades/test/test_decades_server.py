@@ -9,7 +9,7 @@ from pydecades.configparser import DecadesConfigParser
 
 class DecadesProtocolTestCase(unittest.TestCase):
    def setUp(self):
-      factory = DecadesFactory(get_database(), parser.get('Config','calfile'))
+      factory = DecadesFactory()#get_database(), parser.get('Config','calfile'))
       self.proto = factory.buildProtocol('128.0.0.1')
 
    def test_stat(self):
