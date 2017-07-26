@@ -78,7 +78,6 @@ class SeaUDP(DatagramProtocol):
              for p in paras:
                  paras[p]=data[self.writeparas[p]]
              paras["utc_time"]=t
-             print paras
              self.dataProtocols.add_data(self.cursor, paras,('%s' % (self.instname, )).lower())
          self.writedata(flight_data['flight_number'][0],data) # write data to file
       except _csv.Error:
