@@ -24,6 +24,8 @@ Contents:
 
    code.rst
 
+   seaprobe.rst
+
 Indices and tables
 ==================
 

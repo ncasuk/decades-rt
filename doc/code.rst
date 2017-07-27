@@ -20,4 +20,3 @@ Module and Classes
 
 .. automodule:: pydecades.decades_server
    :members:
-
