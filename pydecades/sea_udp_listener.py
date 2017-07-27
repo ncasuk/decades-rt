@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 ############################################################################
 
-# Simple UDP Client for SEA probe DECADES
-# Dave Tiddeman
-# Met Office
 
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor, error
@@ -21,8 +18,20 @@ from distutils.dir_util import mkpath
    
 import os
 
-
 class SeaUDP(DatagramProtocol):
+    '''Simple UDP Client for SEA probe DECADES
+
+    * Dave Tiddeman, Met Office
+    * Dan Walker, NCAS
+
+    Listens on UDP port 2100 for data from the SEA probe. Writes incoming data 
+    packets (prefixed ``d[1-3]``) and calibration packets (``c0``) to an outfile
+    in the DECADES data dir.
+
+    Additionally, uses standard :func:`~pydecades.rt_calcs.rt_data.rt_data.derive_data_alt` 
+    to get the static_pressure (hPa), deiced true air temp (C), and TAS (m/s) to 
+    feed to UDP port 2110 on the SEA probe. This will trigger real data values which
+    can be displayed on the live system.'''
     dataProtocols = DecadesDataProtocols()
     parser = DecadesConfigParser()
     last_time=0
@@ -57,14 +66,16 @@ class SeaUDP(DatagramProtocol):
          
     def stopProtocol(self):
         '''Run on listener stop'''
+        self.outfiles[self.flightno].close() #just being tidy :)
         log.msg('Stopped Listening to SEA probe')
          
     def datagramReceived(self, datagram, address):
       '''reads an incoming UDP datagram, splits it up, INSERTs into database'''
       flight_data=self.rtlib.derive_data_alt(self.readparas,self.conditions,self.orderby)
+      self.flightno = flight_data['flight_number'][0]
       try:
          data = csv.reader([datagram.replace('\x00','')]).next() #assumes only one record, strips NULL
-         log.msg(data[0])
+         #log.msg(data[0])
          if not(data[0][0] =="d" or data[0][0] =="c"):
              raise _csv.Error("Datagram doesn't start 'd*'")
          t=time.time()
@@ -82,19 +93,19 @@ class SeaUDP(DatagramProtocol):
              for p in paras:
                  paras[p]=data[self.writeparas[p]]
              paras["utc_time"]=int(t)
-             log.msg('writing to DB')
+             #log.msg('writing to DB')
              self.dataProtocols.add_data(self.cursor, paras,('%s' % (self.instname, )).lower())
-             log.msg('DB write done')
-         self.writedata(flight_data['flight_number'][0],data) # write data to file
+             #log.msg('DB write done')
+         self.writedata(data) # write data to file
       except _csv.Error:
          log.msg('CSV failed to unpack, type='+data[0])
   
-    def writedata(self, flightno, data):
+    def writedata(self, data):
       '''Writes data to outputfile'''
       try:
-         self.outfiles[flightno].write(repr(data) + "\n")
-         self.outfiles[flightno].flush()
-         log.msg('Writing to output file ')
+         self.outfiles[self.flightno].write(repr(data) + "\n")
+         self.outfiles[self.flightno].flush()
+         #log.msg('Writing to output file ')
       except KeyError: #i.e.file does not exist yet
          try: #try to create file 
             os.umask(022)
@@ -102,17 +113,17 @@ class SeaUDP(DatagramProtocol):
             outpath = os.path.join(self.output_dir,dt.strftime('%Y'), dt.strftime('%m'), dt.strftime('%d'))
             mkpath(outpath, mode=self.output_create_mode + 0111) #acts like "mkdir -p" so if exists returns a success (+0111 adds executable bit as they are dirs)
 
-            outfile = os.path.join(outpath,self.instname + '_'+dt.strftime('%Y%m%d_%H%M%S') +'_' + flightno)
+            outfile = os.path.join(outpath,self.instname + '_'+dt.strftime('%Y%m%d_%H%M%S') +'_' + self.flightno)
             log.msg('Creating output file ' + outfile)
             try:
-               self.outfiles[flightno] = open(outfile, 'w')
+               self.outfiles[self.flightno] = open(outfile, 'w')
             except KeyError:
                #instrument hasn't a CSV file describing it for UDP
                self.outfiles = {} 
-               self.outfiles[flightno] = open(outfile, 'w')
+               self.outfiles[self.flightno] = open(outfile, 'w')
             #write data
-            self.outfiles[flightno].write(repr(data))
-            self.outfiles[flightno].flush()
+            self.outfiles[self.flightno].write(repr(data))
+            self.outfiles[self.flightno].flush()
             
  
          except TypeError: 
@@ -124,7 +135,7 @@ class SeaUDP(DatagramProtocol):
     def send_airdata(self,(source_host, source_port),flight_data):
         #UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],flight_data["deiced_true_air_temp_c"][0],flight_data["true_air_speed_ms"][0])
         UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],17.4,20.1)
-        log.msg(source_host, UDP_out)
+        #log.msg(source_host, UDP_out)
         self.transport.write(UDP_out, (source_host, 2110))
 
 def main():# Listen for UDP on 2100
