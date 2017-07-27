@@ -52,16 +52,20 @@ class SeaUDP(DatagramProtocol):
 
 
     def startProtocol(self):
-        '''starts the listener'''
-   
+        '''run on listener start'''
         log.msg('Started Listening to SEA probe')
+         
+    def stopProtocol(self):
+        '''Run on listener stop'''
+        log.msg('Stopped Listening to SEA probe')
          
     def datagramReceived(self, datagram, address):
       '''reads an incoming UDP datagram, splits it up, INSERTs into database'''
       flight_data=self.rtlib.derive_data_alt(self.readparas,self.conditions,self.orderby)
       try:
          data = csv.reader([datagram.replace('\x00','')]).next() #assumes only one record, strips NULL
-         if not(data[0][0] =="d"):
+         log.msg(data[0])
+         if not(data[0][0] =="d" or data[0][0] =="c"):
              raise _csv.Error("Datagram doesn't start 'd*'")
          t=time.time()
          if(data[0]=="d3"):
@@ -72,23 +76,25 @@ class SeaUDP(DatagramProtocol):
                  pass #  What do you want to do if sea probe time is wrong ?
              #sends pressure, temp, TAS back to SEAPROBE
              self.send_airdata(address,flight_data)
-         if(data[0]=="d1"):
+         elif(data[0]=="d1"):
              #copies data into a dictionary
              paras=self.writeparas.copy()
              for p in paras:
                  paras[p]=data[self.writeparas[p]]
-             paras["utc_time"]=t
+             paras["utc_time"]=int(t)
+             log.msg('writing to DB')
              self.dataProtocols.add_data(self.cursor, paras,('%s' % (self.instname, )).lower())
+             log.msg('DB write done')
          self.writedata(flight_data['flight_number'][0],data) # write data to file
       except _csv.Error:
-         log.msg('CSV failed to unpack')
-         log.msg(datagram)
+         log.msg('CSV failed to unpack, type='+data[0])
   
     def writedata(self, flightno, data):
       '''Writes data to outputfile'''
       try:
          self.outfiles[flightno].write(repr(data) + "\n")
          self.outfiles[flightno].flush()
+         log.msg('Writing to output file ')
       except KeyError: #i.e.file does not exist yet
          try: #try to create file 
             os.umask(022)
@@ -115,11 +121,11 @@ class SeaUDP(DatagramProtocol):
             log.msg('Invalid SEA UDP data, discarding')
 
 
-    def send_airdata(self,address,flight_data):
-        UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],flight_data["deiced_true_air_temp_c"][0],flight_data["true_air_speed_ms"][0])
-        #UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],17.4,20)
-        log.msg(address, UDP_out)
-        self.transport.write(UDP_out, (address[0], 2110))
+    def send_airdata(self,(source_host, source_port),flight_data):
+        #UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],flight_data["deiced_true_air_temp_c"][0],flight_data["true_air_speed_ms"][0])
+        UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],17.4,20.1)
+        log.msg(source_host, UDP_out)
+        self.transport.write(UDP_out, (source_host, 2110))
 
 def main():# Listen for UDP on 2100
    '''This function is only called if this file is executed directly
