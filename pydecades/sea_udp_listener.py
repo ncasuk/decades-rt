@@ -133,8 +133,8 @@ class SeaUDP(DatagramProtocol):
 
 
     def send_airdata(self,(source_host, source_port),flight_data):
-        #UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],flight_data["deiced_true_air_temp_c"][0],flight_data["true_air_speed_ms"][0])
-        UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],17.4,20.1)
+        UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],flight_data["deiced_true_air_temp_c"][0],flight_data["true_air_speed_ms"][0])
+        #UDP_out="{} {} {} 0\n".format(flight_data["static_pressure"][0],17.4,20.1)
         #log.msg(source_host, UDP_out)
         self.transport.write(UDP_out, (source_host, 2110))
 
