@@ -399,26 +399,65 @@ class derived(rt_data.rt_data):
         return (self.getdata('uppbbr01_radiometer_2_sig',data) - self.getdata('uppbbr01_radiometer_2_zero',data))*c[1]*corr
 
     def upper_pyrgeometer_flux(self,data):
-        c=self.cals['CAL083']
-        ct=self.cals['CAL089']
-        rt=self.getdata('uppbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
-        rs=(self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c[1]
-        uir=5.899E-8*(rt+273.16)**4+rs
-        return uir
+
+        # DLU Characteristics
+        dlu_range = 20       # -+10 Range Volt
+        resolution = 2**16   # bit
+
+        # Coefficients for the thermistor
+        alpha = 1.0295*(10**-3)
+        beta = 2.391*(10**-4)
+        gamma = 1.568*(10**-7)
+
+        # Coefficients for the Ampbox/Pyrgeometer combo
+        Ioset=4.0
+        gain=50.0
+        Eoset=600.0
+
+        # temperature
+        dlu_temp_voltage = self.getdata('uppbbr01_radiometer_3_temp', data) * (float(dlu_range)/resolution)
+        R_tot = dlu_temp_voltage/(100E-6)
+        R_t = 1.0/((1.0/R_tot)-(1E-5))
+        temperature = (alpha+(beta*np.log(R_t)+gamma*np.log(R_t)**3))**-1
+        
+        dlu_signal_voltage = self.getdata('uppbbr01_radiometer_3_sig', data) * (float(dlu_range)/resolution)
+        ampage = (dlu_signal_voltage/350.) * 1000.    # mA
+        L_d = (ampage-Ioset)*gain + (5.67e-8 * (temperature**4)) - Eoset
+        return L_d
 
     def lower_pyranometer_clear_flux(self,data):
         c=self.cals['CAL091']
         return (self.getdata('lowbbr01_radiometer_1_sig',data)-self.getdata('lowbbr01_radiometer_1_zero',data))*c[1]
+
     def lower_pyranometer_red_flux(self,data):
         c=self.cals['CAL092']
         return (self.getdata('lowbbr01_radiometer_2_sig',data)-self.getdata('lowbbr01_radiometer_2_zero',data))*c[1]
+
     def lower_pyrgeometer_flux(self,data):
-        c=self.cals['CAL093']
-        ct=self.cals['CAL099']
-        rt=self.getdata('lowbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
-        rs=(self.getdata('lowbbr01_radiometer_3_sig',data)-self.getdata('lowbbr01_radiometer_3_zero',data))*c[1]
-        uir=5.899E-8*(rt+273.16)**4+rs
-        return uir
+        # DLU Characteristics
+        dlu_range = 20       # -+10 Range Volt
+        resolution = 2**16   # bit
+
+        # Coefficients for the thermistor
+        alpha = 1.0295*(10**-3)
+        beta = 2.391*(10**-4)
+        gamma = 1.568*(10**-7)
+
+        # Coefficients for the Ampbox/Pyrgeometer combo
+        Ioset=4.0
+        gain=50.0
+        Eoset=600.0
+
+        # temperature
+        dlu_temp_voltage = self.getdata('lowbbr01_radiometer_3_temp', data) * (float(dlu_range)/resolution)
+        R_tot = dlu_temp_voltage/(100E-6)
+        R_t = 1.0/((1.0/R_tot)-(1E-5))
+        temperature = (alpha+(beta*np.log(R_t)+gamma*np.log(R_t)**3))**-1
+
+        dlu_signal_voltage = self.getdata('lowbbr01_radiometer_3_sig', data) * (float(dlu_range)/resolution)
+        ampage = (dlu_signal_voltage/350.) * 1000.    # mA
+        L_d = (ampage-Ioset)*gain + (5.67e-8 * (temperature**4)) - Eoset
+        return L_d
 
     def gin_latitude(self,data):
         return self.getdata('gindat01_latitude_gin',data)
