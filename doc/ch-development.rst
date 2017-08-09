@@ -34,7 +34,10 @@ Edit the python module version number in: setup.py
 
 Tag the Git repository with the new version number:
 
-``git tag -a 0.9.0 -m ’Version 0.9.0’ git push --tags``
+::
+
+   git tag -a 0.9.0 -m ’Version 0.9.0’ 
+   git push --tags
 
 Make the release and deploy:
 
