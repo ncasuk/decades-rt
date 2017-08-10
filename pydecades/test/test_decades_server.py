@@ -27,7 +27,7 @@ class DecadesProtocolTestCase(unittest.TestCase):
       self.proto.makeConnection(tr)
       self.proto.rawDataReceived(struct.pack(">4s5i", 'PARA',-1,-1,2,515,param_id))
       data = tr.value()
-      self.assertEqual(15,len(struct.unpack(self.proto.status.struct_fmt, data[0:57])),msg=function + " does not return the correct size of data from a STAT request") #PARA requests return a 57-byte STAT respose 
+      self.assertEqual(15,len(struct.unpack(self.proto.rtlib.status.struct_fmt, data[0:57])),msg=function + " does not return the correct size of data from a STAT request") #PARA requests return a 57-byte STAT respose 
       (derindex, size_upcoming) = struct.unpack('>2i',data[57:65])
       #Assert returned data are of the correct length (57 bytes is length of STAT block)
       #2 parameters so "2 * size_upcoming" is the size of the datablock 
