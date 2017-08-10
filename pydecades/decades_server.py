@@ -113,7 +113,7 @@ class DecadesFactory(protocol.ServerFactory):
       self.rtlib=rt_derive.derived(cursor,calfile) #class processing the cals & producing "real" values
       for k,v in self.rtlib.get_paranos().iteritems():
           self.parano[int(v['ParameterIdentifier'])]=k
-      print 'Init factory'
+      log.msg('Init factory')
    
    def buildProtocol(self,addr):
       p = self.protocol(self.rtlib,self.parano)
