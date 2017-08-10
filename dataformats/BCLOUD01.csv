@@ -1,0 +1,7 @@
+field,type,max_chars,description
+$BCLOUD01,text,8,this is the identifier for the start of the CORCON01 UDP packet
+utc_time,unsigned_int,10,the valid time for this packet (usually 1 second behind actual time)
+pcasp_number_conc,double_float,8,PCASP NUMBER CONCENTRATION
+pcasp_volume_conc,double_float,8,PCASP VOLUME CONCENTRATION
+pcasp_mvd,double_float,8,PCASP MEDIAN VOLUME DIAMETER
+pcasp_ed,double_float,8,PCASP EFFECTIVE DIAMETER

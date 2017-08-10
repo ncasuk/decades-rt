@@ -1,8 +1,14 @@
-decades (1.7.3~2.gbp39624a) quantal; urgency=low
+decades (1.7.3) quantal; urgency=low
 
-  * 
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 19 Feb 2015 14:25:19 +0200
+  [ Axel ]
+  * Calibration Constants updated
+  * Display_Parameters variable updated
+  * Pyranometer angle bug fix; WVSS2 dew point added
+  * Display_Parameters and udp dataformats updated
+  * Pyrgeometer processing adapted to work with the new CR4 Kipp&Zonen instruments
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Wed, 09 Aug 2017 14:36:29 +0100
 
 decades (1.7.3~2.gbp39624a) quantal; urgency=low
 
