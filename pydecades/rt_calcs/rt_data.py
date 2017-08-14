@@ -1,17 +1,21 @@
 import numpy as np
 from twisted.python import log
+from pydecades.configparser import DecadesConfigParser
 import time
 data_types_numpy = {'boolean':'bool', 'integer':'int', 'real':'float', 'character varying':'U13'} # postgres "types" to Numpy array types
 
 class rt_data(object):
     """ Class to read extract data from database and perform calibrations for display
         all the actual algorithms are in :class:`pydecades.rt_calcs.rt_derive.derived`"""
-    def __init__(self,database,calfile='HOR_CALIB.DAT'):
+    def __init__(self,database,calfile='HOR_CALIB.DAT', config=DecadesConfigParser()):
         """ Initialise with database and reading in calibration constants""" 
         der=[]
         for d in dir(self):
             if d not in dir(rt_data):
                 der.append(d)
+
+        #Get config details
+        self.config = config
         self.derived=der   # list of derivations, empty unless subclassed
         self.database=database #python Cursor class (Named Tuple version)
         self.database.execute("select column_name,data_type from information_schema.columns where table_name='mergeddata'")
@@ -39,11 +43,19 @@ class rt_data(object):
         return ans
 
     def get_paranos(self):
+        #get derived params
         avail=self.get_available()
         lines={}
         for p in avail:
             lines[p]=dict(zip(['ParameterIdentifier','DisplayText','DisplayUnits','GroupId']
                               ,self.__getattribute__(p).__doc__.split(",")))
+
+        #get params from Display Parameters file unless already specified
+        params = self.config.items('Parameters')
+        for k,v in params:
+           if not v in lines:
+              lines[v] = {'ParameterIdentifier': k}
+
         return lines
 
     def get_raw_paranos(self):
