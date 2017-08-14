@@ -8,13 +8,18 @@ from twisted.python import log
 from pydecades.configparser import DecadesConfigParser
 
 class DecadesProtocolTestCase(unittest.TestCase):
+   '''Unit tests for the Decades Protocol class (i.e. all the parameter functions
+   plus the responses to Horace-style ``PARA`` and ``STAT`` calls'''
+
+   timeout = 240
+
    def setUp(self):
       factory = DecadesFactory()#get_database(), parser.get('Config','calfile'))
       self.proto = factory.buildProtocol('128.0.0.1')
-
-   def test_stat(self):
       tr = proto_helpers.StringTransport()
       self.proto.makeConnection(tr)
+
+   def test_stat(self):
       self.proto.rawDataReceived('STAT') #"transmits" STAT command
       #Assumes successful if it unpacks correctly
       self.assertTrue(struct.unpack(self.proto.status.struct_fmt, tr.value()))
@@ -23,11 +28,9 @@ class DecadesProtocolTestCase(unittest.TestCase):
 
    def _test_para(self,param_id,function):
       #requests all extant data, for now. 
-      tr = proto_helpers.StringTransport()
-      self.proto.makeConnection(tr)
       self.proto.rawDataReceived(struct.pack(">4s5i", 'PARA',-1,-1,2,515,param_id))
       data = tr.value()
-      self.assertEqual(15,len(struct.unpack(self.proto.status.struct_fmt, data[0:57])),msg=function + " does not return the correct size of data from a STAT request") #PARA requests return a 57-byte STAT respose 
+      self.assertEqual(15,len(struct.unpack(self.proto.rtlib.status.struct_fmt, data[0:57])),msg=function + " does not return the correct size of data from a STAT request") #PARA requests return a 57-byte STAT respose 
       (derindex, size_upcoming) = struct.unpack('>2i',data[57:65])
       #Assert returned data are of the correct length (57 bytes is length of STAT block)
       #2 parameters so "2 * size_upcoming" is the size of the datablock 

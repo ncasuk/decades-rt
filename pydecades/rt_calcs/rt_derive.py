@@ -1,9 +1,51 @@
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 import numpy as np
 import rt_data
 from datetime import datetime
 import time
 
 from twisted.python import log
+
+def vp2dp_buck(vp, p, temp):
+    """Water vapour to dew point conversion using the formula from the 
+    Buck CR2 hygrometer manual p19f. Returns the dew point in K.
+    
+    Input:
+      vp: vapour pressure in mb
+      p: air pressure in mbar
+      temp: air temperature in Kelvin
+
+    Output:
+      dew point temperature in K
+    
+    """
+    a, b, c, d = (6.1121, 18.678, 257.14, 234.5)
+    ef=1.0+10**-4*(2.2+p/10.*(0.0383+6.4*10**-5*(temp-273.15)*2))
+    s=np.log(vp/ef)-np.log(a)
+    result=d/2.0 * (b-s-((b-s)**2-4*c*s/d)**0.5)
+    return result+273.15
+
+
+def vp2fp_buck(vp, p, temp):
+    """Water vapour to frost point conversion using the formula from the 
+    Buck CR2 hygrometer manual p19f. Returns the dew point in K.
+    
+    Input:
+      vp: vapour pressure in mb
+      p: air pressure in mbar
+      temp: air temperature in Kelvin
+
+    Output:
+      frost point temperature in K
+    
+    """
+    a, b, c, d=(6.1115, 23.036, 279.82, 333.7)
+    ef=1.0+10**-4*(2.2+p/10.*(0.0383+6.4*10**-5*(temp-273.15)*2))
+    s=np.log(vp/ef)-np.log(a)
+    result=d/2.0 * (b-s-((b-s)**2-4*c*s/d)**0.5)
+    return result+273.15
+
+
 
 class derived(rt_data.rt_data):
     """ A collection of the processing routines for realtime in flight data """
@@ -394,6 +436,7 @@ class derived(rt_data.rt_data):
         c=self.cals['CAL081'] 
         corr=self.getdata('pyranometer_correction',data)
         return (self.getdata('uppbbr01_radiometer_1_sig',data)-self.getdata('uppbbr01_radiometer_1_zero',data))*c[1]*corr
+
     def upper_pyranometer_red_flux(self,data):
         '''539,UPPER PYRANOMETER RED FLUX,W m-2,derived'''
         c=self.cals['CAL082']
@@ -403,29 +446,67 @@ class derived(rt_data.rt_data):
 
     def upper_pyrgeometer_flux(self,data):
         '''540,UPPER PYRGEOMETER FLUX,W m-2,derived'''
-        c=self.cals['CAL083']
-        ct=self.cals['CAL089']
-        rt=self.getdata('uppbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
-        rs=(self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c[1]
-        uir=5.899E-8*(rt+273.16)**4+rs
-        return uir
+        # DLU Characteristics
+        dlu_range = 20       # -+10 Range Volt
+        resolution = 2**16   # bit
+
+        # Coefficients for the thermistor
+        alpha = 1.0295*(10**-3)
+        beta = 2.391*(10**-4)
+        gamma = 1.568*(10**-7)
+
+        # Coefficients for the Ampbox/Pyrgeometer combo
+        Ioset=4.0
+        gain=50.0
+        Eoset=600.0
+
+        # temperature
+        dlu_temp_voltage = self.getdata('uppbbr01_radiometer_3_temp', data) * (float(dlu_range)/resolution)
+        R_tot = dlu_temp_voltage/(100E-6)
+        R_t = 1.0/((1.0/R_tot)-(1E-5))
+        temperature = (alpha+(beta*np.log(R_t)+gamma*np.log(R_t)**3))**-1
+        
+        dlu_signal_voltage = self.getdata('uppbbr01_radiometer_3_sig', data) * (float(dlu_range)/resolution)
+        ampage = (dlu_signal_voltage/350.) * 1000.    # mA
+        L_d = (ampage-Ioset)*gain + (5.67e-8 * (temperature**4)) - Eoset
+        return L_d
 
     def lower_pyranometer_clear_flux(self,data):
         '''541,UPPER PYRANOMETER CLEAR FLUX,W m-2,derived'''
         c=self.cals['CAL091']
         return (self.getdata('lowbbr01_radiometer_1_sig',data)-self.getdata('lowbbr01_radiometer_1_zero',data))*c[1]
+
     def lower_pyranometer_red_flux(self,data):
         '''542,UPPER PYRANOMETER RED FLUX,W m-2,derived'''
         c=self.cals['CAL092']
         return (self.getdata('lowbbr01_radiometer_2_sig',data)-self.getdata('lowbbr01_radiometer_2_zero',data))*c[1]
+
     def lower_pyrgeometer_flux(self,data):
         '''543,LOWER PYRGEOMETER FLUX,W m-2,derived'''
-        c=self.cals['CAL093']
-        ct=self.cals['CAL099']
-        rt=self.getdata('lowbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
-        rs=(self.getdata('lowbbr01_radiometer_3_sig',data)-self.getdata('lowbbr01_radiometer_3_zero',data))*c[1]
-        uir=5.899E-8*(rt+273.16)**4+rs
-        return uir
+        # DLU Characteristics
+        dlu_range = 20       # -+10 Range Volt
+        resolution = 2**16   # bit
+
+        # Coefficients for the thermistor
+        alpha = 1.0295*(10**-3)
+        beta = 2.391*(10**-4)
+        gamma = 1.568*(10**-7)
+
+        # Coefficients for the Ampbox/Pyrgeometer combo
+        Ioset=4.0
+        gain=50.0
+        Eoset=600.0
+
+        # temperature
+        dlu_temp_voltage = self.getdata('lowbbr01_radiometer_3_temp', data) * (float(dlu_range)/resolution)
+        R_tot = dlu_temp_voltage/(100E-6)
+        R_t = 1.0/((1.0/R_tot)-(1E-5))
+        temperature = (alpha+(beta*np.log(R_t)+gamma*np.log(R_t)**3))**-1
+
+        dlu_signal_voltage = self.getdata('lowbbr01_radiometer_3_sig', data) * (float(dlu_range)/resolution)
+        ampage = (dlu_signal_voltage/350.) * 1000.    # mA
+        L_d = (ampage-Ioset)*gain + (5.67e-8 * (temperature**4)) - Eoset
+        return L_d
 
     def gin_latitude(self,data):
         '''662,LATITUDE (GIN),deg +ve N,derived'''
@@ -974,34 +1055,11 @@ C ST    - Corrected Surface Temperature   (deg C)
     def teco_ozone_mixing_ratio(self,data):
         '''574,OZONE MIXING RATIO (TECO),ppb,derived'''
         '''Returns raw signal from TEIOZO instrument'''
-        return self.getdata('teiozo01_conc',data)
+        result = self.getdata('teiozo02_conc',data)
+        return result
         #raw=self.getdata('CHEM:teco_ozone',data)  # What raw signal ?
         #c=self.cals['CAL100']
         #return c[0]+c[1]*raw 
-        
-    def aqd_no(self,data):
-        '''657,NO (AQD),ppt,derived'''
-        raw=self.getdata('CHEM:aqdno',data)  # What raw signal ?
-        c=self.cals['CAL203']
-        return c[0]+c[1]*raw 
-
-    def aqd_no2(self,data):
-        '''658,NO2 (AQD),ppt,derived'''
-        raw=self.getdata('CHEM:aqdno2',data)  # What raw signal ?
-        c=self.cals['CAL204']
-        return c[0]+c[1]*raw 
-
-    def aqd_nox(self,data):
-        '''659,NOx (AQD),ppt,derived'''
-        raw=self.getdata('CHEM:aqdnox',data)  # What raw signal ?
-        c=self.cals['CAL205']
-        return c[0]+c[1]*raw 
-
-    def teco_so2(self,data):
-        '''611,SO2 (TECO),ppb,derived'''
-        raw=self.getdata('CHEM:teco_so2',data)  # What raw signal ?
-        c=self.cals['CAL214']
-        return c[0]+c[1]*raw 
         
     def co_mixing_ratio(self,data):
         '''588,CO MIXING RATIO,ppb,derived'''
@@ -1023,12 +1081,33 @@ C ST    - Corrected Surface Temperature   (deg C)
         #c=self.cals['CAL154']
         #return c[0]+c[1]*raw 
 
+    def wvss2a_tdew(self,data):
+        """705,Dewpoint from WVSS2A,(deg C),derived"""    
+        p=self.getdata('wvss2a01_press',data)
+        vmr=self.getdata('wvss2a01_vmr',data)
+        temp=self.getdata('deiced_true_air_temp_k',data)
+    
+        wmr=vmr/1.6077
+        vp=wmr*p/(622*10**3+wmr)
+        dp=vp2dp_buck(vp, p, temp)
+        return dp-273.15
+    
+    
+    def wvss2b_tdew(self,data):
+        """704,Dewpoint from WVSS2B,(deg C),derived"""    
+        p=self.getdata('wvss2b01_press',data)
+        vmr=self.getdata('wvss2b01_vmr',data)
+        temp=self.getdata('deiced_true_air_temp_k',data)
+    
+        wmr=vmr/1.6077
+        vp=wmr*p/(622*10**3+wmr)
+        dp=vp2dp_buck(vp, p, temp)
+        return dp-273.15
+
     def time_since_midnight(self,data):
         '''515,TIME FROM MIDNIGHT,secs,derived'''
         ''' Subtracts calculated midnight time from current time '''
         unixtime_at_midnight = self.cals['MIDNIGHT']
-        '''
-        #Could calculate this every time
         try:
             self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
             utc=self.database.fetchone()
@@ -1036,7 +1115,7 @@ C ST    - Corrected Surface Temperature   (deg C)
         except Exception as e:
             print(e)
             unixtime_at_midnight=time.mktime(datetime.datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
-        '''
+        log.msg(unixtime_at_midnight)        
         return self.getdata('utc_time',data) - unixtime_at_midnight
 
     def flight_number(self, data):
@@ -1054,4 +1133,4 @@ C ST    - Corrected Surface Temperature   (deg C)
         if len(flightnum) != 4:
             flightnum = self.getdata('aerack01_flight_num',data)
         log.msg('Returning ' +  repr(flightnum))
-        return flightnum
+        return str(flightnum)

@@ -25,6 +25,25 @@ that is done: ``git clone git@77.68.61.13:/decades-rt``
 
 will create a working copy of the repository in the current directory.
 
+Unit Testing
+------------
+
+Before committing a change or deploying a package, you should run the unit tests:
+
+::
+
+    fab test
+
+This is not currently fully complete, but does test that ``STAT`` and ``PARA`` 
+requests
+work as expected and all paramaters in the Display Parameters file return 
+values. You can test a single parameter using a command of the form:
+
+::
+
+    fab unit_test_parameter:corcon01_fast_temp
+
+
 Versioning
 ----------
 
