@@ -101,10 +101,9 @@ class DecadesProtocol(basic.LineReceiver):
 
 class DecadesFactory(protocol.ServerFactory):
    _recvd = {}
-   def __init__(self):
+   def __init__(self, parser=DecadesConfigParser()):
       self.protocol = DecadesProtocol
       conn=get_database()
-      parser = DecadesConfigParser()
       self.parano={}
       #for (code, function) in parser.items('Parameters'):
       #    self.parano[int(code)] = function
