@@ -41,7 +41,7 @@ class DecadesProtocolTestCase(testresources.ResourcedTestCase):
    def test_stat(self):
       self.proto.rawDataReceived('STAT') #"transmits" STAT command
       #Assumes successful if it unpacks correctly
-      self.assertTrue(struct.unpack(self.proto.status.struct_fmt, tr.value()))
+      self.assertTrue(struct.unpack(self.proto.rtlib.status.struct_fmt, self.tr.value()))
 
       
 
