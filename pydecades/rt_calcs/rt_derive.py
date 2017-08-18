@@ -5,47 +5,6 @@ import time
 
 from twisted.python import log
 
-def vp2dp_buck(vp, p, temp):
-    """Water vapour to dew point conversion using the formula from the 
-    Buck CR2 hygrometer manual p19f. Returns the dew point in K.
-    
-    Input:
-      vp: vapour pressure in mb
-      p: air pressure in mbar
-      temp: air temperature in Kelvin
-
-    Output:
-      dew point temperature in K
-    
-    """
-    a, b, c, d = (6.1121, 18.678, 257.14, 234.5)
-    ef=1.0+10**-4*(2.2+p/10.*(0.0383+6.4*10**-5*(temp-273.15)*2))
-    s=np.log(vp/ef)-np.log(a)
-    result=d/2.0 * (b-s-((b-s)**2-4*c*s/d)**0.5)
-    return result+273.15
-
-
-def vp2fp_buck(vp, p, temp):
-    """Water vapour to frost point conversion using the formula from the 
-    Buck CR2 hygrometer manual p19f. Returns the dew point in K.
-    
-    Input:
-      vp: vapour pressure in mb
-      p: air pressure in mbar
-      temp: air temperature in Kelvin
-
-    Output:
-      frost point temperature in K
-    
-    """
-    a, b, c, d=(6.1115, 23.036, 279.82, 333.7)
-    ef=1.0+10**-4*(2.2+p/10.*(0.0383+6.4*10**-5*(temp-273.15)*2))
-    s=np.log(vp/ef)-np.log(a)
-    result=d/2.0 * (b-s-((b-s)**2-4*c*s/d)**0.5)
-    return result+273.15
-
-
-
 class derived(rt_data.rt_data):
     """ A collection of the processing routines for realtime in flight data """
     def pressure_height_feet(self,data):
@@ -378,9 +337,9 @@ class derived(rt_data.rt_data):
         #TWCDP - Dewpoint from Total Water Content  (deg C)
         spr=self.getdata('static_pressure',data)
         twc_mmr=self.getdata('total_water_content',data)
-        DP=np.zeros(len(spr))
+        DP=np.zeroes(len(spr))
         ind=np.where(twc_mmr*spr>0)
-        DP[ind]=5.42E3 / np.log(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
+        DP[ind]=5.42E3 / LOG(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
         return DP
         
     def radar_height(self,data):
@@ -399,65 +358,26 @@ class derived(rt_data.rt_data):
         return (self.getdata('uppbbr01_radiometer_2_sig',data) - self.getdata('uppbbr01_radiometer_2_zero',data))*c[1]*corr
 
     def upper_pyrgeometer_flux(self,data):
-
-        # DLU Characteristics
-        dlu_range = 20       # -+10 Range Volt
-        resolution = 2**16   # bit
-
-        # Coefficients for the thermistor
-        alpha = 1.0295*(10**-3)
-        beta = 2.391*(10**-4)
-        gamma = 1.568*(10**-7)
-
-        # Coefficients for the Ampbox/Pyrgeometer combo
-        Ioset=4.0
-        gain=50.0
-        Eoset=600.0
-
-        # temperature
-        dlu_temp_voltage = self.getdata('uppbbr01_radiometer_3_temp', data) * (float(dlu_range)/resolution)
-        R_tot = dlu_temp_voltage/(100E-6)
-        R_t = 1.0/((1.0/R_tot)-(1E-5))
-        temperature = (alpha+(beta*np.log(R_t)+gamma*np.log(R_t)**3))**-1
-        
-        dlu_signal_voltage = self.getdata('uppbbr01_radiometer_3_sig', data) * (float(dlu_range)/resolution)
-        ampage = (dlu_signal_voltage/350.) * 1000.    # mA
-        L_d = (ampage-Ioset)*gain + (5.67e-8 * (temperature**4)) - Eoset
-        return L_d
+        c=self.cals['CAL083']
+        ct=self.cals['CAL089']
+        rt=self.getdata('uppbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
+        rs=(self.getdata('uppbbr01_radiometer_3_sig',data)-self.getdata('uppbbr01_radiometer_3_zero',data))*c[1]
+        uir=5.899E-8*(rt+273.16)**4+rs
+        return uir
 
     def lower_pyranometer_clear_flux(self,data):
         c=self.cals['CAL091']
         return (self.getdata('lowbbr01_radiometer_1_sig',data)-self.getdata('lowbbr01_radiometer_1_zero',data))*c[1]
-
     def lower_pyranometer_red_flux(self,data):
         c=self.cals['CAL092']
         return (self.getdata('lowbbr01_radiometer_2_sig',data)-self.getdata('lowbbr01_radiometer_2_zero',data))*c[1]
-
     def lower_pyrgeometer_flux(self,data):
-        # DLU Characteristics
-        dlu_range = 20       # -+10 Range Volt
-        resolution = 2**16   # bit
-
-        # Coefficients for the thermistor
-        alpha = 1.0295*(10**-3)
-        beta = 2.391*(10**-4)
-        gamma = 1.568*(10**-7)
-
-        # Coefficients for the Ampbox/Pyrgeometer combo
-        Ioset=4.0
-        gain=50.0
-        Eoset=600.0
-
-        # temperature
-        dlu_temp_voltage = self.getdata('lowbbr01_radiometer_3_temp', data) * (float(dlu_range)/resolution)
-        R_tot = dlu_temp_voltage/(100E-6)
-        R_t = 1.0/((1.0/R_tot)-(1E-5))
-        temperature = (alpha+(beta*np.log(R_t)+gamma*np.log(R_t)**3))**-1
-
-        dlu_signal_voltage = self.getdata('lowbbr01_radiometer_3_sig', data) * (float(dlu_range)/resolution)
-        ampage = (dlu_signal_voltage/350.) * 1000.    # mA
-        L_d = (ampage-Ioset)*gain + (5.67e-8 * (temperature**4)) - Eoset
-        return L_d
+        c=self.cals['CAL093']
+        ct=self.cals['CAL099']
+        rt=self.getdata('lowbbr01_radiometer_3_temp',data)*ct[1]+ct[0]
+        rs=(self.getdata('lowbbr01_radiometer_3_sig',data)-self.getdata('lowbbr01_radiometer_3_zero',data))*c[1]
+        uir=5.899E-8*(rt+273.16)**4+rs
+        return uir
 
     def gin_latitude(self,data):
         return self.getdata('gindat01_latitude_gin',data)
@@ -941,8 +861,7 @@ C ST    - Corrected Surface Temperature   (deg C)
 
     def teco_ozone_mixing_ratio(self,data):
         '''Returns raw signal from TEIOZO instrument'''
-        result = self.getdata('teiozo02_conc',data)
-        return result
+        return self.getdata('teiozo02_conc',data)
         #raw=self.getdata('CHEM:teco_ozone',data)  # What raw signal ?
         #c=self.cals['CAL100']
         #return c[0]+c[1]*raw 
@@ -975,32 +894,15 @@ C ST    - Corrected Surface Temperature   (deg C)
         #c=self.cals['CAL154']
         #return c[0]+c[1]*raw 
 
-    def wvss2a_tdew(self,data):
-        """Dewpoint from WVSS2A (deg C)
-        
-        """    
-        p=self.getdata('wvss2a01_press',data)
-        vmr=self.getdata('wvss2a01_vmr',data)
-        temp=self.getdata('deiced_true_air_temp_k',data)
-    
-        wmr=vmr/1.6077
-        vp=wmr*p/(622*10**3+wmr)
-        dp=vp2dp_buck(vp, p, temp)
-        return dp-273.15
-    
-    
-    def wvss2b_tdew(self,data):
-        """Dewpoint from WVSS2B (deg C)
-    
-        """    
-        p=self.getdata('wvss2b01_press',data)
-        vmr=self.getdata('wvss2b01_vmr',data)
-        temp=self.getdata('deiced_true_air_temp_k',data)
-    
-        wmr=vmr/1.6077
-        vp=wmr*p/(622*10**3+wmr)
-        dp=vp2dp_buck(vp, p, temp)
-        return dp-273.15
+    def seaprobe_ice_water_83(self,data):
+        '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
+         based on the sea_lwc083 reading'''
+        return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc083',data))
+
+    def seaprobe_ice_water_21(self,data):
+        '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
+         based on the sea_lwc021 reading'''
+        return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc021',data))
 
 
 
@@ -1018,19 +920,7 @@ C ST    - Corrected Surface Temperature   (deg C)
         if len(raw[0]) >0: #i.e. it isn't the dummy pass
             #filter out NaNs
             raw = [x for x in raw if not np.isnan(x[0])] '''
-        
-        #unixtime_at_midnight = time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
-        unixtime_at_midnight = self.cals['MIDNIGHT']
-        try:
-            self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
-            utc=self.database.fetchone()
-            log.msg(utc)
-            unixtime_at_midnight=86400*(utc.utc_time/86400)
-            log.msg("Midnight from database") 
-        except Exception as e:
-            print(e)
-            unixtime_at_midnight=time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
-        log.msg(unixtime_at_midnight)        
+        unixtime_at_midnight = time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
         return self.getdata('utc_time',data) - unixtime_at_midnight
         #raw is an array, so subtracting an integer appears to be valid
         '''if len(raw) >0:
