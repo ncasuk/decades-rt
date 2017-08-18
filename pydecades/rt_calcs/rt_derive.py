@@ -1082,7 +1082,7 @@ C ST    - Corrected Surface Temperature   (deg C)
         #return c[0]+c[1]*raw 
 
     def wvss2a_tdew(self,data):
-        """705,Dewpoint from WVSS2A,(deg C),derived"""    
+        """931,Dewpoint from WVSS2A,(deg C),derived"""    
         p=self.getdata('wvss2a01_press',data)
         vmr=self.getdata('wvss2a01_vmr',data)
         temp=self.getdata('deiced_true_air_temp_k',data)
@@ -1094,7 +1094,7 @@ C ST    - Corrected Surface Temperature   (deg C)
     
     
     def wvss2b_tdew(self,data):
-        """704,Dewpoint from WVSS2B,(deg C),derived"""    
+        """932,Dewpoint from WVSS2B,(deg C),derived"""    
         p=self.getdata('wvss2b01_press',data)
         vmr=self.getdata('wvss2b01_vmr',data)
         temp=self.getdata('deiced_true_air_temp_k',data)

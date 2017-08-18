@@ -185,6 +185,12 @@ def docs():
    with lcd('doc'):
       local('make html' % env)
 
+def pdfdocs():
+   with lcd('doc'):
+      local('make latex' % env)
+   with lcd('doc/_build/latex'):
+      local('make all-pdf' % env)
+
 @runs_once
 def Plot_jar():
    '''Creates the JAR file for the display applicaton'''
