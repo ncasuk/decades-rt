@@ -420,9 +420,9 @@ class derived(rt_data.rt_data):
         #TWCDP - Dewpoint from Total Water Content  (deg C)
         spr=self.getdata('static_pressure',data)
         twc_mmr=self.getdata('total_water_content',data)
-        DP=np.zeros(len(spr))
+        DP=np.zeroes(len(spr))
         ind=np.where(twc_mmr*spr>0)
-        DP[ind]=5.42E3 / np.log(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
+        DP[ind]=5.42E3 / LOG(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
         return DP
         
     def radar_height(self,data):
@@ -1055,8 +1055,7 @@ C ST    - Corrected Surface Temperature   (deg C)
     def teco_ozone_mixing_ratio(self,data):
         '''574,OZONE MIXING RATIO (TECO),ppb,derived'''
         '''Returns raw signal from TEIOZO instrument'''
-        result = self.getdata('teiozo02_conc',data)
-        return result
+        return self.getdata('teiozo02_conc',data)
         #raw=self.getdata('CHEM:teco_ozone',data)  # What raw signal ?
         #c=self.cals['CAL100']
         #return c[0]+c[1]*raw 
@@ -1104,18 +1103,30 @@ C ST    - Corrected Surface Temperature   (deg C)
         dp=vp2dp_buck(vp, p, temp)
         return dp-273.15
 
+    def seaprobe_ice_water_83(self,data):
+        '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
+         based on the sea_lwc083 reading'''
+        return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc083',data))
+
+    def seaprobe_ice_water_21(self,data):
+        '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
+         based on the sea_lwc021 reading'''
+        return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc021',data))
+
     def time_since_midnight(self,data):
-        '''515,TIME FROM MIDNIGHT,secs,derived'''
-        ''' Subtracts calculated midnight time from current time '''
-        unixtime_at_midnight = self.cals['MIDNIGHT']
-        try:
-            self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
-            utc=self.database.fetchone()
-            unixtime_at_midnight=86400*(utc.utc_time/86400)
-        except Exception as e:
-            print(e)
-            unixtime_at_midnight=time.mktime(datetime.datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
-        log.msg(unixtime_at_midnight)        
+        """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
+        '''raw = []
+        raw.append(self.getdata('corcon01_utc_time',data))
+        raw.append(self.getdata('prtaft01_utc_time',data))
+        raw.append(self.getdata('gindat01_utc_time',data)) 
+        raw.append(self.getdata('aerack01_utc_time',data))
+        raw.append(self.getdata('lowbbr01_utc_time',data)) 
+        raw.append(self.getdata('uppbbr01_utc_time',data)) 
+        dummy = raw[0] # because if they are all NaN, it should return NaN
+        if len(raw[0]) >0: #i.e. it isn't the dummy pass
+            #filter out NaNs
+            raw = [x for x in raw if not np.isnan(x[0])] '''
+        unixtime_at_midnight = time.mktime(datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
         return self.getdata('utc_time',data) - unixtime_at_midnight
 
     def flight_number(self, data):

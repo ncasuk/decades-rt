@@ -1,5 +1,51 @@
-decades (1.7.3) quantal; urgency=low
+decades (1.7.3~4.gbp8c5518) quantal; urgency=low
 
+  ** SNAPSHOT build @8c55182ac63e7f019916aca45e8d85da5481368a **
+
+  **SNAPSHOT build pre-CLARIFY
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Wed, 09 Aug 2017 14:15:57 +0200
+
+decades (1.7.3~3.gbp8c5518) quantal; urgency=low
+
+  ** SNAPSHOT build @8c55182ac63e7f019916aca45e8d85da5481368a **
+
+  *
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Wed, 09 Aug 2017 14:15:32 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+  * Merge from Axel's live fixes
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:15:19 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+  * Merge from Axel's live fixes
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:15:08 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+  * 
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:15:06 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+  * 
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:15:04 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:01:31 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
 
   [ Axel ]
   * Calibration Constants updated
