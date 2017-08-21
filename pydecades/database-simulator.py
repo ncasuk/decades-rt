@@ -96,7 +96,8 @@ while 1:
             }
             fakedata['ACLOUD'] = {
                'utc_time':timestamp,
-               'aimms_latitude':(0.0 + 5*math.sin(math.radians(timestamp*3)))
+               'aimms_latitude':(0.0 + 5*math.sin(math.radians(timestamp*3))),
+               'aimms_altitude':int(1000 + (50 * math.sin(timestamp/4))) 
             }
             for DLU in args.DLU:
                time.sleep(random.gauss(0.15,0.03)) #makes "random" gaps between data

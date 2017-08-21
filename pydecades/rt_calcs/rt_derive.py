@@ -420,9 +420,9 @@ class derived(rt_data.rt_data):
         #TWCDP - Dewpoint from Total Water Content  (deg C)
         spr=self.getdata('static_pressure',data)
         twc_mmr=self.getdata('total_water_content',data)
-        DP=np.zeroes(len(spr))
+        DP=np.zeros(len(spr))
         ind=np.where(twc_mmr*spr>0)
-        DP[ind]=5.42E3 / LOG(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
+        DP[ind]=5.42E3 / np.log(1.57366E12/(spr[ind]*twc_mmr[ind])) -273.16 # Dewpoint (C) 
         return DP
         
     def radar_height(self,data):
@@ -1114,6 +1114,7 @@ C ST    - Corrected Surface Temperature   (deg C)
         return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc021',data))
 
     def time_since_midnight(self,data):
+        """515,Time since midnight,(s),derived"""
         """ Is this the best place to get time - is there not time in a master time rather than ubber bbr time ? """
         '''raw = []
         raw.append(self.getdata('corcon01_utc_time',data))
