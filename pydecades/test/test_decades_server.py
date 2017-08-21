@@ -4,6 +4,8 @@ from twisted.trial import unittest
 from twisted.test import proto_helpers
 import testresources
 
+from numpy import isnan, nan
+
 import os, struct, exceptions
 
 from twisted.python import log
@@ -53,7 +55,12 @@ class DecadesProtocolTestCase(testresources.ResourcedTestCase):
       (derindex, size_upcoming) = struct.unpack('>2i',data[57:65])
       #Assert returned data are of the correct length (57 bytes is length of STAT block)
       #2 parameters so "2 * size_upcoming" is the size of the datablock 
-      self.assertEqual(len(data)-57,struct.calcsize('>ii'+str(2*size_upcoming)+'f'), msg=function + " does not return the correct size of data from a PARA request")
+      para_fmt = '>ii'+str(2*size_upcoming)+'f'
+      self.assertEqual(len(data)-57,struct.calcsize(para_fmt), msg=function + " does not return the correct size of data from a PARA request")
+
+      out = struct.unpack(para_fmt, data[57:])
+      #check is not returning NaNs
+      self.assertFalse(isnan(out[2:]).any(), msg=function + " returning NaNs")
 
 #Not part of testcase class; is a function that returns a function based on parameters
 def test_parameters(param_id, function):
