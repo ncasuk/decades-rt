@@ -1,12 +1,18 @@
-decades (1.7.3~6.gbpe39185) quantal; urgency=low
+decades (1.7.3~15.gbpf9fb9f) quantal; urgency=low
 
-  ** SNAPSHOT build @e391854366985190a08a610330f5f8eb2f08427d **
+  ** SNAPSHOT build @f9fb9fc269f49c22a0f0b67ed1b39c9ab1ab5644 **
 
   ** Test version for Jamie Trembath to try
 
   * 
+  * detect NaNs; mark as error
+  * Allow localhost as alias
+  * Add aimms altitude
+  * Correct function names
+  * Make package name include branch name
+  * make updates
 
- -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 11:19:35 +0200
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 12:57:40 +0100
 
 decades (1.7.3~4.gbp8c5518) quantal; urgency=low
 
