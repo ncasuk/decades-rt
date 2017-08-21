@@ -52,7 +52,7 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 	cp -r web/css/* debian/$(PACKAGE)/var/www/$(PACKAGE)/css/
 	cp -r web/js/* debian/$(PACKAGE)/var/www/$(PACKAGE)/js/
 	cp -rp live/* debian/$(PACKAGE)/var/www/$(PACKAGE)-live/
-	cp dataformats/*  debian/$(PACKAGE)/opt/$(PACKAGE)/dataformats/
+	cp -rp dataformats/*  debian/$(PACKAGE)/opt/$(PACKAGE)/dataformats/
 	dh_auto_install
    
 

@@ -130,6 +130,7 @@ def create_deb():
    local('git checkout-index --prefix=%(packageprefix)s/ -a' % env)
    local('git-dch %(dchopts)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    local('cp -rp debian %(packageprefix)s/' % env)
+   local('cp Horace/web/plot/Plot.jar %(packageprefix)s/Horace/web/plot/' % env)
    with lcd(env.packageprefix):
       #debuild_out = local('git-buildpackage --git-upstream-branch=master --git-debian-branch=master --git-export=INDEX --git-ignore-new' % env, capture=True)
       debuild_out = local('debuild -us -uc' % env, capture=True)
