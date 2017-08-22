@@ -26,7 +26,7 @@ for proto in dataProtocols.available():
 if dataProtocols.new_table_count > 0:
    #one of the dataformat files has been updated, recreate merge table
    print('Recreating mergeddata table')
-   dataProtocols.create_view(cursor)
+   dataProtocols.create_table(cursor)
 else:
    print('Reusing existing mergeddata table')
 

@@ -1,6 +1,6 @@
-decades (1.7.3~15.gbpf9fb9f) quantal; urgency=low
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
-  ** SNAPSHOT build @f9fb9fc269f49c22a0f0b67ed1b39c9ab1ab5644 **
+  ** SNAPSHOT build @4c2bc820cbaac052ede9e97b512520c7581b6c85 **
 
   ** Test version for Jamie Trembath to try
 
@@ -11,8 +11,10 @@ decades (1.7.3~15.gbpf9fb9f) quantal; urgency=low
   * Correct function names
   * Make package name include branch name
   * make updates
+  * Fixing package build routine
+  * Updated deb changelog
 
- -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 12:57:40 +0100
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 13:33:58 +0100
 
 decades (1.7.3~4.gbp8c5518) quantal; urgency=low
 
