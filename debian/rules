@@ -51,7 +51,6 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 	cp Horace/web/plot/Plot.jar Horace/web/plot/plot.html Horace/web/plot/Parano_old.txt Horace/web/plot/map_data.dat.gz Horace/web/plot/overlay.txt debian/$(PACKAGE)/var/www/$(PACKAGE)/plot/
 	cp -r web/css/* debian/$(PACKAGE)/var/www/$(PACKAGE)/css/
 	cp -r web/js/* debian/$(PACKAGE)/var/www/$(PACKAGE)/js/
-	cp -r web/js/flot/* debian/$(PACKAGE)/var/www/$(PACKAGE)/js/flot/
 	cp -rp live/* debian/$(PACKAGE)/var/www/$(PACKAGE)-live/
 	cp -rp dataformats/*  debian/$(PACKAGE)/opt/$(PACKAGE)/dataformats/
 	dh_auto_install
