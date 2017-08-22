@@ -3,8 +3,8 @@ cfg.parser ()
 {
     PREFIX=${2:=INI_}
     ini="$(<$1)"                # read the file
-    ini="${ini//[/\[}"          # escape [
-    ini="${ini//]/\]}"          # escape ]
+    ini="${ini//\[/\\\[}"          # escape [
+    ini="${ini//\]/\\\]}"          #escape ]
     IFS=$'\n' && ini=( ${ini} ) # convert to line-array
     ini=( ${ini[*]//;*/} )      # remove comments with ;
     ini=( ${ini[*]/\    =/=} )  # remove tabs before =
