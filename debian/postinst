@@ -1,3 +1,4 @@
 #!/bin/sh
 update-rc.d decades defaults >/dev/null
+fab --fabfile=/etc/decades/fabfile.py local_database_setup
 #DEBHELPER#
