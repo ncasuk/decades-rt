@@ -130,7 +130,7 @@ def setup_local_dev_environment():
 
    
 @runs_once
-def create_deb():
+def package():
    env.branch = local('git rev-parse --abbrev-ref HEAD', capture=True).strip()
 
    env.packageprefix = ('%(prj_name)s-%(timestamp)s-%(branch)s' % env)
@@ -173,7 +173,7 @@ def unit_test_parameter(paramname):
 
 def deploy():   
    Plot_jar()
-   debname=create_deb()
+   debname=package()
    deploy_deb(debname=debname)
    sudo('a2enmod wsgi')
    sudo('service apache2 restart')

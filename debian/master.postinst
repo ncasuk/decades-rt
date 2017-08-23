@@ -1,0 +1,5 @@
+#!/bin/sh
+update-rc.d __PACKAGE__ defaults >/dev/null
+a2ensite __PACKAGE__
+fab --fabfile=/etc/__PACKAGE__/fabfile.py local_database_setup
+#DEBHELPER#

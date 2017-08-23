@@ -2,7 +2,7 @@ etc/init.d
 etc/cron.daily
 etc/decades
 etc/default
-etc/apache2/sites-enabled
+etc/apache2/sites-available
 opt/decades/dataformats
 opt/decades/output
 var/lib/decades
