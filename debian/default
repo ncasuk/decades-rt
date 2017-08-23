@@ -1,4 +1,4 @@
-rundir=/usr/local/lib/decades
+rundir=/usr/lib/decades
 
 listenerpidfile=/var/run/decades-listener.pid
 listenerfile=/etc/decades/decades-listener.tac
