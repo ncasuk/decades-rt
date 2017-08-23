@@ -34,6 +34,8 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 	cp pydecades/$(PACKAGE)-server.tac debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp pydecades/$(PACKAGE)-server-balancer.tac debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp pydecades/$(PACKAGE)-gin.tac debian/$(PACKAGE)/etc/$(PACKAGE)
+	#Add fabfile 
+	cp fabfile.py debian/$(PACKAGE)/etc/$(PACKAGE)
 	# Add here commands to install the package into debian/tmp.
 	mkdir -p debian/$(PACKAGE)/etc/init.d
 	mkdir -p debian/$(PACKAGE)/etc/default

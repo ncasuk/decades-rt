@@ -63,11 +63,23 @@ def setup():
    sudo('apt-get -y install aptitude')
    sudo('aptitude update')
    sudo('aptitude -y install postgresql') 
+   database_setup()
+
+def database_setup():   
    with settings(warn_only=True): #already-exists errors ignored
       sudo('psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"',user="postgres")
       sudo('createdb -O inflight inflightdata', user="postgres")
       sudo('createlang plpgsql inflightdata',user="postgres")
-      #CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default 't', ongoing boolean default 't', exclusive boolean default 'f');
+      sudo('psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" inflightdata', user='postgres' )
+
+
+def local_database_setup():   
+   with settings(warn_only=True): #already-exists errors ignored
+      local('sudo -u postgres psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"')
+      local('sudo -u postgres createdb -O inflight inflightdata')
+      local('sudo -u postgres createlang plpgsql inflightdata')
+   local('sudo -u postgres psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" inflightdata' )
+
 
 def setup_local_dev_environment():
    #Sets up a development environment on a Ubuntu install
@@ -75,11 +87,7 @@ def setup_local_dev_environment():
    #stuff to *run* the software (you will need to first "apt-get install fabric")
    local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2')
    local('sudo a2enmod wsgi')
-   with settings(warn_only=True): #already-exists errors ignored
-      local('sudo -u postgres psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"')
-      local('sudo -u postgres createdb -O inflight inflightdata')
-      local('sudo -u postgres createlang plpgsql inflightdata')
-   local('sudo -u postgres psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" inflightdata' )
+   local_database_setup()
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
    local('sudo a2ensite %(prj_name)s' % env)
    #link apache files to dev versions
