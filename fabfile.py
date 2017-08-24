@@ -85,7 +85,7 @@ def setup_local_dev_environment():
    #Sets up a development environment on a Ubuntu install
    local('sudo apt-get -y install aptitude')
    #stuff to *run* the software (you will need to first "apt-get install fabric")
-   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2')
+   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx')
    local('sudo a2enmod wsgi')
    local_database_setup()
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
@@ -94,6 +94,7 @@ def setup_local_dev_environment():
    local('sudo mkdir -p /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/web/css /var/www/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/web/js /var/www/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/doc/_build/html /var/www/%(prj_name)s/docs' % env)
    local('sudo ln -nfs ${PWD}/Horace/web/plot/map_data.dat.gz /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/Horace/web/plot/overlay.txt /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/Horace/web/plot/Parano_old.txt /var/www/%(prj_name)s/plot' % env)
@@ -140,7 +141,8 @@ def package():
    local('gbp dch %(dchopts)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    local('cp -rp debian %(packageprefix)s/' % env)
    #generate documentation
-   docs('%(packageprefix)s' % env)
+   docs('../%(packageprefix)s/web' % env)
+   local('mv %(packageprefix)s/web/html  %(packageprefix)s/web/docs' % env)
    local('cp Horace/web/plot/Plot.jar %(packageprefix)s/Horace/web/plot/' % env)
    with lcd(env.packageprefix):
       #debuild_out = local('git-buildpackage --git-upstream-branch=master --git-debian-branch=master --git-export=INDEX --git-ignore-new' % env, capture=True)
