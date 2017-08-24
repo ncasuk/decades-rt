@@ -112,17 +112,17 @@ def setup_local_dev_environment():
    #dataformats
    local('sudo mkdir -p /opt/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/dataformats /opt/%(prj_name)s/' % env)
-   #make prj_name-test work resolve to localhost
+   #make prj_name-dev work resolve to localhost
    #Could easily be changed; will only do it if
    # it cannot already ping it
-   local('ping -c1 %(prj_name)s-test || echo "127.0.0.1 %(prj_name)s-test" | sudo tee -a /etc/hosts' % env)
+   local('ping -c1 %(prj_name)s-dev || echo "127.0.0.1 %(prj_name)s-dev" | sudo tee -a /etc/hosts' % env)
 
    print('''run the decades-server app:
      DECADESPORT=1500 twistd -ny decades-server.tac
    and maybe the DB simulator:
      pydecades/database-simulator.py
    and browse to:
-     http://decades-test/''')
+     http://decades-dev/''')
 
    print('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html')
    #requirements to deploy
@@ -137,7 +137,7 @@ def package():
    local('mkdir %(packageprefix)s' % env)
    local('git checkout-index --prefix=%(packageprefix)s/ -a' % env)
    local('git submodule foreach "cp -r * \$toplevel/%(packageprefix)s/\$path/"' %env)
-   local('git-dch %(dchopts)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
+   local('gbp dch %(dchopts)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    local('cp -rp debian %(packageprefix)s/' % env)
    local('cp Horace/web/plot/Plot.jar %(packageprefix)s/Horace/web/plot/' % env)
    with lcd(env.packageprefix):
