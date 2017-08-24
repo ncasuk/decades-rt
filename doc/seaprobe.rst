@@ -24,7 +24,7 @@ GNU ``screen`` or it will close if your SSH session ends.
 On running, after a few seconds it will display the initial status. It will look
 something like this:
 
-.. code-block:: shell-session
+.. code-block:: console
 
     Removing stale pidfile /home/eardkdw/twistd.pid
     2017-07-27 15:00:34+0000 [-] Log opened.

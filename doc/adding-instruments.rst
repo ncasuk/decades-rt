@@ -28,7 +28,7 @@ Display Parameters file
 
 You must also add the desired display parameters to you Display
 Parameters file; this defaults to
- ``/etc/decades/Display_Parameters_ver1.1.csv`` but can be overridden in
+ ``/etc/decades/Display_Parameters_ver1.3.csv`` but can be overridden in
 the  ``/etc/decades/decades.ini`` file’s  ``[Config]`` section.
 
 In the case of precalibrated data, the Display Parameters file
