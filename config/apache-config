@@ -1,59 +1,60 @@
-# vi: syntax=apache ft=apache
+# vim: syntax=apache ft=apache tabstop=8 expandtab shiftwidth=3 softtabstop=3
 <VirtualHost *:80>
-	ServerAdmin webmaster@localhost
-	ServerName septic
-	ServerAlias fish
+   ServerAdmin webmaster@localhost
+   ServerName septic
+   ServerAlias fish
+   ServerAlias header
+   ServerAlias drunk
+   ServerAlias decades-dev
+   ServerAlias decades-test
    ServerAlias 192.168.101.108
    ServerAlias 192.168.101.110
-   ServerAlias 192.168.56.104
-   ServerAlias 10.0.2.2
-   ServerAlias decades-test
    ServerAlias 127.0.0.1
 
-	DocumentRoot /var/www/decades/
+   DocumentRoot /var/www/decades/
 
-	<Directory />
-		Options FollowSymLinks
-		AllowOverride None
-	</Directory>
-	<Directory /var/www/decades/>
-		Options Indexes FollowSymLinks MultiViews ExecCGI
+   <Directory />
+      Options FollowSymLinks
+      AllowOverride None
+   </Directory>
+   <Directory /var/www/decades/>
+      Options Indexes FollowSymLinks MultiViews ExecCGI
       #CheckSpelling On
-		AddHandler cgi-script .cgi
-		AddHandler wsgi-script .wsgi
+      AddHandler cgi-script .cgi
+      AddHandler wsgi-script .wsgi
 
-		AllowOverride All
-		Order allow,deny
-		allow from all
-	</Directory>
+      AllowOverride All
+      Order allow,deny
+      allow from all
+   </Directory>
 
    Redirect /index.html /live/index
    WSGIScriptAlias /live/ /var/www/decades-live/live.wsgi/
    WSGIScriptAlias /plot/Parano.txt /var/www/decades-live/live.wsgi/parano.txt
    #WSGIScriptAlias /plot/FLTSUMM /var/www/decades-live/flightmanager.wsgi
    SetEnv JinjaTemplates /var/www/decades-live/templates
-	<Directory "/var/www/decades-live/">
-		AllowOverride None
-		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
-		Order allow,deny
-		Allow from all
-	</Directory>
+   <Directory "/var/www/decades-live/">
+      AllowOverride None
+      Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+      Order allow,deny
+      Allow from all
+   </Directory>
 
-	ErrorLog /var/log/apache2/error.log
+   ErrorLog /var/log/apache2/error.log
 
-	# Possible values include: debug, info, notice, warn, error, crit,
-	# alert, emerg.
-	LogLevel info
+   # Possible values include: debug, info, notice, warn, error, crit,
+   # alert, emerg.
+   LogLevel info
 
-	CustomLog /var/log/apache2/access.log combined
+   CustomLog /var/log/apache2/access.log combined
 
-    Alias /doc/ "/usr/share/doc/"
-    <Directory "/usr/share/doc/">
-        Options Indexes MultiViews FollowSymLinks
-        AllowOverride None
-        Order deny,allow
-        Deny from all
-        Allow from 127.0.0.0/255.0.0.0 ::1/128
-    </Directory>
+   Alias /doc/ "/usr/share/doc/"
+   <Directory "/usr/share/doc/">
+      Options Indexes MultiViews FollowSymLinks
+      AllowOverride None
+      Order deny,allow
+      Deny from all
+      Allow from 127.0.0.0/255.0.0.0 ::1/128
+   </Directory>
 
 </VirtualHost>
