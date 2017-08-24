@@ -139,6 +139,8 @@ def package():
    local('git submodule foreach "cp -r * \$toplevel/%(packageprefix)s/\$path/"' %env)
    local('gbp dch %(dchopts)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    local('cp -rp debian %(packageprefix)s/' % env)
+   #generate documentation
+   docs('%(packageprefix)s' % env)
    local('cp Horace/web/plot/Plot.jar %(packageprefix)s/Horace/web/plot/' % env)
    with lcd(env.packageprefix):
       #debuild_out = local('git-buildpackage --git-upstream-branch=master --git-debian-branch=master --git-export=INDEX --git-ignore-new' % env, capture=True)
@@ -194,9 +196,12 @@ def clean():
       local('make clean') #cleans compiled Java files
 
 
-def docs():
+def docs(builddir=False):
    with lcd('doc'):
-      local('make html' % env)
+      if builddir:
+        local('BUILDDIR='+builddir+' make html')
+      else:
+        local('make html' % env)
 
 def pdfdocs():
    with lcd('doc'):

@@ -1,3 +1,15 @@
+decades (1.7.3~19.gbpa41839) UNRELEASED; urgency=medium
+
+  ** SNAPSHOT build @a41839488a3b766b7f635f8eb3a683cb85128bda **
+
+  * Adding description of various tanks (proposed)
+  * Link all Display Params files
+  * Add other tanks
+  * Change to 'gdp dch' instead of git-dch; correct machine name
+  * Link to docs
+
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 24 Aug 2017 16:31:16 +0100
+
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
   * 
