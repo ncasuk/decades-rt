@@ -1,6 +1,6 @@
-decades (1.7.3~21.gbp1bbcdc) UNRELEASED; urgency=medium
+decades (1.7.3~25.gbp7a8125) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @1bbcdcaf917525c5da4b9fb9510a00d49933631c **
+  ** SNAPSHOT build @7a8125f9aae38417d32fe0622294cb0069493825 **
 
   * Adding description of various tanks (proposed)
   * Link all Display Params files
@@ -8,8 +8,10 @@ decades (1.7.3~21.gbp1bbcdc) UNRELEASED; urgency=medium
   * Change to 'gdp dch' instead of git-dch; correct machine name
   * Link to docs
   * Documentation to be included in package
+  * Allow specifying from command line
+  * Include docs in package
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 24 Aug 2017 16:41:22 +0100
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 24 Aug 2017 17:08:06 +0100
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 

@@ -111,7 +111,7 @@ To run the decades server (which talks to the Java applet) you need to run ``pyd
 You need to edit your hosts file to fool plot.html into thinking your laptop is horace. Just make horace an alias to 127.0.0.1
 
 Running a local copy of decades-server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 In work directory:
 
 .. code-block:: bash
