@@ -107,7 +107,7 @@ def setup_local_dev_environment():
    #runtime ini files
    local('sudo mkdir -p /etc/%(prj_name)s' % env)
    local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/%(prj_name)s/' % env)
-   local('sudo ln -nfs ${PWD}/config/Display_Parameters_ver1.1.csv /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/config/Display_Parameters*.csv /etc/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/%(prj_name)s/' % env)
    #dataformats
    local('sudo mkdir -p /opt/%(prj_name)s/' % env)

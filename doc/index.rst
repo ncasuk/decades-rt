@@ -21,6 +21,7 @@ Contents:
    db-syncing.rst
    ch-development.rst
    dev-environment.rst
+   aircraft-tanks.rst
 
    code.rst
 

@@ -16,7 +16,7 @@ Install git and fabric
 Clone the Git repository
 ------------------------
 
-``git clone git@77.68.61.13:/decades-rt``
+``git clone git@213.171.204.22:/decades-rt``
 
 Change into the repository directory
 ------------------------------------

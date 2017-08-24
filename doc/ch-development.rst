@@ -21,7 +21,7 @@ Checkout the source code
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 You will need to contact FAAM with your public key to allow access. Once
-that is done: ``git clone git@77.68.61.13:/decades-rt``
+that is done: ``git clone git@213.171.204.22:/decades-rt``
 
 will create a working copy of the repository in the current directory.
 
@@ -64,3 +64,10 @@ Make the release and deploy:
 
 You will be offered the chance to edit the change log. Change the number
 on the top line to match the release number.
+
+Alternately, you can create a package using:
+
+``fab package``
+
+copy the resulting ``.deb`` file to the tank(s) and then manually install the 
+package with ``dpkg -i <name-of-deb-file> || apt-get -fy install`` (``fab deploy_deb <name-of-deb-file>`` will do this automatically)
