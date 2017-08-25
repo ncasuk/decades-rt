@@ -58,21 +58,6 @@ def _annotate_hosts_with_ssh_config_info():
 
 _annotate_hosts_with_ssh_config_info()
 
-def setup():
-   '''ab initio setup'''
-   sudo('apt-get -y install aptitude')
-   sudo('aptitude update')
-   sudo('aptitude -y install postgresql') 
-   database_setup()
-
-def database_setup():   
-   with settings(warn_only=True): #already-exists errors ignored
-      sudo('psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"',user="postgres")
-      sudo('createdb -O inflight inflightdata', user="postgres")
-      sudo('createlang plpgsql inflightdata',user="postgres")
-      sudo('psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" inflightdata', user='postgres' )
-
-
 def local_database_setup():   
    with settings(warn_only=True): #already-exists errors ignored
       local('sudo -u postgres psql -c "CREATE ROLE inflight UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"')
