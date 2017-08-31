@@ -103,13 +103,13 @@ class DecadesFactory(protocol.ServerFactory):
    _recvd = {}
    def __init__(self, parser=DecadesConfigParser()):
       self.protocol = DecadesProtocol
-      conn=get_database()
+      conn=get_database(parser)
       self.parano={}
       #for (code, function) in parser.items('Parameters'):
       #    self.parano[int(code)] = function
       calfile = parser.get('Config','calfile')
-      cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-      self.rtlib=rt_derive.derived(cursor,calfile, parser) #class processing the cals & producing "real" values
+      self.cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+      self.rtlib=rt_derive.derived(self.cursor,calfile, parser) #class processing the cals & producing "real" values
       for k,v in self.rtlib.get_paranos().iteritems():
           self.parano[int(v['ParameterIdentifier'])]=k
       log.msg('Init factory')

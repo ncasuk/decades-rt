@@ -1,12 +1,16 @@
 from pydecades.decades_server import DecadesFactory, DecadesProtocol
 from pydecades.database import get_database
+from pydecades.decades import DecadesDataProtocols
 from twisted.trial import unittest
 from twisted.test import proto_helpers
+from twisted.internet import defer
 import testresources
 
 from numpy import isnan, nan
+import psycopg2 
+import psycopg2.extras
 
-import os, struct, exceptions
+import os, struct, exceptions, csv
 
 from twisted.python import log
 from pydecades.configparser import DecadesConfigParser
@@ -17,10 +21,41 @@ class GenerateTestDecadesFactory(testresources.TestResourceManager):
    (e.g. ``/etd/decades/decades.ini`` and 
    ``/etc/decades/Display_Parameters_ver1.3.csv``) are only read once''' 
    def make(self, dependency_resources):
+
       print "Generating Factory"
-      return DecadesFactory()
+      #create test database
+      self.ddp = DecadesDataProtocols()
+      self.conn = get_database(parser)
+      self.cursor = self.conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+      self.ddp.create_maintable(self.cursor)
+      with open('../pydecades/test/sample-data-ascension.csv') as sample_data:
+        reader = csv.DictReader(sample_data)
+        all_fields = self.ddp.all_fields()
+        for row in reader:
+            #strip test data that's not in current dataformats
+            line = {k: row[k] for k in list(set(all_fields.keys()) & set(row.keys()))}
+            for each in line:
+                if line[each] == '':
+                    if all_fields[each] == 'real':
+                        line[each] = '10.0' #dummy value
+                    else:
+                        line[each] = 'NULL'
+                elif all_fields[each] == 'varchar':
+                    line[each] = "'" + line[each] + "'"
+                elif all_fields[each] == 'boolean':
+                    if(line[each] == 't'):
+                        line[each] = 'TRUE'
+                    else:
+                        line[each] = 'FALSE'
+                        
+            
+            line['utc_time'] =  row['utc_time']
+            self.cursor.execute("INSERT INTO mergeddata (" + ", ".join(line.keys()) + ") VALUES (" + ", ".join(line.values()) +")")
+
+      factory = DecadesFactory(parser=parser)
+      return factory
    
-class DecadesProtocolTestCase(testresources.ResourcedTestCase):
+class DecadesProtocolTestCase(unittest.TestCase, testresources.ResourcedTestCase):
    '''Unit tests for the Decades Protocol class (i.e. all the parameter functions
    plus the responses to Horace-style ``PARA`` and ``STAT`` calls'''
 
@@ -33,6 +68,7 @@ class DecadesProtocolTestCase(testresources.ResourcedTestCase):
    def setUp(self):
       ''' Sets up the test case, reusing existing Factory if available'''
       super(DecadesProtocolTestCase, self).setUp()
+
       self.proto = self.factory.buildProtocol('128.0.0.1')
       self.tr = proto_helpers.StringTransport()
       self.proto.makeConnection(self.tr)
@@ -41,10 +77,10 @@ class DecadesProtocolTestCase(testresources.ResourcedTestCase):
       self.tr.loseConnection()
 
    def test_stat(self):
+    
       self.proto.rawDataReceived('STAT') #"transmits" STAT command
       #Assumes successful if it unpacks correctly
       self.assertTrue(struct.unpack(self.proto.rtlib.status.struct_fmt, self.tr.value()))
-
       
 
    def _test_para(self,param_id,function):
@@ -60,7 +96,7 @@ class DecadesProtocolTestCase(testresources.ResourcedTestCase):
 
       out = struct.unpack(para_fmt, data[57:])
       #check is not returning NaNs
-      self.assertFalse(isnan(out[2:]).any(), msg=function + " returning NaNs")
+      self.assertFalse(isnan(out[2:]).any(), msg=function + " returning NaNs: "+ repr(out[2:]))
 
 #Not part of testcase class; is a function that returns a function based on parameters
 def test_parameters(param_id, function):
@@ -70,6 +106,8 @@ def test_parameters(param_id, function):
 
 #create one test function per Parameter entry in decades.ini
 parser = DecadesConfigParser()
+parser.set('Database','user', parser.get('Database','user') + '_test')
+parser.set('Database','database', parser.get('Database','database') + '_test')
 for (code, function) in parser.items('Parameters'):
    if code != "513": #flight_number is not called for plotting, and would fail as it doesn't return a float
       test_method = test_parameters(code, function)

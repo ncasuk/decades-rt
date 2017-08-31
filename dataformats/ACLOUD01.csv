@@ -1,9 +1,9 @@
 field,type,max_chars,description
 $ACLOUD01,text,8,Identifies which Data Logging Unit (DLU) created the packet
 utc_time,unsigned_int,10,time assigned by tank when packet received and read
-aimms_temperature ,double_float,8,AIMMS TEMPERATURE
+aimms_temperature,double_float,8,AIMMS TEMPERATURE
 aimms_rh,double_float,8,AIMMS RELATIVE HUMIDITY
-aimms_pressure ,double_float,8,AIMMS PRESSURE
+aimms_pressure,double_float,8,AIMMS PRESSURE
 aimms_wind_flow_n,double_float,8,AIMMS WIND FLOW NORTH
 aimms_wind_flow_e,double_float,8,AIMMS WIND FLOW EAST
 aimms_wind_speed,double_float,8,AIMMS WIND SPEED
@@ -12,7 +12,7 @@ aimms_latitude,double_float,8,AIMMS LATITUDE
 aimms_longitude,double_float,8,AIMMS LONGITUDE
 aimms_altitude,double_float,8,AIMMS ALTITUDE
 aimms_velocity_n,double_float,8,AIMMS VELOCITY NORTH
-aimms_velocity_e ,double_float,8,AIMMS VELOCITY EAST
+aimms_velocity_e,double_float,8,AIMMS VELOCITY EAST
 aimms_velocity_d,double_float,8,AIMMS VELOCITY DOWN
 aimms_roll,double_float,8,AIMMS ROLL
 aimms_pitch,double_float,8,AIMMS PITCH

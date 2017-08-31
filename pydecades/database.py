@@ -1,8 +1,7 @@
 import psycopg2, psycopg2.extensions
 from pydecades.configparser import DecadesConfigParser
 
-def get_database():
-    parser = DecadesConfigParser()
+def get_database(parser = DecadesConfigParser()):
     conn = psycopg2.connect (host = parser.get('Database','host'),
                            user = parser.get('Database','user'),
                            password = parser.get('Database','password'),

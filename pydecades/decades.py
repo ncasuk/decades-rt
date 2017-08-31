@@ -1,5 +1,6 @@
 #!/usr/bin/python
 #Class to read CSV protocol descriptions and present them to Python
+# vim: tabstop=8 expandtab shiftwidth=3 softtabstop=3
 import os, glob, csv
 from twisted.python import log 
 import time
@@ -89,10 +90,9 @@ class DecadesDataProtocols():
       '''creates a SQL table of all the data from the 
       protocol files. '''
       fields = []
-      for proto in self.protocols:
-         protoname = self.protocols[proto][0]['field'].lstrip('$')
-         for field in self.protocols[proto]: 
-            fields.append(protoname.lower()+'_'+field['field'].lstrip('$').lower()+' '+self.field_types_map[field['type'].lstrip('<>')])
+      all_fields = self.all_fields()
+      for each in all_fields.keys():
+         fields.append(each + ' ' + all_fields[each])
       squirrel = "CREATE TABLE mergeddata ( "+ ', '.join(fields) +')' 
       log.msg(cursor.mogrify(squirrel)) 
       cursor.execute('DROP TABLE IF EXISTS mergeddata')
@@ -122,7 +122,6 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;''')
-
 
 
    def add_data(self, cursor, data, instrument):
@@ -156,9 +155,21 @@ LANGUAGE plpgsql;''')
    
 
    def fields(self, protocol_name):
-      #returns a List of field names
+      '''returns a List of field names for a given protocol'''
       r = []
       for field in self.protocols[protocol_name]:
-         r.append(field['field'].lstrip('$'))
+         r.append(field['field'].lstrip('$').strip())
 
       return r
+
+   def all_fields(self):
+      '''returns a dictionary of all currently-defined fields'''
+      fields= {}
+      for proto in self.protocols:
+         protoname = self.protocols[proto][0]['field'].lstrip('$')
+         for field in self.protocols[proto]: 
+            value = protoname.lower()+'_'+field['field'].lstrip('$').lower().strip()
+            field_type = self.field_types_map[field['type'].lstrip('<>')]
+            fields[value] =  field_type
+
+      return fields

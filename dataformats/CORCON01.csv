@@ -11,6 +11,8 @@ crio_status,boolean,1,"- currently unused but for future use (boolean, therefore
 crio_UDP_num,>unsigned_int,6,"this number starts @ zero and increments with each UDP packet - used for verification of packet stream"
 crio_mem_used,text,3,"a string to represent the percentage of CRIO hard disk currently used"
 crio_disktype,text,3,"- Which disk is being used, INT = internal flash : USB = usb flash drive : --- = NODATA!"
+crio_aux_out1,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
+crio_aux_out2,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
 crio_aux_out3,text,6,"- currently unused but for future use ( text, max string size = 6 characters )"
 tp_up_down,>signed_int,9,"the raw reading (in counts) taken from the ""top-bottom"" turbulence probe transducer"
 tp_left_right,>signed_int,9,"the raw reading (in counts) taken from the ""left-right"" turbulence probe transducer"

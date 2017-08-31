@@ -1,3 +1,4 @@
+# vim: tabstop=8 expandtab shiftwidth=3 softtabstop=3
 import numpy as np
 from twisted.python import log
 from pydecades.configparser import DecadesConfigParser
@@ -18,7 +19,7 @@ class rt_data(object):
         self.config = config
         self.derived=der   # list of derivations, empty unless subclassed
         self.database=database #python Cursor class (Named Tuple version)
-        self.database.execute("select column_name,data_type from information_schema.columns where table_name='mergeddata'")
+        self.database.execute("SELECT column_name,data_type FROM information_schema.columns WHERE table_name='mergeddata'")
         self.columns={}
         for name,dt in self.database:
             self.columns[name]=data_types_numpy[dt]
