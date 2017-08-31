@@ -22,9 +22,12 @@ class DecadesDataProtocols():
          self.protocols[protocol_file_name[0:-4]] = [] #[0:-4] strips the '.csv. off the end
          full_path = os.path.join(self.location,protocol_file_name)
          self.protocol_versions[protocol_file_name[0:-4]] = str(os.stat(full_path)[9]) #we're just after the integer - dots are not allowed in psql tablenames
-         protocolReader = csv.DictReader(open(full_path, 'rb'))
-         for row in protocolReader:
-            self.protocols[protocol_file_name[0:-4]].append(row)
+         with open(full_path, 'rb') as protocol_file:
+            protocolReader = csv.DictReader(open(full_path, 'rb'))
+            for row in protocolReader:
+               print row
+               print {k:element.strip() for k, element in row.iteritems()}
+               self.protocols[protocol_file_name[0:-4]].append({k:element.strip() for k, element in row.iteritems()})
 
    def available(self):
       return self.protocols.keys()
