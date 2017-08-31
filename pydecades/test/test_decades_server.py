@@ -38,6 +38,8 @@ class GenerateTestDecadesFactory(testresources.TestResourceManager):
                 if line[each] == '':
                     if all_fields[each] == 'real':
                         line[each] = '10.0' #dummy value
+                    elif all_fields[each] == 'integer':
+                        line[each] = '10' #dummy value
                     else:
                         line[each] = 'NULL'
                 elif all_fields[each] == 'varchar':
@@ -96,7 +98,7 @@ class DecadesProtocolTestCase(unittest.TestCase, testresources.ResourcedTestCase
 
       out = struct.unpack(para_fmt, data[57:])
       #check is not returning NaNs
-      self.assertFalse(isnan(out[2:]).any(), msg=function + " returning NaNs: "+ repr(out[2:]))
+      self.assertFalse(isnan(out[2+size_upcoming:]).any(), msg=function + " returning NaNs. Function missing in rt_derive?")
 
 #Not part of testcase class; is a function that returns a function based on parameters
 def test_parameters(param_id, function):
