@@ -12,7 +12,7 @@ class DecadesDataProtocols():
    protocols = {} #Dictionary of protocols
    tables = {} #list of protocol_name to current tablename
    protocol_versions = {} #Dictionary of protocol:version pairs. Version is mtime at present
-   field_types_map = {'boolean':'boolean', 'signed_int':'integer', 'single_float':'real', 'double_float':'real','float':'real', 'text':'varchar', 'unsigned_int':'int'} # maps CSV protocol file "types" to PostgreSQL field types (postgreSQL does not have unsigned values)
+   field_types_map = {'boolean':'boolean', 'signed_int':'integer', 'single_float':'real', 'double_float':'real','float':'real', 'text':'varchar', 'unsigned_int':'integer'} # maps CSV protocol file "types" to PostgreSQL field types (postgreSQL does not have unsigned values)
    new_table_count = 0
    
    def __init__(self):
