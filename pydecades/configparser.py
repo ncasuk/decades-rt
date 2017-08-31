@@ -15,4 +15,4 @@ class DecadesConfigParser(SafeConfigParser):
             self.add_section('Parameters')
             parameters = csv.DictReader(csvfile)    #uses first line as fieldnames
             for line in parameters:
-                self.set('Parameters',line['ParameterIdentifier'],line['ParameterName'])
+                self.set('Parameters',line['ParameterIdentifier'],line['ParameterName'].strip())
