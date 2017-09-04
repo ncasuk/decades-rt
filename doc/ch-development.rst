@@ -71,3 +71,8 @@ Alternately, you can create a package using:
 
 copy the resulting ``.deb`` file to the tank(s) and then manually install the 
 package with ``dpkg -i <name-of-deb-file> || apt-get -fy install`` (``fab deploy_deb <name-of-deb-file>`` will do this automatically)
+
+Accessing the Postgres Database directly
+----------------------------------------
+
+``psql -h 127.0.0.1 --port=5432 --password --user inflight inflightdata``
