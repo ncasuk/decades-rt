@@ -25,7 +25,9 @@ if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
    env.dchopts = '--release'
 
 @runs_once
+@task
 def list_hosts():
+   '''Lists the hosts commands will act on. (Default is none)'''
    print env.hosts
 
 def _annotate_hosts_with_ssh_config_info():
@@ -64,7 +66,10 @@ def _annotate_hosts_with_ssh_config_info():
 
 _annotate_hosts_with_ssh_config_info()
 
+@task
 def local_database_setup(suffix=''):   
+   '''Creates inflight database and summary table (does nothing if it already 
+   exists'''
    with settings(warn_only=True): #already-exists errors ignored
       subs = {'suffix' : suffix}
       for each in env.parser.items('Database'):
@@ -74,9 +79,10 @@ def local_database_setup(suffix=''):
       local('sudo -u postgres createlang plpgsql %(database)s%(suffix)s' % subs)
    local('sudo -u postgres psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" %(database)s%(suffix)s'  % subs)
 
+@task
 def local_database_delete(suffix='', ask=True):
-   '''``DROP``s all instrument tables and ``mergeddata`` 
-      table. Leaves ``summary`` intact.'''
+   '''DROPs all instrument tables and the mergeddata 
+      table. Leaves summary intact.'''
    if not ask or console.confirm("This will delete all live data. Do want to continue?", default=False):
       subs = {'suffix' : suffix}
       for each in env.parser.items('Database'):
@@ -92,8 +98,9 @@ def local_database_delete(suffix='', ask=True):
       print "Not doing anything!" 
    
 
+@task
 def setup_local_dev_environment():
-   #Sets up a development environment on a Ubuntu install
+   '''Sets up a development environment on a Ubuntu install'''
    local('sudo apt-get -y install aptitude')
    #stuff to *run* the software (you will need to first "apt-get install fabric")
    local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr')
@@ -121,6 +128,7 @@ def setup_local_dev_environment():
    local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/config/Display_Parameters*.csv /etc/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/fabfile.py /etc/%(prj_name)s/' % env)
    #dataformats
    local('sudo mkdir -p /opt/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/dataformats /opt/%(prj_name)s/' % env)
@@ -142,7 +150,9 @@ def setup_local_dev_environment():
 
    
 @runs_once
+@task
 def package():
+   '''Creates a .deb package of the current branch'''
    env.branch = local('git rev-parse --abbrev-ref HEAD', capture=True).strip()
 
    env.packageprefix = ('%(prj_name)s-%(timestamp)s-%(branch)s' % env)
@@ -169,7 +179,9 @@ def package():
    print packagename
    return packagename
    
+@task
 def deploy_deb(debname=False):
+   '''deploys a given .deb file to all hosts, including install dependencies'''
    if debname:
       put(debname)
       #installs all dependencies
@@ -178,18 +190,23 @@ def deploy_deb(debname=False):
    else:
       print('No deb filename specified')
 
+@task
 def test():
    '''runs all the unit tests'''
    local_database_setup('_test')
    local('trial pydecades')
    local_database_delete(suffix='_test', ask=False)
 
+@task
 def unit_test_parameter(paramname):
    '''runs a unit test for a single parameter, e.g vertical_vorticity. 
    Usage: fab unit_test_parameter:<parametername>'''
    local('trial pydecades.test.test_decades_server.DecadesProtocolTestCase.test_%s' % paramname)
 
-def deploy():   
+@task
+def deploy():
+   '''Creates and deploys a full package, including generating a .jar file
+   for the Horace display client, and restarting apache'''
    Plot_jar()
    debname=package()
    deploy_deb(debname=debname)
@@ -201,7 +218,9 @@ def deploy():
       warn('Postgresql timezone is ' + pg_timezone + '. Set it to UTC in postgresql.conf')
       
 
+@task
 def clean():
+   '''Cleans a development tree of all build files etc.'''
    local('find . -maxdepth 1 -name \*.tar.gz -exec rm {} \;')
    local('find . -maxdepth 1 -name \*.deb -exec rm {} \;')
    local('find . -maxdepth 1 -name \*.dsc -exec rm {} \;')
@@ -212,20 +231,25 @@ def clean():
       local('make clean') #cleans compiled Java files
 
 
+@task
 def docs(builddir=False):
+   '''Create HTML documentation'''
    with lcd('doc'):
       if builddir:
         local('BUILDDIR='+builddir+' make html')
       else:
         local('make html' % env)
 
+@task
 def pdfdocs():
+   '''creates PDF documentation'''
    with lcd('doc'):
       local('make latex' % env)
    with lcd('doc/_build/latex'):
       local('make all-pdf' % env)
 
 @runs_once
+@task
 def Plot_jar():
    '''Creates the JAR file for the display applicaton'''
    with lcd('Horace/web/plot/plot'):
