@@ -7,6 +7,7 @@
 #from __future__ import with_statement # needed for python 2.5
 from fabric.api import *
 from fabric.utils import warn
+from fabric.contrib import console
 import time, os, glob, csv
 from cStringIO import StringIO
 
@@ -76,18 +77,19 @@ def local_database_setup(suffix=''):
 def local_database_delete(suffix=''):
    '''``DROP``s all instrument tables and ``mergeddata`` 
       table. Leaves ``summary`` intact.'''
-   subs = {'suffix' : suffix}
-   for each in env.parser.items('Database'):
-      subs[each[0]] = each[1]
-   #local('sudo -u postgres psql -c "DROP owned BY %(user)s;" %(database)s%(suffix)s'  % subs)
-   tablelist = StringIO(local('sudo -u postgres psql -P "footer=off" -F "," -Ac "\dt" %(database)s%(suffix)s' % subs, capture=True))
-   #skip first row
-   tablelist.next()
-   tables = csv.DictReader(tablelist)
-   for each in tables:
-      if each['Name'] not in ('summary'):
-         local('sudo -u postgres psql -c "DROP TABLE ' + each['Name'] + ';" %(database)s%(suffix)s' % subs)
-   
+   if console.confirm("This will delete all live data. Do want to continue?", default=False):
+      subs = {'suffix' : suffix}
+      for each in env.parser.items('Database'):
+         subs[each[0]] = each[1]
+      tablelist = StringIO(local('sudo -u postgres psql -P "footer=off" -F "," -Ac "\dt" %(database)s%(suffix)s' % subs, capture=True))
+      #skip first row
+      tablelist.next()
+      tables = csv.DictReader(tablelist)
+      for each in tables:
+         if each['Name'] not in ('summary'):
+            local('sudo -u postgres psql -c "DROP TABLE ' + each['Name'] + ';" %(database)s%(suffix)s' % subs)
+   else:
+      print "Not doing anything!" 
    
 
 def setup_local_dev_environment():
