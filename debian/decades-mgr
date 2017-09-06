@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#Wrapper around the DECADES fabfile to allow calls of the form
+#
+#  decades <command-name>
+#
+
+COMMAND=${1:-'--list'}
+
+fab --fabfile=/etc/decades/fabfile.py ${COMMAND}

@@ -51,6 +51,7 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 	cp debian/copyright debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)/
 	cp debian/README.Debian debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)/
 	cp debian/cfg_parser.sh debian/$(PACKAGE)/usr/bin
+	cp debian/$(PACKAGE)-mgr debian/$(PACKAGE)/usr/bin
 	cp config/apache-config debian/$(PACKAGE)/etc/apache2/sites-available/$(PACKAGE).conf
 	#Files needed to be web-visible
 	cp Horace/web/plot/Plot.jar Horace/web/plot/plot.html Horace/web/plot/Parano_old.txt Horace/web/plot/map_data.dat.gz Horace/web/plot/overlay.txt debian/$(PACKAGE)/var/www/$(PACKAGE)/plot/
