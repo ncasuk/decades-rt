@@ -74,10 +74,10 @@ def local_database_setup(suffix=''):
       local('sudo -u postgres createlang plpgsql %(database)s%(suffix)s' % subs)
    local('sudo -u postgres psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" %(database)s%(suffix)s'  % subs)
 
-def local_database_delete(suffix=''):
+def local_database_delete(suffix='', ask=True):
    '''``DROP``s all instrument tables and ``mergeddata`` 
       table. Leaves ``summary`` intact.'''
-   if console.confirm("This will delete all live data. Do want to continue?", default=False):
+   if not ask or console.confirm("This will delete all live data. Do want to continue?", default=False):
       subs = {'suffix' : suffix}
       for each in env.parser.items('Database'):
          subs[each[0]] = each[1]
@@ -182,6 +182,7 @@ def test():
    '''runs all the unit tests'''
    local_database_setup('_test')
    local('trial pydecades')
+   local_database_delete(suffix='_test', ask=False)
 
 def unit_test_parameter(paramname):
    '''runs a unit test for a single parameter, e.g vertical_vorticity. 
