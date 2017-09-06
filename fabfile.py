@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# vim: tabstop=8 expandtab shiftwidth=3 softtabstop=3
 # -*- coding: utf-8 -*-
 # fabfile for Django:
 # http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
@@ -6,7 +7,10 @@
 #from __future__ import with_statement # needed for python 2.5
 from fabric.api import *
 from fabric.utils import warn
-import time, os, glob
+import time, os, glob, csv
+from cStringIO import StringIO
+
+from pydecades.configparser import DecadesConfigParser
 
 # globals
 env.prj_name = 'decades' # no spaces!
@@ -15,6 +19,7 @@ env.webserver = 'apache2' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'postgresql' # mysql or postgresql
 env.timestamp = time.strftime('%Y%m%d%H%M%S')
 env.dchopts = '--snapshot'
+env.parser = DecadesConfigParser()
 if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
    env.dchopts = '--release'
 
@@ -61,11 +66,29 @@ _annotate_hosts_with_ssh_config_info()
 def local_database_setup(suffix=''):   
    with settings(warn_only=True): #already-exists errors ignored
       subs = {'suffix' : suffix}
-      local('sudo -u postgres psql -c "CREATE ROLE inflight%(suffix)s UNENCRYPTED PASSWORD \'wibble\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"'% subs)
-      local('sudo -u postgres createdb -O inflight%(suffix)s inflightdata%(suffix)s' % subs)
-      local('sudo -u postgres createlang plpgsql inflightdata%(suffix)s' % subs)
-   local('sudo -u postgres psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" inflightdata%(suffix)s'  % subs)
+      for each in env.parser.items('Database'):
+         subs[each[0]] = each[1]
+      local('sudo -u postgres psql -c "CREATE ROLE %(user)s%(suffix)s UNENCRYPTED PASSWORD \'%(password)s\' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"'% subs)
+      local('sudo -u postgres createdb -O %(user)s%(suffix)s %(database)s%(suffix)s' % subs)
+      local('sudo -u postgres createlang plpgsql %(database)s%(suffix)s' % subs)
+   local('sudo -u postgres psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" %(database)s%(suffix)s'  % subs)
 
+def local_database_delete(suffix=''):
+   '''``DROP``s all instrument tables and ``mergeddata`` 
+      table. Leaves ``summary`` intact.'''
+   subs = {'suffix' : suffix}
+   for each in env.parser.items('Database'):
+      subs[each[0]] = each[1]
+   #local('sudo -u postgres psql -c "DROP owned BY %(user)s;" %(database)s%(suffix)s'  % subs)
+   tablelist = StringIO(local('sudo -u postgres psql -P "footer=off" -F "," -Ac "\dt" %(database)s%(suffix)s' % subs, capture=True))
+   #skip first row
+   tablelist.next()
+   tables = csv.DictReader(tablelist)
+   for each in tables:
+      if each['Name'] not in ('summary'):
+         local('sudo -u postgres psql -c "DROP TABLE ' + each['Name'] + ';" %(database)s%(suffix)s' % subs)
+   
+   
 
 def setup_local_dev_environment():
    #Sets up a development environment on a Ubuntu install
@@ -123,6 +146,8 @@ def package():
    env.packageprefix = ('%(prj_name)s-%(timestamp)s-%(branch)s' % env)
    local('mkdir %(packageprefix)s' % env)
    local('git checkout-index --prefix=%(packageprefix)s/ -a' % env)
+   local('git submodule init')
+   local('git submodule update')
    local('git submodule foreach "cp -r * \$toplevel/%(packageprefix)s/\$path/"' %env)
    local('gbp dch %(dchopts)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    local('cp -rp debian %(packageprefix)s/' % env)
