@@ -25,8 +25,6 @@ class DecadesDataProtocols():
          with open(full_path, 'rb') as protocol_file:
             protocolReader = csv.DictReader(open(full_path, 'rb'))
             for row in protocolReader:
-               print row
-               print {k:element.strip() for k, element in row.iteritems()}
                self.protocols[protocol_file_name[0:-4]].append({k:element.strip() for k, element in row.iteritems()})
 
    def available(self):
@@ -147,9 +145,8 @@ LANGUAGE plpgsql;''')
           cursor.execute("SELECT corcon01_flight_num FROM mergeddata WHERE corcon01_utc_time IS NOT NULL ORDER BY utc_time DESC LIMIT 1")
           flight_num=cursor.fetchone()
           if(flight_num):
-              print(data['flight_num'],flight_num[0])
               if (data['flight_num']!=flight_num[0]) & (re.match('^[A-Za-z]\d{3}$',data['flight_num'])!=None):
-                  print("SHOULD MAKE A NEW TABLE !!!!")
+                  log.msg("SHOULD MAKE A NEW TABLE !!!!")
                   self.empty_table(cursor)
       sql_update = ('UPDATE mergeddata SET ' + ", ".join(sql_u) + ' WHERE utc_time=' + cursor.mogrify('%s', (data['utc_time'],)))
       #sql_insert = (cursor.mogrify('INSERT INTO mergeddata (' + ", ".join(sql_i[0]) + ',id, utc_time) VALUES (' + ('%s,' * len(sql_i[1])) + '%s,%s)',sql_i[1] +[data['utc_time'],data['utc_time']]))
