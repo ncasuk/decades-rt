@@ -21,6 +21,8 @@ env.webserver = 'apache2' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'postgresql' # mysql or postgresql
 env.timestamp = time.strftime('%Y%m%d%H%M%S')
 env.dchopts = '--snapshot'
+versionfile = open(os.path.join('VERSION'))
+env.version= versionfile.read().strip()
 env.parser = DecadesConfigParser()
 if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
    env.dchopts = '--release'
@@ -162,7 +164,7 @@ def package():
    local('git submodule init')
    local('git submodule update')
    local('git submodule foreach "cp -r * \$toplevel/%(packageprefix)s/\$path/"' %env)
-   local('gbp dch %(dchopts)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
+   local('gbp dch %(dchopts)s --new-version=%(version)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    local('cp -rp debian %(packageprefix)s/' % env)
    #generate documentation
    docs('../%(packageprefix)s/web' % env)
@@ -258,3 +260,8 @@ def Plot_jar():
       #sign jar if and only if it isn't signed
       local('jarsigner -verify -strict Plot.jar || jarsigner Plot.jar septic')
       local('cp Plot.jar ..') 
+
+@runs_once
+@task
+def local_start_simulator():
+   pass    
