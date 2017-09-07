@@ -8,6 +8,7 @@
 from fabric.api import *
 from fabric.utils import warn
 from fabric.contrib import console
+from fabric.colors import red, green
 import time, os, glob, csv
 from cStringIO import StringIO
 
@@ -215,7 +216,7 @@ def deploy():
    pg_timezone = sudo('psql -tc "SHOW TIME ZONE" | head -n1',user="postgres").strip()
    if(pg_timezone != 'UTC'):
       #raise WARNING that postgres is not correctly configured 
-      warn('Postgresql timezone is ' + pg_timezone + '. Set it to UTC in postgresql.conf')
+      warn(red('Postgresql timezone is ' + pg_timezone + '. Set it to UTC in postgresql.conf'))
       
 
 @task
