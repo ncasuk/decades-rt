@@ -1,6 +1,6 @@
-decades (1.7.3~30.gbpe46317) UNRELEASED; urgency=medium
+decades (1.7.3~32.gbp7c3da8) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @e463176a3ae8b14d4ef1c4fa06062232dc8a4773 **
+  ** SNAPSHOT build @7c3da8c30c809c2fe26187e26438c3f6ba4702ac **
 
   * Adding description of various tanks (proposed)
   * Link all Display Params files
@@ -26,8 +26,11 @@ decades (1.7.3~30.gbpe46317) UNRELEASED; urgency=medium
   * Delete test DB asfer (successful) test
   * Fabfile update to 1.1-style @task syntax
   * Add DECADES manager command-line utility
+  * Changelog update
+  * Test with trailing spaces
+  * Require python 2.7
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Wed, 06 Sep 2017 14:21:27 +0100
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 07 Sep 2017 10:09:10 +0100
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
