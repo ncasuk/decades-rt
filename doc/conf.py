@@ -167,6 +167,7 @@ htmlhelp_basename = 'DECADES-RTdoc'
 # The paper size ('letter' or 'a4').
 latex_paper_size = 'a4'
 latex_elements = {'papersize':'a4paper'}
+latex_engine = 'xelatex'
 
 # The font size ('10pt', '11pt' or '12pt').
 #latex_font_size = '10pt'
@@ -180,7 +181,7 @@ latex_documents = [
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-#latex_logo = None
+latex_logo = os.path.join('_static','FAAM.pdf')
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
