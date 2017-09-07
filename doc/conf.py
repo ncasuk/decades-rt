@@ -59,7 +59,7 @@ release = '.'.join(versionelements)
 # non-false value, then it is used:
 #today = ''
 # Else, today_fmt is used as the format for a strftime call.
-#today_fmt = '%B %d, %Y'
+today_fmt = '%Y-%m-%d'
 
 # List of documents that shouldn't be included in the build.
 #unused_docs = []
@@ -168,7 +168,6 @@ htmlhelp_basename = 'DECADES-RTdoc'
 
 # The paper size ('letter' or 'a4').
 latex_paper_size = 'a4'
-latex_elements = {'papersize':'a4paper'}
 latex_engine = 'xelatex'
 
 # The font size ('10pt', '11pt' or '12pt').
@@ -180,6 +179,16 @@ latex_documents = [
   ('index', 'DECADES-RT.tex', u'DECADES-RT Documentation',
    u'Dan Walker, Dave Tiddeman, et al.', 'manual'),
 ]
+
+latex_elements = {'papersize':'a4paper',
+    'fontenc': '\\usepackage{fontspec}',
+    'fontpkg': '''\
+\\setmainfont{DejaVu Serif}
+\\setsansfont{TitilliumText25L}
+\\setmonofont{DejaVu Sans Mono}''',
+	'inputenc':'',
+	'utf8extra':''
+}
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.

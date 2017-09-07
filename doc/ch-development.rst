@@ -47,30 +47,26 @@ values. You can test a single parameter using a command of the form:
 Versioning
 ----------
 
-To increment the version number you need to:
+To increment the version number you need to increment the number in the file ``VERSION`` in the repository root.
 
-Edit the python module version number in: setup.py
 
-Tag the Git repository with the new version number:
+It is a good idea to "tag" the Git repository with the new version number:
 
 ::
 
-   git tag -a 0.9.0 -m ’Version 0.9.0’ 
+   git tag -a $(cat VERSION) -m "Version $(cat VERSION)"
    git push --tags
 
 Make the release and deploy:
 
 ``RELEASE=yes fab -H fish,septic deploy``
 
-You will be offered the chance to edit the change log. Change the number
-on the top line to match the release number.
-
 Alternately, you can create a package using:
 
 ``fab package``
 
 copy the resulting ``.deb`` file to the tank(s) and then manually install the 
-package with ``dpkg -i <name-of-deb-file> || apt-get -fy install`` (``fab deploy_deb <name-of-deb-file>`` will do this automatically)
+package with ``dpkg -i <name-of-deb-file> || apt-get -fy install`` (``fab deploy_deb:<name-of-deb-file>`` will do this automatically)
 
 Accessing the Postgres Database directly
 ----------------------------------------

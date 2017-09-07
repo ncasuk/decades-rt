@@ -106,7 +106,7 @@ def setup_local_dev_environment():
    '''Sets up a development environment on a Ubuntu install'''
    local('sudo apt-get -y install aptitude')
    #stuff to *run* the software (you will need to first "apt-get install fabric")
-   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr')
+   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex')
    local('sudo a2enmod wsgi')
    local_database_setup()
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
@@ -147,7 +147,8 @@ def setup_local_dev_environment():
    and browse to:
      http://decades-dev/''')
 
-   print('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html')
+   warn(red('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html'))
+   warn(red('You will need to install TitilliumText25L font for the PDF docs; try http://www.campivisivi.net/titillium/text'))
    #requirements to deploy
    local('sudo aptitude install -y fastjar git-buildpackage debhelper')
 
@@ -249,6 +250,12 @@ def pdfdocs():
    with lcd('doc'):
       local('make latex' % env)
    with lcd('doc/_build/latex'):
+      sphinx_ver = local('sphinx-build --version', capture=True).split(' ')[2]
+      print sphinx_ver
+      if sphinx_ver < '1.5.0':
+         #manually force xelatex as latex_engine setting is not honoured before
+         # v1.5
+         local('sed -i -e "s/PDFLATEX = pdflatex/PDFLATEX = xelatex/g" Makefile')
       local('make all-pdf' % env)
 
 @runs_once
