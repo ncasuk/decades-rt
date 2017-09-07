@@ -1,7 +1,7 @@
 Source: decades
 Section: net
 Priority: extra
-Maintainer: Dan Walker <D.K.D.Walker@leeds.ac.uk>
+Maintainer: Dan Walker <daniel.walker@ncas.ac.uk>
 Build-Depends-Indep: debhelper, python (>= 2.6.5-7)
 Standards-Version: 3.8.4
 XS-Python-Version: current
