@@ -187,7 +187,49 @@ latex_elements = {'papersize':'a4paper',
 \\setsansfont{TitilliumText25L}
 \\setmonofont{DejaVu Sans Mono}''',
 	'inputenc':'',
-	'utf8extra':''
+	'utf8extra':'',
+	'maketitle':'''\\makeatletter%%
+  \\begin{titlepage}%%
+    \\let\\footnotesize\\small
+    \\let\\footnoterule\\relax
+    \\rule{\\textwidth}{1pt}%%
+    \\ifsphinxpdfoutput
+      \\begingroup
+      %% These \\defs are required to deal with multi-line authors; it
+      %% changes \\\\ to ', ' (comma-space), making it pass muster for
+      %% generating document info in the PDF file.
+      \\def\\\\{, }
+      \\def\\and{and }
+      \\pdfinfo{
+        /Author (\\@author)
+        /Title (\\@title)
+      }
+      \\endgroup
+    \\fi
+    \\begin{flushright}%%
+      \\sphinxlogo%%
+      {\\sffamily\\Huge \\@title \\par}%%
+      {\\sffamily\\em\\LARGE %(release)s \\releaseinfo \\par}
+      \\vfill
+      {\\sffamily\\LARGE
+        \\begin{tabular}[t]{c}
+          \\@author
+        \\end{tabular}
+        \\par}
+      \\vfill\\vfill
+      {\\sffamily\\large
+       \@date \\par
+       \\vfill
+       \\py@authoraddress \\par
+      }%%
+    \\end{flushright}%%\par
+    \\@thanks
+  \\end{titlepage}%%
+  \\cleardoublepage%%
+  \\setcounter{footnote}{0}%%
+  \\let\\thanks\\relax\\let\\maketitle\\relax
+  %%\\gdef\\@thanks{}\\gdef\\@author{}\\gdef\\@title{}\makeatother
+''' % {'release':release }
 }
 
 # The name of an image file (relative to this directory) to place at the top of
