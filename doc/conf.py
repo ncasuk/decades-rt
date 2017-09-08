@@ -224,6 +224,11 @@ latex_elements = {'papersize':'a4paper',
       }%%
     \\end{flushright}%%\par
     \\@thanks
+  \\begin{center}%%
+  \\raisebox{-0.5\height}{\\includegraphics[width=0.33\\linewidth]{nerc-logo-long.pdf}}%%
+  \\raisebox{-0.5\height}{\\includegraphics[width=0.167\\linewidth]{Met_Office.pdf}}%%
+  \\raisebox{-0.5\height}{\\includegraphics[width=0.33\\linewidth]{NCAS_national_centre_logo13.pdf}}%%
+  \\end{center}%%
   \\end{titlepage}%%
   \\cleardoublepage%%
   \\setcounter{footnote}{0}%%
@@ -235,6 +240,12 @@ latex_elements = {'papersize':'a4paper',
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 latex_logo = os.path.join('_static','FAAM.pdf')
+latex_additional_files = [
+os.path.join('_static','NCAS_national_centre_logo13.pdf'),
+os.path.join('_static','nerc-logo-long.pdf'),
+os.path.join('_static','Met_Office.pdf'),
+]
+
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
