@@ -1,5 +1,6 @@
+**************
 DECADES in use
-==============
+**************
 
 *Using and managing the DECADES system*
 

@@ -8,7 +8,18 @@ DECADES-RT's documentation
 
 This is the operation and testing manual for the DECADES (Data Evaluation, Collection, Analysis, Display, End-use and Storage) system.
 
-Contents:
+###########
+User Manual
+###########
+
+.. toctree::
+   :maxdepth: 2
+
+   user-manual.rst
+
+##################
+Developing DECADES
+##################
 
 .. toctree::
    :maxdepth: 2
@@ -27,8 +38,9 @@ Contents:
 
    seaprobe.rst
 
+##################
 Indices and tables
-==================
+##################
 
 * :ref:`genindex`
 * :ref:`modindex`
