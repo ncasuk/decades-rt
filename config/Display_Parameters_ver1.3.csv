@@ -140,9 +140,9 @@ ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,
 930,corcon01_di_temp,DI TEMP (RAW),(counts)
 931,wvss2a_tdew,WVSS2A (flush) TDEW,(deg C)
 932,wvss2b_tdew,WVSS2B (rosemount) TDEW,(deg C)
-940,acloud01_aimms_temperature,AIMMS TEMPERATURE,(deg C),,,,
+940,acloud01_aimms_temperature ,AIMMS TEMPERATURE,(deg C),,,,
 941,acloud01_aimms_rh,AIMMS RELATIVE HUMIDITY,(%),,,,
-942,acloud01_aimms_pressure,AIMMS PRESSURE,(mBar),,,,
+942,acloud01_aimms_pressure ,AIMMS PRESSURE,(mBar),,,,
 943,acloud01_aimms_wind_flow_n,AIMMS WIND FLOW NORTH,(m s-1),,,,
 944,acloud01_aimms_wind_flow_e,AIMMS WIND FLOW EAST,(m s-1),,,,
 945,acloud01_aimms_wind_speed,AIMMS WIND SPEED,(m s-1),,,,

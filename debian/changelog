@@ -1,6 +1,6 @@
-decades (1.7.3~25.gbp7a8125) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbp7ac488) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @7a8125f9aae38417d32fe0622294cb0069493825 **
+  ** SNAPSHOT build @7ac488632c181b9a092d7be408c1d89f7155ebad **
 
   * Adding description of various tanks (proposed)
   * Link all Display Params files
@@ -10,8 +10,32 @@ decades (1.7.3~25.gbp7a8125) UNRELEASED; urgency=medium
   * Documentation to be included in package
   * Allow specifying from command line
   * Include docs in package
+  * Fixes to docs incorp; changelog
+  * Dependencies for testing
+  * These functions now performed on package install
+  * Unit tests now working
+  * Inconsistent map targets. int=integer for postgres
+  * Add dummy integer data for blank sample data fields
+  * Accept dataformat files with leading or trailing whitespace
+  * Strip whitespace in parameters file
+  * Add DB access details
+  * convert SVG text to path
+  * Print statemenst to log.msg or removed
+  * DB fns take details from config; add clean DB fn
+  * Adding confirm call
+  * Delete test DB asfer (successful) test
+  * Fabfile update to 1.1-style @task syntax
+  * Add DECADES manager command-line utility
+  * Changelog update
+  * Test with trailing spaces
+  * Require python 2.7
+  * make the postgres timezone warning more visible
+  * PDF version of logo
+  * Adding logo to PDF doc
+  * Git update
+  * UNRELEASED
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 24 Aug 2017 17:08:06 +0100
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 07 Sep 2017 11:41:46 +0100
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 

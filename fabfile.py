@@ -8,6 +8,7 @@
 from fabric.api import *
 from fabric.utils import warn
 from fabric.contrib import console
+from fabric.colors import red, green
 import time, os, glob, csv
 from cStringIO import StringIO
 
@@ -20,6 +21,8 @@ env.webserver = 'apache2' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'postgresql' # mysql or postgresql
 env.timestamp = time.strftime('%Y%m%d%H%M%S')
 env.dchopts = '--snapshot'
+versionfile = open(os.path.join('VERSION'))
+env.version= versionfile.read().strip()
 env.parser = DecadesConfigParser()
 if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
    env.dchopts = '--release'
@@ -103,7 +106,7 @@ def setup_local_dev_environment():
    '''Sets up a development environment on a Ubuntu install'''
    local('sudo apt-get -y install aptitude')
    #stuff to *run* the software (you will need to first "apt-get install fabric")
-   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr')
+   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex')
    local('sudo a2enmod wsgi')
    local_database_setup()
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
@@ -144,7 +147,8 @@ def setup_local_dev_environment():
    and browse to:
      http://decades-dev/''')
 
-   print('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html')
+   warn(red('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html'))
+   warn(red('You will need to install TitilliumText25L font for the PDF docs; try http://www.campivisivi.net/titillium/text'))
    #requirements to deploy
    local('sudo aptitude install -y fastjar git-buildpackage debhelper')
 
@@ -161,7 +165,7 @@ def package():
    local('git submodule init')
    local('git submodule update')
    local('git submodule foreach "cp -r * \$toplevel/%(packageprefix)s/\$path/"' %env)
-   local('gbp dch %(dchopts)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
+   local('gbp dch %(dchopts)s --new-version=%(version)s --debian-branch=%(branch)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    local('cp -rp debian %(packageprefix)s/' % env)
    #generate documentation
    docs('../%(packageprefix)s/web' % env)
@@ -215,7 +219,7 @@ def deploy():
    pg_timezone = sudo('psql -tc "SHOW TIME ZONE" | head -n1',user="postgres").strip()
    if(pg_timezone != 'UTC'):
       #raise WARNING that postgres is not correctly configured 
-      warn('Postgresql timezone is ' + pg_timezone + '. Set it to UTC in postgresql.conf')
+      warn(red('Postgresql timezone is ' + pg_timezone + '. Set it to UTC in postgresql.conf'))
       
 
 @task
@@ -246,6 +250,12 @@ def pdfdocs():
    with lcd('doc'):
       local('make latex' % env)
    with lcd('doc/_build/latex'):
+      sphinx_ver = local('sphinx-build --version', capture=True).split(' ')[2]
+      print sphinx_ver
+      if sphinx_ver < '1.5.0':
+         #manually force xelatex as latex_engine setting is not honoured before
+         # v1.5
+         local('sed -i -e "s/PDFLATEX = pdflatex/PDFLATEX = xelatex/g" Makefile')
       local('make all-pdf' % env)
 
 @runs_once
@@ -257,3 +267,8 @@ def Plot_jar():
       #sign jar if and only if it isn't signed
       local('jarsigner -verify -strict Plot.jar || jarsigner Plot.jar septic')
       local('cp Plot.jar ..') 
+
+@runs_once
+@task
+def local_start_simulator():
+   pass    
