@@ -21,7 +21,7 @@ env.webserver = 'apache2' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'postgresql' # mysql or postgresql
 env.timestamp = time.strftime('%Y%m%d%H%M%S')
 env.dchopts = '--snapshot'
-versionfile = open(os.path.join('VERSION'))
+versionfile = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'VERSION'))
 env.version= versionfile.read().strip()
 env.parser = DecadesConfigParser()
 if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
@@ -106,7 +106,7 @@ def setup_local_dev_environment():
    '''Sets up a development environment on a Ubuntu install'''
    local('sudo apt-get -y install aptitude')
    #stuff to *run* the software (you will need to first "apt-get install fabric")
-   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex')
+   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex fonts-linuxlibertine')
    local('sudo a2enmod wsgi')
    local_database_setup()
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
@@ -148,7 +148,7 @@ def setup_local_dev_environment():
      http://decades-dev/''')
 
    warn(red('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html'))
-   warn(red('You will need to install TitilliumText25L font for the PDF docs; try http://www.campivisivi.net/titillium/text'))
+   warn(red('You will need to install Titillium font for the PDF docs; try http://www.campivisivi.net/titillium/text (Titillium_roman_upright_italic version 2.0)'))
    #requirements to deploy
    local('sudo aptitude install -y fastjar git-buildpackage debhelper')
 
@@ -170,6 +170,7 @@ def package():
    #generate documentation
    docs('../%(packageprefix)s/web' % env)
    local('mv %(packageprefix)s/web/html  %(packageprefix)s/web/docs' % env)
+   pdfdocs('../%(packageprefix)s/web/docs/' % env)
    local('cp Horace/web/plot/Plot.jar %(packageprefix)s/Horace/web/plot/' % env)
    with lcd(env.packageprefix):
       #debuild_out = local('git-buildpackage --git-upstream-branch=master --git-debian-branch=master --git-export=INDEX --git-ignore-new' % env, capture=True)
@@ -245,7 +246,7 @@ def docs(builddir=False):
         local('make html' % env)
 
 @task
-def pdfdocs():
+def pdfdocs(outdir=False):
    '''creates PDF documentation'''
    with lcd('doc'):
       local('make latex' % env)
@@ -257,6 +258,8 @@ def pdfdocs():
          # v1.5
          local('sed -i -e "s/PDFLATEX = pdflatex/PDFLATEX = xelatex/g" Makefile')
       local('make all-pdf' % env)
+      if outdir:
+         local('cp %(prj_name)s.pdf ../../%(outdir)s' % dict(env.items() + {'outdir':outdir}.items()))
 
 @runs_once
 @task

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# DECADES-RT documentation build configuration file, created by
+# decades documentation build configuration file, created by
 # sphinx-quickstart on Tue Jun 20 16:44:06 2017.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -37,7 +37,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'DECADES-RT'
+project = u'decades'
 copyright = u'2017, National Centre for Atmospheric Science / Met Office / NERC'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -162,7 +162,7 @@ html_logo = html_static_path[0] + '/FAAM.svg'
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DECADES-RTdoc'
+htmlhelp_basename = 'decadesdoc'
 
 # -- Options for LaTeX output --------------------------------------------------
 
@@ -176,16 +176,16 @@ latex_engine = 'xelatex'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'DECADES-RT.tex', u'DECADES-RT Documentation',
-   u'Dan Walker, Dave Tiddeman, et al.', 'manual'),
+  ('index', 'decades.tex', u'DECADES Documentation',
+   u'Dan Walker, Dave Tiddeman, \\itshape{et al}.', 'manual'),
 ]
 
 latex_elements = {'papersize':'a4paper',
     'fontenc': '\\usepackage{fontspec}',
     'fontpkg': '''\
-\\setmainfont{DejaVu Serif}
-\\setsansfont{TitilliumText25L}
-\\setmonofont{DejaVu Sans Mono}''',
+\\setmainfont{Linux Libertine O}
+\\setsansfont{Titillium}
+\\setmonofont{Ubuntu Mono}''',
 	'inputenc':'',
 	'utf8extra':'',
 	'maketitle':'''\\makeatletter%%
@@ -234,6 +234,9 @@ latex_elements = {'papersize':'a4paper',
   \\setcounter{footnote}{0}%%
   \\let\\thanks\\relax\\let\\maketitle\\relax
   %%\\gdef\\@thanks{}\\gdef\\@author{}\\gdef\\@title{}\makeatother
+\\titleformat{\\part}[display]
+  {\\selectfont\\center\\huge\\sffamily}
+  {\\partname~\\thepart}{0pt}{\\vspace{1pc}\\Huge\\bfseries}
 ''' % {'release':release }
 }
 
@@ -249,7 +252,7 @@ os.path.join('_static','Met_Office.pdf'),
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
-#latex_use_parts = False
+latex_use_parts = True
 
 # Additional stuff for the LaTeX preamble.
 #latex_preamble = ''

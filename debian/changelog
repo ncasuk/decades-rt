@@ -1,6 +1,6 @@
-decades (1.7.4~1.gbp7ac488) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbp65d339) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @7ac488632c181b9a092d7be408c1d89f7155ebad **
+  ** SNAPSHOT build @65d3392af1696a91eecce988b346ad5adc31fc88 **
 
   * Adding description of various tanks (proposed)
   * Link all Display Params files
@@ -34,8 +34,24 @@ decades (1.7.4~1.gbp7ac488) UNRELEASED; urgency=medium
   * Adding logo to PDF doc
   * Git update
   * UNRELEASED
+  * Updating my email address
+  * Single-source version number
+  * PDF doc creation fixes
+  * Custom titlepage
+  * Add logos to title page
+  * Add user manual
+  * Remove images from rst file
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 07 Sep 2017 11:41:46 +0100
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Fri, 08 Sep 2017 16:54:21 +0100
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
