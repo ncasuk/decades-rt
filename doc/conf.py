@@ -177,7 +177,7 @@ latex_engine = 'xelatex'
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'decades.tex', u'DECADES Documentation',
-   u'Dan Walker, Dave Tiddeman, \\itshape{et al}.', 'manual'),
+   u'Dan Walker, Dave Tiddeman, {\\itshape~et al}.', 'manual'),
 ]
 
 latex_elements = {'papersize':'a4paper',
@@ -229,6 +229,11 @@ latex_elements = {'papersize':'a4paper',
   \\raisebox{-0.5\height}{\\includegraphics[width=0.167\\linewidth]{Met_Office.pdf}}%%
   \\raisebox{-0.5\height}{\\includegraphics[width=0.33\\linewidth]{NCAS_national_centre_logo13.pdf}}%%
   \\end{center}%%
+  \\clearpage
+    \\null
+    \\vfill
+    \\noindent Copyright \copyright\ \\the\year\ by FAAM.\\\\
+    {\\small This document is set in Linux Libertine (\\url{http://www.linuxlibertine.org/}), Titillium (\\url{http://www.campivisivi.net/titillium/}), both under the terms of the Open Font Licence, and Ubuntu Mono (\\url{http://font.ubuntu.com/}), under the terms of the Ubuntu Font Licence. Our grateful thanks to the creators of all three.}%%
   \\end{titlepage}%%
   \\cleardoublepage%%
   \\setcounter{footnote}{0}%%
@@ -237,7 +242,8 @@ latex_elements = {'papersize':'a4paper',
 \\titleformat{\\part}[display]
   {\\selectfont\\center\\huge\\sffamily}
   {\\partname~\\thepart}{0pt}{\\vspace{1pc}\\Huge\\bfseries}
-''' % {'release':release }
+''' % {'release':release },
+    'preamble': '\\setcounter{chapter}{-1}'
 }
 
 # The name of an image file (relative to this directory) to place at the top of
