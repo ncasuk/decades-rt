@@ -193,19 +193,11 @@ latex_elements = {'papersize':'a4paper',
     \\let\\footnotesize\\small
     \\let\\footnoterule\\relax
     \\rule{\\textwidth}{1pt}%%
-    \\ifsphinxpdfoutput
-      \\begingroup
-      %% These \\defs are required to deal with multi-line authors; it
-      %% changes \\\\ to ', ' (comma-space), making it pass muster for
-      %% generating document info in the PDF file.
-      \\def\\\\{, }
-      \\def\\and{and }
-      \\pdfinfo{
-        /Author (\\@author)
-        /Title (\\@title)
-      }
-      \\endgroup
-    \\fi
+    \\begingroup %% for PDF information dictionary
+       \\def\endgraf{ }\\def\\and{\\& }%%
+       \\pdfstringdefDisableCommands{\\def\\\\{, }}%% overwrite hyperref setup
+       \\hypersetup{pdfauthor={\\@author}, pdftitle={\\@title}}%%
+    \\endgroup
     \\begin{flushright}%%
       \\sphinxlogo%%
       {\\sffamily\\Huge \\@title \\par}%%
@@ -258,7 +250,8 @@ os.path.join('_static','Met_Office.pdf'),
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
-latex_use_parts = True
+latex_use_parts = True # for Sphinx < 1.4
+latex_toplevel_sectioning = 'part' # > 1.4
 
 # Additional stuff for the LaTeX preamble.
 #latex_preamble = ''

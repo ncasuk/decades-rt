@@ -13,6 +13,7 @@ User Manual
 ###########
 
 .. toctree::
+   :caption: Table of Contents
    :maxdepth: 2
 
    user-manual.rst
