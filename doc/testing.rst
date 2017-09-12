@@ -24,18 +24,21 @@ Locate the decades-listener process, and kill it:
 Start the database simulator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Change directory to the decades dir:
-
-``$ cd /usr/local/lib/decades``
-
 Start the database simulator:
 
-``$ ./pydecades/database-simulator.py``
+``$ fab local_start_simulator``
 
-This replaces the UDP Listener element with simulated data. You can also
-limit the number of DLUs simulated. Run:
+or, on a system with a DECADES package installed:
+
+``$ decades-mgr local_start_simulator``
+
+You can also limit the number of DLUs simulated. Run:
 
 ``$ ./pydecades/database-simulator.py --help``
+
+or 
+
+``$ /usr/lib/python2.7/dist-packages/pydecades/decades-simulator.py --help``
 
 for information.
 
