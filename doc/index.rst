@@ -35,9 +35,15 @@ Developing DECADES
    dev-environment.rst
    aircraft-tanks.rst
 
-   code.rst
+#########
+Reference
+#########
 
+.. toctree::
+
+   code.rst
    seaprobe.rst
+   commands.rst
 
 ##################
 Indices and tables

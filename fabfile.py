@@ -83,7 +83,7 @@ def local_database_setup(suffix=''):
       local('sudo -u postgres createlang plpgsql %(database)s%(suffix)s' % subs)
    local('sudo -u postgres psql -c "CREATE TABLE IF NOT EXISTS summary ( id serial primary key, flight_number char(4) NOT NULL, event text, start timestamp default now(), start_heading int, start_height float, start_latitude float, start_longitude float, stop timestamp, stop_heading int, stop_height float, stop_latitude float, stop_longitude float, comment text, finished boolean default \'t\', ongoing boolean default \'t\', exclusive boolean default \'f\');" %(database)s%(suffix)s'  % subs)
 
-@task
+@task(alias='purge_db')
 def local_database_delete(suffix='', ask=True):
    '''DROPs all instrument tables and the mergeddata 
       table. Leaves summary intact.'''

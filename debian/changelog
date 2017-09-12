@@ -1,6 +1,6 @@
-decades (1.7.4~1.gbpce746e) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbpbc1a9b) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @ce746e2243a6d8862d3607471eb8426d8a2c59b1 **
+  ** SNAPSHOT build @bc1a9b1cf5a39ba0a2794f2f6055d8ab69aa1884 **
 
   * Adding description of various tanks (proposed)
   * Link all Display Params files
@@ -52,8 +52,15 @@ decades (1.7.4~1.gbpce746e) UNRELEASED; urgency=medium
   * UNRELEASED
   * PDF docs tidying
   * UNRELEASED
+  * Tidy table, add in list contents
+  * Colophon, chapter numbering
+  * Add link to PDF docs
+  * Correct link
+  * Alter to also work with later versions of Sphinx
+  * Use SVG doc logo on HTML interface too
+  * Add run simulator task
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Fri, 08 Sep 2017 16:58:11 +0100
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Tue, 12 Sep 2017 15:19:00 +0100
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 

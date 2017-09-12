@@ -16,7 +16,8 @@ import sys, os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.append(os.path.abspath('..'))
+#sys.path.append(os.path.abspath('..'))
+sys.path = [os.path.abspath('..')] + sys.path
 
 # -- General configuration -----------------------------------------------------
 
@@ -260,3 +261,8 @@ latex_toplevel_sectioning = 'part' # > 1.4
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
+#deal correctly with fabfile (see http://docs.fabfile.org/en/1.13/api/core/docs.html )
+from fabric.docs import unwrap_tasks
+import fabfile
+unwrap_tasks(fabfile)
