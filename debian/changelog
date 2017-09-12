@@ -1,6 +1,6 @@
-decades (1.7.4~1.gbp65d339) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbpce746e) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @65d3392af1696a91eecce988b346ad5adc31fc88 **
+  ** SNAPSHOT build @ce746e2243a6d8862d3607471eb8426d8a2c59b1 **
 
   * Adding description of various tanks (proposed)
   * Link all Display Params files
@@ -50,8 +50,10 @@ decades (1.7.4~1.gbp65d339) UNRELEASED; urgency=medium
   * UNRELEASED
   * UNRELEASED
   * UNRELEASED
+  * PDF docs tidying
+  * UNRELEASED
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Fri, 08 Sep 2017 16:54:21 +0100
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Fri, 08 Sep 2017 16:58:11 +0100
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 

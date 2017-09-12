@@ -192,7 +192,6 @@ latex_elements = {'papersize':'a4paper',
   \\begin{titlepage}%%
     \\let\\footnotesize\\small
     \\let\\footnoterule\\relax
-    \\rule{\\textwidth}{1pt}%%
     \\begingroup %% for PDF information dictionary
        \\def\endgraf{ }\\def\\and{\\& }%%
        \\pdfstringdefDisableCommands{\\def\\\\{, }}%% overwrite hyperref setup
