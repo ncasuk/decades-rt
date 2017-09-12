@@ -9,10 +9,11 @@ from fabric.api import *
 from fabric.utils import warn
 from fabric.contrib import console
 from fabric.colors import red, green
-import time, os, glob, csv
+import time, os, glob, csv, subprocess
 from cStringIO import StringIO
 
 from pydecades.configparser import DecadesConfigParser
+
 
 # globals
 env.prj_name = 'decades' # no spaces!
@@ -274,4 +275,9 @@ def Plot_jar():
 @runs_once
 @task
 def local_start_simulator():
-   pass    
+   '''Starts the DECADES simulator. Tries ./pydecades/decades-simulator.py first,
+   failing that tries to find the installed one'''
+   try:
+      subprocess.check_call(['python2.7', './pydecades/decades-simulator.py'])
+   except subprocess.CalledProcessError:
+      subprocess.check_call(['python2.7', '/usr/lib/python2.7/dist-packages/pydecades/decades-simulator.py'])
