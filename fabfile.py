@@ -5,6 +5,12 @@
 # http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
 # modified for fabric 0.9/1.0
 #from __future__ import with_statement # needed for python 2.5
+"""Tasks defined here can called with ``fab`` or ``decades-mgr`` (on an system with a DECADES package installed). 
+
+**Usage**:
+   ``fab <taskname>``, e.g. ``fab docs`` OR
+   ``decades-mgr <taskname>`` e.g. ``decades-mgr purge``
+"""
 from fabric.api import *
 from fabric.utils import warn
 from fabric.contrib import console
@@ -13,7 +19,6 @@ import time, os, glob, csv, subprocess
 from cStringIO import StringIO
 
 from pydecades.configparser import DecadesConfigParser
-
 
 # globals
 env.prj_name = 'decades' # no spaces!
@@ -31,12 +36,12 @@ if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
 @runs_once
 @task
 def list_hosts():
-   '''Lists the hosts commands will act on. (Default is none)'''
+   """Lists the hosts commands will act on. (Default is none)"""
    print env.hosts
 
 def _annotate_hosts_with_ssh_config_info():
-    '''deals with hosts specified in ~/.ssh/config - shouldn't be needed
-      after fabric 1.4 '''
+    """deals with hosts specified in ~/.ssh/config - shouldn't be needed
+      after fabric 1.4 """
     from os.path import expanduser
     try: 
       from ssh.config import SSHConfig
@@ -72,8 +77,9 @@ _annotate_hosts_with_ssh_config_info()
 
 @task
 def local_database_setup(suffix=''):   
-   '''Creates inflight database and summary table (does nothing if it already 
-   exists'''
+   """Creates inflight database and summary table.
+
+Does nothing if it already exists."""
    with settings(warn_only=True): #already-exists errors ignored
       subs = {'suffix' : suffix}
       for each in env.parser.items('Database'):
@@ -85,8 +91,9 @@ def local_database_setup(suffix=''):
 
 @task(alias='purge_db')
 def local_database_delete(suffix='', ask=True):
-   '''DROPs all instrument tables and the mergeddata 
-      table. Leaves summary intact.'''
+   """Clears the local inflight database.
+
+   Drops all instrument tables and the ``mergeddata`` table. Leaves ``summary`` intact. Can also be called as ``purge_db``"""
    if not ask or console.confirm("This will delete all live data. Do want to continue?", default=False):
       subs = {'suffix' : suffix}
       for each in env.parser.items('Database'):
@@ -104,7 +111,7 @@ def local_database_delete(suffix='', ask=True):
 
 @task
 def setup_local_dev_environment():
-   '''Sets up a development environment on a Ubuntu install'''
+   """Sets up a development environment on a Ubuntu install"""
    local('sudo apt-get -y install aptitude')
    #stuff to *run* the software (you will need to first "apt-get install fabric")
    local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex fonts-linuxlibertine')
@@ -141,12 +148,12 @@ def setup_local_dev_environment():
    # it cannot already ping it
    local('ping -c1 %(prj_name)s-dev || echo "127.0.0.1 %(prj_name)s-dev" | sudo tee -a /etc/hosts' % env)
 
-   print('''run the decades-server app:
+   print("""run the decades-server app:
      DECADESPORT=1500 twistd -ny decades-server.tac
    and maybe the DB simulator:
      pydecades/database-simulator.py
    and browse to:
-     http://decades-dev/''')
+     http://decades-dev/""")
 
    warn(red('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html'))
    warn(red('You will need to install Titillium font for the PDF docs; try http://www.campivisivi.net/titillium/text (Titillium_roman_upright_italic version 2.0)'))
@@ -157,7 +164,7 @@ def setup_local_dev_environment():
 @runs_once
 @task
 def package():
-   '''Creates a .deb package of the current branch'''
+   """Creates a .deb package of the current branch"""
    env.branch = local('git rev-parse --abbrev-ref HEAD', capture=True).strip()
 
    env.packageprefix = ('%(prj_name)s-%(timestamp)s-%(branch)s' % env)
@@ -187,7 +194,7 @@ def package():
    
 @task
 def deploy_deb(debname=False):
-   '''deploys a given .deb file to all hosts, including install dependencies'''
+   """deploys a given .deb file to all hosts, including install dependencies"""
    if debname:
       put(debname)
       #installs all dependencies
@@ -198,21 +205,27 @@ def deploy_deb(debname=False):
 
 @task
 def test():
-   '''runs all the unit tests'''
+   """runs all the unit tests"""
    local_database_setup('_test')
    local('trial pydecades')
    local_database_delete(suffix='_test', ask=False)
 
 @task
 def unit_test_parameter(paramname):
-   '''runs a unit test for a single parameter, e.g vertical_vorticity. 
-   Usage: fab unit_test_parameter:<parametername>'''
+   """runs a unit test for a single parameter, e.g vertical_vorticity. 
+
+   Args:
+      paramname: string
+         Name of the single parameter to test, such as ``static_pressure``.
+   
+
+   *Usage:* ``fab unit_test_parameter:<parametername>``"""
    local('trial pydecades.test.test_decades_server.DecadesProtocolTestCase.test_%s' % paramname)
 
 @task
 def deploy():
-   '''Creates and deploys a full package, including generating a .jar file
-   for the Horace display client, and restarting apache'''
+   """Creates and deploys a full package, including generating a .jar file
+   for the Horace display client, and restarting apache"""
    Plot_jar()
    debname=package()
    deploy_deb(debname=debname)
@@ -226,7 +239,7 @@ def deploy():
 
 @task
 def clean():
-   '''Cleans a development tree of all build files etc.'''
+   """Cleans a development tree of all build files etc."""
    local('find . -maxdepth 1 -name \*.tar.gz -exec rm {} \;')
    local('find . -maxdepth 1 -name \*.deb -exec rm {} \;')
    local('find . -maxdepth 1 -name \*.dsc -exec rm {} \;')
@@ -239,7 +252,7 @@ def clean():
 
 @task
 def docs(builddir=False):
-   '''Create HTML documentation'''
+   """Create HTML documentation"""
    with lcd('doc'):
       if builddir:
         local('BUILDDIR='+builddir+' make html')
@@ -248,7 +261,7 @@ def docs(builddir=False):
 
 @task
 def pdfdocs(outdir=False):
-   '''creates PDF documentation'''
+   """creates PDF documentation"""
    with lcd('doc'):
       local('make latex' % env)
    with lcd('doc/_build/latex'):
@@ -265,7 +278,7 @@ def pdfdocs(outdir=False):
 @runs_once
 @task
 def Plot_jar():
-   '''Creates the JAR file for the display applicaton'''
+   """Creates the JAR file for the display applicaton"""
    with lcd('Horace/web/plot/plot'):
       local('make jar')
       #sign jar if and only if it isn't signed
@@ -275,8 +288,9 @@ def Plot_jar():
 @runs_once
 @task
 def local_start_simulator():
-   '''Starts the DECADES simulator. Tries ./pydecades/decades-simulator.py first,
-   failing that tries to find the installed one'''
+   """Starts the DECADES simulator.
+
+    Tries ``./pydecades/decades-simulator.py`` first, failing that tries to find the installed one"""
    try:
       subprocess.check_call(['python2.7', './pydecades/decades-simulator.py'])
    except subprocess.CalledProcessError:
