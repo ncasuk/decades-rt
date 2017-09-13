@@ -1,17 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Cartesian plots</title>
-	<link href="/css/examples.css" rel="stylesheet" type="text/css">
+{% extends "layouts/default.html" %}
+{% block css %}
+<link rel="stylesheet" href="/css/examples.css" type="text/css" />
+{% endblock %}
+{% block script %}
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.time.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.resize.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
 	<script type="text/javascript">
+//<![CDATA[
    var paramlist;
    $.fn.sort_select_box = function(){
     var my_options = $("#" + this.attr('id') + ' option');
@@ -205,10 +204,10 @@
          $('#frm').val(d.toUTCString().slice(17,25)); //i.e the time section
        });
    });
-	</script>
-</head>
-<body>
-
+//]]>
+</script>
+{% endblock %}
+{% block body %}
 	<div id="header">
 		<h2>Cartesian plots</h2>
 	</div>
@@ -220,12 +219,12 @@
 		</div>
 
 
-		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
+		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em" /> milliseconds</p>
       <form method="GET" action="cartesian">
 		<p>
          <label for="frm">From:</label><input type="text" id="frm" name="frm" />
          <label for="to">To:</label><input type="text" id="to"  name="to"/>
-         <label for="minAgo"><select id="minAgo">
+         <select id="minAgo">
             <option value="0">now</option>
             <option value="5">5 mins ago</option>
             <option value="10">10 mins ago</option>
@@ -254,8 +253,6 @@
 	</div>
 
 	<div id="footer">
-		Copyright &copy; 2007 - 2013 IOLA and Ole Laursen
+		Flot &copy; 2007 - 2013 IOLA and Ole Laursen
 	</div>
-
-</body>
-</html>
+{% endblock %}
