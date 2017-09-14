@@ -275,6 +275,9 @@
       var YAxesUnits = [];
       window.YAxesOpts = [];
       window.frm_epoch = {{ frm_epoch }};
+      {% if to_epoch %}
+      window.to_epoch = {{ to_epoch }};
+      {% endif %}
       window.plotOptions = {
 			series: {
 				shadowSize: 0	// Drawing is faster without shadows
