@@ -12,6 +12,7 @@
 	<script type="text/javascript">
 //<![CDATA[
    var paramlist;
+   xhr = null;
    $.fn.sort_select_box = function(){
     var my_options = $("#" + this.attr('id') + ' option');
     my_options.sort(function(a,b) {
@@ -96,7 +97,7 @@
          }
          $.ajaxSetup({ cache: false });
  
-         $.ajax({
+         xhr = $.ajax({
             url: "/live/livejson",
             dataType: 'json',
             //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
@@ -208,6 +209,14 @@
          d.setUTCMinutes(d.getMinutes() - $('#minAgo').val());
          $('#frm').val(d.toUTCString().slice(17,25)); //i.e the time section
        });
+      $( "#liveform" ).submit(function( event ) {
+        if( xhr != null ) {
+                xhr.abort();
+                xhr = null;
+        }
+      });
+
+
    });
 //]]>
 </script>
@@ -225,7 +234,7 @@
 
 
 		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em" /> milliseconds</p>
-      <form method="GET" action="cartesian">
+      <form id="liveform" method="GET" action="cartesian">
 		<p>
          <label for="frm">From:</label><input type="text" id="frm" name="frm" />
          <label for="to">To:</label><input type="text" id="to"  name="to"/>
