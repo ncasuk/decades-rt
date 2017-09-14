@@ -245,7 +245,7 @@ def clean():
    local('find . -maxdepth 1 -name \*.dsc -exec rm {} \;')
    local('find . -maxdepth 1 -name \*.build -exec rm {} \;')
    local('find . -maxdepth 1 -name \*.changes -exec rm {} \;')
-   local(' rm -rf decades-20[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
+   local('rm -rf decades-20[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]*')
    with lcd('Horace/web/plot/plot'):
       local('make clean') #cleans compiled Java files
 
