@@ -44,7 +44,7 @@ class cartesian:
             to_epoch = ''
       else:
          to_epoch = ''
-      return render_template('chart-cartesian.html', x=user_data.x, y=user_data.y, c=user_data.c,frm_epoch=frm_epoch, to_epoch=to_epoch,colours=colours)
+      return render_template('chart-cartesian.html', x=user_data.x, y=user_data.y, c=user_data.c,frm_epoch=frm_epoch, to_epoch=to_epoch,colours=colours, title='Live Cartesian Plot')
       #return '<h1>' + user_data.y0 + '</h1>'
            
 '''Draws tephigrams'''

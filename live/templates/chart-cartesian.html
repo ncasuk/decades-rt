@@ -52,6 +52,9 @@
       var YAxesUnits = [];
       window.YAxesOpts = [];
       window.frm_epoch = {{ frm_epoch }};
+      {% if to_epoch %}
+      window.to_epoch = {{ to_epoch }};
+      {% endif %}
       window.plotOptions = {
 			series: {
 				shadowSize: 0	// Drawing is faster without shadows
@@ -97,7 +100,7 @@
             url: "/live/livejson",
             dataType: 'json',
             //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
-            data: jQuery.param({'frm':window.frm_epoch,'to':'{{ to_epoch }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
+            data: jQuery.param({'frm':window.frm_epoch,'to':window.to_epoch,'para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
             success: function(livejson) {  // arbitrary number of y-series
             for(p=0; p < livejson.length; p++)
             {
@@ -106,8 +109,7 @@
             {% endfor %}
             }
             //set frm_epoch to most recent
-            //window.frm_epoch = isNaN(data.slice(-1).utc_time)?window.frm_epoch:Math.round(data.slice(-1).utc_time); //Math.round approximated cast-as-int
-            window.frm_epoch=data.slice(-1)[0].utc_time
+            window.frm_epoch=livejson.slice(-1)[0].utc_time;
             },  //if success, call update()
             error: function(xhr, status, thrown) { alert(status + thrown); }
          });
@@ -194,8 +196,11 @@
       $('#addYSeries').click(
       function() {
          existingSeries = $('select.yseries').length;
-         newHTML = $('p.yseries').html().replace(/y0/g,'y' + existingSeries).replace(/<sub>0<\/sub>/, '<sub>' + existingSeries + '</sub>')
+         newHTML = $('p.yseries').html().replace(/y0/g,'y' + existingSeries).replace(/<sub>0<\/sub>/, '<sub>' + existingSeries + '</sub>').replace(/c0/g,'c' + existingSeries)
          $('#YSeriesContainer').append('<p class=\"yseries">' + newHTML + '</p>');
+         $('#c' + existingSeries).val($('#c' + (existingSeries - 1) + ' option:selected').val());
+         $('#c' + existingSeries  + ' option:selected').next().attr('selected', 'selected');
+
       }
    )
       $('#minAgo').change(function() {
