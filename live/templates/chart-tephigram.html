@@ -324,7 +324,7 @@
             url: "/live/livejson",
             dataType: 'json',
             //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
-            data: jQuery.param({'frm':window.frm_epoch,'to':'{{ to_epoch }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
+            data: jQuery.param({'frm':window.frm_epoch,'to':window.to_epoch,'para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
             success: function(livejson) {  // arbitrary number of y-series
             for(p=0; p < livejson.length; p++)
             {
