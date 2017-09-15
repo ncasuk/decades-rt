@@ -107,6 +107,15 @@ def local_database_delete(suffix='', ask=True):
             local('sudo -u postgres psql -c "DROP TABLE ' + each['Name'] + ';" %(database)s%(suffix)s' % subs)
    else:
       print "Not doing anything!" 
+
+@task(alias='purge_data')
+def local_offline_data_purge(ask=True):
+   """Removes all offline data older than 90 days
+
+Removes all files in ``output_dir`` as specified in ``decades.ini`` older than 90 days."""
+   if not ask or console.confirm("This will delete all offline data older than 90 days. Do want to continue?", default=False):
+      print "Purging " + env.parser.get('Config','output_dir')
+      local("find %s -ctime +90 -delete" % env.parser.get('Config','output_dir'))
    
 
 @task
