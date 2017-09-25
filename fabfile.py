@@ -29,7 +29,6 @@ env.timestamp = time.strftime('%Y%m%d%H%M%S')
 env.dchopts = '--snapshot'
 versionfile = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'VERSION'))
 env.version= versionfile.read().strip()
-env.parser = DecadesConfigParser()
 if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
    env.dchopts = '--release'
 
@@ -80,6 +79,7 @@ def local_database_setup(suffix=''):
    """Creates inflight database and summary table.
 
 Does nothing if it already exists."""
+   env.parser = DecadesConfigParser()
    with settings(warn_only=True): #already-exists errors ignored
       subs = {'suffix' : suffix}
       for each in env.parser.items('Database'):
@@ -94,6 +94,7 @@ def local_database_delete(suffix='', ask=True):
    """Clears the local inflight database.
 
    Drops all instrument tables and the ``mergeddata`` table. Leaves ``summary`` intact. Can also be called as ``purge_db``"""
+   env.parser = DecadesConfigParser()
    if not ask or console.confirm("This will delete all live data. Do want to continue?", default=False):
       subs = {'suffix' : suffix}
       for each in env.parser.items('Database'):
@@ -116,8 +117,9 @@ def setup_local_dev_environment():
    #stuff to *run* the software (you will need to first "apt-get install fabric")
    local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex fonts-linuxlibertine')
    local('sudo a2enmod wsgi')
-   local_database_setup()
+   local('sudo ln -nfs ${PWD}/config/Display_Parameters*.csv /etc/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
+   local_database_setup()
    local('sudo a2ensite %(prj_name)s' % env)
    #link apache files to dev versions
    local('sudo mkdir -p /var/www/%(prj_name)s/plot' % env)
@@ -137,7 +139,6 @@ def setup_local_dev_environment():
    #runtime ini files
    local('sudo mkdir -p /etc/%(prj_name)s' % env)
    local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/%(prj_name)s/' % env)
-   local('sudo ln -nfs ${PWD}/config/Display_Parameters*.csv /etc/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/fabfile.py /etc/%(prj_name)s/' % env)
    #dataformats
