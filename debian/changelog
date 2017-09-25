@@ -1,6 +1,6 @@
-decades (1.7.4~1.gbpbc1a9b) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbpa20c53) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @bc1a9b1cf5a39ba0a2794f2f6055d8ab69aa1884 **
+  ** SNAPSHOT build @a20c53bdc68ecf5a406f6fc90f8b9dafc3c75ce1 **
 
   * Adding description of various tanks (proposed)
   * Link all Display Params files
@@ -59,8 +59,24 @@ decades (1.7.4~1.gbpbc1a9b) UNRELEASED; urgency=medium
   * Alter to also work with later versions of Sphinx
   * Use SVG doc logo on HTML interface too
   * Add run simulator task
+  * Change simulator instructions
+  * Autodoc fabfile
+  * Document fabfile with sphinx autodoc
+  * Send correct contenttype header
+  * Live Data to use same layout as interface; jquery update
+  * new version of jquery
+  * change to  minified version
+  * Tephigram to default layout
+  * Style changes to HTML docs
+  * Dave Chart to default layout
+  * Also clean dirs with branch suffixes
+  * Deal with 'to' times correctly, and default line colours
+  * UNRELEASED
+  * Abort runnin Ajax call before Submit
+  * to time working
+  * Correct to-time code
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Tue, 12 Sep 2017 15:19:00 +0100
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 14 Sep 2017 16:45:23 +0100
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
