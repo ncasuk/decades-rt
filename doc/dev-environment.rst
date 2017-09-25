@@ -26,6 +26,10 @@ Change into the repository directory
 Create the local dev environment
 --------------------------------
 
+If you are not developing the ``master`` branch, change to your development branch, e.g.:
+
+``git checkout dan-test``
+
 ``fab setup_local_dev_environment``
 
 Create SSH stanzas referring to fish and septic
