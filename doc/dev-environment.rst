@@ -50,6 +50,10 @@ Run the Twisted decades-server and the database simulator
 
 and in a different terminal or `screen <http://www.gnu.org/software/screen/>`_:
 
+``DECADESPORT=1500 twistd --pid=listener.pid -ny pydecades/decades-listener.tac``
+
+and in a third:
+
 ``pydecades/database-simulator.py``
 
 Then browse to:
