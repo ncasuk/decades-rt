@@ -6,11 +6,13 @@ from twisted.test import proto_helpers
 from twisted.internet import defer
 import testresources
 
-from numpy import isnan, nan
+from numpy import isnan, nan, array
 import psycopg2 
 import psycopg2.extras
 
 import os, struct, exceptions, csv
+
+from datetime import datetime
 
 from twisted.python import log
 from pydecades.configparser import DecadesConfigParser
@@ -99,6 +101,19 @@ class DecadesProtocolTestCase(unittest.TestCase, testresources.ResourcedTestCase
       out = struct.unpack(para_fmt, data[57:])
       #check is not returning NaNs
       self.assertFalse(isnan(out[2+size_upcoming:]).any(), msg=function + " returning NaNs. Function missing in rt_derive?")
+
+   def test_flight_number(self):
+      self.proto.rawDataReceived('STAT') #"transmits" STAT command
+      flight = struct.unpack(self.proto.rtlib.status.struct_fmt, self.tr.value())[-1]
+      self.assertTrue(type(flight) == str)
+      self.assertTrue(len(flight) == 4)
+      self.assertTrue(flight == 'C037')
+
+   def test_derive_data_alt(self):
+      statblock= self.proto.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft','static_pressure','gin_latitude','gin_longitude','gin_heading'], '','DESC LIMIT 1')
+      print type(statblock['flight_number'])
+      print u'<p>Flight {}  {}</p>'.format(statblock['flight_number'][0], datetime.utcfromtimestamp(statblock['utc_time']).strftime('%H:%M:%SZ'))
+
 
 #Not part of testcase class; is a function that returns a function based on parameters
 def test_parameters(param_id, function):
