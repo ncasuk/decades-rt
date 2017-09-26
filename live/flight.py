@@ -50,14 +50,15 @@ class flight:
       if path in ('manager', 'summary', 'events','csv'): 
          #get calibrated data from DB as required
          results = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft'],'','DESC LIMIT 1')
+         flight_num = self.rtlib.getdata_fromdatabase('corcon01_flight_num', '', 'DESC LIMIT 1')
 
          #get existing summary entries
-         entries = self.db.select('summary', {'flight_number':results['flight_number'][0] }, where='summary.flight_number = $flight_number', order='summary.start DESC')
+         entries = self.db.select('summary', {'flight_number':flight_num[0] }, where='summary.flight_number = $flight_number', order='summary.start DESC')
      
          web.header('Cache-control', 'no-cache')
          if path == 'csv': #CSV outputs as a file to download
             web.header('Content-Type', 'text/csv')
-            web.header('Content-Disposition', 'attachment;filename=FLTSUM01' + datetime.utcnow().strftime('_%Y%m%d_%H%M%S_') + '{}-summary.csv'.format( results['flight_number'][0]))
+            web.header('Content-Disposition', 'attachment;filename=FLTSUM01' + datetime.utcnow().strftime('_%Y%m%d_%H%M%S_') + '{}-summary.csv'.format( flight_num[0]))
 
             csv_file = StringIO()
             csv_writer = csv.writer(csv_file)
@@ -85,6 +86,7 @@ class flight:
      
       #get location & time data 
       prtgindata = self.rtlib.derive_data_alt(['time_since_midnight','utc_time','flight_number','pressure_height_kft','gin_latitude','gin_longitude','gin_heading'], '','DESC LIMIT 1')
+      flight_num = self.rtlib.getdata_fromdatabase('corcon01_flight_num', '', 'DESC LIMIT 1')
      
       #uses fromtimestamp rather than utcfromtimestamp as we want the result to be TZ-aware 
       with self.db.transaction():
@@ -92,12 +94,12 @@ class flight:
             if(action.exclusive == 'True'):
                #only one exclusive event can run at a time 
                #get ids of other open exclusive events
-               unfinished_exclusives = self.db.select('summary', {'exclusive':True, 'finished':False, 'ongoing':True, 'flight_number':prtgindata['flight_number'][0]}, where='exclusive=$exclusive AND ongoing=$ongoing AND flight_number=$flight_number AND finished=$finished', what='id' )
+               unfinished_exclusives = self.db.select('summary', {'exclusive':True, 'finished':False, 'ongoing':True, 'flight_number':flight_num[0]}, where='exclusive=$exclusive AND ongoing=$ongoing AND flight_number=$flight_number AND finished=$finished', what='id' )
                #close them
                for unfinished in unfinished_exclusives:
                   self._stop(unfinished.id, prtgindata)
             #start new action
-            db_res = self.db.insert('summary', flight_number=prtgindata['flight_number'][0], start=datetime.fromtimestamp(prtgindata['utc_time'], timezone('utc')), start_heading=int(prtgindata['gin_heading']), start_latitude=float(prtgindata['gin_latitude']), start_longitude=float(prtgindata['gin_longitude']), start_height=float(prtgindata['pressure_height_kft']), comment=action.comment, event=action.event, ongoing=(action.status == 'ongoing'), finished=(action.status == 'instant'), exclusive=(action.exclusive == 'True'))
+            db_res = self.db.insert('summary', flight_number=flight_num[0], start=datetime.fromtimestamp(prtgindata['utc_time'], timezone('utc')), start_heading=int(prtgindata['gin_heading']), start_latitude=float(prtgindata['gin_latitude']), start_longitude=float(prtgindata['gin_longitude']), start_height=float(prtgindata['pressure_height_kft']), comment=action.comment, event=action.event, ongoing=(action.status == 'ongoing'), finished=(action.status == 'instant'), exclusive=(action.exclusive == 'True'))
          elif(action.submit=='stop' and action.id):
                
             self._stop(action.id, prtgindata)
