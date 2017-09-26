@@ -312,7 +312,7 @@ class rt_status(dict):
 	       self['wind_angle'],
 	       self['gin_latitude'],
 	       self['gin_longitude'],
-	       self['flight_number'])
+	       str(self['flight_number']))
 
     def json(self):
         import json
