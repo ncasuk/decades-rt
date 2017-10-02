@@ -125,7 +125,7 @@ def setup_local_dev_environment():
 def create_deb():
    local('mkdir %(prj_name)s-%(timestamp)s' % env)
    local('git checkout-index --prefix=%(prj_name)s-%(timestamp)s/ -a' % env)
-   local('git-dch %(dchopts)s --auto --git-author' % env) #adds latest commit details to a snapshot version
+   local('gbp dch %(dchopts)s --auto --git-author' % env) #adds latest commit details to a snapshot version
    local('cp -rp debian %(prj_name)s-%(timestamp)s/' % env)
    with lcd('%(prj_name)s-%(timestamp)s' % env):
       #debuild_out = local('git-buildpackage --git-upstream-branch=master --git-debian-branch=master --git-export=INDEX --git-ignore-new' % env, capture=True)
