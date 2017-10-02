@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Permissions: sandbox
 Application-Name: DECADES Live Data Plotter
-Codebase: http://fish http://septic http://decades-test http://192.168.101.108 http://192.168.101.110
+Codebase: http://fish http://septic http://decades-test http://192.168.101.108 http://192.168.101.110 http://header http://192.168.101.80 http://192.168.101.30 http://drunk 192.168.101.31 http://192.168.101.81
