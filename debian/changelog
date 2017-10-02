@@ -1,6 +1,9 @@
-decades (1.7.4~1.gbpa20c53) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbp7a2273) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @a20c53bdc68ecf5a406f6fc90f8b9dafc3c75ce1 **
+  ** SNAPSHOT build @7a22730f73937bc58eadda0ee6079de433ad0cbe **
+
+  [ Dan Walker ]
+  ** SNAPSHOT build @ae372ee07459a92b124b8a49df7e285c38f5d48f **
 
   * Adding description of various tanks (proposed)
   * Link all Display Params files
@@ -75,8 +78,18 @@ decades (1.7.4~1.gbpa20c53) UNRELEASED; urgency=medium
   * Abort runnin Ajax call before Submit
   * to time working
   * Correct to-time code
+  * Add purge data function
+  * Update changelog
+  * Change so Config is not loaded until needed, otherwise setup_local_dev won't work
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 14 Sep 2017 16:45:23 +0100
+  [ Drunk Tank ]
+  * Add listner call to How-to
+
+  [ Dan Walker ]
+  * adding to howto
+  * Add Header and Drunk to manifest file
+
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Mon, 02 Oct 2017 13:17:39 +0100
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
