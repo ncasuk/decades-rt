@@ -1145,4 +1145,4 @@ C ST    - Corrected Surface Temperature   (deg C)
         if len(flightnum) != 4:
             flightnum = self.getdata('aerack01_flight_num',data)
         log.msg('Returning ' +  repr(flightnum))
-        return str(flightnum)
+        return flightnum

@@ -158,6 +158,10 @@ def setup_local_dev_environment():
    # it cannot already ping it
    local('ping -c1 %(prj_name)s-dev || echo "127.0.0.1 %(prj_name)s-dev" | sudo tee -a /etc/hosts' % env)
 
+   #Submodules
+   local('git submodule init')
+   local('git submodule update')
+
    print("""run the decades-server app:
      DECADESPORT=1500 twistd -ny decades-server.tac
    and maybe the DB simulator:
@@ -230,7 +234,9 @@ def unit_test_parameter(paramname):
    
 
    *Usage:* ``fab unit_test_parameter:<parametername>``"""
+   local_database_setup('_test')
    local('trial pydecades.test.test_decades_server.DecadesProtocolTestCase.test_%s' % paramname)
+   local_database_delete(suffix='_test', ask=False)
 
 @task
 def deploy():

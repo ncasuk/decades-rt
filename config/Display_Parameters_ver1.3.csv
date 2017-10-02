@@ -29,6 +29,7 @@ ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,
 542,lower_pyranometer_red_flux,LOWER PYRANOMETER RED FLUX,(W m-2)
 543,lower_pyrgeometer_flux,LOWER PYRGEOMETER FLUX,(W m-2)
 546,lifting_condensation_level,LIFTING CONDENSATION LEVEL,(m)
+547,fwvs_humidity_mixing_ratio,FWVS HUMIDITY MIXING RATIO,(g m-3)
 548,angle_of_attack,ANGLE OF ATTACK,(deg)
 549,angle_of_sideslip,ANGLE OF SIDESLIP,(deg)
 550,aerack01_buck_mirr_temp,DEWPOINT (CR2),(deg C)
@@ -151,7 +152,7 @@ ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,
 948,acloud01_aimms_longitude,AIMMS LONGITUDE,(deg),,,,
 949,acloud01_aimms_altitude,AIMMS ALTITUDE,(m),,,,
 950,acloud01_aimms_velocity_n,AIMMS VELOCITY NORTH,(m s-1),,,,
-951,acloud01_aimms_velocity_e,AIMMS VELOCITY EAST,(m s-1),,,,
+951,acloud01_aimms_velocity_e ,AIMMS VELOCITY EAST,(m s-1),,,,
 952,acloud01_aimms_velocity_d,AIMMS VELOCITY DOWN,(m s-1),,,,
 953,acloud01_aimms_roll,AIMMS ROLL,(deg),,,,
 954,acloud01_aimms_pitch,AIMMS PITCH,(deg),,,,
@@ -167,3 +168,10 @@ ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,
 966,bcloud01_pcasp_volume_conc,PCASP VOLUME CONCENTRATION,(cm-2 cm-3),,,,
 967,bcloud01_pcasp_mvd,PCASP MEDIAN VOLUME DIAMETER,(um),,,,
 968,bcloud01_pcasp_ed,PCASP EFFECTIVE DIAMETER,(um),,,,
+970,seaprobe_sea_twc,SEAPROBE TOTAL WATER,(gm-3),,,,
+971,seaprobe_sea_lwc083,SEAPROBE LIQUID WATER 83,(gm-3),,,,
+972,seaprobe_sea_lwc021,SEAPROBE LIQUID WATER 21,(gm-3),,,,
+973,seaprobe_ice_water_83,SEAPROBE ICE WATER 83,(gm-3),,,,
+974,seaprobe_ice_water_21,SEAPROBE ICE WATER 21,(gm-3),,,,
+975,aqdnox01_noy,NOy CONC (AQD),(ppt)
+976,aqdnox01_h2s,H2S CONC (AQD),(ppt)
