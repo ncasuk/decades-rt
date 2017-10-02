@@ -1,3 +1,20 @@
+decades (1.7.3~6.gbpd4c43a) UNRELEASED; urgency=medium
+
+  ** SNAPSHOT build @d4c43a62525458b62d071fd1fab01dcbd0a0b2b9 **
+
+  [ Dan Walker ]
+  * changelog
+  * updates from deploy routine
+  * Merge in live version with UPPBBR corrections
+
+  [ Axel Wellpott @ obelix ]
+  * UDP definition file for AQD-NOx instrument updated
+
+  [ Dan Walker ]
+  * Display params for SEA probe and AQD NOy/H₂S
+
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Mon, 02 Oct 2017 13:24:39 +0100
+
 decades (1.7.3~4.gbp8c5518) quantal; urgency=low
 
   ** SNAPSHOT build @8c55182ac63e7f019916aca45e8d85da5481368a **
