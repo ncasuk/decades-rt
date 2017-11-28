@@ -1,6 +1,6 @@
-decades (1.7.3~6.gbpd4c43a) UNRELEASED; urgency=medium
+decades (1.7.3~7.gbpd102ce) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @d4c43a62525458b62d071fd1fab01dcbd0a0b2b9 **
+  ** SNAPSHOT build @d102cea161562571ade1b10889aff239a7f2db2c **
 
   [ Dan Walker ]
   * changelog
@@ -12,8 +12,21 @@ decades (1.7.3~6.gbpd4c43a) UNRELEASED; urgency=medium
 
   [ Dan Walker ]
   * Display params for SEA probe and AQD NOy/H₂S
+  * Manifest backport from dan-test
+  * Correct Git dch call
+  * Changelog update
+  * Ignore later-version doc build dir
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Mon, 02 Oct 2017 13:24:39 +0100
+  [ Axel Wellpott @ obelix ]
+  * Spaces removed in paramter names
+  * SO2 udp definition file updated to latest version
+
+  [ Axel Wellpott@dacru ]
+  * dew point code for WVSS2[A,B] added to rt_derive. vp conversion coded added to formulas
+
+  [ Dan Walker ]
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Tue, 28 Nov 2017 10:27:52 +0000
 
 decades (1.7.3~4.gbp8c5518) quantal; urgency=low
 
