@@ -4,12 +4,12 @@
 Display Parameters csv file '''
 import web
 
-urls = {
+urls = (
    #'', 'parano'
    '\.(.+)', 'parameters'  #DO NOT CALL THIS CLASS 'parano'
                            #it doesn't work. May be meaningful
                            #elsewhere? - DW 2014-06-02
-}
+)
 app= web.application(urls, locals())   
 
 #Standard python modules for config and date/time functions
