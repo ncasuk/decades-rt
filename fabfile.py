@@ -126,8 +126,14 @@ def setup_local_dev_environment():
    #stuff to *run* the software (you will need to first "apt-get install fabric")
    local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex fonts-linuxlibertine')
    local('sudo a2enmod wsgi')
-   local('sudo ln -nfs ${PWD}/config/Display_Parameters*.csv /etc/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
+   #runtime ini files
+   local('sudo mkdir -p /etc/%(prj_name)s' % env)
+   local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/fabfile.py /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/config/Display_Parameters*.csv /etc/%(prj_name)s/' % env)
+   #setup DB
    local_database_setup()
    local('sudo a2ensite %(prj_name)s' % env)
    #link apache files to dev versions
@@ -145,11 +151,6 @@ def setup_local_dev_environment():
    #python module
    local('sudo python setup.py build')
    local('sudo python setup.py install')
-   #runtime ini files
-   local('sudo mkdir -p /etc/%(prj_name)s' % env)
-   local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/%(prj_name)s/' % env)
-   local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/%(prj_name)s/' % env)
-   local('sudo ln -nfs ${PWD}/fabfile.py /etc/%(prj_name)s/' % env)
    #dataformats
    local('sudo mkdir -p /opt/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/dataformats /opt/%(prj_name)s/' % env)
