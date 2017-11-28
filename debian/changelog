@@ -157,6 +157,36 @@ decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
  -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 13:33:58 +0100
 
+decades (1.7.3~7.gbpd102ce) UNRELEASED; urgency=medium
+
+  ** SNAPSHOT build @d102cea161562571ade1b10889aff239a7f2db2c **
+
+  [ Dan Walker ]
+  * changelog
+  * updates from deploy routine
+  * Merge in live version with UPPBBR corrections
+
+  [ Axel Wellpott @ obelix ]
+  * UDP definition file for AQD-NOx instrument updated
+
+  [ Dan Walker ]
+  * Display params for SEA probe and AQD NOy/H₂S
+  * Manifest backport from dan-test
+  * Correct Git dch call
+  * Changelog update
+  * Ignore later-version doc build dir
+
+  [ Axel Wellpott @ obelix ]
+  * Spaces removed in paramter names
+  * SO2 udp definition file updated to latest version
+
+  [ Axel Wellpott@dacru ]
+  * dew point code for WVSS2[A,B] added to rt_derive. vp conversion coded added to formulas
+
+  [ Dan Walker ]
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Tue, 28 Nov 2017 10:27:52 +0000
+
 decades (1.7.3~4.gbp8c5518) quantal; urgency=low
 
   * 
