@@ -4,9 +4,9 @@
 '''Flight Manager's console'''
 import web
 
-urls = {
-   "/(.+)", 'flight'
-}
+urls = (
+   '/(.+)', 'flight'
+)
 
 app= web.application(urls, locals())   
 
