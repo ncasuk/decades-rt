@@ -47,9 +47,9 @@ class rt_data(object):
         #get derived params
         avail=self.get_available()
         lines={}
-        for p in avail:
-            lines[p]=dict(zip(['ParameterIdentifier','DisplayText','DisplayUnits','GroupId']
-                              ,self.__getattribute__(p).__doc__.split(",")))
+        #for p in avail:
+        #    lines[p]=dict(zip(['ParameterIdentifier','DisplayText','DisplayUnits','GroupId']
+        #                      ,self.__getattribute__(p).__doc__.split(",")))
 
         #get params from Display Parameters file unless already specified
         params = self.config.items('Parameters')

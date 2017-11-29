@@ -16,7 +16,7 @@ import time
 import math
 from datetime import datetime, timedelta
 import struct
-from rt_calcs import rt_derive,rt_data
+from pydecades.rt_calcs import rt_derive,rt_data
 from pydecades.configparser import DecadesConfigParser
 import numpy as np
 from pydecades.database import get_database

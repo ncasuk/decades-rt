@@ -1026,11 +1026,13 @@ C ST    - Corrected Surface Temperature   (deg C)
         return self.getdata('al52co01_conc',data)
 
     def seaprobe_ice_water_83(self,data):
+        '''973,SEAPROBE ICE WATER 83,gm-3,derived'''
         '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
          based on the sea_lwc083 reading'''
         return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc083',data))
 
     def seaprobe_ice_water_21(self,data):
+        '''973,SEAPROBE ICE WATER 21,gm-3,derived'''
         '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
          based on the sea_lwc021 reading'''
         return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc021',data))

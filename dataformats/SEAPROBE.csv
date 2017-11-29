@@ -1,6 +1,6 @@
 field,type,max_chars,description
 $SEAPROBE,text,9,"this is the identifier for the start of the SEAPROBE UDP packet"
-utc_time,>unsigned_int,10,"the valid time for this packet (usually 1 second behind actual time)"
-sea_twc,single_float,6,2,"SEA probe TWC"
-sea_lwc083,single_float,6,2,"SEA probe LWC 082"
-sea_lwc021,single_float,6,2,"SEA probe LWC 021"
+utc_time,unsigned_int,10,"the valid time for this packet (usually 1 second behind actual time)"
+sea_twc,single_float,6,"SEA probe TWC"
+sea_lwc083,single_float,6,"SEA probe LWC 082"
+sea_lwc021,single_float,6,"SEA probe LWC 021"
