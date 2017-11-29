@@ -1,5 +1,6 @@
 #!/usr/bin/python
 '''Listens for requests from the Java client applet and responds appropriately'''
+# -*- test-case-name: pydecades.test.test_decades_server -*-
 from array import array
 
 from twisted.internet import protocol, reactor
