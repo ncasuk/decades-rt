@@ -1032,7 +1032,7 @@ C ST    - Corrected Surface Temperature   (deg C)
         return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc083',data))
 
     def seaprobe_ice_water_21(self,data):
-        '''973,SEAPROBE ICE WATER 21,gm-3,derived'''
+        '''974,SEAPROBE ICE WATER 21,gm-3,derived'''
         '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
          based on the sea_lwc021 reading'''
         return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc021',data))
@@ -1059,16 +1059,6 @@ C ST    - Corrected Surface Temperature   (deg C)
         vp=wmr*p/(622*10**3+wmr)
         dp=formulas.vp2dp(vp, p, temp)
         return dp-273.15
-
-    def seaprobe_ice_water_83(self,data):
-        '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
-         based on the sea_lwc083 reading'''
-        return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc083',data))
-
-    def seaprobe_ice_water_21(self,data):
-        '''Returns the Ice Water Content which is simply the seaprobe Total Water Content minus the Liquid Water Content
-         based on the sea_lwc021 reading'''
-        return (self.getdata('seaprobe_sea_twc',data) - self.getdata('seaprobe_sea_lwc021',data))
 
     def time_since_midnight(self,data):
         """515,Time since midnight,(s),derived"""
