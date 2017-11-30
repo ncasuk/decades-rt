@@ -7,6 +7,7 @@
    ServerAlias 192.168.101.110
    ServerAlias 10.0.2.2
    ServerAlias decades-test
+   ServerAlias decades-dev
 
 	DocumentRoot /var/www/decades/
 
