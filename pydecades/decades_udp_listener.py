@@ -13,7 +13,7 @@ from decades import DecadesDataProtocols
 from twisted.python import log 
 
 from retryingcall import RetryingCall, simpleBackoffIterator
-    
+import time
 
 
 class multicastJoinFailureTester(object):
@@ -23,8 +23,7 @@ class multicastJoinFailureTester(object):
       failure.trap(self.okErrs)
 
 class MulticastServerUDP(DatagramProtocol):
-    dataProtocols = DecadesDataProtocols()
-    maxTimeError=300 
+    dataProtocols = DecadesDataProtocols() 
     def __init__(self, conn):
         '''Takes a database connection, and creates a cursor'''
         self.conn = conn
@@ -38,9 +37,9 @@ class MulticastServerUDP(DatagramProtocol):
         if self.dataProtocols.new_table_count > 0:
             #one of the dataformat files has been updated, recreate merge table
             log.msg('Recreating mergeddata table')
-            self.dataProtocols.create_maintable(self.cursor)
+            self.dataProtocols.create_view(self.cursor)
         else:
-            self.dataProtocols.reuse_table(self.cursor)
+            log.msg('Reusing existing mergeddata table')
       
         # Join a specific multicast group, which is the IP we will respond to
         r = RetryingCall(self.transport.joinGroup, '239.1.4.6')
@@ -55,39 +54,29 @@ class MulticastServerUDP(DatagramProtocol):
          #copies data into a dictionary
          inst=data[0].lstrip('$')
          fields=self.dataProtocols.fields(inst)
-         if(len(data)!=len(fields)):
-             print('Wrong number of fields in %s expected %i got %i' % (inst,len(fields),len(data)))
-             print(data)
-             return
-         dictdata = dict(zip(fields, data)) 
+         if(len(fields)!=len(data)):
+             log.msg("%i fields != %i data length" % (len(fields),len(data)))
+             raise IndexError("Wrong number of parameters")
+         dictdata = dict(zip(fields, data))
          instname=self.dataProtocols.protocols[inst][0]['field'].lstrip('$')
-         now=int(time.time())
+         for each in fields:
+             if dictdata[each] == "":
+                 dictdata[each]=None 
+             if dictdata[each] =="NaN":
+                 dictdata[each]="-9999"
          try:
              if dictdata['utc_time']=='NOW':
-                 print('Replace time with %i' % now)
-                 dictdata['utc_time']='%i' % now
+                 dictdata['utc_time']='%i' % time.time()
          except IndexError:
-            log.msg('%s has no time rejecting' % data[0].lstrip('$'))
-            return # No time !
-         try:
-             dt=now-int(dictdata['utc_time'])
-             if abs(dt)>self.maxTimeError:
-                 log.msg('%s time out by %i s rejecting' % (data[0].lstrip('$'),dt))
-                 return
-         except Exception as e:
-             log.msg(str(e))
-             return
+             pass
          self.dataProtocols.add_data(self.cursor, dictdata,('%s' % (instname, )).lower())
          #adds to separate individual-instrument tables; no longer needed, 
          #although it does provide a good error-check in the logs. DW 2013-11-01
          squirrel = 'INSERT INTO %s_%s (%s)' % (instname, self.dataProtocols.protocol_versions[inst], ', '.join(fields))
          processed= []
          for each in fields:
-            if dictdata[each] == '':
-               processed.append(None)
-            else:
                processed.append(dictdata[each])
-         if len(data)==len(fields):
+         if len(data)==len(self.dataProtocols.fields(data[0].lstrip('$'))):
             self.cursor.execute(squirrel + ' VALUES (' + (','.join(['%s'] * len(data))) +')', processed)
             log.msg("Insert into %s successful" % data[0].lstrip('$'))
          else:
@@ -96,7 +85,12 @@ class MulticastServerUDP(DatagramProtocol):
       except _csv.Error:
          log.msg('CSV failed to unpack')
          log.msg(datagram)
-  
+      except IndexError:
+         log.msg(datagram)
+      except Exception as e:
+         log.msg("ERROR ...")
+         log.msg(e)
+         log.msg(datagram)  
 
 # Note that the join function is picky about having a unique object
 # on which to call join.  To avoid using startProtocol, the following is

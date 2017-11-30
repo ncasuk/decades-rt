@@ -1,6 +1,5 @@
 import numpy as np
 from twisted.python import log
-import time
 
 class rt_data(object):
     """ Class to read extract data from database and perform calibrations for display
@@ -13,17 +12,18 @@ class rt_data(object):
                 der.append(d)
         self.derived=der   # list of derivations, empty unless subclassed
         self.database=database #python Cursor class (Named Tuple version)
+        self.database=database
         self.read_cal_const(calfile)
         
-    def derive_data(self,names,selection,order=" ORDER BY id",rawdata=None):
+    def derive_data(self,names,selection,rawdata=None):
         """Read in data and process in one go, using repeated database queries
            ( must be sure that the selection doesn't vary )"""
         ans={}
         if(rawdata==None):
             rawdata={}
         for name in names:
-            ans[name]=self.getdata(name,(rawdata,(selection,order)))
-            #ans[name]=self.getdata(name,rawdata)
+            #ans[name]=self.getdata(name,(rawdata,selection))
+            ans[name]=self.getdata(name,rawdata)
         return ans
 
     def derive_data_alt(self,names,selection,order=" ORDER BY id"):
@@ -39,9 +39,6 @@ class rt_data(object):
         rawset=set()
         for name in names:
             self.getdata(name,(rawset,))
-        for r in list(rawset):
-            if((r in self.derived) or (r in self.cals)):
-                rawset.remove(r)
         return rawset
 
     def getdata(self,name,data):
@@ -51,82 +48,64 @@ class rt_data(object):
             . Needs processing
             . Needs to be extracted from database"""
         try:
-            if(data[0].has_key(name)):
-                return data[0][name]
+            if(data.has_key(name)):
+                return data[name]
             elif(self.cals.has_key(name)):
                 return self.cals[name]
             else:    
                 if(name in self.derived):
-                    try:
-                        data[0][name]=self.__getattribute__(name)(data)
-                    except IndexError:  # probably mismatched arrays
-                        data[0][name]=np.array([])
+                    data[name]=eval('self.'+name+'(data)')
+                    #print 'Derive '+name
                 else:
-                    data[0][name]=self.getdata_fromdatabase(name,*data[1]) 
-                return data[0][name]               
+                    data[name]=self.getdata_fromdatabase(name,data[1]) 
+                return data[name]               
         except AttributeError:
             # This is for the dummy run which puts the needed raw data into a set
-            if(name in data[0]):
-                return np.array([])
+            if(name in self.derived):
+                return eval('self.'+name+'(data)')
             elif(name in self.cals):
                 return self.cals[name]
-            elif(name in self.derived):
-                data[0].update([name])
-                return self.__getattribute__(name)(data)
             else:
-                data[0].update([name])
+                #data[0].update([name])
+                data[0].update({name:[]})
                 return np.array([])
  
-    def getdata_fromdatabase(self,name,selection,order=' ORDER BY id'):
+    def getdata_fromdatabase(self,name,selection):
         """ Reads one parameter from database"""
         fieldname_part = 'SELECT %s ' % name 
-        #instrument = (filter(lambda a: a[9:] != 'flight_num',
-        #             filter(lambda b: b[9:] != 'utc_time',
-        #             filter(lambda c: c != 'utc_time',
-        #             filter(lambda d: d != 'id',[name])))))
-        #not_null_part = ' AND %s IS NOT NULL' % name
-        #if(instrument):
-        #    not_null_part = ' AND %s_utc_time IS NOT NULL' % instrument[0][0:8]
-        self.database.execute('%s FROM mergeddata WHERE id %s %s' % (fieldname_part, selection , order) )
-        data=np.reshape(np.array(self.database.fetchall()),-1)
-        if(data.dtype=='O'):
-            try:
-                data=data.astype('float')
-            except ValueError:
-                data=data.astype('str')
-        return data
+        self.database.execute(fieldname_part + 'FROM mergeddata WHERE id %s AND %s IS NOT NULL ORDER BY id' % (selection, name) )
+        #print self.database.query
+        data[name] = []
+        for record in self.database: #iterates over results 
+            data[name].append(getattr(record,name))
+        return np.array(data[name],dtype='float')
             
     def getbunchofdata_fromdatabase(self,names,selection,order=' ORDER BY id'):
         """ Reads several parameters from database"""
-        t1=time.time()
         fieldname_part = 'SELECT %s ' % ', '.join(names)
         #gets a set of the "names" list's entry's first 8 characters
         #sets are unique so removes duplicates
-        instruments = set([s[0:8] for s in 
-                              filter(lambda a: a[9:] != 'flight_num',
-                              filter(lambda b: b[9:] != 'utc_time',
-                              filter(lambda c: c != 'utc_time',names)))]) 
+        instruments = set([s[0:8] for s in filter(lambda a: a[9:] != 'flight_num',filter(lambda b: b[9:] != 'utc_time',filter(lambda c: c != 'utc_time',names)))]) 
         instruments.discard('id') # don't need that one, it's not an instrument
         #if the instrument is returning data <instrumentname>_utc_time will not be null
         not_null_part = ''
         if len(instruments) >0:
             not_null_part = ' AND %s' % '_utc_time IS NOT NULL AND '.join(instruments) + '_utc_time IS NOT NULL'
+        #self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s AND ' + ' IS NOT NULL AND '.join(names) + ' IS NOT NULL ')% selection, )
         self.database.execute(fieldname_part + ('FROM mergeddata WHERE id %s %s %s')% (selection, not_null_part, order) )
         ans={}
-        dty=[]
-        fetched=self.database.fetchall()
-        if(fetched):
-            for i,n in zip(fetched[0],names):
-                dt=np.array(i).dtype
-                if(dt=='O'):dt='f'
-                dty.append((n,dt))
-            ansarr=np.array(fetched,dty)
+        data={}
+        for name in names:
+            data[name] = []
+        for record in self.database: #iterates over results 
             for name in names:
-                ans[name]=ansarr[name]
-        else:
-            for name in names:
-                ans[name]=np.array([])
-               
+               data[name].append(getattr(record,name))
+        for name in names:
+            try:
+               ans[name]=np.array(data[name],dtype='float')
+            except ValueError:
+               #can't cast to float, presumably string
+               ans[name] = data[name]
         return ans
                     
     def constants_not_in_file(self):
@@ -148,16 +127,6 @@ class rt_data(object):
         self.cals['CALAOSS']=[-2.1887E-02,0.0000E-00,0.0000E0,5.7967E-02,-1.7229E-02,0.0000E0,0.9505E+0,0.0050E+0]
         self.cals['CALAOA']=[3.35361E-01,2.78277E-01,-5.73689E-01,-6.1619E-02,-5.2595E-02,1.0300E-01,1.0776E+0,-0.4126E+0]
         self.cals['CALTAS']=[0.9984E0]
-        try:
-            self.database.execute("SELECT utc_time FROM mergeddata ORDER BY utc_time ASC LIMIT 1")
-            utc=self.database.fetchone()
-            log.msg(utc)
-            self.cals['MIDNIGHT']=86400*(utc.utc_time/86400)
-            log.msg("Midnight from database") 
-        except Exception as e:
-            log.msg(e)
-            self.cals['MIDNIGHT']=time.mktime(datetime.datetime.utcnow().timetuple()[0:3]+(0,0,0,0,0,0))
-        log.msg("self.cals[MIDNIGHT]=%i" % self.cals['MIDNIGHT'])
         return
 
     def read_cal_const(self,filename):
@@ -174,69 +143,3 @@ class rt_data(object):
                 s=line[8:].split(',')
                 self.cals[line[:6]]=tuple(float(c) for c in s[:ncal])
         
-
-
-class rt_status(dict):
-    def __init__(self):
-        dict.__init__(self,{})
-        self.paras=['derindex','utc_time','time_since_midnight',
-               'pressure_height_kft','static_pressure',
-               'gin_heading','gin_latitude','gin_longitude',
-               'true_air_speed','deiced_true_air_temp_c',
-               'gin_wind_speed','wind_angle','dew_point','flight_number']
-        for p in self.paras:
-            self[p]=float('NaN')
-        self['flight_number']='####'
-        self['derindex']=0
-        self.struct_fmt = ">bii11f4s"
-        self.output_format = "{0:.2f}" #Format string for those output variables that are displayed unmodified in STAT lines 2 d.p at present
-        self.derindex=0
-        self.prttime=0
-        self.gintime=0
-        self.cortime=0
-
-    def packed(self):
-        import struct
-        return struct.pack(self.struct_fmt,
-               1,
-               self['derindex'],
-               self['derindex'],
-	       self['time_since_midnight'],
-	       self['gin_heading'],
-	       self['static_pressure'],
-	       self['pressure_height_kft'],
-	       self['true_air_speed'],
-	       float(self.output_format.format(self['deiced_true_air_temp_c'])),
-	       float(self.output_format.format(self['dew_point'])),
-	       self['gin_wind_speed'],
-	       self['wind_angle'],
-	       self['gin_latitude'],
-	       self['gin_longitude'],
-	       self['flight_number'])
-
-    def checkStatus(self,rtlib,oldestdata=10):
-        """ Updates once there is a new index (id ) """
-        derind=rtlib.getdata_fromdatabase('id','>%i' % self['derindex'],'ORDER BY id DESC LIMIT 1')
-        if(derind):
-            rawdata={}
-            if(not(hasattr(self,'rawset'))):
-                self.rawset=rtlib.get_raw_required(self.paras)
-                self.rawset.remove('utc_time')
-            r='utc_time'
-            rawdata[r]=rtlib.getdata_fromdatabase(r,'=id AND %s IS NOT NULL' % r,'ORDER BY id DESC LIMIT 1')
-            t=rawdata[r][0]-oldestdata # Oldest data to display 10 secs ago.
-            for r in self.rawset:
-                rawdata[r]=rtlib.getdata_fromdatabase(r,'=id AND %s IS NOT NULL AND utc_time>%i' % (r,t),'ORDER BY id DESC LIMIT 1')
-            newdata=rtlib.derive_data(self.paras,'=id','ORDER BY id DESC LIMIT 1',rawdata=rawdata)
-            for k in self.paras:
-                try:
-                    self[k]=float(newdata[k][0])
-                except ValueError:
-                    self[k]=newdata[k][0]
-                except IndexError:
-                    if(k=='flight_number'):
-                        self[k]='####'
-                    elif(k!='derindex'):
-                        self[k]=float('NaN')
-        return self
- 

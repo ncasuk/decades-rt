@@ -4,11 +4,13 @@ def vp2dp(vp, p, temp):
     """Water vapour to dew point conversion using the formula from the 
     Buck CR2 hygrometer manual p19f. Returns the dew point in K.
     
-    :param vp: vapour pressure in mb
-    :param p: p: air pressure in mbar
-    :param temp: air temperature in Kelvin
+    Input:
+      vp: vapour pressure in mb
+      p: air pressure in mbar
+      temp: air temperature in Kelvin
 
-    :result: dew point temperature in K
+    Output:
+      dew point temperature in K
     
     """
     a, b, c, d = (6.1121, 18.678, 257.14, 234.5)
@@ -22,10 +24,13 @@ def vp2fp(vp, p, temp):
     """Water vapour to frost point conversion using the formula from the 
     Buck CR2 hygrometer manual p19f. Returns the dew point in K.
     
-    :param vp: vapour pressure in mb
-    :param p: air pressure in mbar
-    :param temp: air temperature in Kelvin
-    : return: frost point temperature in K
+    Input:
+      vp: vapour pressure in mb
+      p: air pressure in mbar
+      temp: air temperature in Kelvin
+
+    Output:
+      frost point temperature in K
     
     """
     a, b, c, d=(6.1115, 23.036, 279.82, 333.7)

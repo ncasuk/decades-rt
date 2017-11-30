@@ -1,7 +1,6 @@
 from twisted.internet.protocol import Protocol
 from twisted.python import log
 from datetime import datetime
-import time
 import os, struct, json, re
 from distutils.dir_util import mkpath
 
@@ -25,23 +24,37 @@ class DecadesTCPListener(Protocol):
       '''reconstitutes a possibly-fragmented incoming TCP record'''
 
       self.__buffer = self.__buffer + data
-      while len(self.__buffer) >= self.header_length:
-          if self.INSTRUMENT.match(self.__buffer[0:9]):
-              (packet_length, ) = struct.unpack('>I',self.__buffer[9:self.header_length])
-              if len(self.__buffer)<self.header_length+packet_length:
-                  #Incomplete; wait for more data
-                  log.msg('Buffered %s bytes' % len(self.__buffer))
-                  return
-              else:
-                  self.complete_record(self.__buffer[:self.header_length+packet_length])
-                  self.__buffer=self.__buffer[self.header_length+packet_length:]                  
-          else:    
-              log.msg('Discarded %s bytes' % len(self.__buffer))
-              #Drops TCP connection to console
-              # so stream from it restarts "clean"
-              log.msg(repr(self.__buffer))
-              self.transport.loseConnection()
-          
+      if len(self.__buffer) <= self.header_length:
+         #incomplete, and still in the header; wait for more data
+         return
+      
+      #Decode packet length
+      (packet_length, ) = struct.unpack('>I',self.__buffer[9:self.header_length])
+      log.msg('%s %s arrived, %s is full length' % (self.__buffer[1:9], len(data), packet_length+self.header_length))
+      #split buffer into expected size chunks
+      chunks = [self.__buffer[i:i+packet_length+self.header_length] for i in range(0, len(self.__buffer), packet_length+self.header_length)]
+      while chunks:
+         line = chunks.pop()
+         if(len(line) == packet_length+self.header_length):
+            self.complete_record(line)
+            #strip that line from the buffer
+            self.__buffer = "".join(chunks)
+         elif (len(line) < packet_length+self.header_length):
+            #it's trailing incomplete data
+            if(self.INSTRUMENT.match(self.__buffer[0:9])):
+               #(probably) valid, keep it
+               log.msg('Buffered %s bytes' % len(line))
+               self.__buffer = line
+            else:
+               log.msg('Discarded %s bytes' % len(line))
+               #Drops TCP connection to console
+               # so stream from it restarts "clean"
+               log.msg(repr(line))
+               self.transport.loseConnection()
+               #raise ValueError(repr(self.__buffer))
+         else:
+            #should never happen...
+            raise ValueError
  
    #used to be the dataReceived method, above 
    def complete_record(self, data):
@@ -52,12 +65,6 @@ class DecadesTCPListener(Protocol):
       self.writedata(data, instrument, flightno)
    
    def writedata(self, data, instrument, flightno):
-      if(data[13:17]==' NOW'): # Deal with cases which don't include time, but require it ...
-                               # string ' NOW' would be 6/03/1987 long before any 146 flights
-          data=data[:13]+struct.pack('>I',time.time())+data[17:]
-          if(data[17:19]=='ms'): # Optional millisecond fraction
-              data=data[:17]+struct.pack('>H',1000*(time.time() % 1))+data[19:]
-      print(struct.unpack('>I',data[13:17]))
       try:
          self.factory.outfiles[instrument][flightno].write(data)
          self.factory.outfiles[instrument][flightno].flush()
