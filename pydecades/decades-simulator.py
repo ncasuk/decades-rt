@@ -52,7 +52,7 @@ class DecadesMUDPSender(DatagramProtocol):
         self.loopObj.start(1, now=False)
 
     def stopProtocol(self):
-        "Called after all transport is teared down"
+        "Called after all transport is torn down"
         pass
 
     def datagramReceived(self, data, (host, port)):
@@ -86,7 +86,9 @@ class DecadesMUDPSender(DatagramProtocol):
                'di_temp':int(240000 + (9000 * math.sin(timestamp/3))),
                'ge_dew':int(39371 + (1204 * math.cos(timestamp/3))),
                'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
-               'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3)))
+               'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3))),
+               'cabin_t':int(1847435 + (100 * math.sin(timestamp/2))),
+               'cabin_p':int(28963 + (50 * math.cos(timestamp/2.5)))
             }
             fakedata['UPPBBR'] = {
                'utc_time':timestamp,
@@ -114,7 +116,8 @@ class DecadesMUDPSender(DatagramProtocol):
             }
             fakedata['AERACK'] = {
                'utc_time':timestamp,
-               'flight_num':self.flightnum
+               'flight_num':self.flightnum,
+               'buck_mirr_cln_flag':0
             }
             fakedata['LOWBBR'] = {
                'utc_time':timestamp,
