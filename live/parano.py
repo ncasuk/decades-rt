@@ -4,9 +4,9 @@
 Display Parameters csv file '''
 import web
 
-urls = {
+urls = (
    '', 'parano'
-}
+)
 app= web.application(urls, locals())   
 
 #Standard python modules for config and date/time functions
