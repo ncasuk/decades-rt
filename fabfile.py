@@ -140,8 +140,6 @@ def setup_local_dev_environment():
    local('sudo mkdir -p /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/web/css /var/www/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/web/js /var/www/%(prj_name)s/' % env)
-   local('sudo ln -nfs ${PWD}/doc/_build/html /var/www/%(prj_name)s/docs' % env)
-   local('sudo ln -nfs ${PWD}/doc/_build/latex/%(prj_name)s.pdf /var/www/%(prj_name)s/docs/' % env)
    local('sudo ln -nfs ${PWD}/Horace/web/plot/map_data.dat.gz /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/Horace/web/plot/overlay.txt /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/Horace/web/plot/Parano_old.txt /var/www/%(prj_name)s/plot' % env)
@@ -164,7 +162,10 @@ def setup_local_dev_environment():
    local('git submodule init')
    local('git submodule update')
    docs()
-   pdfdocs()
+   local('sudo ln -nfs ${PWD}/doc/_build/html /var/www/%(prj_name)s/docs' % env)
+   local('sudo mkdir -p ${PWD}/doc/_build/latex' % env)
+   local('sudo ln -nfs ${PWD}/doc/_build/latex/%(prj_name)s.pdf /var/www/%(prj_name)s/docs/' % env)
+   #pdfdocs()
 
    print("""run the decades-server app:
      DECADESPORT=1500 twistd -ny decades-server.tac
@@ -174,7 +175,7 @@ def setup_local_dev_environment():
      http://decades-dev/""")
 
    warn(red('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html'))
-   warn(red('You will need to install Titillium font for the PDF docs; try http://www.campivisivi.net/titillium/text (Titillium_roman_upright_italic version 2.0)'))
+   warn(red('You will need to install Titillium font for the PDF docs; try http://www.campivisivi.net/titillium/text (Titillium_roman_upright_italic version 2.0) and then run fab pdfdocs'))
 
    
 @runs_once
