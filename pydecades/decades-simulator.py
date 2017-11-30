@@ -83,10 +83,10 @@ class DecadesMUDPSender(DatagramProtocol):
             fakedata['CORCON'] = {
                'utc_time':timestamp,
                'flight_num':self.flightnum,
-               'di_temp':int(240000 + (9000 * math.sin(timestamp/3))),
-               'ge_dew':int(39371 + (1204 * math.cos(timestamp/3))),
-               'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
-               'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3))),
+               'di_temp':int(240000 + (9000 * math.sin(timestamp/3.0))),
+               'ge_dew':int(39371 + (1204 * math.cos(timestamp/3.0))),
+               'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3.0))),
+               'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3.0))),
                'cabin_t':int(1847435 + (3000 * math.sin(timestamp/6.0))), #3000 ~ 1 degC
                'cabin_p':int(28963 + (50 * math.cos(timestamp/2.5)))
             }
