@@ -14,6 +14,7 @@ install-stamp
 *.deb
 *.dsc
 *.build
+*.buildinfo
 *.changes
 *.tar.gz
 *.class
