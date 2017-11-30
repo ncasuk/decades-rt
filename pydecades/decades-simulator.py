@@ -87,7 +87,7 @@ class DecadesMUDPSender(DatagramProtocol):
                'ge_dew':int(39371 + (1204 * math.cos(timestamp/3))),
                'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
                'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3))),
-               'cabin_t':int(1847435 + (3000 * math.sin(timestamp/6))), #3000 ~ 1 degC
+               'cabin_t':int(1847435 + (3000 * math.sin(timestamp/6.0))), #3000 ~ 1 degC
                'cabin_p':int(28963 + (50 * math.cos(timestamp/2.5)))
             }
             fakedata['UPPBBR'] = {
