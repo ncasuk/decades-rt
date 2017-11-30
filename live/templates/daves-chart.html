@@ -13,8 +13,6 @@
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.simpleresample.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.axisnavigate.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
-        <script language="javascript" type="text/javascript" src="/js/jquery.event.drag.js"></script>
-        <script language="javascript" type="text/javascript" src="/js/jquery.mousewheel.js"></script>
 	<script type="text/javascript">
 //<![CDATA[
    var paramlist;
@@ -33,7 +31,7 @@
       $("#"+this.attr('id')+" option").attr('selected', false);
    }
    $(document).ready(function() {
-      $.getJSON('/live/para_no.raw', function(paramlist){
+      $.getJSON('/live/para_no.json', function(paramlist){
          //paramlist = json;
          
          //populate parameter choices

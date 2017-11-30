@@ -47,7 +47,7 @@ $.event.special.rightclick = {
 
     function bindevents(plot){
         var offset=plot.offset();
-
+        var prevPos = 0;
 	$.each(plot.getAxes(), function (i, axis) {
 	             axis.navigationdiv.unbind(); // in cae called previously
                  axis.navigationdiv
@@ -56,37 +56,56 @@ $.event.special.rightclick = {
 					function () { $(this).css({ opacity: 0.10 }) },
 					function () { $(this).css({ opacity: 0 }) }
 				)
-                                .bind("dragend",function (event,dd) { 
+                                .bind("drag",function(e){
+                                      if(axis.direction=="x"){
+                                          plot.pan({ left: prevPos - e.pageX, top: 0 });
+                                          prevPos = e.pageX;
+                                      }else{
+                                          plot.pan({ left:0, top: prevPos - e.pageY });
+                                          prevPos = e.pageY;
+                                      }
+
+                 })
+                                .bind("dragstart", { distance: 10 },function(e){
+                                       if(axis.direction=="x"){
+                                           prevPos=e.pageX;
+                                       }else{
+                                           prevPos=e.pageY;
+                                       }
+                 })
+                                .bind("dragend",function (e) { 
                                         if(axis.direction=="x"){
-                                          var x1=axis.c2p(dd.startX - offset.left);
-                                          var x2=axis.c2p(event.pageX - offset.left);
-                                          axis.options.max=axis.max+x1-x2;
-                                          axis.options.min=axis.min+x1-x2;
-                                          plot.setupGrid();
-                                          plot.draw();
+                                            plot.pan({ left: prevPos - e.pageX, top: 0 });
+                                          //var x1=axis.c2p(dd.startX - offset.left);
+                                          //var x2=axis.c2p(event.pageX - offset.left);
+                                          //axis.options.max=axis.max+x1-x2;
+                                          //axis.options.min=axis.min+x1-x2;
+                                          //plot.setupGrid();
+                                          //plot.draw();
                                         }
                                         if(axis.direction=="y"){
-                                          var y1=axis.c2p(dd.startY - offset.top);
-                                          var y2=axis.c2p(event.pageY - offset.top);
-                                          axis.options.max=axis.max+y1-y2;
-                                          axis.options.min=axis.min+y1-y2;
-                                          plot.setupGrid();
-                                          plot.draw();
+                                            plot.pan({ left:0, top: prevPos - e.pageY });
+                                          //var y1=axis.c2p(dd.startY - offset.top);
+                                          //var y2=axis.c2p(event.pageY - offset.top);
+                                          //axis.options.max=axis.max+y1-y2;
+                                          //axis.options.min=axis.min+y1-y2;
+                                          //plot.setupGrid();
+                                          //plot.draw();
                                         }
                                 })
                                 .bind("mousewheel",function(event,dd){
-                                        scale=(3.0-dd)/3.0
+                                         scale=(3.0-dd)/3.0;
                                         if(axis.direction=="x"){
                                           var x=axis.c2p(event.pageX - offset.left);
-                                          axis.options.max=x+(axis.max-x)*scale
-                                          axis.options.min=x-(x-axis.min)*scale
+                                          axis.options.max=x+(axis.max-x)*scale;
+                                          axis.options.min=x-(x-axis.min)*scale;
                                           plot.setupGrid();
                                           plot.draw();
                                         }
                                         if(axis.direction=="y"){
                                           var y=axis.c2p(event.pageY - offset.top);
-                                          axis.options.max=y+(axis.max-y)*scale
-                                          axis.options.min=y-(y-axis.min)*scale
+                                          axis.options.max=y+(axis.max-y)*scale;
+                                          axis.options.min=y-(y-axis.min)*scale;
                                           plot.setupGrid();
                                           plot.draw();
                                         }
