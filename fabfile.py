@@ -124,7 +124,7 @@ def setup_local_dev_environment():
    """Sets up a development environment on a Ubuntu install"""
    local('sudo apt-get -y install aptitude')
    #stuff to *run* the software (you will need to first "apt-get install fabric")
-   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex fonts-linuxlibertine debhelper fastjar fabric git-buildpackage')
+   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex fonts-linuxlibertine debhelper fastjar fabric git-buildpackage lm-sensors')
    local('sudo a2enmod wsgi')
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
    #runtime ini files
