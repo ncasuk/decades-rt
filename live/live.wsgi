@@ -2,7 +2,7 @@
 import web
 import sys
 sys.path.append('/var/www/decades-live')
-import status, flight, parano, avaps, livejson, testsonde
+import status, flight, parano, avaps
 from render_helper import render_template
 
 #Libraries to access the PostgreSQL database
@@ -18,29 +18,22 @@ from pydecades.rt_calcs import rt_derive
 from pydecades.database import get_database
 
 from datetime import datetime
-from dateutil import parser
-from time import mktime
 from pytz import timezone
 
 #to encode
 import json
-import csv, operator
 
 urls = (
    '/index', 'index',
    '/stat', status.app,
    '/avaps', avaps.app,
-   '/livejson', livejson.app,
    '/parano', parano.app,
    '/flight', flight.app,   
-   '/tank_status\.(.*)', 'tank_status',
-   '/livegraph', 'livegraph',
-   '/sonde', testsonde.app
+   '/tank_status\.(.*)', 'tank_status'
 )
 app = web.application(urls, globals(), autoreload=False)
 application = app.wsgifunc()
 
-#web.config.debug = False
 
 class index:        
     def GET(self):
@@ -133,42 +126,6 @@ class tank_status:
          
         else:
             raise web.notfound()
-
-class livegraph:
-   def GET(self):
-      '''parser = DecadesConfigParser()
-      parameters_file = parser.get('Config','parameters_file')
-      params = '';
-      #read CSV display parameters file
-      with open(parameters_file, 'r') as csvfile:
-         parameters = csv.DictReader(csvfile)   #uses first line as fieldnames
-         sortedparams = sorted(parameters, key=operator.itemgetter('DisplayText'))
-         for line in sortedparams:
-            params = params + '<option value="' + line['ParameterName'] + '">' + line['DisplayText'] + ' ' + (line['DisplayUnits']).strip('()') + '</option>'
-      '''
-           
-      #defaults to from now
-      now = int(mktime(datetime.utcnow().timetuple()))
-      #HTML standard colours (except for white)
-      colours = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow']
-      user_data = web.input(x="javascript_time",y=["deiced_true_air_temp_c"],frm=None,to=None,c=colours)
-      if user_data.frm is not None and user_data.frm is not '':
-         try:
-            frm_epoch = int(mktime(parser.parse(user_data.frm + ' UTC').timetuple()))
-         except (AttributeError, ValueError):
-            frm_epoch = now 
-      else:
-         frm_epoch = now
-
-      if user_data.to is not None and user_data.to is not '':
-         try: 
-            to_epoch = int(mktime(parser.parse(user_data.to + ' UTC').timetuple()))
-         except (AttributeError, ValueError):
-            to_epoch = ''
-      else:
-         to_epoch = ''
-      return render_template('livegraph.html', x=user_data.x, y=user_data.y, c=user_data.c,frm_epoch=frm_epoch, to_epoch=to_epoch,colours=colours)
-      #return '<h1>' + user_data.y0 + '</h1>'
             
          
 if __name__ == "__main__":
