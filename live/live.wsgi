@@ -79,7 +79,7 @@ class tank_status:
             #No PTPD statlog
             statuses['Tank']['PTPD'] = None;
             
-        results = self.rtlib.derive_data_alt(['time_since_midnight','flight_number','static_pressure'],'=id','ORDER BY id DESC LIMIT 1')
+        results = self.rtlib.derive_data_alt(['time_since_midnight','flight_number','static_pressure'],'','DESC LIMIT 1')
         try:
             statuses['Tank']['Flight'] = str(results['flight_number'][0])
         except IndexError:
