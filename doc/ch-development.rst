@@ -68,7 +68,29 @@ Alternately, you can create a package using:
 copy the resulting ``.deb`` file to the tank(s) and then manually install the 
 package with ``dpkg -i <name-of-deb-file> || apt-get -fy install`` (``fab deploy_deb:<name-of-deb-file>`` will do this automatically)
 
+PostgreSQL
+----------
+
 Accessing the Postgres Database directly
-----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``psql -h 127.0.0.1 --port=5432 --password --user inflight inflightdata``
+
+Monitoring the number of clients
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This can be useful to check if some process is leaving clients idle but unclosed. There is a ``max_connections`` parameter in the
+Postgres config file (i.e. ``/etc/postgresql/X.X/main/postgresql.conf`` where X.X is the Postgres version you're running) after which 
+it will refuse further queries. This defaults to 100. It has been set to 1000 on Drunk, but it is only 115 on Fish and Septic as they have
+a lower max Shared Memory size. 
+
+``SELECT SUM(numbackends) FROM pg_stat_database;``
+
+If Postgres is refusing queries due to reaching ``max_connections`` you can restart it to close any idle ones:
+
+::
+
+   sudo service postgresql restart
+   sudo service decades restart
+
+
