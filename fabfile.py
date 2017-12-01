@@ -172,7 +172,7 @@ def setup_local_dev_environment():
    and maybe the DB simulator:
      pydecades/database-simulator.py
    and browse to:
-     http://decades-dev/""")
+     http://%(prj_name)s-dev/""" % env)
 
    warn(red('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html'))
    warn(red('You will need to install Titillium font for the PDF docs; try http://www.campivisivi.net/titillium/text (Titillium_roman_upright_italic version 2.0) and then run fab pdfdocs'))
@@ -309,8 +309,20 @@ def Plot_jar():
 def local_start_simulator():
    """Starts the DECADES simulator.
 
-    Tries ``./pydecades/decades-simulator.py`` first, failing that tries to find the installed one"""
+    Tries ``./py%(prj_name)s/%(prj_name)s-simulator.py`` first, failing that tries to find the installed one"""
    try:
-      subprocess.check_call(['python2.7', './pydecades/decades-simulator.py'])
+      subprocess.check_call(['python2.7', './py%(prj_name)s/%(prj_name)s-simulator.py' % env])
    except subprocess.CalledProcessError:
-      subprocess.check_call(['python2.7', '/usr/lib/python2.7/dist-packages/pydecades/decades-simulator.py'])
+      subprocess.check_call(['python2.7', '/usr/lib/python2.7/dist-packages/py%(prj_name)s/%(prj_name)s-simulator.py' % env])
+
+@runs_once
+@task
+def local_start_listener():
+
+   """Starts the DECADES listener.
+
+    Tries ``./py%(prj_name)s/%(prj_name)s-listener.tac`` first, failing that tries to find the installed one"""
+   try:
+      subprocess.check_call(['twistd', "--pidfile=%(prj_name)s-listener.pid" % env,"-ny", "./py%(prj_name)s/%(prj_name)s-listener.tac" % env])
+   except subprocess.CalledProcessError:
+      subprocess.check_call(['twistd', "--pidfile=%(prj_name)s-listener.pid" % env,"-ny","/usr/lib/python2.7/dist-packages/py%(prj_name)s/%(prj_name)s-listener.tac" % env])

@@ -54,15 +54,15 @@ Run the Twisted decades-server and the database simulator
 
 and in a different terminal or `screen <http://www.gnu.org/software/screen/>`_:
 
-``DECADESPORT=1500 twistd --pid=listener.pid -ny pydecades/decades-listener.tac``
+``fab local_start_listener`` (or ``DECADESPORT=1500 twistd --pid=listener.pid -ny pydecades/decades-listener.tac`` )
 
 and in a third:
 
-``pydecades/database-simulator.py``
+``fab local_start_simulator`` (or ``pydecades/database-simulator.py``)
 
 Then browse to:
 
-``http://decades-test/``
+``http://decades-dev/``
 
 If you are running on a “headless” (i.e. without X) linux box and you
 need to run firefox on it and display it on a local machine, you can use
