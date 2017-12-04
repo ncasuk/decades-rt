@@ -58,10 +58,22 @@ $.event.special.rightclick = {
 				)
                                 .bind("drag",function(e){
                                       if(axis.direction=="x"){
-                                          plot.pan({ left: prevPos - e.pageX, top: 0 });
-                                          prevPos = e.pageX;
+                                          //plot.pan({ left: prevPos - e.pageX, top: 0 });
+                                          var x1=axis.c2p(prevPos - offset.left);
+                                          var x2=axis.c2p(e.pageX - offset.left);
+                                          axis.options.max=axis.max+x1-x2;
+                                          axis.options.min=axis.min+x1-x2;
+                                          plot.setupGrid();
+                                          plot.draw();
+                                         prevPos = e.pageX;
                                       }else{
-                                          plot.pan({ left:0, top: prevPos - e.pageY });
+                                          //plot.pan({ left:0, top: prevPos - e.pageY });
+                                          var y1=axis.c2p(prevPos - offset.top);
+                                          var y2=axis.c2p(e.pageY - offset.top);
+                                          axis.options.max=axis.max+y1-y2;
+                                          axis.options.min=axis.min+y1-y2;
+                                          plot.setupGrid();
+                                          plot.draw();
                                           prevPos = e.pageY;
                                       }
 
@@ -75,22 +87,22 @@ $.event.special.rightclick = {
                  })
                                 .bind("dragend",function (e) { 
                                         if(axis.direction=="x"){
-                                            plot.pan({ left: prevPos - e.pageX, top: 0 });
-                                          //var x1=axis.c2p(dd.startX - offset.left);
-                                          //var x2=axis.c2p(event.pageX - offset.left);
-                                          //axis.options.max=axis.max+x1-x2;
-                                          //axis.options.min=axis.min+x1-x2;
-                                          //plot.setupGrid();
-                                          //plot.draw();
+                                          //plot.pan({ left: prevPos - e.pageX, top: 0 });
+                                          var x1=axis.c2p(prevPos - offset.left);
+                                          var x2=axis.c2p(e.pageX - offset.left);
+                                          axis.options.max=axis.max+x1-x2;
+                                          axis.options.min=axis.min+x1-x2;
+                                          plot.setupGrid();
+                                          plot.draw();
                                         }
                                         if(axis.direction=="y"){
-                                            plot.pan({ left:0, top: prevPos - e.pageY });
-                                          //var y1=axis.c2p(dd.startY - offset.top);
-                                          //var y2=axis.c2p(event.pageY - offset.top);
-                                          //axis.options.max=axis.max+y1-y2;
-                                          //axis.options.min=axis.min+y1-y2;
-                                          //plot.setupGrid();
-                                          //plot.draw();
+                                          //  plot.pan({ left:0, top: prevPos - e.pageY });
+                                          var y1=axis.c2p(prevPos - offset.top);
+                                          var y2=axis.c2p(e.pageY - offset.top);
+                                          axis.options.max=axis.max+y1-y2;
+                                          axis.options.min=axis.min+y1-y2;
+                                          plot.setupGrid();
+                                          plot.draw();
                                         }
                                 })
                                 .bind("mousewheel",function(event,dd){
