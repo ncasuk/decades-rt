@@ -40,6 +40,7 @@ class parameters:
          return output
 
       elif filetype == 'json':
+         web.header('Content-Type','application/json; charset=utf-8', unique=True) 
          output = {} #dictionary
          for line in sortedparams:
             output[line['ParameterName']] = line
