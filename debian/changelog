@@ -1,6 +1,6 @@
-decades (1.7.4~1.gbp978d27) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbp961f0d) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @978d274a8df4f9b203373cae6235feb3913aa743 **
+  ** SNAPSHOT build @961f0dc2481e51a92c1db6b13ae441cf6b30bc73 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @ae372ee07459a92b124b8a49df7e285c38f5d48f **
@@ -177,8 +177,9 @@ decades (1.7.4~1.gbp978d27) UNRELEASED; urgency=medium
   * Correct for Python Simplified GIL State API WSGI bug
   * return empty pressure_alt values to trigger RuntimeWarnings and hence Python Simplified GIL State API bug if present
   * UNRELEASED
+  * Add Titillium font to package
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Tue, 05 Dec 2017 17:21:51 +0000
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Wed, 06 Dec 2017 09:29:02 +0000
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
