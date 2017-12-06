@@ -24,7 +24,7 @@ class parameters:
       #read CSV display parameters file
       with open(parameters_file, 'r') as csvfile:
          parameters = csv.DictReader(csvfile)   #uses first line as fieldnames
-         sortedparams = sorted(parameters, key=operator.itemgetter('DisplayText'))
+         sortedparams = sorted(parameters, key=operator.itemgetter('ParameterIdentifier'))
 
       if filetype == 'txt': 
          output = 'PARANO.TXT - Derived parameter numbers for HORACE                      ' + datetime.utcnow().strftime('%d/%m/%Y') + '\n'
