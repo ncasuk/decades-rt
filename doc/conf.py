@@ -185,7 +185,11 @@ latex_elements = {'papersize':'a4paper',
     'fontenc': '\\usepackage{fontspec}',
     'fontpkg': '''\
 \\setmainfont{Linux Libertine O}
-\\setsansfont{Titillium}
+\\setsansfont[  Path=../../../config/titillium/,
+                UprightFont = *-RegularUpright,
+                BoldFont = *-Bold,
+                ItalicFont = *-RegularItalic,
+                BoldItalicFont = *-BoldItalic]{Titillium}
 \\setmonofont{Ubuntu Mono}''',
 	'inputenc':'',
 	'utf8extra':'',

@@ -10,7 +10,7 @@
    ServerAlias decades-test
    ServerAlias 192.168.101.108
    ServerAlias 192.168.101.110
-   ServerAlias 192.168.101.81
+   ServerAlias 192.168.101.111
    ServerAlias 127.0.0.1
 
    DocumentRoot /var/www/decades/
@@ -31,6 +31,7 @@
    </Directory>
 
    Redirect /index.html /live/index
+   WSGIApplicationGroup %{GLOBAL}
    WSGIScriptAlias /live/ /var/www/decades-live/live.wsgi/
    WSGIScriptAlias /plot/Parano.txt /var/www/decades-live/live.wsgi/parano.txt
    #WSGIScriptAlias /plot/FLTSUMM /var/www/decades-live/flightmanager.wsgi

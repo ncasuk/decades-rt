@@ -70,7 +70,10 @@ class tank_status:
         #tank name (e.g. fish or septic)
         statuses['Tank'] =  {}
         statuses['Tank']['Name'] = platform.node()
-        statuses['Tank']['Temp'] = subprocess.check_output("sensors")
+        try:
+            statuses['Tank']['Temp'] = subprocess.check_output("sensors")
+        except subprocess.CalledProcessError:
+            statuses['Tank']['Temp'] = None
         #get PTPD status
         try:
             with open('/var/log/ptpd/ptpd-stats.log','r') as ptpdstats:
@@ -79,9 +82,9 @@ class tank_status:
             #No PTPD statlog
             statuses['Tank']['PTPD'] = None;
             
-        results = self.rtlib.derive_data_alt(['time_since_midnight','flight_number','static_pressure'],'=id','ORDER BY id DESC LIMIT 1')
+        results = self.rtlib.derive_data_alt(['time_since_midnight','flight_number','static_pressure'],'','DESC LIMIT 1')
         try:
-            statuses['Tank']['Flight'] = str(results['flight_number'][0])
+            statuses['Tank']['Flight'] = results['flight_number']
         except IndexError:
             pass #ignore it, it's not been set yet
         
@@ -93,14 +96,17 @@ class tank_status:
             pid = f.readlines()
             statuses['Process'][os.path.basename(each).replace('.pid','')] = os.path.exists('/proc/' + pid[0])
         statuses['TCP'] = {}
-        with open(os.path.join(self.output_dir,'latest'),'r') as latest:
-            latest_array = json.load(latest)
-            for each in latest_array:
-               if latest_array[each] != 'MISSING':
-                  fileinfo = os.stat(latest_array[each])
-                  statuses['TCP'][each] = [latest_array[each], fileinfo.st_mtime, fileinfo.st_size]
-               else:
-                  statuses['TCP'][each] = ['MISSING', None, None]
+        try:
+            with open(os.path.join(self.output_dir,'latest'),'r') as latest:
+                latest_array = json.load(latest)
+                for each in latest_array:
+                    if latest_array[each] != 'MISSING':
+                        fileinfo = os.stat(latest_array[each])
+                        statuses['TCP'][each] = [latest_array[each], fileinfo.st_mtime, fileinfo.st_size]
+                    else:
+                        statuses['TCP'][each] = ['MISSING', None, None]
+        except IOError:
+            statuses['TCP']['TCP files'] = ['NOT FOUND',None, None]
             
         #UDP data
         statuses['UDP'] = {}
@@ -108,7 +114,7 @@ class tank_status:
             #of form twcdat01_utc_time 
             field = each.lower() + '_utc_time'
             #gets most recent UTC Time field from that console
-            entries = self.db.select('mergeddata', {}, where='mergeddata.' + field + ' IS NOT NULL', what=field, order='mergeddata.id DESC', limit=1)
+            entries = self.db.select('mergeddata', {}, where='mergeddata.' + field + ' IS NOT NULL', what=field, order='mergeddata.utc_time DESC', limit=1)
             statuses['UDP'][each] = None
             for entry in entries: #should only be 0 or 1 entries
                statuses['UDP'][each] = dict(entry)[field]

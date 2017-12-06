@@ -2,6 +2,7 @@
 # vim: set fileencoding=utf-8:
 
 import web
+import math
 
 urls = (
     '', 'status'
@@ -28,11 +29,14 @@ class status:
    in Status mode'''
    def deg_to_dms(self, deg):
       '''Converts decimal degrees into a degrees/minutes/seconds list'''
-      d = int(deg)
-      md = abs(deg - d) * 60
-      m = int(md)
-      sd = (md - m) * 60
-      return [d, m, sd]
+      if math.isnan(deg):
+         return [float('NaN'), float('NaN'), float('NaN')]
+      else:
+         d = int(deg)
+         md = abs(deg - d) * 60
+         m = int(md)
+         sd = (md - m) * 60
+         return [d, m, sd]
 
    def GET(self):
       web.header('Content-Type','text/html; charset=utf-8', unique=True) 

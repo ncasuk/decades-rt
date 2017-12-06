@@ -112,8 +112,8 @@
             //set frm_epoch to most recent
             window.frm_epoch=livejson.slice(-1)[0].utc_time;
             },  //if success, call update()
-            error: function(xhr, status, thrown) { alert(status + thrown); },
-	    timeout: 2000
+            error: function(xhr, status, thrown) { },
+	         timeout: 2000
          });
 
 			// Zip the generated y values with the x values

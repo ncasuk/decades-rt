@@ -31,15 +31,16 @@ class livejson:
    '''Produces the requested data as JSON for live display'''
    default = ['pressure_height_m','static_pressure','gin_latitude','gin_track_angle','gin_longitude','gin_heading','gin_d_velocity','gin_altitude','gin_speed', 'true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle']
    always = ['time_since_midnight','utc_time']
+   conn = get_database()
+   cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+   parser = DecadesConfigParser()
+   calfile = parser.get('Config','calfile')
+   rtlib = rt_derive.derived(cur, calfile)
+
    def GET(self):
       '''Usage: via web.py, e.g. http://fish/live/livejson'''
       web.header('Content-Type','application/json; charset=utf-8', unique=True) 
       web.header('Cache-control', 'no-cache')
-      conn = get_database()
-      cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-      parser = DecadesConfigParser()
-      calfile = parser.get('Config','calfile')
-      rtlib = rt_derive.derived(cur, calfile)
       user_data = web.input(para=[])
       if len(user_data.para) == 0:
          #no paras sent, send default
@@ -74,7 +75,7 @@ class livejson:
             pass;
      
          #get data
-      data = rtlib.derive_data_alt(self.always + parameters, conditions,orderby)
+      data = self.rtlib.derive_data_alt(self.always + parameters, conditions,orderby)
       keylist = data.keys()
       #loop over records, make each record self-contained
       dataout = []

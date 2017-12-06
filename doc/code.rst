@@ -20,3 +20,6 @@ Module and Classes
 
 .. automodule:: pydecades.decades_server
    :members:
+
+.. automodule:: pydecades.decades_gin_forward
+    :members:

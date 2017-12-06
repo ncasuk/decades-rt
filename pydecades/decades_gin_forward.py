@@ -3,12 +3,19 @@ from twisted.internet import reactor
 from twisted.internet.protocol import Protocol, ReconnectingClientFactory, ServerFactory
 from twisted.python import log
 from datetime import datetime
-import os, json
+import os
+import json
 from distutils.dir_util import mkpath
 
 from pydecades.configparser import DecadesConfigParser
 
 class Proxy(Protocol):
+   '''GIN recorder and forwarder for DECADES
+   
+   * Dan Walker, NCAS
+   
+   Listens on address/port specified in ``decades.ini`` for incoming GIN data. It then rebroadcasts the data on outport/outaddress,
+   also as specified, and also records the incoming data in the output dir.'''
    noisy = True
    peer = None
  

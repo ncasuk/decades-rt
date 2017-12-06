@@ -1,6 +1,9 @@
-decades (1.7.4~1.gbpa20c53) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbp961f0d) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @a20c53bdc68ecf5a406f6fc90f8b9dafc3c75ce1 **
+  ** SNAPSHOT build @961f0dc2481e51a92c1db6b13ae441cf6b30bc73 **
+
+  [ Dan Walker ]
+  ** SNAPSHOT build @ae372ee07459a92b124b8a49df7e285c38f5d48f **
 
   * Adding description of various tanks (proposed)
   * Link all Display Params files
@@ -75,8 +78,108 @@ decades (1.7.4~1.gbpa20c53) UNRELEASED; urgency=medium
   * Abort runnin Ajax call before Submit
   * to time working
   * Correct to-time code
+  * Add purge data function
+  * Update changelog
+  * Change so Config is not loaded until needed, otherwise setup_local_dev won't work
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Thu, 14 Sep 2017 16:45:23 +0100
+  [ Drunk Tank ]
+  * Add listner call to How-to
+
+  [ Dan Walker ]
+  * adding to howto
+  * Add Header and Drunk to manifest file
+
+  [ Drunk Tank ]
+  * Changed to match Septic and reality:)
+  * init submodules on dev setup; add test DB to single unit tests
+
+  [ Dan Walker ]
+  * Fix Stat block display errors
+
+  [ Axel Wellpott @ obelix ]
+  * UDP definition file for AQD-NOx instrument updated
+
+  [ Dan Walker ]
+  * HACK: fiddle flight num to display/work correctly with DB
+
+  [ Drunk Tank ]
+  * Additional testing for flight_number
+  * cast unicode to str for HORACE-type STAT
+  * Changes to make drunktank work for other machines
+
+  [ Dan Walker ]
+  * Display params for SEA probe and AQD NOy/H₂S
+  * Add decades-dev to manifest file
+  * Changelog auto-update
+  * Manifest backport from dan-test
+  * Correct Git dch call
+  * Changelog update
+  * Ignore later-version doc build dir
+
+  [ Axel Wellpott @ obelix ]
+  * Spaces removed in paramter names
+  * SO2 udp definition file updated to latest version
+
+  [ Axel Wellpott@dacru ]
+  * dew point code for WVSS2[A,B] added to rt_derive. vp conversion coded added to formulas
+
+  [ Dan Walker ]
+  * All display params files
+  * Add missing / reorder local dev setup
+  * Silently ignore AJAX errors
+  * Tuple not Dict
+  * Tuple not Dict
+  * Generate docs and combine all package install commands
+  * septic sync - vp2dp forumla calls
+  * SEA probe data format added
+  * Fix unit tests
+  * Read docstrings again
+  * Remove duplicated functions
+  * remove obsolete params
+  * Add test case name comment per best practice
+  * Ignore buildinfo files
+  * Add Header IP address
+  * Deal correctly with NaN co-ordinates
+  * Add more modern autocommit setting
+  * add extra fields with semi-sensible values
+  * Move connection into class vars
+  * Increase variance of cabin_t
+  * Make it us floating-point maths for smoother curve
+
+  [ datid ]
+  * Fixed axis panning in daves_chart
+
+  [ Dan Walker ]
+  * m dummy latex build dir so we can include a dangling link for the decades.pdf file
+  * Floating point arithmetic for smoother curves
+
+  [ Drunk Tank ]
+  * Added status bar to daves_chart
+
+  [ Dan Walker ]
+  * Add lm-sensors to dependencies
+
+  [ Drunk Tank ]
+  * Fixed incorrect call to derive_data_alt
+  * Rearranged daves-chart a bit
+
+  [ Dan Walker ]
+  * Adding backup known-good JAR files
+  * Add local_start_listener stanza
+  * GIN Forward notes
+  * Adding how-to-monitor-postgres-clients section
+
+  [ David Tiddeman ]
+  * Fixed axis navigation to be independent per axis on panning
+
+  [ Dan Walker ]
+  * Fixes for Tank Status when TCP data are absent
+  * Correct for Python Simplified GIL State API WSGI bug
+  * return empty pressure_alt values to trigger RuntimeWarnings and hence Python Simplified GIL State API bug if present
+  * UNRELEASED
+  * Add Titillium font to package
+
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Wed, 06 Dec 2017 09:29:02 +0000
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
@@ -143,6 +246,36 @@ decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
   * Updated deb changelog
 
  -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 13:33:58 +0100
+
+decades (1.7.3~7.gbpd102ce) UNRELEASED; urgency=medium
+
+  ** SNAPSHOT build @d102cea161562571ade1b10889aff239a7f2db2c **
+
+  [ Dan Walker ]
+  * changelog
+  * updates from deploy routine
+  * Merge in live version with UPPBBR corrections
+
+  [ Axel Wellpott @ obelix ]
+  * UDP definition file for AQD-NOx instrument updated
+
+  [ Dan Walker ]
+  * Display params for SEA probe and AQD NOy/H₂S
+  * Manifest backport from dan-test
+  * Correct Git dch call
+  * Changelog update
+  * Ignore later-version doc build dir
+
+  [ Axel Wellpott @ obelix ]
+  * Spaces removed in paramter names
+  * SO2 udp definition file updated to latest version
+
+  [ Axel Wellpott@dacru ]
+  * dew point code for WVSS2[A,B] added to rt_derive. vp conversion coded added to formulas
+
+  [ Dan Walker ]
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Tue, 28 Nov 2017 10:27:52 +0000
 
 decades (1.7.3~4.gbp8c5518) quantal; urgency=low
 
