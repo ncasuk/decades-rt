@@ -46,6 +46,7 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 	cp config/$(PACKAGE).ini debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp config/Display_Parameters*.csv debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp config/HOR_CALIB.DAT debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp -r config/titillium debian/$(PACKAGE)/usr/share/fonts/opentype/
 	cp debian/init.d debian/$(PACKAGE)/etc/init.d/$(PACKAGE)
 	cp debian/cronjob debian/$(PACKAGE)/etc/cron.daily/$(PACKAGE)
 	cp debian/default debian/$(PACKAGE)/etc/default/$(PACKAGE)

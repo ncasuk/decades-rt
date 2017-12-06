@@ -1,6 +1,6 @@
-decades (1.7.4~1.gbp7a2273) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbp978d27) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @7a22730f73937bc58eadda0ee6079de433ad0cbe **
+  ** SNAPSHOT build @978d274a8df4f9b203373cae6235feb3913aa743 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @ae372ee07459a92b124b8a49df7e285c38f5d48f **
@@ -89,7 +89,96 @@ decades (1.7.4~1.gbp7a2273) UNRELEASED; urgency=medium
   * adding to howto
   * Add Header and Drunk to manifest file
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Mon, 02 Oct 2017 13:17:39 +0100
+  [ Drunk Tank ]
+  * Changed to match Septic and reality:)
+  * init submodules on dev setup; add test DB to single unit tests
+
+  [ Dan Walker ]
+  * Fix Stat block display errors
+
+  [ Axel Wellpott @ obelix ]
+  * UDP definition file for AQD-NOx instrument updated
+
+  [ Dan Walker ]
+  * HACK: fiddle flight num to display/work correctly with DB
+
+  [ Drunk Tank ]
+  * Additional testing for flight_number
+  * cast unicode to str for HORACE-type STAT
+  * Changes to make drunktank work for other machines
+
+  [ Dan Walker ]
+  * Display params for SEA probe and AQD NOy/H₂S
+  * Add decades-dev to manifest file
+  * Changelog auto-update
+  * Manifest backport from dan-test
+  * Correct Git dch call
+  * Changelog update
+  * Ignore later-version doc build dir
+
+  [ Axel Wellpott @ obelix ]
+  * Spaces removed in paramter names
+  * SO2 udp definition file updated to latest version
+
+  [ Axel Wellpott@dacru ]
+  * dew point code for WVSS2[A,B] added to rt_derive. vp conversion coded added to formulas
+
+  [ Dan Walker ]
+  * All display params files
+  * Add missing / reorder local dev setup
+  * Silently ignore AJAX errors
+  * Tuple not Dict
+  * Tuple not Dict
+  * Generate docs and combine all package install commands
+  * septic sync - vp2dp forumla calls
+  * SEA probe data format added
+  * Fix unit tests
+  * Read docstrings again
+  * Remove duplicated functions
+  * remove obsolete params
+  * Add test case name comment per best practice
+  * Ignore buildinfo files
+  * Add Header IP address
+  * Deal correctly with NaN co-ordinates
+  * Add more modern autocommit setting
+  * add extra fields with semi-sensible values
+  * Move connection into class vars
+  * Increase variance of cabin_t
+  * Make it us floating-point maths for smoother curve
+
+  [ datid ]
+  * Fixed axis panning in daves_chart
+
+  [ Dan Walker ]
+  * m dummy latex build dir so we can include a dangling link for the decades.pdf file
+  * Floating point arithmetic for smoother curves
+
+  [ Drunk Tank ]
+  * Added status bar to daves_chart
+
+  [ Dan Walker ]
+  * Add lm-sensors to dependencies
+
+  [ Drunk Tank ]
+  * Fixed incorrect call to derive_data_alt
+  * Rearranged daves-chart a bit
+
+  [ Dan Walker ]
+  * Adding backup known-good JAR files
+  * Add local_start_listener stanza
+  * GIN Forward notes
+  * Adding how-to-monitor-postgres-clients section
+
+  [ David Tiddeman ]
+  * Fixed axis navigation to be independent per axis on panning
+
+  [ Dan Walker ]
+  * Fixes for Tank Status when TCP data are absent
+  * Correct for Python Simplified GIL State API WSGI bug
+  * return empty pressure_alt values to trigger RuntimeWarnings and hence Python Simplified GIL State API bug if present
+  * UNRELEASED
+
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Tue, 05 Dec 2017 17:21:51 +0000
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
