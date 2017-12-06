@@ -103,6 +103,9 @@ html_theme_path = ['_theme']
 # documentation.
 #html_theme_options = {}
 
+#Number figures
+numfig = True
+
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
 

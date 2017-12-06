@@ -1,3 +1,5 @@
+.. _tanks-proposal:
+
 Tanks on the Aircraft (proposed)
 --------------------------------
 
