@@ -31,6 +31,7 @@ versionfile = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'VER
 env.version= versionfile.read().strip()
 if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
    env.dchopts = '--release'
+env.use_ssh_config = True
 
 @runs_once
 @task
@@ -38,7 +39,7 @@ def list_hosts():
    """Lists the hosts commands will act on. (Default is none)"""
    print env.hosts
 
-def _annotate_hosts_with_ssh_config_info():
+'''def _annotate_hosts_with_ssh_config_info():
     """deals with hosts specified in ~/.ssh/config - shouldn't be needed
       after fabric 1.4 """
     from os.path import expanduser
@@ -72,7 +73,7 @@ def _annotate_hosts_with_ssh_config_info():
         for role, rolehosts in env.roledefs.items():
             env.roledefs[role] = [hostinfo(host, config) for host in rolehosts]
 
-_annotate_hosts_with_ssh_config_info()
+_annotate_hosts_with_ssh_config_info()'''
 
 @task
 def local_database_setup(suffix=''):   
@@ -217,6 +218,8 @@ def deploy_deb(debname=False):
       #installs all dependencies
       #sudo('aptitude -y install `dpkg --info %s | grep Depends | awk -F ":" \'{print $2}\' | sed -e "s/,/ /g"`' % debname)
       sudo('dpkg -i %s || apt-get -fy install' % debname) 
+      sudo('a2enmod wsgi')
+      sudo('service apache2 restart')
    else:
       print('No deb filename specified')
 
@@ -248,8 +251,6 @@ def deploy():
    Plot_jar()
    debname=package()
    deploy_deb(debname=debname)
-   sudo('a2enmod wsgi')
-   sudo('service apache2 restart')
    pg_timezone = sudo('psql -tc "SHOW TIME ZONE" | head -n1',user="postgres").strip()
    if(pg_timezone != 'UTC'):
       #raise WARNING that postgres is not correctly configured 
