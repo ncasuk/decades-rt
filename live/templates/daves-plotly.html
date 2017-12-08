@@ -2,21 +2,17 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>XY plots</title>
+	<title>Plotly plots</title>
 	<link href="/css/examples.css" rel="stylesheet" type="text/css">
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.time.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.navigate.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.resize.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/jquery.flot.simpleresample.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/jquery.flot.axisnavigate.js"></script>
-	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
-        <script language="javascript" type="text/javascript" src="/js/jquery.event.drag.js"></script>
-        <script language="javascript" type="text/javascript" src="/js/jquery.mousewheel.js"></script>
+	<script language="javascript" type="text/javascript" src="/js/plotly-latest.min.js"></script>
 	<script type="text/javascript">
+//<![CDATA[
+//      var refreshStat = setInterval(function() {
+//      $('#statcontainer').load('/live/stat');
+//   }, 1000);
+
    var paramlist;
    $.fn.sort_select_box = function(){
     var my_options = $("#" + this.attr('id') + ' option');
@@ -53,7 +49,7 @@
          {% endfor %}
          
 
-		var data = {};
+		var datax = {};
 		var plotdata = [];
 		var totalPoints = 1000/{{ dep|count }};
       window.frm_epoch = {{ frm_epoch }};
@@ -63,8 +59,6 @@
       window.plotOptions = {
 			series: {
 				shadowSize: 0	// Drawing is faster without shadows
-                               ,simpleresample:{maxpoints:totalPoints,
-                                                hidenull:$('#hidenull').is(':checked')}
                                ,points:{symbol:function (ctx, x, y, radius, shadow) {
                 ctx.rect(x - radius, y - radius, radius + radius, radius + radius);
                                        },show:$('#points').is(':checked')
@@ -99,7 +93,6 @@
          for(var i=0;i<plotdata.length;i++){ // for all series            
             plotdata[i].lines.show=$('#lines').is(':checked');
             plotdata[i].points.show=$('#points').is(':checked');
-            plotdata[i].simpleresample.hidenull=$('#hidenull').is(':checked');
          }
        }
 
@@ -108,7 +101,7 @@
            var YAxesUnits = [];
            var XAxesUnits = [];
             {% for nn,xx,yy in paras: %} // arbitrary number of series
-            data['{{ nn }}'] = [];
+            datax['{{ nn }}'] = {x:[],y:[]};
             if(-1 == YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits))
             {
                YAxesUnits.push(paramlist.{{ yy }}.DisplayUnits);
@@ -121,15 +114,16 @@
                //sets the opts for the xaxes, alternating between top and bottom
                window.XAxesOpts.push({ position: (XAxesUnits.length % 2)?"bottom":"top", show: true, axisLabel: paramlist.{{ xx }}.DisplayUnits});
             }
-            
-            plotdata.push( {data: data['{{ nn }}'], label: paramlist.{{ nn }}.DisplayText, 
-                                color: '{{ c[dep.index(nn)] }}', 
-                                lines: { show: true}, points:{show:false,radius:0.5},
-                                simpleresample:{hidenull:false},
-                                yaxis: YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 ,
-                                xaxis: XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits) +1 });
+            console.log(datax['{{ nn }}']);
+            plotdata.push( {x: datax['{{ nn }}'].x,y: datax['{{ nn }}'].y, name: paramlist.{{ nn }}.DisplayText 
+                                //,color: '{{ c[dep.index(nn)] }}', 
+                                //lines: { show: true}, points:{show:false,radius:0.5},
+                                //yaxis: YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 ,
+                                //xaxis: XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits) +1 
+                                });
          {% endfor %};
-         set_plotoptions();
+         console.log(plotdata);
+         //set_plotoptions();
        })()
        
        
@@ -145,19 +139,31 @@
                                 'para':[{% for entry in allparas: %}'{{ entry }}',{% endfor %}]
                                 }, true),
             success: function(livejson) {  // arbitrary number of y-series
-            if(livejson.{{x[0]}}.length){
-           for(p=0; p < livejson.{{x[0]}}.length; p++)
-            {
+            if(livejson.{{x[0]}}.length){            
+           //for(p=0; p < livejson.{{x[0]}}.length; p++)
+            //{
             {% for nn,xx,yy in paras: %}
-               data['{{nn}}'].push([livejson.{{ xx }}[p]{{mult}}, livejson.{{ yy }}[p]]);
+               console.log("{{nn}} {{xx}} {{yy}}");
+               datax['{{nn}}'].x.push(...livejson.{{ xx }});
+               datax['{{nn}}'].y.push(...livejson.{{ yy }});
             {% endfor %}
-            }
+            //}
+            console.log("HERE");
+            console.log(plotdata);
+            console.log(datax);
+            console.log(plot);
             if(plot){
-              plot.setData(plotdata);
-              plot.setupGrid();
-	          plot.draw();
+              console.log("Restyle");
+              console.log(plotdata.map(function(c,i){ return i;}));
+              Plotly.update("chart",plotdata);
+              Plotly.redraw("chart");
+              plot.then(function(result){
+                  console.log(result);
+                  console.log(result.id);
+                  //Plotly.restyle(result.id,plotdata);
+                  });
             }else{
-              set_plotoptions();
+              //set_plotoptions();
               plotit(window.plotOptions);
             }
             }
@@ -247,19 +253,21 @@
                 getData();
 
                 function plotit(options){
-                    plot= $.plot("#chart", plotdata, options);
-                    plot.getOptions().selection.mode=$('#zoomtype').val() ? "xy" : null;
-                    plot.getOptions().pan.interactive=$('#zoomtype').val() != "xy";
-                    plot.setupGrid();
-                    plot.draw();
-                    plot.rebindEvents();
+                    console.log("PLOTIT");
+                    console.log(plotdata);
+                    plot= Plotly.newPlot("chart", plotdata);
+                    //plot.getOptions().selection.mode=$('#zoomtype').val() ? "xy" : null;
+                    //plot.getOptions().pan.interactive=$('#zoomtype').val() != "xy";
+                    //plot.setupGrid();
+                    //plot.draw();
+                    //plot.rebindEvents();
                 }
 
                 {% endif %}
 		// Add the Flot version string to the footer
 	});
 
-		$("#footer").prepend("Copyright &copy; FAAM 2015 based on </br>Flot " + $.plot.version + " &ndash; ");
+		$("#footer").prepend("Copyright &copy; FAAM 2017 based on </br>Plotly " + Plotly.version + " &ndash; ");
       //function add extra series boxes.
 
       $('#addYSeries').click(
@@ -328,17 +336,18 @@
       }
 
 
-	</script>
+ </script>
 </head>
 <body>
-
 	<div id="header">
-		<h2>XY plots</h2>
+		<h2>Plotly plots</h2>
+<div id="statcontainer"></div>
+
 	</div>
 	<div id="content">
 
-                {% if allparas|length >= 2 %}
-		<div class="demo-container">
+               {% if allparas|length >= 2 %}
+ 		<div class="demo-container">
 			<div id="chart" class="demo-chart"></div>
 		</div>
                 {% endif %}
@@ -354,7 +363,7 @@
               <button id=reset>RESET</button></p>     
 
 
-          <form method="GET" action="xy">
+          <form method="GET" action="plotly">
 		<p>
          <label for="frm">From:</label><input type="text" id="frm" name="frm" value="{{frm}}"></input>
          <label for="to">To:</label><input type="text" id="to"  name="to" value="{{to}}"></input>
@@ -398,8 +407,8 @@
 	</div>
 
 	<div id="footer">
-		Copyright &copy; 2007 - 2013 IOLA and Ole Laursen<br>
+		MIT license<br>
 	</div>
-
 </body>
 </html>
+
