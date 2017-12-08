@@ -31,6 +31,7 @@ versionfile = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'VER
 env.version= versionfile.read().strip()
 if os.environ.has_key('RELEASE') and os.environ['RELEASE']:
    env.dchopts = '--release'
+env.use_ssh_config = True
 
 @runs_once
 @task
@@ -38,7 +39,7 @@ def list_hosts():
    """Lists the hosts commands will act on. (Default is none)"""
    print env.hosts
 
-def _annotate_hosts_with_ssh_config_info():
+'''def _annotate_hosts_with_ssh_config_info():
     """deals with hosts specified in ~/.ssh/config - shouldn't be needed
       after fabric 1.4 """
     from os.path import expanduser
@@ -72,7 +73,7 @@ def _annotate_hosts_with_ssh_config_info():
         for role, rolehosts in env.roledefs.items():
             env.roledefs[role] = [hostinfo(host, config) for host in rolehosts]
 
-_annotate_hosts_with_ssh_config_info()
+_annotate_hosts_with_ssh_config_info()'''
 
 @task
 def local_database_setup(suffix=''):   
@@ -124,17 +125,22 @@ def setup_local_dev_environment():
    """Sets up a development environment on a Ubuntu install"""
    local('sudo apt-get -y install aptitude')
    #stuff to *run* the software (you will need to first "apt-get install fabric")
-   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex fonts-linuxlibertine')
+   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex fonts-linuxlibertine debhelper fastjar fabric git-buildpackage lm-sensors')
    local('sudo a2enmod wsgi')
-   local('sudo ln -nfs ${PWD}/config/Display_Parameters*.csv /etc/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
+   #runtime ini files
+   local('sudo mkdir -p /etc/%(prj_name)s' % env)
+   local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/fabfile.py /etc/%(prj_name)s/' % env)
+   local('sudo ln -nfs ${PWD}/config/Display_Parameters*.csv /etc/%(prj_name)s/' % env)
+   #setup DB
    local_database_setup()
    local('sudo a2ensite %(prj_name)s' % env)
    #link apache files to dev versions
    local('sudo mkdir -p /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/web/css /var/www/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/web/js /var/www/%(prj_name)s/' % env)
-   local('sudo ln -nfs ${PWD}/doc/_build/html /var/www/%(prj_name)s/docs' % env)
    local('sudo ln -nfs ${PWD}/Horace/web/plot/map_data.dat.gz /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/Horace/web/plot/overlay.txt /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/Horace/web/plot/Parano_old.txt /var/www/%(prj_name)s/plot' % env)
@@ -145,11 +151,6 @@ def setup_local_dev_environment():
    #python module
    local('sudo python setup.py build')
    local('sudo python setup.py install')
-   #runtime ini files
-   local('sudo mkdir -p /etc/%(prj_name)s' % env)
-   local('sudo ln -nfs ${PWD}/config/%(prj_name)s.ini /etc/%(prj_name)s/' % env)
-   local('sudo ln -nfs ${PWD}/config/HOR_CALIB.DAT /etc/%(prj_name)s/' % env)
-   local('sudo ln -nfs ${PWD}/fabfile.py /etc/%(prj_name)s/' % env)
    #dataformats
    local('sudo mkdir -p /opt/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/dataformats /opt/%(prj_name)s/' % env)
@@ -161,18 +162,21 @@ def setup_local_dev_environment():
    #Submodules
    local('git submodule init')
    local('git submodule update')
+   docs()
+   local('sudo ln -nfs ${PWD}/doc/_build/html /var/www/%(prj_name)s/docs' % env)
+   local('sudo mkdir -p ${PWD}/doc/_build/latex' % env)
+   local('sudo ln -nfs ${PWD}/doc/_build/latex/%(prj_name)s.pdf /var/www/%(prj_name)s/docs/' % env)
+   #pdfdocs()
 
    print("""run the decades-server app:
      DECADESPORT=1500 twistd -ny decades-server.tac
    and maybe the DB simulator:
      pydecades/database-simulator.py
    and browse to:
-     http://decades-dev/""")
+     http://%(prj_name)s-dev/""" % env)
 
    warn(red('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html'))
-   warn(red('You will need to install Titillium font for the PDF docs; try http://www.campivisivi.net/titillium/text (Titillium_roman_upright_italic version 2.0)'))
-   #requirements to deploy
-   local('sudo aptitude install -y fastjar git-buildpackage debhelper')
+   warn(red('You will need to install Titillium font for the PDF docs; try http://www.campivisivi.net/titillium/text (Titillium_roman_upright_italic version 2.0) and then run fab pdfdocs'))
 
    
 @runs_once
@@ -214,6 +218,8 @@ def deploy_deb(debname=False):
       #installs all dependencies
       #sudo('aptitude -y install `dpkg --info %s | grep Depends | awk -F ":" \'{print $2}\' | sed -e "s/,/ /g"`' % debname)
       sudo('dpkg -i %s || apt-get -fy install' % debname) 
+      sudo('a2enmod wsgi')
+      sudo('service apache2 restart')
    else:
       print('No deb filename specified')
 
@@ -245,8 +251,6 @@ def deploy():
    Plot_jar()
    debname=package()
    deploy_deb(debname=debname)
-   sudo('a2enmod wsgi')
-   sudo('service apache2 restart')
    pg_timezone = sudo('psql -tc "SHOW TIME ZONE" | head -n1',user="postgres").strip()
    if(pg_timezone != 'UTC'):
       #raise WARNING that postgres is not correctly configured 
@@ -306,8 +310,20 @@ def Plot_jar():
 def local_start_simulator():
    """Starts the DECADES simulator.
 
-    Tries ``./pydecades/decades-simulator.py`` first, failing that tries to find the installed one"""
+    Tries ``./py%(prj_name)s/%(prj_name)s-simulator.py`` first, failing that tries to find the installed one"""
    try:
-      subprocess.check_call(['python2.7', './pydecades/decades-simulator.py'])
+      subprocess.check_call(['python2.7', './py%(prj_name)s/%(prj_name)s-simulator.py' % env])
    except subprocess.CalledProcessError:
-      subprocess.check_call(['python2.7', '/usr/lib/python2.7/dist-packages/pydecades/decades-simulator.py'])
+      subprocess.check_call(['python2.7', '/usr/lib/python2.7/dist-packages/py%(prj_name)s/%(prj_name)s-simulator.py' % env])
+
+@runs_once
+@task
+def local_start_listener():
+
+   """Starts the DECADES listener.
+
+    Tries ``./py%(prj_name)s/%(prj_name)s-listener.tac`` first, failing that tries to find the installed one"""
+   try:
+      subprocess.check_call(['twistd', "--pidfile=%(prj_name)s-listener.pid" % env,"-ny", "./py%(prj_name)s/%(prj_name)s-listener.tac" % env])
+   except subprocess.CalledProcessError:
+      subprocess.check_call(['twistd', "--pidfile=%(prj_name)s-listener.pid" % env,"-ny","/usr/lib/python2.7/dist-packages/py%(prj_name)s/%(prj_name)s-listener.tac" % env])

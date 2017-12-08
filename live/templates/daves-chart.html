@@ -13,10 +13,12 @@
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.simpleresample.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.axisnavigate.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
-        <script language="javascript" type="text/javascript" src="/js/jquery.event.drag.js"></script>
-        <script language="javascript" type="text/javascript" src="/js/jquery.mousewheel.js"></script>
 	<script type="text/javascript">
 //<![CDATA[
+      var refreshStat = setInterval(function() {
+      $('#statcontainer').load('/live/stat');
+   }, 1000);
+
    var paramlist;
    $.fn.sort_select_box = function(){
     var my_options = $("#" + this.attr('id') + ' option');
@@ -333,11 +335,13 @@
 {% block body %}
 	<div id="header">
 		<h2>XY plots</h2>
+<div id="statcontainer"></div>
+
 	</div>
 	<div id="content">
 
-                {% if allparas|length >= 2 %}
-		<div class="demo-container">
+               {% if allparas|length >= 2 %}
+ 		<div class="demo-container">
 			<div id="chart" class="demo-chart"></div>
 		</div>
                 {% endif %}

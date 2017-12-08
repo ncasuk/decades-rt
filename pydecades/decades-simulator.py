@@ -52,7 +52,7 @@ class DecadesMUDPSender(DatagramProtocol):
         self.loopObj.start(1, now=False)
 
     def stopProtocol(self):
-        "Called after all transport is teared down"
+        "Called after all transport is torn down"
         pass
 
     def datagramReceived(self, data, (host, port)):
@@ -75,7 +75,7 @@ class DecadesMUDPSender(DatagramProtocol):
             fakedata['PRTAFT'] = {
                'utc_time':timestamp,
                'flight_num':self.flightnum,
-               'pressure_alt':int(1000 + (50 * math.sin(timestamp/4))), #average 10kft
+               'pressure_alt':'',#int(1000 + (50 * math.sin(timestamp/4))), #average 10kft
                'ind_air_speed':int(9600 + (10 * math.cos(timestamp*4))), #average 300kts
                'deiced_temp_flag':True, #alternates between true and false
                'rad_alt':int(random.normalvariate(10000,400))
@@ -83,10 +83,12 @@ class DecadesMUDPSender(DatagramProtocol):
             fakedata['CORCON'] = {
                'utc_time':timestamp,
                'flight_num':self.flightnum,
-               'di_temp':int(240000 + (9000 * math.sin(timestamp/3))),
-               'ge_dew':int(39371 + (1204 * math.cos(timestamp/3))),
-               'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3))),
-               'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3)))
+               'di_temp':int(240000 + (9000 * math.sin(timestamp/3.0))),
+               'ge_dew':int(39371 + (1204 * math.cos(timestamp/3.0))),
+               'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3.0))),
+               'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3.0))),
+               'cabin_t':int(1847435 + (3000 * math.sin(timestamp/6.0))), #3000 ~ 1 degC
+               'cabin_p':int(28963 + (50 * math.cos(timestamp/2.5)))
             }
             fakedata['UPPBBR'] = {
                'utc_time':timestamp,
@@ -114,7 +116,8 @@ class DecadesMUDPSender(DatagramProtocol):
             }
             fakedata['AERACK'] = {
                'utc_time':timestamp,
-               'flight_num':self.flightnum
+               'flight_num':self.flightnum,
+               'buck_mirr_cln_flag':0
             }
             fakedata['LOWBBR'] = {
                'utc_time':timestamp,

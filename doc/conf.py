@@ -103,6 +103,9 @@ html_theme_path = ['_theme']
 # documentation.
 #html_theme_options = {}
 
+#Number figures
+numfig = True
+
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
 
@@ -185,7 +188,11 @@ latex_elements = {'papersize':'a4paper',
     'fontenc': '\\usepackage{fontspec}',
     'fontpkg': '''\
 \\setmainfont{Linux Libertine O}
-\\setsansfont{Titillium}
+\\setsansfont[  Path=../../../config/titillium/,
+                UprightFont = *-RegularUpright,
+                BoldFont = *-Bold,
+                ItalicFont = *-RegularItalic,
+                BoldItalicFont = *-BoldItalic]{Titillium}
 \\setmonofont{Ubuntu Mono}''',
 	'inputenc':'',
 	'utf8extra':'',

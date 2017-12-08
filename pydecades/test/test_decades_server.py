@@ -24,12 +24,13 @@ class GenerateTestDecadesFactory(testresources.TestResourceManager):
    ``/etc/decades/Display_Parameters_ver1.3.csv``) are only read once''' 
    def make(self, dependency_resources):
 
-      print "Generating Factory"
+      print("Generating Factory")
       #create test database
       self.ddp = DecadesDataProtocols()
       self.conn = get_database(parser)
       self.cursor = self.conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
       self.ddp.create_maintable(self.cursor)
+      print("opening sample data")
       with open('../pydecades/test/sample-data-ascension.csv') as sample_data:
         reader = csv.DictReader(sample_data)
         all_fields = self.ddp.all_fields()

@@ -8,6 +8,7 @@ opt/decades/output
 var/lib/decades
 usr/share/doc/decades
 usr/share/decades
+usr/share/fonts/opentype/
 usr/lib/decades
 usr/bin
 var/log/decades

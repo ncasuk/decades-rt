@@ -1,5 +1,6 @@
 #!/usr/bin/python
 '''Listens for requests from the Java client applet and responds appropriately'''
+# -*- test-case-name: pydecades.test.test_decades_server -*-
 from array import array
 
 from twisted.internet import protocol, reactor
@@ -16,7 +17,7 @@ import time
 import math
 from datetime import datetime, timedelta
 import struct
-from rt_calcs import rt_derive,rt_data
+from pydecades.rt_calcs import rt_derive,rt_data
 from pydecades.configparser import DecadesConfigParser
 import numpy as np
 from pydecades.database import get_database

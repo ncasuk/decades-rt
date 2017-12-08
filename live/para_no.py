@@ -4,12 +4,12 @@
 Display Parameters csv file '''
 import web
 
-urls = {
+urls = (
    #'', 'parano'
    '\.(.+)', 'parameters'  #DO NOT CALL THIS CLASS 'parano'
                            #it doesn't work. May be meaningful
                            #elsewhere? - DW 2014-06-02
-}
+)
 app= web.application(urls, locals())   
 
 #Standard python modules for config and date/time functions
@@ -49,11 +49,17 @@ class parameters:
          return output
 
       elif filetype == 'json':
+         web.header('Content-Type','application/json; charset=utf-8', unique=True) 
+         web.header('Cache-control', 'no-cache')
+
          parameters['utc_time'] = {'DisplayText': 'Time', 'DisplayUnits': 'UTC', 'ParameterName':'utc_time','GroupId':'all'}
          return json.dumps(parameters) 
 
       elif filetype == 'raw':
-         parameters.update(rtlib.get_raw_paranos())
+         web.header('Content-Type','application/json; charset=utf-8', unique=True) 
+         web.header('Cache-control', 'no-cache')
+
+         parameters=rtlib.get_raw_paranos()
          parameters['utc_time'] = {'DisplayText': 'Time', 'DisplayUnits': 'UTC', 'ParameterName':'utc_time','GroupId':'all'}
          return json.dumps(parameters) 
 
