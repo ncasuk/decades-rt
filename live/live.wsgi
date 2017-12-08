@@ -140,5 +140,7 @@ class tank_status:
 
          
 if __name__ == "__main__":
+    from twisted.python import log
+    log.startLogging(sys.stdout)
+    log.msg('Log Starting')
     app.run()
-

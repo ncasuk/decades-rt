@@ -1,0 +1,26 @@
+field,type,max_chars,description
+$ACLOUD01,text,8,Identifies which Data Logging Unit (DLU) created the packet
+utc_time,unsigned_int,10,time assigned by tank when packet received and read
+aimms_temperature,double_float,8,AIMMS TEMPERATURE
+aimms_rh,double_float,8,AIMMS RELATIVE HUMIDITY
+aimms_pressure,double_float,8,AIMMS PRESSURE
+aimms_wind_flow_n,double_float,8,AIMMS WIND FLOW NORTH
+aimms_wind_flow_e,double_float,8,AIMMS WIND FLOW EAST
+aimms_wind_speed,double_float,8,AIMMS WIND SPEED
+aimms_wind_direction,double_float,8,AIMMS WIND DIRECTION
+aimms_latitude,double_float,8,AIMMS LATITUDE
+aimms_longitude,double_float,8,AIMMS LONGITUDE
+aimms_altitude,double_float,8,AIMMS ALTITUDE
+aimms_velocity_n,double_float,8,AIMMS VELOCITY NORTH
+aimms_velocity_e,double_float,8,AIMMS VELOCITY EAST
+aimms_velocity_d,double_float,8,AIMMS VELOCITY DOWN
+aimms_roll,double_float,8,AIMMS ROLL
+aimms_pitch,double_float,8,AIMMS PITCH
+aimms_yaw,double_float,8,AIMMS YAW
+aimms_tas,double_float,8,AIMMS TRUE AIR SPEED
+aimms_vertical_wind,double_float,8,AIMMS VERTICAL WIND
+aimms_sideslip_angle,double_float,8,AIMMS SIDESLIP ANGLE
+cdp_number_conc,double_float,8,CDP NUMBER CONCENTRATION
+cdp_lwc,double_float,8,CDP LIQUID WATER CONTENT
+cdp_mvd,double_float,8,CDP MEDIAN VOLUME DIAMETER
+cdp_ed,double_float,8,CDP EFFECTIVE DIAMETER

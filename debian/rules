@@ -19,6 +19,9 @@ test-python%:
 override_dh_auto_test: $(PYTHON2:%=test-python%) $(PYTHON3:%=test-python%)
 endif
 
+build:
+	sed "s/__PACKAGE__/$(PACKAGE)/g" debian/master.postinst > debian/postinst
+
 build-python%:
 	python$* setup.py build
 
@@ -34,11 +37,14 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 	cp pydecades/$(PACKAGE)-server.tac debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp pydecades/$(PACKAGE)-server-balancer.tac debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp pydecades/$(PACKAGE)-gin.tac debian/$(PACKAGE)/etc/$(PACKAGE)
+	#Add fabfile 
+	cp fabfile.py debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp VERSION debian/$(PACKAGE)/etc/$(PACKAGE)
 	# Add here commands to install the package into debian/tmp.
 	mkdir -p debian/$(PACKAGE)/etc/init.d
 	mkdir -p debian/$(PACKAGE)/etc/default
 	cp config/$(PACKAGE).ini debian/$(PACKAGE)/etc/$(PACKAGE)
-	cp config/Display_Parameters_ver1.1.csv debian/$(PACKAGE)/etc/$(PACKAGE)
+	cp config/Display_Parameters*.csv debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp config/HOR_CALIB.DAT debian/$(PACKAGE)/etc/$(PACKAGE)
 	cp debian/init.d debian/$(PACKAGE)/etc/init.d/$(PACKAGE)
 	cp debian/cronjob debian/$(PACKAGE)/etc/cron.daily/$(PACKAGE)
@@ -46,13 +52,15 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 	cp debian/copyright debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)/
 	cp debian/README.Debian debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)/
 	cp debian/cfg_parser.sh debian/$(PACKAGE)/usr/bin
-	cp config/apache-config debian/$(PACKAGE)/etc/apache2/sites-enabled/$(PACKAGE)
+	cp debian/$(PACKAGE)-mgr debian/$(PACKAGE)/usr/bin
+	cp config/apache-config debian/$(PACKAGE)/etc/apache2/sites-available/$(PACKAGE).conf
 	#Files needed to be web-visible
 	cp Horace/web/plot/Plot.jar Horace/web/plot/plot.html Horace/web/plot/Parano_old.txt Horace/web/plot/map_data.dat.gz Horace/web/plot/overlay.txt debian/$(PACKAGE)/var/www/$(PACKAGE)/plot/
 	cp -r web/css/* debian/$(PACKAGE)/var/www/$(PACKAGE)/css/
 	cp -r web/js/* debian/$(PACKAGE)/var/www/$(PACKAGE)/js/
+	cp -r web/docs/* debian/$(PACKAGE)/var/www/$(PACKAGE)/docs/
 	cp -rp live/* debian/$(PACKAGE)/var/www/$(PACKAGE)-live/
-	cp dataformats/*  debian/$(PACKAGE)/opt/$(PACKAGE)/dataformats/
+	cp -rp dataformats/*  debian/$(PACKAGE)/opt/$(PACKAGE)/dataformats/
 	dh_auto_install
    
 
@@ -61,5 +69,6 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 
 override_dh_auto_clean:
 	dh_auto_clean
+	rm -f debian/postinst
 	rm -rf build
 	rm -rf *.egg-info

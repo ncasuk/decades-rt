@@ -46,6 +46,7 @@ doc/*.temp
 doc/*.cookie
 doc/*.bbl
 doc/*.blg
+doc/_build
 #Horace
 Horace/web/plot/Makefile.old
 Horace/web/js

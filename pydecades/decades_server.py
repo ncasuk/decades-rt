@@ -24,8 +24,10 @@ from pydecades.database import get_database
 #class to handle Decades events
 class DecadesProtocol(basic.LineReceiver):
    '''Python version of the HORACE server - to work with DECADES system. Responds to two commands:
-         STAT (returns basic status data e.g. lat/long, heading etc.)
-         PARA (Returns requested parameters)'''
+
+       * ``STAT`` (returns basic status data e.g. lat/long, heading etc.)
+       * ``PARA`` (Returns requested parameters)'''
+
    delimiter = "" #Java DatInputStream does not have a delimiter between lines
    der = []
    def __init__(self,rtlib,parano):
@@ -99,19 +101,18 @@ class DecadesProtocol(basic.LineReceiver):
 
 class DecadesFactory(protocol.ServerFactory):
    _recvd = {}
-   def __init__(self):
+   def __init__(self, parser=DecadesConfigParser()):
       self.protocol = DecadesProtocol
-      conn=get_database()
-      parser = DecadesConfigParser()
+      conn=get_database(parser)
       self.parano={}
       #for (code, function) in parser.items('Parameters'):
       #    self.parano[int(code)] = function
       calfile = parser.get('Config','calfile')
-      cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
-      self.rtlib=rt_derive.derived(cursor,calfile) #class processing the cals & producing "real" values
+      self.cursor = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+      self.rtlib=rt_derive.derived(self.cursor,calfile, parser) #class processing the cals & producing "real" values
       for k,v in self.rtlib.get_paranos().iteritems():
           self.parano[int(v['ParameterIdentifier'])]=k
-      print 'Init factory'
+      log.msg('Init factory')
    
    def buildProtocol(self,addr):
       p = self.protocol(self.rtlib,self.parano)

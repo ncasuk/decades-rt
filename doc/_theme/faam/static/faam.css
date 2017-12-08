@@ -1,0 +1,14 @@
+.logo {
+    max-width: 100%;
+}
+body {
+    background-color: #186f4d;
+    font-family: "Linux Libertine", serif;
+}
+
+h1, h2 {
+    font-family: 'Titillium', 'Titillium Maps',  Arial, sans-serif;
+}
+pre, .pre {
+    font-family: 'Ubuntu Mono', 'Deja Vu Sans Mono', 'Consolas', monospace;
+}

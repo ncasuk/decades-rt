@@ -1,6 +1,261 @@
+decades (1.7.4~1.gbp7a2273) UNRELEASED; urgency=medium
+
+  ** SNAPSHOT build @7a22730f73937bc58eadda0ee6079de433ad0cbe **
+
+  [ Dan Walker ]
+  ** SNAPSHOT build @ae372ee07459a92b124b8a49df7e285c38f5d48f **
+
+  * Adding description of various tanks (proposed)
+  * Link all Display Params files
+  * Add other tanks
+  * Change to 'gdp dch' instead of git-dch; correct machine name
+  * Link to docs
+  * Documentation to be included in package
+  * Allow specifying from command line
+  * Include docs in package
+  * Fixes to docs incorp; changelog
+  * Dependencies for testing
+  * These functions now performed on package install
+  * Unit tests now working
+  * Inconsistent map targets. int=integer for postgres
+  * Add dummy integer data for blank sample data fields
+  * Accept dataformat files with leading or trailing whitespace
+  * Strip whitespace in parameters file
+  * Add DB access details
+  * convert SVG text to path
+  * Print statemenst to log.msg or removed
+  * DB fns take details from config; add clean DB fn
+  * Adding confirm call
+  * Delete test DB asfer (successful) test
+  * Fabfile update to 1.1-style @task syntax
+  * Add DECADES manager command-line utility
+  * Changelog update
+  * Test with trailing spaces
+  * Require python 2.7
+  * make the postgres timezone warning more visible
+  * PDF version of logo
+  * Adding logo to PDF doc
+  * Git update
+  * UNRELEASED
+  * Updating my email address
+  * Single-source version number
+  * PDF doc creation fixes
+  * Custom titlepage
+  * Add logos to title page
+  * Add user manual
+  * Remove images from rst file
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * UNRELEASED
+  * PDF docs tidying
+  * UNRELEASED
+  * Tidy table, add in list contents
+  * Colophon, chapter numbering
+  * Add link to PDF docs
+  * Correct link
+  * Alter to also work with later versions of Sphinx
+  * Use SVG doc logo on HTML interface too
+  * Add run simulator task
+  * Change simulator instructions
+  * Autodoc fabfile
+  * Document fabfile with sphinx autodoc
+  * Send correct contenttype header
+  * Live Data to use same layout as interface; jquery update
+  * new version of jquery
+  * change to  minified version
+  * Tephigram to default layout
+  * Style changes to HTML docs
+  * Dave Chart to default layout
+  * Also clean dirs with branch suffixes
+  * Deal with 'to' times correctly, and default line colours
+  * UNRELEASED
+  * Abort runnin Ajax call before Submit
+  * to time working
+  * Correct to-time code
+  * Add purge data function
+  * Update changelog
+  * Change so Config is not loaded until needed, otherwise setup_local_dev won't work
+
+  [ Drunk Tank ]
+  * Add listner call to How-to
+
+  [ Dan Walker ]
+  * adding to howto
+  * Add Header and Drunk to manifest file
+
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Mon, 02 Oct 2017 13:17:39 +0100
+
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
+
   * 
 
- -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 19 Feb 2015 14:25:19 +0200
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 24 Aug 2017 12:19:14 +0200
+
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 24 Aug 2017 12:19:12 +0200
+
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 24 Aug 2017 12:19:09 +0200
+
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 24 Aug 2017 12:19:08 +0200
+
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 24 Aug 2017 12:19:07 +0200
+
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 24 Aug 2017 12:19:06 +0200
+
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 24 Aug 2017 12:19:04 +0200
+
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
+
+  * Test add doc files to deb
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Thu, 24 Aug 2017 12:18:50 +0200
+
+decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
+
+  ** SNAPSHOT build @4c2bc820cbaac052ede9e97b512520c7581b6c85 **
+
+  ** Test version for Jamie Trembath to try
+
+  * 
+  * detect NaNs; mark as error
+  * Allow localhost as alias
+  * Add aimms altitude
+  * Correct function names
+  * Make package name include branch name
+  * make updates
+  * Fixing package build routine
+  * Updated deb changelog
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 13:33:58 +0100
+
+decades (1.7.3~4.gbp8c5518) quantal; urgency=low
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 11:19:31 +0200
+
+decades (1.7.3~4.gbp8c5518) quantal; urgency=low
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 11:19:29 +0200
+
+decades (1.7.3~4.gbp8c5518) quantal; urgency=low
+
+  * Test version for Jamie 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Mon, 21 Aug 2017 11:19:14 +0200
+
+decades (1.7.3~4.gbp8c5518) quantal; urgency=low
+
+  * Test version for Jamie
+
+ -- Dave Tiddeman <dave.tiddeman@metoffice.gov.uk>  Mon, 21 Aug 2017 11:19:01 +0200
+
+decades (1.7.3~4.gbp8c5518) quantal; urgency=low
+
+  * 
+
+ -- Dave Tiddeman <dave.tiddeman@metoffice.gov.uk>  Mon, 21 Aug 2017 11:18:59 +0200
+
+decades (1.7.3~4.gbp8c5518) quantal; urgency=low
+
+  * 
+
+ -- Dave Tiddeman <dave.tiddeman@metoffice.gov.uk>  Mon, 21 Aug 2017 11:18:55 +0200
+
+decades (1.7.3~4.gbp8c5518) quantal; urgency=low
+
+  * 
+
+ -- Dave Tiddeman <dave.tiddeman@metoffice.gov.uk>  Mon, 21 Aug 2017 11:18:51 +0200
+
+decades (1.7.3~4.gbp8c5518) quantal; urgency=low
+
+  ** SNAPSHOT build @8c55182ac63e7f019916aca45e8d85da5481368a **
+
+  **SNAPSHOT build pre-CLARIFY
+
+  * 
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Wed, 09 Aug 2017 14:15:57 +0200
+
+decades (1.7.3~3.gbp8c5518) quantal; urgency=low
+
+  ** SNAPSHOT build @8c55182ac63e7f019916aca45e8d85da5481368a **
+
+  *
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Wed, 09 Aug 2017 14:15:32 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+  * Merge from Axel's live fixes
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:15:19 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+  * Merge from Axel's live fixes
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:15:08 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+  * 
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:15:06 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+  * 
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:15:04 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+
+ -- Axel <axll@faam.ac.uk>  Wed, 09 Aug 2017 14:01:31 +0200
+
+decades (1.7.3~2.gbp39624a) quantal; urgency=low
+
+  [ Axel ]
+  * Calibration Constants updated
+  * Display_Parameters variable updated
+  * Pyranometer angle bug fix; WVSS2 dew point added
+  * Display_Parameters and udp dataformats updated
+  * Pyrgeometer processing adapted to work with the new CR4 Kipp&Zonen instruments
+
+ -- Dan Walker <daniel.walker@ncas.ac.uk>  Wed, 09 Aug 2017 14:36:29 +0100
 
 decades (1.7.3~2.gbp39624a) quantal; urgency=low
 
@@ -374,7 +629,7 @@ decades (0.7.3~2.gbp39624a) quantal; urgency=low
 
  -- Dan Walker <D.K.D.Walker@leeds.ac.uk>  Thu, 19 Feb 2015 14:21:32 +0200
 
-decades (0.7.3~2.gbp39624a) quantal; urgency=low
+decades (0.7.3~8.gbpae6db6) quantal; urgency=low
 
   ** SNAPSHOT build @95871a802d7ccd6af02defc450bdd29e03ff75a2 **
 

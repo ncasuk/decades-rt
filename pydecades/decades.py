@@ -1,5 +1,6 @@
 #!/usr/bin/python
 #Class to read CSV protocol descriptions and present them to Python
+# vim: tabstop=8 expandtab shiftwidth=3 softtabstop=3
 import os, glob, csv
 from twisted.python import log 
 import time
@@ -11,7 +12,7 @@ class DecadesDataProtocols():
    protocols = {} #Dictionary of protocols
    tables = {} #list of protocol_name to current tablename
    protocol_versions = {} #Dictionary of protocol:version pairs. Version is mtime at present
-   field_types_map = {'boolean':'boolean', 'signed_int':'integer', 'single_float':'real', 'double_float':'real','float':'real', 'text':'varchar', 'unsigned_int':'int'} # maps CSV protocol file "types" to PostgreSQL field types (postgreSQL does not have unsigned values)
+   field_types_map = {'boolean':'boolean', 'signed_int':'integer', 'single_float':'real', 'double_float':'real','float':'real', 'text':'varchar', 'unsigned_int':'integer'} # maps CSV protocol file "types" to PostgreSQL field types (postgreSQL does not have unsigned values)
    new_table_count = 0
    
    def __init__(self):
@@ -21,9 +22,10 @@ class DecadesDataProtocols():
          self.protocols[protocol_file_name[0:-4]] = [] #[0:-4] strips the '.csv. off the end
          full_path = os.path.join(self.location,protocol_file_name)
          self.protocol_versions[protocol_file_name[0:-4]] = str(os.stat(full_path)[9]) #we're just after the integer - dots are not allowed in psql tablenames
-         protocolReader = csv.DictReader(open(full_path, 'rb'))
-         for row in protocolReader:
-            self.protocols[protocol_file_name[0:-4]].append(row)
+         with open(full_path, 'rb') as protocol_file:
+            protocolReader = csv.DictReader(open(full_path, 'rb'))
+            for row in protocolReader:
+               self.protocols[protocol_file_name[0:-4]].append({k:element.strip() for k, element in row.iteritems()})
 
    def available(self):
       return self.protocols.keys()
@@ -89,10 +91,9 @@ class DecadesDataProtocols():
       '''creates a SQL table of all the data from the 
       protocol files. '''
       fields = []
-      for proto in self.protocols:
-         protoname = self.protocols[proto][0]['field'].lstrip('$')
-         for field in self.protocols[proto]: 
-            fields.append(protoname.lower()+'_'+field['field'].lstrip('$').lower()+' '+self.field_types_map[field['type'].lstrip('<>')])
+      all_fields = self.all_fields()
+      for each in all_fields.keys():
+         fields.append(each + ' ' + all_fields[each])
       squirrel = "CREATE TABLE mergeddata ( "+ ', '.join(fields) +')' 
       log.msg(cursor.mogrify(squirrel)) 
       cursor.execute('DROP TABLE IF EXISTS mergeddata')
@@ -124,7 +125,6 @@ $$
 LANGUAGE plpgsql;''')
 
 
-
    def add_data(self, cursor, data, instrument):
       '''adds incoming data to the database. data is a Python 
          dictionary of fieldname=> value pairs'''
@@ -145,9 +145,8 @@ LANGUAGE plpgsql;''')
           cursor.execute("SELECT corcon01_flight_num FROM mergeddata WHERE corcon01_utc_time IS NOT NULL ORDER BY utc_time DESC LIMIT 1")
           flight_num=cursor.fetchone()
           if(flight_num):
-              print(data['flight_num'],flight_num[0])
               if (data['flight_num']!=flight_num[0]) & (re.match('^[A-Za-z]\d{3}$',data['flight_num'])!=None):
-                  print("SHOULD MAKE A NEW TABLE !!!!")
+                  log.msg("SHOULD MAKE A NEW TABLE !!!!")
                   self.empty_table(cursor)
       sql_update = ('UPDATE mergeddata SET ' + ", ".join(sql_u) + ' WHERE utc_time=' + cursor.mogrify('%s', (data['utc_time'],)))
       #sql_insert = (cursor.mogrify('INSERT INTO mergeddata (' + ", ".join(sql_i[0]) + ',id, utc_time) VALUES (' + ('%s,' * len(sql_i[1])) + '%s,%s)',sql_i[1] +[data['utc_time'],data['utc_time']]))
@@ -156,9 +155,21 @@ LANGUAGE plpgsql;''')
    
 
    def fields(self, protocol_name):
-      #returns a List of field names
+      '''returns a List of field names for a given protocol'''
       r = []
       for field in self.protocols[protocol_name]:
-         r.append(field['field'].lstrip('$'))
+         r.append(field['field'].lstrip('$').strip())
 
       return r
+
+   def all_fields(self):
+      '''returns a dictionary of all currently-defined fields'''
+      fields= {}
+      for proto in self.protocols:
+         protoname = self.protocols[proto][0]['field'].lstrip('$')
+         for field in self.protocols[proto]: 
+            value = protoname.lower()+'_'+field['field'].lstrip('$').lower().strip()
+            field_type = self.field_types_map[field['type'].lstrip('<>')]
+            fields[value] =  field_type
+
+      return fields

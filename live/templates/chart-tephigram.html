@@ -1,11 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Tephigram</title>
-	<link href="/css/examples.css" rel="stylesheet" type="text/css">
+{% extends "layouts/default.html" %}
+{% block css %}
+<link rel="stylesheet" href="/css/examples.css" type="text/css" />
+{% endblock %}
+{% block script %}
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.time.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/flot/jquery.flot.selection.js"></script>
@@ -14,6 +12,7 @@
 	<script language="javascript" type="text/javascript" src="/js/flot-axislabels/jquery.flot.axislabels.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/jquery.flot.labels.js"></script>
 	<script type="text/javascript">
+//<![CDATA[
    /* Loosely adapted from tephiplot.java by Dave Tiddeman
       Dan Walker 2014-06 */
 
@@ -276,6 +275,9 @@
       var YAxesUnits = [];
       window.YAxesOpts = [];
       window.frm_epoch = {{ frm_epoch }};
+      {% if to_epoch %}
+      window.to_epoch = {{ to_epoch }};
+      {% endif %}
       window.plotOptions = {
 			series: {
 				shadowSize: 0	// Drawing is faster without shadows
@@ -322,7 +324,7 @@
             url: "/live/livejson",
             dataType: 'json',
             //"traditional" encoding for web.py: see http://api.jquery.com/jquery.param/
-            data: jQuery.param({'frm':window.frm_epoch,'to':'{{ to_epoch }}','para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
+            data: jQuery.param({'frm':window.frm_epoch,'to':window.to_epoch,'para':['{{ x }}',{% for entry in y: %}'{{ entry }}', {% endfor %}]}, true),
             success: function(livejson) {  // arbitrary number of y-series
             for(p=0; p < livejson.length; p++)
             {
@@ -470,10 +472,9 @@
          $('#frm').val(d.toUTCString().slice(17,25)); //i.e the time section
        });
    });
-	</script>
-</head>
-<body>
-
+//]]></script>
+{% endblock %}
+{% block body %}
 	<div id="header">
 		<h2>Tephigram</h2>
 	</div>
@@ -520,8 +521,6 @@
 	</div>
 
 	<div id="footer">
-		Copyright &copy; 2007 - 2013 IOLA and Ole Laursen
+		Flot &copy; 2007 - 2013 IOLA and Ole Laursen
 	</div>
-
-</body>
-</html>
+{% endblock %}

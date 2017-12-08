@@ -6,15 +6,21 @@ body {
 div#logocontainer {
    float:left;
    padding:1.0em; 
+   width: 20%;
 }
 h1#logo
 {
-   font-family: 'Titillium Maps',  Arial, sans-serif;
+   font-family: 'Titillium', 'Titillium Maps',  Arial, sans-serif;
    font-size:2.5em;
    line-height:1.0em;
    font-weight:normal;
    margin-top:0;
    font-style:italic;
+   background-color: white;
+   padding-left:0.2em;
+}
+h1#logo img {
+   width: 100%;
 }
 #logo a {
    text-decoration: none;
@@ -44,14 +50,13 @@ div#statblock {
    background-color: white;
    margin-left: auto;
    margin-right: auto;
+   border: solid 1px grey;
 }
 div#statblock p{
    color: #0C2174;
    padding: 0;
    margin-top: 0;
-   margin-right: 0;
    margin-bottom: 0.2em;
-   margin-left: 0.25em;
 }
 #flightsummary table {
    margin-left: auto;

@@ -2,7 +2,7 @@ etc/init.d
 etc/cron.daily
 etc/decades
 etc/default
-etc/apache2/sites-enabled
+etc/apache2/sites-available
 opt/decades/dataformats
 opt/decades/output
 var/lib/decades
@@ -15,4 +15,7 @@ var/www/decades
 var/www/decades/plot
 var/www/decades/css
 var/www/decades/js
+var/www/decades/docs
+var/www/decades/docs/_sources
+var/www/decades/docs/_static
 var/www/decades-live

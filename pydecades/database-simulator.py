@@ -5,7 +5,7 @@ import argparse
 #Parse arguments
 parser = argparse.ArgumentParser(description='Data simulator for DECADES testing. It defaults to simulating all the DLUs, but you can limit it to a subset using the --DLU option.')
 
-DLUs_list  = ['CORCON', 'GINDAT', 'PRTAFT', 'UPPBBR', 'LOWBBR', 'AERACK','TWCDAT']
+DLUs_list  = ['CORCON', 'GINDAT', 'PRTAFT', 'UPPBBR', 'LOWBBR', 'AERACK','TWCDAT','ACLOUD']
 
 #allows choice of DLUs on the command line, defaults to all of them
 parser.add_argument('--DLU','--dlu', nargs='*', choices=DLUs_list, default=DLUs_list, help="Which DLU(s) you wish to simulate. (e.g. CORCON, GINDAT) Defaults to all of them.", metavar='DLUNAME')
@@ -26,13 +26,13 @@ for proto in dataProtocols.available():
 if dataProtocols.new_table_count > 0:
    #one of the dataformat files has been updated, recreate merge table
    print('Recreating mergeddata table')
-   dataProtocols.create_view(cursor)
+   dataProtocols.create_table(cursor)
 else:
    print('Reusing existing mergeddata table')
 
 #delete previous run
 cursor.execute('TRUNCATE TABLE mergeddata;')
-cursor.execute('ALTER SEQUENCE mergeddata_id_seq RESTART WITH 1;')
+#cursor.execute('ALTER SEQUENCE mergeddata_id_seq RESTART WITH 1;')
 conn.commit()
 while 1:
             seconds_since_midnight = (datetime.datetime.now() - datetime.datetime(datetime.datetime.now().year,datetime.datetime.now().month,datetime.datetime.now().day)).seconds
@@ -93,6 +93,11 @@ while 1:
                'utc_time':timestamp,
                'flight_num':flightnum,
                'twc_detector':random.normalvariate(120,50)
+            }
+            fakedata['ACLOUD'] = {
+               'utc_time':timestamp,
+               'aimms_latitude':(0.0 + 5*math.sin(math.radians(timestamp*3))),
+               'aimms_altitude':int(1000 + (50 * math.sin(timestamp/4))) 
             }
             for DLU in args.DLU:
                time.sleep(random.gauss(0.15,0.03)) #makes "random" gaps between data
