@@ -200,16 +200,15 @@ cRIO NI 9022 Controller and NI 9112 8-slot chassis
 **Functions:**
 
 1. Records data from: Deiced and Non-Deiced temperature sensors; General
-Eastern Hygrometer; Nevzorov Liquid/Ice Water sensor; Cabin, S9 and
-Turbulence probe pressure sensors; Heimann Radiometer and calibration
-unit
-
+   Eastern Hygrometer; Nevzorov Liquid/Ice Water sensor; Cabin, S9 and
+   Turbulence probe pressure sensors; Heimann Radiometer and calibration
+   unit
 2. Produces signal flags for Weight on Wheels, Heimann Radiometer
-Calibration and Deiced Temperature heater state, passing these to the
-Port Aft DLU for logging (done this way to keep equivalent to previous
-system).
-
+   Calibration and Deiced Temperature heater state, passing these to the
+   Port Aft DLU for logging (done this way to keep equivalent to previous
+   system).
 3. Transmits calibrated data feed via serial connection to AVAPS
+
 
 
 .. table:: Core Console Hardware Connections
@@ -323,19 +322,19 @@ system).
    | Signals                   | 8:4                            | 5:6                       |
    +---------------------------+--------------------------------+---------------------------+
    
-**Additional front-panel cards:**
+Additional front-panel cards
+############################
 
 Fast Temperature
+    To translate the thermistor measurement to a voltage, the thermistor is
+    operated in a potential divider with one of two selectable precision
+    resistors (depending on the temperature range) A 5V switched source from
+    the NI 9263 determines which series resistor is used, the sourcing
+    current of the module is too low to complete the switching unaided so a
+    simple transistor amplifier is used to boost this. The NI9263 also
+    supplies the voltage for the potential divider.
 
-To translate the thermistor measurement to a voltage, the thermistor is
-operated in a potential divider with one of two selectable precision
-resistors (depending on the temperature range) A 5V switched source from
-the NI 9263 determines which series resistor is used, the sourcing
-current of the module is too low to complete the switching unaided so a
-simple transistor amplifier is used to boost this. The NI9263 also
-supplies the voltage for the potential divider.
-
-\*\*Update to reflect Matt’s changes of this hardware card\*\*
+    \*\*Update to reflect Matt’s changes of this hardware card\*\*
 
 .. figure:: _static/dlu-fast-temp.png
    :figwidth: image
@@ -346,15 +345,13 @@ supplies the voltage for the potential divider.
 
 
 Signal Register
-
-This card translates the various signal outputs from the 5 data sources
-(Nevz TWC, Nevz LWC, Rosemount Deiced Heater, WOW, Heimann Calibration)
-into binary outputs for the digital input cards. This is done using
-miniature relays.
+    This card translates the various signal outputs from the 5 data sources
+    (Nevz TWC, Nevz LWC, Rosemount Deiced Heater, WOW, Heimann Calibration)
+    into binary outputs for the digital input cards. This is done using
+    miniature relays.
 
 Temperature Card
-
-\*\*update with the info for Matt’s card\*\*
+    \*\*update with the info for Matt’s card\*\*
 
 LOWER and UPPER BBR (Two DLUS)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -365,20 +362,20 @@ cRIO NI 9022 Controller and NI 9111 4-slot chassis
 
 1 NI 9472 8-channel 24V Digital Output card
 
-Additional Front Panel Cards:
+Additional Front Panel Cards
+############################
 
 28-15V DC-DC converter and connectors
 
 **Function:**
 
 Acquire data from the Broadband Radiometer (BBR) instruments.
-
-Each BBR requires a switched 15V signal to determine whether a signal or
-reference (‘zero’) measurement is being output. These are switched
-halfway through every second. The DC-DC converter to provide the ±15V
-BBR supply is mounted on the inside of the BBR DLU front panel. 15V for
-the switched circuit comes from a small voltage regulator card mounted
-on the rear of the same panel, this is switched using the NI 9472 module
+    Each BBR requires a switched 15V signal to determine whether a signal or
+    reference (‘zero’) measurement is being output. These are switched
+    halfway through every second. The DC-DC converter to provide the ±15V
+    BBR supply is mounted on the inside of the BBR DLU front panel. 15V for
+    the switched circuit comes from a small voltage regulator card mounted
+    on the rear of the same panel, this is switched using the NI 9472 module
 
 .. figure:: _static/bbr-schematic.png
    :figwidth: image
@@ -482,8 +479,8 @@ employed on the conventional DLUs, via UDP multicast and TCP/IP
 connection to the Tank PCs. In addition to this the Chemistry pc carries
 out other control and data functions, fully documented elsewhere.
 
-2.1.7 Other Pseudo-DLUs (The Way Ahead!)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Other Pseudo-DLUs (The Way Ahead!)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The philosophy behind aircraft data acquisition for the lifetime of the
 new data system will be the simplicity with which new data sources can
