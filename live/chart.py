@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from pytz import timezone
 from time import mktime
+from collections import OrderedDict
 import json
 
 class cartesian:
@@ -26,9 +27,9 @@ class cartesian:
            
       #defaults to from now
       now = int(mktime(datetime.utcnow().timetuple()))
-      #HTML standard colours (except for white)
-      colours = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow']
-      user_data = web.input(x="javascript_time",y=["deiced_true_air_temp_c"],frm=None,to=None,c=colours)
+      #see http://www.cookbook-r.com/Graphs/Colors_%28ggplot2%29/#a-colorblind-friendly-palette  
+      colours = OrderedDict([('Grey',"#999999"), ('Orange',"#E69F00"), ('Sky blue',"#56B4E9"), ('Blue-Green',"#009E73"), ('Yellow',"#F0E442"), ('Blue',"#0072B2"), ('Vermillion',"#D55E00"), ('Pink',"#CC79A7")])
+      user_data = web.input(x="javascript_time",y=["deiced_true_air_temp_c"],frm=None,to=None,c=colours.values())
       if user_data.frm is not None and user_data.frm is not '':
          try:
             frm_epoch = int(mktime(parser.parse(user_data.frm + ' UTC').timetuple()))

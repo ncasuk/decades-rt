@@ -258,7 +258,7 @@
       <p><label for="x">X series</label><select id="x" name="x"></select></p>
       <div id="YSeriesContainer">
       {% for entry in y: %}
-         <p class="yseries"><label for="y{{ y.index(entry)}}">Y<sub>{{ y.index(entry)}}</sub> series</label><select class="yseries" id="y{{ y.index(entry)}}" name="y"></select><label for="colourUI">Colour:</label><select class="colourUI" id="c{{ y.index(entry)}}" name="c">{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select><span onclick="$(this).parent().remove()" >[X]</span></p>
+         <p class="yseries"><label for="y{{ y.index(entry)}}">Y<sub>{{ y.index(entry)}}</sub> series</label><select class="yseries" id="y{{ y.index(entry)}}" name="y"></select><label for="colourUI">Colour:</label><select class="colourUI" id="c{{ y.index(entry)}}" name="c">{% for each in colours.iteritems(): %}<option value="{{ each[1] }}" style="color: {{ each[1] }}">{{each[0]}}</option>{% endfor %}</select><span onclick="$(this).parent().remove()" >[X]</span></p>
       {% endfor %}
       </div>
       <input type="button" id="addYSeries" value="Add Y series"/>      
