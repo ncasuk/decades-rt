@@ -1,18 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Plotly plots</title>
-	<link href="/css/examples.css" rel="stylesheet" type="text/css">
+{% extends "layouts/default.html" %}
+{% block css %}
+<link rel="stylesheet" href="/css/examples.css" type="text/css" />
+{% endblock %}
+{% block script %}
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="/js/plotly-latest.min.js"></script>
 	<script type="text/javascript">
 //<![CDATA[
-//      var refreshStat = setInterval(function() {
-//      $('#statcontainer').load('/live/stat');
-//   }, 1000);
-
    var paramlist;
    $.fn.sort_select_box = function(){
     var my_options = $("#" + this.attr('id') + ' option');
@@ -49,7 +44,7 @@
          {% endfor %}
          
 
-		var datax = {};
+		var data = {};
 		var plotdata = [];
 		var totalPoints = 1000/{{ dep|count }};
       window.frm_epoch = {{ frm_epoch }};
@@ -101,7 +96,7 @@
            var YAxesUnits = [];
            var XAxesUnits = [];
             {% for nn,xx,yy in paras: %} // arbitrary number of series
-            datax['{{ nn }}'] = {x:[],y:[]};
+            data['{{ nn }}'] = {x:[],y:[]};
             if(-1 == YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits))
             {
                YAxesUnits.push(paramlist.{{ yy }}.DisplayUnits);
@@ -114,8 +109,8 @@
                //sets the opts for the xaxes, alternating between top and bottom
                window.XAxesOpts.push({ position: (XAxesUnits.length % 2)?"bottom":"top", show: true, axisLabel: paramlist.{{ xx }}.DisplayUnits});
             }
-            console.log(datax['{{ nn }}']);
-            plotdata.push( {x: datax['{{ nn }}'].x,y: datax['{{ nn }}'].y, name: paramlist.{{ nn }}.DisplayText 
+            console.log(data['{{ nn }}']);
+            plotdata.push( {x: data['{{ nn }}'].x,y: data['{{ nn }}'].y, name: paramlist.{{ nn }}.DisplayText 
                                 //,color: '{{ c[dep.index(nn)] }}', 
                                 //lines: { show: true}, points:{show:false,radius:0.5},
                                 //yaxis: YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 ,
@@ -144,13 +139,13 @@
             //{
             {% for nn,xx,yy in paras: %}
                console.log("{{nn}} {{xx}} {{yy}}");
-               datax['{{nn}}'].x.push(...livejson.{{ xx }});
-               datax['{{nn}}'].y.push(...livejson.{{ yy }});
+               data['{{nn}}'].x.push(...livejson.{{ xx }});
+               data['{{nn}}'].y.push(...livejson.{{ yy }});
             {% endfor %}
             //}
             console.log("HERE");
             console.log(plotdata);
-            console.log(datax);
+            console.log(data);
             console.log(plot);
             if(plot){
               console.log("Restyle");
@@ -336,9 +331,9 @@
       }
 
 
- </script>
-</head>
-<body>
+//]]></script>
+{% endblock %}
+{% block body %}
 	<div id="header">
 		<h2>Plotly plots</h2>
 <div id="statcontainer"></div>
@@ -409,6 +404,4 @@
 	<div id="footer">
 		MIT license<br>
 	</div>
-</body>
-</html>
-
+{% endblock %}
