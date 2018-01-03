@@ -34,6 +34,7 @@ Developing DECADES
    ch-development.rst
    dev-environment.rst
    aircraft-tanks.rst
+   install-header-tank.rst 
 
 #########
 Reference

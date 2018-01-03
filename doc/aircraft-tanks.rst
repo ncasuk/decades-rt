@@ -18,7 +18,7 @@ work fine. My suggestion would be, in the style of Debian Linux’s
 stable/unstable/testing arrangement:
 
 Fish
-    Stable, no non-emergency live changes
+    Stable, no non-emergency live changes (referred to as "Flying Fish"; see below)
 Septic
     Stable, live changes if required (i.e. master branch with changes limited 
     to non-interfering ones (e.g. SEA Probe stuff that’s currently flying))
@@ -34,8 +34,12 @@ Header and Drunk would be repurposed laptops. They do not need to be
 particularly special; an out-of-warranty one that’s a few years old would be 
 fine.
 
+In the lab, there is also a tank for testing. It also is called Fish and has the same IP address as the aircraft one. It should be referred to as "Blenny" [2]_ to
+reduce ambiguity.
+
 Users could use Header and Drunk to see live data if they wished, with the 
 proviso that they aren’t to rely on it.
 
 .. [1] Septic & Fish are currently running Ubuntu 12.04LTS, which has end-of-lifed now unless we want to pay for Extended Security Support, so that’s something else that needs dealing with.
 
+.. [2] https://en.wikipedia.org/wiki/Pacific_leaping_blenny "They are able to dwell on land for several hours at a time" :)
