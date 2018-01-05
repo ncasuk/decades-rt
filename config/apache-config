@@ -11,6 +11,7 @@
    ServerAlias 192.168.101.108
    ServerAlias 192.168.101.110
    ServerAlias 192.168.101.111
+   ServerAlias 192.168.101.133
    ServerAlias 127.0.0.1
 
    DocumentRoot /var/www/decades/

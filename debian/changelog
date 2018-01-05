@@ -249,7 +249,7 @@ decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
 decades (1.7.3~7.gbpd102ce) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @d102cea161562571ade1b10889aff239a7f2db2c **
+  ** SNAPSHOT build @76f81545252b419c683693ad8f22823bcae507f6 **
 
   [ Dan Walker ]
   * changelog
@@ -274,8 +274,18 @@ decades (1.7.3~7.gbpd102ce) UNRELEASED; urgency=medium
   * dew point code for WVSS2[A,B] added to rt_derive. vp conversion coded added to formulas
 
   [ Dan Walker ]
+  * All display params files
+  * Deal correctly with NaN co-ordinates
+  * Ignore buildinfo files
+  * Tuple not Dict
+  * Correct syntax
+  * Add dev server to allowed aliases
+  * Sea probe from septic
+  * Revert parameter order to ID order
+  * Change PSAP calibs
+  * Merge cal changes from live septic
 
- -- Dan Walker <daniel.walker@ncas.ac.uk>  Tue, 28 Nov 2017 10:27:52 +0000
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Fri, 05 Jan 2018 11:54:25 +0000
 
 decades (1.7.3~4.gbp8c5518) quantal; urgency=low
 
