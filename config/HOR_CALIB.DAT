@@ -8,7 +8,7 @@ CAL001 1  0.2,                      	Deiced heating correction (deg C)*
 CAL002 1  0.985,                    	Temperature recovery factor *
 CAL003 1  0.847,                    	Upwash factor *
 CAL004 1  1.000,                    	TAS correction factor *
-CAL010 3  -246.3051,1.004281E-3,2.099042E-10,  	De-iced temperature (deg C)
+CAL010 3  -239.2496,1.016112E-3,2.136242E-10,  	De-iced temperature (deg C)
 CAL014 3  2.758,0.03293,-2.463E-10,		Cabin pressure (mb)
 CAL101 1  3.29E-4,                     Nevzerov cal
 CAL102 1  -6.82E-2,                    Nevzerov cal
@@ -31,10 +31,10 @@ CAL118 1  0.80,                        K_LWC
 CAL120 1  2589.0,                      energy required for heating and evaporating drops J/g
 CAL121 1  0.3e-4,                      Area LWC collector (m2)
 CAL122 1  0.5e-4,                      Area TWC collector (m2)
-CAL023 3  -250.2949,1.004052E-3,2.11836E-10, 	Non de-iced temperature (deg C)
+CAL023 3  -243.7559,1.003395E-3,1.869041E-10, 	Non de-iced temperature (deg C)
 CAL042 2  0,1.538E-4,       			Johnson Williams  (g m-3)
 CAL058 2  -78.46,0.00421,           	General Eastern Hygrometer   (C)
-CAL070 2  11.415,5.07e-3,                TWC Detector Scaling
+CAL070 2  33.1,5.65e-3,                TWC Detector Scaling
 CAL072 2  3.9565E+2,1.5437E-02,              TWC Sample Temp
 CAL081 2  2.32,0.0535,   			Upper pyran clear sig & zero (W m-2)
 CAL082 2  0.389,0.0293,     			Upper pyran red   sig & zero (W m-2)
