@@ -117,7 +117,9 @@ class DecadesMUDPSender(DatagramProtocol):
             fakedata['AERACK'] = {
                'utc_time':timestamp,
                'flight_num':self.flightnum,
-               'buck_mirr_cln_flag':0
+               'buck_mirr_cln_flag':0,
+               'neph_total_blue': 4.773 + 3.0*math.cos(math.radians(timestamp*3.0)),
+               'neph_backscatter_blue': 3.75 + 2.81*math.cos(math.radians(timestamp*2.37))
             }
             fakedata['LOWBBR'] = {
                'utc_time':timestamp,
