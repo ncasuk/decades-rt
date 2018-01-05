@@ -1,6 +1,6 @@
-decades (1.7.3~8.gbp76f815) UNRELEASED; urgency=medium
+decades (1.7.3~9.gbpc71a47) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @76f81545252b419c683693ad8f22823bcae507f6 **
+  ** SNAPSHOT build @c71a473830a2e8d9dbdcd52c6be64d2012a2e173 **
 
   [ Dan Walker ]
   * changelog
@@ -35,8 +35,11 @@ decades (1.7.3~8.gbp76f815) UNRELEASED; urgency=medium
   * Revert parameter order to ID order
   * Change PSAP calibs
   * Merge cal changes from live septic
+  * Add hader to JSON out
+  * Update changelog
+  * Correct from 125 to 0.125
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Fri, 05 Jan 2018 11:54:25 +0000
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Fri, 05 Jan 2018 12:15:51 +0000
 
 decades (1.7.3~4.gbp8c5518) quantal; urgency=low
 
