@@ -58,7 +58,7 @@ CAL183 2  0.,0.0020,                	Nephelometer humidity
 CAL184 2  0.,0.25,                  	Nephelometer status
 CAL185 2  8.85E-2,0.001595,        		PSAP linear abs coeff
 CAL186 2  0.0,1.0,                  	PSAP log abs coeff * 
-CAL187 2  -1.77E+2,3.19E-04,        	PSAP transmittance
+CAL187 2  0.0,1.25E02,        	PSAP transmittance
 CAL188 2  -7.36E-1,1.12E-4,         	PSAP flow rate *
 CAL207 2  -263.87,1.532E-4,            	Cabin temperature *
 							Nevzorov Data to be added
