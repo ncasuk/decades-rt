@@ -5,3 +5,4 @@ Horace Original Horace Fortran and Web code, taken off G-LUXE aircraft 2012-04-2
 docs Documentation written in Sphinx's dialect of reStructured Text.
 live Python web.py live data system replacement
 web  skeleton directory structure for live deployment
+dataformats Contains the formats for the UDP/TCP packets from the various instruments
