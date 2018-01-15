@@ -7,3 +7,4 @@ live Python web.py live data system replacement
 web  skeleton directory structure for live deployment
 dataformats Contains the formats for the UDP/TCP packets from the various instruments
 config  Contains config files (e.g. cron tables, apache config, etc)
+debian  Debian packaging (.deb) control files.
