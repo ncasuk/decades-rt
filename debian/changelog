@@ -1,6 +1,6 @@
-decades (1.7.4~1.gbp961f0d) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbp42e187) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @961f0dc2481e51a92c1db6b13ae441cf6b30bc73 **
+  ** SNAPSHOT build @42e18778904a57ea38648559ee011713efd02806 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @ae372ee07459a92b124b8a49df7e285c38f5d48f **
@@ -178,8 +178,33 @@ decades (1.7.4~1.gbp961f0d) UNRELEASED; urgency=medium
   * return empty pressure_alt values to trigger RuntimeWarnings and hence Python Simplified GIL State API bug if present
   * UNRELEASED
   * Add Titillium font to package
+  * Deal correctly with NaN co-ordinates
+  * Ignore buildinfo files
+  * Tuple not Dict
+  * Correct syntax
+  * Add dev server to allowed aliases
+  * Sea probe from septic
+  * Revert parameter order to ID order
+  * Use local font for Titillium
+  * Scematic from user manual
+  * More images from user manual
+  * Add hader to JSON out
+  * Correct fabfile to read SSH config correctly with recent versions of Fabric
+  * Tidy up User Manual; add images etc
+  * Tidying up
+  * Change to colourblind-friendly pallette
+  * Docs updated
+  * Neph changes
+  * Change PSAP calibs
+  * Merge cal changes from live septic
+  * Update changelog
+  * Correct from 125 to 0.125
+  * Calibs from Fish Tank
+  * Changelog mods
+  * UNRELEASED
+  * UNRELEASED
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Wed, 06 Dec 2017 09:29:02 +0000
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Fri, 05 Jan 2018 13:20:57 +0000
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 

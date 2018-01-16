@@ -75,11 +75,12 @@ class DecadesMUDPSender(DatagramProtocol):
             fakedata['PRTAFT'] = {
                'utc_time':timestamp,
                'flight_num':self.flightnum,
-               'pressure_alt':'',#int(1000 + (50 * math.sin(timestamp/4))), #average 10kft
+               'pressure_alt':int(2621 + (50 * math.sin(timestamp/4.0))), #average 10kft
                'ind_air_speed':int(9600 + (10 * math.cos(timestamp*4))), #average 300kts
                'deiced_temp_flag':True, #alternates between true and false
                'rad_alt':int(random.normalvariate(10000,400))
             }
+            print fakedata['PRTAFT']['pressure_alt']
             fakedata['CORCON'] = {
                'utc_time':timestamp,
                'flight_num':self.flightnum,
