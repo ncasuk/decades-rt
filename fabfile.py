@@ -165,6 +165,7 @@ def setup_local_dev_environment():
    local('sudo ln -nfs ${PWD}/doc/_build/html /var/www/%(prj_name)s/docs' % env)
    local('sudo mkdir -p ${PWD}/doc/_build/latex' % env)
    local('sudo ln -nfs ${PWD}/doc/_build/latex/%(prj_name)s.pdf /var/www/%(prj_name)s/docs/' % env)
+   local('ln ${PWD}/config/titillium ~/.fonts/')
    #pdfdocs()
 
    print("""run the decades-server app:
@@ -175,7 +176,6 @@ def setup_local_dev_environment():
      http://%(prj_name)s-dev/""" % env)
 
    warn(red('You will need to install java. http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html'))
-   warn(red('You will need to install Titillium font for the PDF docs; try http://www.campivisivi.net/titillium/text (Titillium_roman_upright_italic version 2.0) and then run fab pdfdocs'))
 
    
 @runs_once
