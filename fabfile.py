@@ -125,7 +125,7 @@ def setup_local_dev_environment():
    """Sets up a development environment on a Ubuntu install"""
    local('sudo apt-get -y install aptitude')
    #stuff to *run* the software (you will need to first "apt-get install fabric")
-   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr texlive texlive-xetex fonts-linuxlibertine debhelper fastjar fabric git-buildpackage lm-sensors')
+   local('sudo aptitude -y install apache2 libapache2-mod-wsgi python-webpy postgresql python-setuptools python-numpy python-tz python-jinja2 python-twisted python-psycopg2 python-sphinx python-testresources python-pbr python-pip texlive texlive-xetex fonts-linuxlibertine debhelper fastjar fabric git-buildpackage lm-sensors ')
    local('sudo a2enmod wsgi')
    local('sudo ln -nfs ${PWD}/config/apache-config /etc/apache2/sites-available/%(prj_name)s.conf' % env)
    #runtime ini files
@@ -148,9 +148,8 @@ def setup_local_dev_environment():
    local('sudo ln -nfs ${PWD}/Horace/web/plot/Plot.jar /var/www/%(prj_name)s/plot' % env)
    local('sudo ln -nfs ${PWD}/live /var/www/%(prj_name)s-live' % env)
    local('sudo service apache2 reload' % env)
-   #python module
-   local('sudo python setup.py build')
-   local('sudo python setup.py install')
+   #python module dev install
+   local('sudo pip install -e .') 
    #dataformats
    local('sudo mkdir -p /opt/%(prj_name)s/' % env)
    local('sudo ln -nfs ${PWD}/dataformats /opt/%(prj_name)s/' % env)
