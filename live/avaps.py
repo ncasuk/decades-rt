@@ -41,7 +41,7 @@ class avaps:
       rtlib = rt_derive.derived(cur, calfile)
 
       #get data
-      data = rtlib.derive_data_alt(['time_since_midnight','utc_time','pressure_height_m','static_pressure','gin_latitude','gin_track_angle','gin_longitude','gin_heading','gin_d_velocity','gin_altitude','gin_speed', 'true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '=id','ORDER BY id DESC LIMIT 1')
+      data = rtlib.derive_data(['time_since_midnight','utc_time','pressure_height_m','static_pressure','gin_latitude','gin_track_angle','gin_longitude','gin_heading','gin_d_velocity','gin_altitude','gin_speed', 'true_air_speed', 'deiced_true_air_temp_c','dew_point','gin_wind_speed','wind_angle'], '',' DESC LIMIT 1')
       #each entry is a length=1 list, so flatten
       for each in data:
          data[each] = data[each][0]
