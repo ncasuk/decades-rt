@@ -84,11 +84,14 @@ class livejson:
          #Javascript time is in whole milliseconds
          for each in keylist:
             if (np.isfinite(data[each][n])):#don't return NaNs
-               #dataout[-1][each] = data[each][n] 
-               dataout[n][each] = np.asscalar(data[each][n])
+                #dataout[-1][each] = data[each][n] 
+                try:
+                    dataout[n][each] = np.asscalar(data[each][n])
+                except IndexError:
+                    pass; #ignore silently index errors
             else:
-               del dataout[-1];
-               break; #go on to next entry
+                del dataout[-1];
+                break; #go on to next entry
 
       #data['utc_time'] = datetime.fromtimestamp(data['utc_time'],timezone('utc')).strftime('%H:%M:%S') 
       return json.dumps(dataout, allow_nan=False) #in *no particular order*
