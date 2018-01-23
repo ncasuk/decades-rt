@@ -165,7 +165,7 @@ def setup_local_dev_environment():
    local('sudo ln -nfs ${PWD}/doc/_build/html /var/www/%(prj_name)s/docs' % env)
    local('sudo mkdir -p ${PWD}/doc/_build/latex' % env)
    local('sudo ln -nfs ${PWD}/doc/_build/latex/%(prj_name)s.pdf /var/www/%(prj_name)s/docs/' % env)
-   local('ln ${PWD}/config/titillium ~/.fonts/')
+   local('ln -nfs ${PWD}/config/titillium ~/.fonts/')
    #pdfdocs()
 
    print("""run the decades-server app:
