@@ -4,70 +4,71 @@ HOR_CALIB.DAT
 Contains calibration constants used by H_DERIVE on HORACE to do derivations.
 See end of this file for required format of entries.
 
-CAL001 1  0.2,                      	Deiced heating correction (deg C)*
-CAL002 1  0.9928,                    	Temperature recovery factor *
-CAL003 1  0.847,                    	Upwash factor *
-CAL004 1  1.000,                    	TAS correction factor *
-CAL010 3  -243.9687,3.793929E-5,2.928983E-13, 	De-iced temperature (deg C)
-CAL014 3  2.758,0.03293,-2.463E-10,		Cabin pressure (mb)
-CAL101 1  3.29E-4,                     Nevzerov cal
-CAL102 1  -6.82E-2,                    Nevzerov cal
-CAL103 1  3.29E-4,                     Nevzerov cal
-CAL104 1  -6.82E-2,                    Nevzerov cal
-CAL105 1  3.29E-4,                     Nevzerov cal
-CAL106 1  -6.82E-2,                    Nevzerov cal
-CAL107 1  3.29E-4,                     Nevzerov cal
-CAL108 1  -6.82E-2,                    Nevzerov cal
-CAL109 1  3.29E-4,                     Nevzerov cal
-CAL110 1  -6.82E-2,                    Nevzerov cal
-CAL111 1  3.29E-4,                     Nevzerov cal
-CAL112 1  -6.82E-2,                    Nevzerov cal
-CAL113 1  3.29E-4,                     Nevzerov cal
-CAL114 1  -6.82E-2,                    Nevzerov cal
-CAL115 1  3.29E-4,                     Nevzerov cal
-CAL116 1  -6.82E-2,                    Nevzerov cal
-CAL117 1  1.654,                       K_TWC  SN376 fitted C073 used TWC, N 120 deg
-CAL118 1  2.240,                       K_LWC  SN376 fitted C073 used LWC1, N 120 deg
-CAL120 1  2589.0,                      energy required for heating and evaporating drops J/g
-CAL121 1  0.3e-4,                      Area LWC collector (m2)
-CAL122 1  0.5e-4,                      Area TWC collector (m2)
-CAL023 3  -244.1365,3.787870E-5,2.999373E-13,		Non de-iced temperature (deg C)
-CAL042 2  0,1.538E-4,       			Johnson Williams  (g m-3)
-CAL058 2  -78.46,0.00421,           	General Eastern Hygrometer   (C)
-CAL070 2  11.415,5.07e-3,                TWC Detector Scaling
-CAL072 2  3.9565E+2,1.5437E-02,              TWC Sample Temp
-CAL081 2  2.32,0.0535,   			Upper pyran clear sig & zero (W m-2)
-CAL082 2  0.389,0.0293,     			Upper pyran red   sig & zero (W m-2)
-CAL083 2  -1467,0.0947,     			Upper pyrge       sig & zero (W m-2)
-CAL089 2  134.3,-0.00600,     		Upper pyrge temp (deg C)
-CAL091 2  1.493,0.04304,     			Lower pyran clear sig & zero (W m-2)
-CAL092 2  0.7718,0.02668,   			Lower pyran red   sig & zero (W m-2)
-CAL093 2  -534.02,0.03432,    		Lower pyrge       sig & zero (W m-2)
-CAL099 2  133.782,-0.006017,     		Lower pyrge temp (deg C)
-CAL141 2  -45.45,0.00303,        		Heimann temp (C)
-CAL142 2  -22.30,0.00192,        		Heimann calibrator temp (C)
-CAL175 2  -150.0,0.0229,              	Nephelometer pressure *
-CAL176 2  -50.,7.63E-3,               	Nephelometer temperature *
-CAL177 5  1.81E-02,3.27E-04,7.,2.,1.E-6, 	Nephelometer blue sp 
-CAL178 5  1.81E-02,3.27E-04,7.,2.,1.E-6, Nephelometer green sp
-CAL179 5  1.81E-02,3.27E-04,7.,2.,1.E-6, 	Nephelometer red sp
-CAL180 5  1.81E-02,3.27E-04,7.,2.,1.E-6, 	Nephelometer blue bsp
-CAL181 5  1.81E-02,3.27E-04,7.,2.,1.E-6, Nephelometer red bsp
-CAL182 5  1.81E-02,3.27E-04,7.,2.,1.E-6, 	Nephelometer green bsp
-CAL183 2  0.,0.0020,                	Nephelometer humidity
-CAL184 2  0.,0.25,                  	Nephelometer status
-CAL185 2  8.85E-2,0.001595,        		PSAP linear abs coeff
-CAL186 2  0.0,1.0,                  	PSAP log abs coeff * 
-CAL187 2  0.0,1.25E-01,        	PSAP transmittance
-CAL188 2  -7.36E-1,1.12E-4,         	PSAP flow rate *
-CAL207 2  -263.87,1.532E-4,            	Cabin temperature *
-							Nevzorov Data to be added
-CAL215 3  0.5519038,0.005446950,1.429741E-9,	Turb probe pitot-static (mb)
-CAL216 3  -0.08816,2.103E-05,0.00E-10,	Turb probe attack diff (mb)
-CAL217 3  0.02700,2.103E-05,0.00E-10,	Turb probe sideslip diff (mb)
-CAL218 3  0.5754,0.01079,0.00E-10,	Turb probe attack check (mb)
-CAL219 3  -0.6113,0.01070,0.00E-10,	Turb probe sideslip check (mb)
-CAL221 3  -1.093,0.03298,3.238E-10,	S9 static (mb)
+CAL001 1  0.2,                                  Deiced heating correction (deg C)*
+CAL002 1  0.985,                                Temperature recovery factor *
+CAL003 1  0.847,                                Upwash factor *
+CAL004 1  1.000,                                TAS correction factor *
+CAL010 3  -246.3051,1.004281E-3,2.099042E-10,   De-iced temperature (deg C)
+CAL014 3  2.758,0.03293,-2.463E-10,             Cabin pressure (mb)
+CAL101 1  3.29E-4,                              Nevzorov cal 
+CAL102 1  -6.82E-2,                             Nevzorov cal
+CAL103 1  3.29E-4,                              Nevzorov cal
+CAL104 1  -6.82E-2,                             Nevzorov cal
+CAL105 1  3.29E-4,                              Nevzorov cal
+CAL106 1  -6.82E-2,                             Nevzorov cal
+CAL107 1  3.29E-4,                              Nevzorov cal
+CAL108 1  -6.82E-2,                             Nevzorov cal
+CAL109 1  3.29E-4,                              Nevzorov cal
+CAL110 1  -6.82E-2,                             Nevzorov cal
+CAL111 1  3.29E-4,                              Nevzorov cal
+CAL112 1  -6.82E-2,                             Nevzorov cal
+CAL113 1  3.29E-4,                              Nevzorov cal
+CAL114 1  -6.82E-2,                             Nevzorov cal
+CAL115 1  3.29E-4,                              Nevzorov cal
+CAL116 1  -6.82E-2,                             Nevzorov cal
+CAL117 1  1.40,                                 K_LWC1
+CAL118 1  1.96,                                 K_LWC2
+CAL119 1  0.66,                                 K_TWC
+CAL120 1  2589.0,                               energy required for heating and evaporating drops J/g
+CAL121 1  0.256e-4,                             Area LWC1 collector (m2)
+CAL122 1  0.381e-4,                             Area LWC2 collector (m2)
+CAL123 1  0.502e-4,                             Area TWC collector (m2)
+CAL023 3  -250.2949,1.004052E-3,2.11836E-10,    Non de-iced temperature (deg C)
+CAL042 2  0,1.538E-4,                           Johnson Williams  (g m-3)
+CAL058 2  -78.46,0.00421,                       General Eastern Hygrometer   (C)
+CAL070 2  11.415,5.07e-3,                       TWC Detector Scaling
+CAL072 2  3.9565E+2,1.5437E-02,                 TWC Sample Temp
+CAL081 2  2.32,0.0535,                          Upper pyran clear sig & zero (W m-2)
+CAL082 2  0.389,0.0293,                         Upper pyran red   sig & zero (W m-2)
+CAL083 2  -1467,0.0947,                         Upper pyrge       sig & zero (W m-2)
+CAL089 2  134.3,-0.00600,                       Upper pyrge temp (deg C)
+CAL091 2  1.493,0.04304,                        Lower pyran clear sig & zero (W m-2)
+CAL092 2  0.7718,0.02668,                       Lower pyran red   sig & zero (W m-2)
+CAL093 2  -534.02,0.03432,                      Lower pyrge       sig & zero (W m-2)
+CAL099 2  133.782,-0.006017,                    Lower pyrge temp (deg C)
+CAL141 2  -45.45,0.00303,                       Heimann temp (C)
+CAL142 2  -22.30,0.00192,                       Heimann calibrator temp (C)
+CAL175 2  -150.0,0.0229,                        Nephelometer pressure *
+CAL176 2  -50.,7.63E-3,                         Nephelometer temperature *
+CAL177 5  1.81E-02,3.27E-04,7.,2.,1.E-6,        Nephelometer blue sp 
+CAL178 5  1.81E-02,3.27E-04,7.,2.,1.E-6,        Nephelometer green sp
+CAL179 5  1.81E-02,3.27E-04,7.,2.,1.E-6,        Nephelometer red sp
+CAL180 5  1.81E-02,3.27E-04,7.,2.,1.E-6,        Nephelometer blue bsp
+CAL181 5  1.81E-02,3.27E-04,7.,2.,1.E-6,        Nephelometer red bsp
+CAL182 5  1.81E-02,3.27E-04,7.,2.,1.E-6,        Nephelometer green bsp
+CAL183 2  0.,0.0020,                            Nephelometer humidity
+CAL184 2  0.,0.25,                              Nephelometer status
+CAL185 2  8.85E-2,0.001595,                     PSAP linear abs coeff
+CAL186 2  0.0,1.0,                              PSAP log abs coeff * 
+CAL187 2  -1.77E+2,3.19E-04,                    PSAP transmittance
+CAL188 2  -7.36E-1,1.12E-4,                     PSAP flow rate *
+CAL207 2  -263.87,1.532E-4,                     Cabin temperature *
+CAL215 3  0.5519038,0.005446950,1.429741E-9,    Turb probe pitot-static (mb)
+CAL216 3  -0.08816,2.103E-05,0.00E-10,          Turb probe attack diff (mb)
+CAL217 3  0.02700,2.103E-05,0.00E-10,           Turb probe sideslip diff (mb)
+CAL218 3  0.5754,0.01079,0.00E-10,              Turb probe attack check (mb)
+CAL219 3  -0.6113,0.01070,0.00E-10,             Turb probe sideslip check (mb)
+CAL221 3  -1.093,0.03298,3.238E-10,             S9 static (mb)
 
 Format of entries in this file:
 

@@ -723,12 +723,12 @@ C ST    - Corrected Surface Temperature   (deg C)
       lwc_col_r=lwc_col_v/lwc_col_i
       lwc_ref_r=lwc_ref_v/lwc_ref_i
     '''
-    def nevzorov_liquid_water(self,data):
+    def nevzorov_lwc1(self, data):
         '''Calculates the display value of the Nevzerov Liquid Water in g/m^3'''
-        icol=self.getdata('corcon01_nv_lwc_icol',data)
-        vcol=self.getdata('corcon01_nv_lwc_vcol',data)
-        iref=self.getdata('corcon01_nv_lwc_iref',data)
-        vref=self.getdata('corcon01_nv_lwc_vref',data)
+        icol = self.getdata('corcon01_nv_lwc_icol', data)
+        vcol = self.getdata('corcon01_nv_lwc_vcol', data)
+        iref = self.getdata('corcon01_nv_lwc_iref', data)
+        vref = self.getdata('corcon01_nv_lwc_vref', data)
         CAL101 = self.cals['CAL101'][0]
         CAL102 = self.cals['CAL102'][0]
         CAL103 = self.cals['CAL103'][0]
@@ -737,9 +737,9 @@ C ST    - Corrected Surface Temperature   (deg C)
         CAL106 = self.cals['CAL106'][0]
         CAL107 = self.cals['CAL107'][0]
         CAL108 = self.cals['CAL108'][0]
-        K_LWC=self.cals['CAL118'][0]
-        L_LWC=self.cals['CAL120'][0]
-        AREA_LWC=self.cals['CAL121'][0]
+        K_LWC = self.cals['CAL117'][0]
+        L_LWC = self.cals['CAL120'][0]
+        AREA_LWC = self.cals['CAL121'][0]
         #calibrate raw data
         lwc_col_i = CAL101*icol + CAL102
         lwc_col_v = CAL103*vcol + CAL104
@@ -748,20 +748,54 @@ C ST    - Corrected Surface Temperature   (deg C)
         #Calculate derived parameters.
         #
         #Sensor power (J/s).
-        lwc_col_p=lwc_col_i*lwc_col_v
-        lwc_ref_p=lwc_ref_i*lwc_ref_v
+        lwc_col_p = lwc_col_i*lwc_col_v
+        lwc_ref_p = lwc_ref_i*lwc_ref_v
 
-        tas=self.getdata('true_air_speed_ms',data)
-        lwc_p=lwc_col_p-K_LWC*lwc_ref_p
-        lwc_q=lwc_p/(tas*AREA_LWC*L_LWC)
+        tas = self.getdata('true_air_speed_ms',data)
+        lwc_p = lwc_col_p-(K_LWC*lwc_ref_p)
+        print(K_LWC)
+        lwc_q = lwc_p/(tas*AREA_LWC*L_LWC)
         return lwc_q
 
-    def nevzorov_total_water(self,data):
+    def nevzorov_lwc2(self, data):
+        '''Calculates the display value of the Nevzerov Liquid Water in g/m^3'''
+        icol = self.getdata('corcon01_nv_twc_iref', data)
+        vcol = self.getdata('corcon01_nv_twc_vref', data)
+        iref = self.getdata('corcon01_nv_lwc_iref', data)
+        vref = self.getdata('corcon01_nv_lwc_vref', data)
+        CAL101 = self.cals['CAL101'][0]
+        CAL102 = self.cals['CAL102'][0]
+        CAL103 = self.cals['CAL103'][0]
+        CAL104 = self.cals['CAL104'][0]
+        CAL105 = self.cals['CAL105'][0]
+        CAL106 = self.cals['CAL106'][0]
+        CAL107 = self.cals['CAL107'][0]
+        CAL108 = self.cals['CAL108'][0]
+        K_LWC = self.cals['CAL118'][0]
+        L_LWC = self.cals['CAL120'][0]
+        AREA_LWC = self.cals['CAL122'][0]
+        #calibrate raw data
+        lwc_col_i = CAL101*icol + CAL102
+        lwc_col_v = CAL103*vcol + CAL104
+        lwc_ref_i = CAL105*iref + CAL106
+        lwc_ref_v = CAL107*vref + CAL108
+        #Calculate derived parameters.
+        #
+        #Sensor power (J/s).
+        lwc_col_p = lwc_col_i*lwc_col_v
+        lwc_ref_p = lwc_ref_i*lwc_ref_v
+
+        tas = self.getdata('true_air_speed_ms',data)
+        lwc_p = lwc_col_p-(K_LWC*lwc_ref_p)
+        lwc_q = lwc_p/(tas*AREA_LWC*L_LWC)
+        return lwc_q
+
+    def nevzorov_twc(self, data):
         '''Calculates the display value of the Nevzerov Total Water in g/m^3'''
-        icol=self.getdata('corcon01_nv_twc_icol',data)
-        vcol=self.getdata('corcon01_nv_twc_vcol',data)
-        iref=self.getdata('corcon01_nv_twc_iref',data)
-        vref=self.getdata('corcon01_nv_twc_vref',data)
+        icol = self.getdata('corcon01_nv_twc_icol', data)
+        vcol = self.getdata('corcon01_nv_twc_vcol', data)
+        iref = self.getdata('corcon01_nv_lwc_iref', data)
+        vref = self.getdata('corcon01_nv_lwc_vref', data)
         CAL109 = self.cals['CAL109'][0]
         CAL110 = self.cals['CAL110'][0]
         CAL111 = self.cals['CAL111'][0]
@@ -770,9 +804,9 @@ C ST    - Corrected Surface Temperature   (deg C)
         CAL114 = self.cals['CAL114'][0]
         CAL115 = self.cals['CAL115'][0]
         CAL116 = self.cals['CAL116'][0]
-        K_TWC=self.cals['CAL117'][0]
-        L_TWC=self.cals['CAL120'][0]
-        AREA_TWC=self.cals['CAL122'][0]
+        K_TWC = self.cals['CAL119'][0]
+        L_TWC = self.cals['CAL120'][0]
+        AREA_TWC = self.cals['CAL123'][0]
         #calibrate raw data
         twc_col_i = CAL109*icol + CAL110
         twc_col_v = CAL111*vcol + CAL112
@@ -781,12 +815,12 @@ C ST    - Corrected Surface Temperature   (deg C)
         #Calculate derived parameters.
         #
         #Sensor power (J/s).
-        twc_col_p=twc_col_i*twc_col_v
-        twc_ref_p=twc_ref_i*twc_ref_v
+        twc_col_p = twc_col_i*twc_col_v
+        twc_ref_p = twc_ref_i*twc_ref_v
 
-        tas=self.getdata('true_air_speed_ms',data)
-        twc_p=twc_col_p-K_TWC*twc_ref_p
-        twc_q=twc_p/(tas*AREA_TWC*L_TWC)
+        tas = self.getdata('true_air_speed_ms', data)
+        twc_p = twc_col_p-(K_TWC*twc_ref_p)
+        twc_q = twc_p/(tas*AREA_TWC*L_TWC)
         return twc_q
 
     def neph_pressure(self,data):
@@ -938,37 +972,37 @@ C ST    - Corrected Surface Temperature   (deg C)
       return self.getdata('id',data)
 
     def wvss2a_tdew(self,data):
-	"""
-	:return: Dewpoint from WVSS2A (deg C)
+        """
+        :returns: Dewpoint from WVSS2A (deg C)
 
-	"""
-	p=self.getdata('wvss2a01_press',data)
-	vmr=self.getdata('wvss2a01_vmr',data)
-	temp=self.getdata('deiced_true_air_temp_k',data)
+        """
+        p=self.getdata('wvss2a01_press',data)
+        vmr=self.getdata('wvss2a01_vmr',data)
+        temp=self.getdata('deiced_true_air_temp_k',data)
 
-	wmr=vmr/1.6077
-	vp=wmr*p/(622*10**3+wmr)
-	dp=formulas.vp2dp(vp, p, temp)
-	return dp-273.15
+        wmr=vmr/1.6077
+        vp=wmr*p/(622*10**3+wmr)
+        dp=formulas.vp2dp(vp, p, temp)
+        return dp-273.15
 
     def wvss2b_tdew(self,data):
-	"""
-	:return: Dewpoint from WVSS2B (deg C)
+        """
+        :return: Dewpoint from WVSS2B (deg C)
 
-	"""
-	p=self.getdata('wvss2b01_press',data)
-	vmr=self.getdata('wvss2b01_vmr',data)
-	temp=self.getdata('deiced_true_air_temp_k',data)
+        """
+        p=self.getdata('wvss2b01_press',data)
+        vmr=self.getdata('wvss2b01_vmr',data)
+        temp=self.getdata('deiced_true_air_temp_k',data)
 
-	wmr=vmr/1.6077
-	vp=wmr*p/(622*10**3+wmr)
-	dp=formulas.vp2dp(vp, p, temp)
-	return dp-273.15
+        wmr=vmr/1.6077
+        vp=wmr*p/(622*10**3+wmr)
+        dp=formulas.vp2dp(vp, p, temp)
+        return dp-273.15
 
     def total_water_content_per_volume(self,data):
-	#air density in kg*m^3
-	rho=self.getdata('dry_air_density',data)
-	# twc in g*kg-1
-	twc=self.getdata('total_water_content',data)
-	result=twc*rho
-	return result
+        #air density in kg*m^3
+        rho=self.getdata('dry_air_density',data)
+        # twc in g*kg-1
+        twc=self.getdata('total_water_content',data)
+        result=twc*rho
+        return result
