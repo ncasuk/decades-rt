@@ -1,6 +1,9 @@
 #!/usr/bin/python
 #Produces fake 1-second data to test Decades-Server.py
 import argparse
+import os
+import numbers
+
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
@@ -30,6 +33,8 @@ class DecadesMUDPSender(DatagramProtocol):
         self.port = 50001
         dp=DecadesDataProtocols()
         self.fakedata={}
+        self.csvdata= None
+        self.csvoffset=0
         defmap={'double_float': 0.0, 'text': ' ', 'float': 0.0, 'signed_int': 0, 
            'boolean': 0, 'unsigned_int': 0, 'single_float': 0.0 }
         for prot in DLUs:    
@@ -60,10 +65,14 @@ class DecadesMUDPSender(DatagramProtocol):
         #print "received %r from %s:%d" % (data, host, port)
 
     def sendFakeData(self):
-        fakedata=self.makeupdata()
+        fakedata=self.data_from_csv()
+        #fakedata=self.makeupdata()
         for inst in self.fakedata.keys():
             for f,v in fakedata[inst].items():
-                self.fakedata[inst][f]=v
+                if f in self.fakedata[inst]:
+                    if(isinstance(self.fakedata[inst][f] , numbers.Number) and v==''): 
+                        v=0
+                    self.fakedata[inst][f]=v
             udp_string=','.join([str(s) for s in self.fakedata[inst].values()])
             print udp_string
             self.transport.write(udp_string, (self.host, self.port))
@@ -75,18 +84,18 @@ class DecadesMUDPSender(DatagramProtocol):
             fakedata['PRTAFT'] = {
                'utc_time':timestamp,
                'flight_num':self.flightnum,
-               'pressure_alt':int(2621 + (50 * math.sin(timestamp/4.0))), #average 10kft
-               'ind_air_speed':int(9600 + (10 * math.cos(timestamp*4))), #average 300kts
-               'deiced_temp_flag':True, #alternates between true and false
+               'pressure_alt':int(2625 + (50 * math.sin(timestamp/4.0))), #average 10kft
+               'ind_air_speed':int(6624 + (10 * math.cos(timestamp*4))), #average 300kts
+               'deiced_temp_flag':False, #alternates between true and false
                'rad_alt':int(random.normalvariate(10000,400))
             }
             print fakedata['PRTAFT']['pressure_alt']
             fakedata['CORCON'] = {
-               'utc_time':timestamp,
+               'utc_time':timestamp - 17,
                'flight_num':self.flightnum,
-               'di_temp':int(240000 + (9000 * math.sin(timestamp/3.0))),
-               'ge_dew':int(39371 + (1204 * math.cos(timestamp/3.0))),
-               'ndi_temp':int(22300 + (1204 * math.sin(timestamp/3.0))),
+               'di_temp':int(240645 + (9000 * math.sin(timestamp/3.0))),
+               'ge_dew':int(16618 + (1204 * math.cos(timestamp/3.0))),
+               'ndi_temp':int(248797 + (1204 * math.sin(timestamp/3.0))),
                'jw_lwc':int(22300 + (1204 * math.sin(timestamp/3.0))),
                'cabin_t':int(1847435 + (3000 * math.sin(timestamp/6.0))), #3000 ~ 1 degC
                'cabin_p':int(28963 + (50 * math.cos(timestamp/2.5)))
@@ -133,6 +142,33 @@ class DecadesMUDPSender(DatagramProtocol):
                'status':'11111111'
             }
             return fakedata
+
+    def data_from_csv(self, filename = os.path.join(os.path.dirname(__file__),'test/mergeddata-X734.csv')):
+        if not self.csvdata:
+            #open datafile if not already open
+            import csv
+            f = open(filename,'r')
+            self.csvdata = csv.DictReader(f)
+            #get start time offset
+            self.csvoffset = int(time.time()) - int(self.csvdata.next()['utc_time'])
+
+        dataline = self.csvdata.next()
+        fakedata = {}
+        for each in dataline.keys():
+                if each != 'id' and each != 'utc_time':
+                    instcode, datum = each.split('_',1)
+                    inst = instcode.upper()[0:-2] #i.e. CORCON rather than corcon01
+                    if inst not in fakedata:
+                        fakedata[inst] = {}
+                    if datum=='utc_time' and dataline[each] > '':
+                        fakedata[inst][datum] = str(int(dataline[each]) + self.csvoffset)
+                        print(each,  str(int(dataline[each]) + self.csvoffset))
+                    elif datum == '$' + instcode.upper():
+                        pass;
+                    else:
+                        fakedata[inst][datum] = dataline[each]
+        return fakedata
+        
 
 mudpSenderObj = DecadesMUDPSender(args.DLU)
 
