@@ -1,6 +1,6 @@
-decades (1.7.4~1.gbp42e187) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbp22e702) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @42e18778904a57ea38648559ee011713efd02806 **
+  ** SNAPSHOT build @22e702b9a95d75e58e371c4ad1b2a46e9c7568af **
 
   [ Dan Walker ]
   ** SNAPSHOT build @ae372ee07459a92b124b8a49df7e285c38f5d48f **
@@ -203,8 +203,21 @@ decades (1.7.4~1.gbp42e187) UNRELEASED; urgency=medium
   * Changelog mods
   * UNRELEASED
   * UNRELEASED
+  * Update readme
+  * Update readme
+  * Update readme
+  * Update readme
+  * Update readme
+  * Update readme. resolves #1945
+  * Add pressure_alt to simulator
+  * AVAPS data display fix; resolves #1949
+  * Pip development install for dev versions
+  * Link Titillium font to user's font dir for dev installs.
+  * UNRELEASED
+  * Link font even if link is already there
+  * Silently ignore errors where target row has already been deleted due to containing NaNs
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Fri, 05 Jan 2018 13:20:57 +0000
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Tue, 23 Jan 2018 16:15:21 +0000
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 
