@@ -4,9 +4,10 @@ import argparse
 import os
 import sys
 import numbers
+import random
 
 from twisted.internet.protocol import DatagramProtocol
-from twisted.internet import reactor
+from twisted.internet import reactor, defer
 from twisted.internet.task import LoopingCall
 from twisted.python import log 
 from collections import OrderedDict
@@ -68,6 +69,9 @@ class DecadesMUDPSender(DatagramProtocol):
         pass
         #print "received %r from %s:%d" % (data, host, port)
 
+    def sendPacket(self,udp_string):
+        self.transport.write(udp_string, (self.host, self.port))
+
     def sendFakeData(self):
         if len(self.clargs.csv) > 0:
             #use CSV file for data
@@ -76,14 +80,18 @@ class DecadesMUDPSender(DatagramProtocol):
             #no CSV file, make some data up
             fakedata=self.makeupdata()
 
-        for inst in self.fakedata.keys():
+        instruments = self.fakedata.keys()
+        #not always in the same order
+        random.shuffle(instruments)
+        for inst in instruments:
             for f,v in fakedata[inst].items():
                 if f in self.fakedata[inst]:
                     if(isinstance(self.fakedata[inst][f] , numbers.Number) and v==''): 
-                        v=0
+                        v=None
                     self.fakedata[inst][f]=v
             udp_string=','.join([str(s) for s in self.fakedata[inst].values()])
-            self.transport.write(udp_string, (self.host, self.port))
+            #use asynchronous sending so sorder is "realistically" inconsistent
+            reactor.callLater(random.uniform(0.1, 1.9),self.sendPacket,udp_string)
 
     def makeupdata(self):
             timestamp = int(math.floor(time.time()))
