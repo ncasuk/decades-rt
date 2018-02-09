@@ -2,6 +2,7 @@
 #Produces fake 1-second data to test Decades-Server.py
 import argparse
 import os
+import sys
 import numbers
 
 from twisted.internet.protocol import DatagramProtocol
@@ -10,15 +11,18 @@ from twisted.internet.task import LoopingCall
 from twisted.python import log 
 from collections import OrderedDict
 
-#Parse arguments
+#Parse clargs
 parser = argparse.ArgumentParser(description='Data simulator for DECADES testing. It defaults to simulating all the DLUs, but you can limit it to a subset using the --DLU option.')
 
 DLUs_list  = ['CORCON', 'GINDAT', 'PRTAFT', 'UPPBBR', 'LOWBBR', 'AERACK','TWCDAT']
 
 #allows choice of DLUs on the command line, defaults to all of them
 parser.add_argument('--DLU','--dlu', nargs='*', choices=DLUs_list, default=DLUs_list, help="Which DLU(s) you wish to simulate. (e.g. CORCON, GINDAT) Defaults to all of them.", metavar='DLUNAME')
+parser.add_argument('--csv','--CSV', nargs=1, default=[], help="filename of a CSV dump of mergeddata table from a live flight")
 
 args = parser.parse_args()
+
+log.startLogging(sys.stdout)
 
 import psycopg2, datetime, time, math, random
 from decades import DecadesDataProtocols
@@ -26,18 +30,19 @@ from database import get_database
 
 
 class DecadesMUDPSender(DatagramProtocol):
-    def __init__(self,DLUs,flightnum='SIMU'):
+    def __init__(self,clargs,flightnum='SIMU'):
         self.flightnum=flightnum
         self.loopObj = None
         self.host = "239.1.4.6"
         self.port = 50001
+        self.clargs = clargs
         dp=DecadesDataProtocols()
         self.fakedata={}
         self.csvdata= None
         self.csvoffset=0
         defmap={'double_float': 0.0, 'text': ' ', 'float': 0.0, 'signed_int': 0, 
            'boolean': 0, 'unsigned_int': 0, 'single_float': 0.0 }
-        for prot in DLUs:    
+        for prot in self.clargs.DLU:    
             inst=OrderedDict()
             for i in dp.protocols[prot+'01']:
                 ty=i['type'].replace(">","").replace("<","")
@@ -47,7 +52,6 @@ class DecadesMUDPSender(DatagramProtocol):
             elif(prot+'01' in inst):
                 inst[prot+'01']='$'+prot+'01'
             self.fakedata[prot]=inst
-            print inst
     
     def startProtocol(self):
         # Called when transport is connected
@@ -65,8 +69,13 @@ class DecadesMUDPSender(DatagramProtocol):
         #print "received %r from %s:%d" % (data, host, port)
 
     def sendFakeData(self):
-        fakedata=self.data_from_csv()
-        #fakedata=self.makeupdata()
+        if len(self.clargs.csv) > 0:
+            #use CSV file for data
+            fakedata=self.data_from_csv(self.clargs.csv[0])
+        else:
+            #no CSV file, make some data up
+            fakedata=self.makeupdata()
+
         for inst in self.fakedata.keys():
             for f,v in fakedata[inst].items():
                 if f in self.fakedata[inst]:
@@ -74,7 +83,6 @@ class DecadesMUDPSender(DatagramProtocol):
                         v=0
                     self.fakedata[inst][f]=v
             udp_string=','.join([str(s) for s in self.fakedata[inst].values()])
-            print udp_string
             self.transport.write(udp_string, (self.host, self.port))
 
     def makeupdata(self):
@@ -89,7 +97,6 @@ class DecadesMUDPSender(DatagramProtocol):
                'deiced_temp_flag':False, #alternates between true and false
                'rad_alt':int(random.normalvariate(10000,400))
             }
-            print fakedata['PRTAFT']['pressure_alt']
             fakedata['CORCON'] = {
                'utc_time':timestamp - 17,
                'flight_num':self.flightnum,
@@ -143,14 +150,17 @@ class DecadesMUDPSender(DatagramProtocol):
             }
             return fakedata
 
-    def data_from_csv(self, filename = os.path.join(os.path.dirname(__file__),'test/mergeddata-X734.csv')):
+    def data_from_csv(self, filename):
         if not self.csvdata:
             #open datafile if not already open
             import csv
-            f = open(filename,'r')
-            self.csvdata = csv.DictReader(f)
+            import operator
+            log.msg("Using CSV file" + filename)
+            f = csv.DictReader(open(filename,'r'))
+            self.csvdata = iter(sorted(f, key=operator.itemgetter('utc_time')))
             #get start time offset
             self.csvoffset = int(time.time()) - int(self.csvdata.next()['utc_time'])
+            log.msg("Start of data is " + str(self.csvoffset) + " behind current time. Correcting.")
 
         dataline = self.csvdata.next()
         fakedata = {}
@@ -162,7 +172,7 @@ class DecadesMUDPSender(DatagramProtocol):
                         fakedata[inst] = {}
                     if datum=='utc_time' and dataline[each] > '':
                         fakedata[inst][datum] = str(int(dataline[each]) + self.csvoffset)
-                        print(each,  str(int(dataline[each]) + self.csvoffset))
+                        #print(each,  int(time.time()), str(int(dataline[each]) + self.csvoffset))
                     elif datum == '$' + instcode.upper():
                         pass;
                     else:
@@ -170,7 +180,7 @@ class DecadesMUDPSender(DatagramProtocol):
         return fakedata
         
 
-mudpSenderObj = DecadesMUDPSender(args.DLU)
+mudpSenderObj = DecadesMUDPSender(args)
 
 reactor.listenMulticast(0, mudpSenderObj)
 reactor.run()
