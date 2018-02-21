@@ -306,14 +306,19 @@ def Plot_jar():
 
 @runs_once
 @task
-def local_start_simulator():
+def local_start_simulator(csvfile=None):
    """Starts the DECADES simulator.
 
     Tries ``./py%(prj_name)s/%(prj_name)s-simulator.py`` first, failing that tries to find the installed one"""
+
+   csvparam = []
+   if csvfile:
+      csvparam = ['--csv',csvfile]
+
    try:
-      subprocess.check_call(['python2.7', './py%(prj_name)s/%(prj_name)s-simulator.py' % env])
+      subprocess.check_call(['python2.7', './py%(prj_name)s/%(prj_name)s-simulator.py' % env] + csvparam)
    except subprocess.CalledProcessError:
-      subprocess.check_call(['python2.7', '/usr/lib/python2.7/dist-packages/py%(prj_name)s/%(prj_name)s-simulator.py' % env])
+      subprocess.check_call(['python2.7', '/usr/lib/python2.7/dist-packages/py%(prj_name)s/%(prj_name)s-simulator.py' % env] + csvparam)
 
 @runs_once
 @task
