@@ -1079,17 +1079,17 @@ C ST    - Corrected Surface Temperature   (deg C)
 
     def flight_number(self, data):
         '''693,FLIGHT NUMBER,-,derived'''
-        """ Returns the flight code from the CORCON, unless that is not set (i.e. no data has come in from that yet) in which case return PRTAFT flight code"""
+        """ Returns the flight code from the PRTAFT, unless that is not set (i.e. no data has come in from that yet) in which case return CORCON flight code, etc."""
         flightnum = self.getdata('prtaft01_flight_num',data)
-        if len(flightnum) != 4:
+        if len(flightnum[-1]) != 4:
             flightnum = self.getdata('corcon01_flight_num',data)
-        if len(flightnum) != 4:
+        if len(flightnum[-1]) != 4:
             flightnum = self.getdata('gindat01_flight_num',data)
-        if len(flightnum) != 4:
+        if len(flightnum[-1]) != 4:
             flightnum = self.getdata('uppbrr01_flight_num',data)
-        if len(flightnum) != 4:
+        if len(flightnum[-1]) != 4:
             flightnum = self.getdata('lowbrr01_flight_num',data)
-        if len(flightnum) != 4:
+        if len(flightnum[-1]) != 4:
             flightnum = self.getdata('aerack01_flight_num',data)
         log.msg('Returning ' +  repr(flightnum))
         return flightnum
