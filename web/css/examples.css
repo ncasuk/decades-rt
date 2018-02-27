@@ -1,5 +1,5 @@
 body {
-	font: 18px "Gill Sans MT",Helvetica, Arial, sans-serif;
+	font: 18px "Nexa Light",Helvetica, Arial, sans-serif;
    background-color: #186f4d;
    color: white;
 }
@@ -9,12 +9,12 @@ a:hover { color: #28b; }
 
 h2 {
 	margin-top: 15px;
-	font: normal 32px "Gill Sans MT",Helvetica, Arial, sans-serif;
+	font: normal 32px "Nexa Light",Helvetica, Arial, sans-serif;
 }
 
 h3 {
 	margin-left: 30px;
-	font: normal 26px "Gill Sans MT",Helvetica, Arial, sans-serif;
+	font: normal 26px "Nexa Light",Helvetica, Arial, sans-serif;
 	color: #666;
 }
 

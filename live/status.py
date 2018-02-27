@@ -57,15 +57,15 @@ class status:
       #open output div 
       output = u'<div id="statblock">' 
       if(corcondata['time_since_midnight'] and abs(corcondata['utc_time'] - prtgindata['utc_time']) < 10):
-         output = output + u'<p>Flight {} {}</p>'.format(prtgindata['flight_number'][0],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
-         output = output + (u'<p>Heading %.0f° Speed %.0fkts Height %.0fkft Pressure %.0fmb</p>' % (prtgindata['gin_heading'],corcondata['true_air_speed'], prtgindata['pressure_height_kft'], prtgindata['static_pressure']))
-         output = output + (u'<p>Lat %.0f°%.0f\'%.2f" Long %.0f°%.0f\'%.2f" Wind %.1fms¯¹ / %.0f°</p>' % tuple(self.deg_to_dms(prtgindata['gin_latitude']) + self.deg_to_dms(prtgindata['gin_longitude']) + [corcondata['gin_wind_speed'],corcondata['wind_angle']] ))
-         output = output + (u'<p>Temp %.1f°C Dewpoint %.1f°C</p>' % (corcondata['deiced_true_air_temp_c'],corcondata['dew_point']))
+         output = output + u'<p>Flight <span>{} {}</span></p>'.format(prtgindata['flight_number'][0],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
+         output = output + (u'<p>Heading <span>%.0f</span>° Speed <span>%.0f</span>kts Height <span>%.0f</span>kft Pressure <span>%.0f</span>mb</p>' % (prtgindata['gin_heading'],corcondata['true_air_speed'], prtgindata['pressure_height_kft'], prtgindata['static_pressure']))
+         output = output + (u'<p>Lat <span>%2.0f°%2.0f\'%5.2f"</span> Long <span>%2.0f°%2.0f\'%5.2f"</span> Wind <span>%3.1f</span>ms¯¹ / <span>%3.0f</span>°</p>' % tuple(self.deg_to_dms(prtgindata['gin_latitude']) + self.deg_to_dms(prtgindata['gin_longitude']) + [corcondata['gin_wind_speed'],corcondata['wind_angle']] ))
+         output = output + (u'<p>Temp <span>%.1f</span>°C Dewpoint <span>%.1f</span>°C</p>' % (corcondata['deiced_true_air_temp_c'],corcondata['dew_point']))
       elif (prtgindata['time_since_midnight']):
-         output = output + u'<p>Flight {} {}</p>'.format(flight_num[0],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
-         output = output + (u'<p>Heading %.0f° Speed %.0fkts Height %.0fkft Pressure %.0fmb</p>' % (prtgindata['gin_heading'],float('NaN'), prtgindata['pressure_height_kft'], prtgindata['static_pressure']))
-         output = output + (u'<p>Lat %.0f°%.0f\'%.2f" Long %.0f°%.0f\'%.2f" Wind %.1fms¯¹ / %.0f°</p>' % tuple(self.deg_to_dms(prtgindata['gin_latitude']) + self.deg_to_dms(prtgindata['gin_longitude']) + [float('NaN'),float('NaN')] ))
-         output = output + (u'<p>Temp %.1f°C Dewpoint %.1f°C</p>' % (float('NaN'),float('NaN')))
+         output = output + u'<p>Flight <span>{} {}</span></p>'.format(flight_num[0],datetime.utcfromtimestamp(prtgindata['utc_time']).strftime('%H:%M:%SZ'))
+         output = output + (u'<p>Heading <span>%3.0f°</span> Speed <span>%.0f</span>kts Height <span>%.0f</span>kft Pressure <span>%.0f</span>mb</p>' % (prtgindata['gin_heading'],float('NaN'), prtgindata['pressure_height_kft'], prtgindata['static_pressure']))
+         output = output + (u'<p>Lat <span>%2.0f°%.0f\'%2.2f"</span> Long <span>%2.0f°%.0f\'%2.2f"</span> Wind <span>%3.1f</span>ms¯¹ / <span>%3.0f°</span></p>' % tuple(self.deg_to_dms(prtgindata['gin_latitude']) + self.deg_to_dms(prtgindata['gin_longitude']) + [float('NaN'),float('NaN')] ))
+         output = output + (u'<p>Temp <span>%.1f</span>°C Dewpoint <span>%.1f°C</span></p>' % (float('NaN'),float('NaN')))
       else:
          output = output + u'<p>Flight ####</p>' 
       #close output div

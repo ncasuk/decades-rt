@@ -188,11 +188,10 @@ latex_elements = {'papersize':'a4paper',
     'fontenc': '\\usepackage{fontspec}',
     'fontpkg': '''\
 \\setmainfont{Linux Libertine O}
-\\setsansfont[  Path=../../../config/titillium/,
-                UprightFont = *-RegularUpright,
-                BoldFont = *-Bold,
-                ItalicFont = *-RegularItalic,
-                BoldItalicFont = *-BoldItalic]{Titillium}
+\\setsansfont[  Path=../../../config/nexa/,
+                UprightFont = * Light,
+                BoldFont = * Bold,
+                ]{Nexa}
 \\setmonofont{Ubuntu Mono}''',
 	'inputenc':'',
 	'utf8extra':'',
@@ -232,7 +231,7 @@ latex_elements = {'papersize':'a4paper',
     \\null
     \\vfill
     \\noindent Copyright \copyright\ \\the\year\ by FAAM.\\\\
-    {\\small This document is set in Linux Libertine (\\url{http://www.linuxlibertine.org/}), Titillium (\\url{http://www.campivisivi.net/titillium/}), both under the terms of the Open Font Licence, and Ubuntu Mono (\\url{http://font.ubuntu.com/}), under the terms of the Ubuntu Font Licence. Our grateful thanks to the creators of all three.}%%
+    {\\small This document is set in Linux Libertine (\\url{http://www.linuxlibertine.org/}) under the terms of the Open Font Licence, Nexa Bold \\& Light by permission of Fontfabric (\\url{http://www.fontfabric.com/nexa-free-font/}), and Ubuntu Mono (\\url{http://font.ubuntu.com/}), under the terms of the Ubuntu Font Licence. Our grateful thanks to the creators of all three.}%%
   \\end{titlepage}%%
   \\cleardoublepage%%
   \\setcounter{footnote}{0}%%
