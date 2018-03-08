@@ -60,6 +60,8 @@ and in a third:
 
 ``fab local_start_simulator`` (or ``pydecades/database-simulator.py``)
 
+(also see :ref:`simulator-usage` for more options)
+
 Then browse to:
 
 ``http://decades-dev/``

@@ -1,6 +1,6 @@
-decades (1.7.4~1.gbp22e702) UNRELEASED; urgency=medium
+decades (1.7.4~1.gbp0b5f12) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @22e702b9a95d75e58e371c4ad1b2a46e9c7568af **
+  ** SNAPSHOT build @0b5f12b55d325c3f8734a380ccd3568e6e583660 **
 
   [ Dan Walker ]
   ** SNAPSHOT build @ae372ee07459a92b124b8a49df7e285c38f5d48f **
@@ -216,8 +216,18 @@ decades (1.7.4~1.gbp22e702) UNRELEASED; urgency=medium
   * UNRELEASED
   * Link font even if link is already there
   * Silently ignore errors where target row has already been deleted due to containing NaNs
+  * Add facility to read downloaded real data and use that in the simulator
+  * Adding option to use real flight data dump as test data
+  * Changelog update
+  * Add random deferral time to muck up incoming order of data
+  * Add option to call --csv argument to simulator
+  * Stat block shouldn't display NaNs, so request most recent valid data
+  * Better flight_num handling. resolves #2026
+  * New style logo, font, etc
+  * New Roundel
+  * Change font directory for package
 
- -- Dan Walker <dan.walker@ncas.ac.uk>  Tue, 23 Jan 2018 16:15:21 +0000
+ -- Dan Walker <dan.walker@ncas.ac.uk>  Wed, 07 Mar 2018 16:47:48 +0000
 
 decades (1.7.3~16.gbp4c2bc8) quantal; urgency=low
 

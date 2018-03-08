@@ -21,6 +21,8 @@ Locate the decades-listener process, and kill it:
 
 ``$ sudo kill $(sudo cat /var/run/decades-listener.pid)``
 
+.. _simulator-usage:
+
 Start the database simulator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -31,6 +33,15 @@ Start the database simulator:
 or, on a system with a DECADES package installed:
 
 ``$ decades-mgr local_start_simulator``
+
+If you have a ``.csv`` of genuine data from a flight, you can tell the simulator 
+to use that as a source:
+
+``$ fab local_start_simulator:<path-to-csv-file>``
+
+e.g.
+
+``$ fab local_start_simulator:pydecades/test/mergeddata-2018-02-08-1400-flight.csv``
 
 You can also limit the number of DLUs simulated. Run:
 
