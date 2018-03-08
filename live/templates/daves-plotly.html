@@ -110,14 +110,14 @@
                window.XAxesOpts.push({ position: (XAxesUnits.length % 2)?"bottom":"top", show: true, axisLabel: paramlist.{{ xx }}.DisplayUnits});
             }
             //console.log(data['{{ nn }}']);
-            plotdata.push( {x: data['{{ nn }}'].x,y: data['{{ nn }}'].y, name: paramlist.{{ nn }}.DisplayText 
+            plotdata.push( {x: data['{{ nn }}'].x,y: data['{{ nn }}'].y, line: { color: $('#ycol{{ paras.index((nn,xx,yy)) }}').val()}, name: paramlist.{{ nn }}.DisplayText 
                                 //,color: '{{ c[dep.index(nn)] }}', 
                                 //lines: { show: true}, points:{show:false,radius:0.5},
                                 //yaxis: YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 ,
                                 //xaxis: XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits) +1 
                                 });
          {% endfor %};
-         console.log(plotdata);
+         //console.log(plotdata.lines);
          //set_plotoptions();
        })()
        
@@ -156,18 +156,19 @@
                data['{{nn}}'].y.push(...livejson.{{ yy }});
             {% endfor %}
             //}
+            console.log(plotdata[0].lines);
             /*console.log("HERE");
             console.log(plotdata);
             console.log(data);
             console.log(plot);*/
             if(plot){
-              console.log("Restyle");
-              console.log(plotdata.map(function(c,i){ return i;}));
+              //console.log("Restyle");
+              //console.log(plotdata.map(function(c,i){ return i;}));
               Plotly.update("chart",plotdata);
               Plotly.redraw("chart");
               plot.then(function(result){
-                  console.log(result);
-                  console.log(result.id);
+                  //console.log(result);
+                  //console.log(result.id);
                   //Plotly.restyle(result.id,plotdata);
                   });
             }else{
@@ -184,7 +185,7 @@
 
             }  //if success, call update()
             ,error: function(xhr, status, thrown) { 
-                    console.log('Data error '+status + thrown); 
+                    //console.log('Data error '+status + thrown); 
                     setTimeout(getData, updateInterval); // try again as it failed !
             }
          });
@@ -261,8 +262,8 @@
                 getData();
 
                 function plotit(options){
-                    console.log("PLOTIT");
-                    console.log(plotdata);
+                    //console.log("PLOTIT");
+                    //console.log(plotdata);
                     plot= Plotly.newPlot("chart", plotdata);
                     //plot.getOptions().selection.mode=$('#zoomtype').val() ? "xy" : null;
                     //plot.getOptions().pan.interactive=$('#zoomtype').val() != "xy";
@@ -404,7 +405,7 @@
       {% for entry in y: %}
          <p class="yparameters"><label class="yname">Y<sub>{{ y.index(entry)}}</sub> </label>
               <select class="parameters" id="y{{ y.index(entry)}}" name="y"></select>
-              <label class="ycolour">Colour:</label><select id="ycol{{ y.index(entry)}}" class="ycolour" name="c">{% for each in colours.iteritems(): %}<option value="{{ each[1] }}" style="background-color: {{ each[1] }};">{{each[0]}}</option>{% endfor %}</select>
+              <label class="ycolour">Colour:</label><select id="ycol{{ y.index(entry)}}" class="ycolour" name="c">{% for each in colours.iteritems(): %}<option value="{{ each[1] }}" {% if c[y.index(entry)] == each[1]: %} selected="selected" {% endif %} style="background-color: {{ each[1] }};">{{each[0]}}</option>{% endfor %}</select>
               <span onclick="$(this).parent().remove();update_series();" >{% if y.index(entry)>0 %}[X]{% endif %}</span></p>
       {% endfor %}
       </div>

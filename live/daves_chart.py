@@ -20,16 +20,18 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from pytz import timezone
 from time import mktime
+from collections import OrderedDict
 import json
-colours = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow']
+
+colours = OrderedDict([('Grey',"#999999"), ('Orange',"#E69F00"), ('Sky blue',"#56B4E9"), ('Blue-Green',"#009E73"), ('Yellow',"#F0E442"), ('Blue',"#0072B2"), ('Vermillion',"#D55E00"), ('Pink',"#CC79A7")])
 
 class xy:
-   def GET(self,x=[],y=[],frm='',to='',c=colours):
+   def GET(self,x=[],y=[],frm='',to='',c=[]):
            
       #defaults to from now
       now = int(mktime(datetime.utcnow().timetuple()))
       #HTML standard colours (except for white)
-      user_data = web.input(x=[],y=[],frm='',to='',c=colours)
+      user_data = web.input(x=[],y=[],frm='',to='',c=[])
 
       if hasattr(user_data.x,'lower'):
           x=[str(user_data.x)]
@@ -78,12 +80,12 @@ class xy:
            
 
 class plotly:
-   def GET(self,x=[],y=[],frm='',to='',c=colours):
+   def GET(self,x=[],y=[],frm='',to='',c=[]):
            
       #defaults to from now
       now = int(mktime(datetime.utcnow().timetuple()))
       #HTML standard colours (except for white)
-      user_data = web.input(x=[],y=[],frm='',to='',c=colours)
+      user_data = web.input(x=[],y=[],frm='',to='',c=[])
 
       if hasattr(user_data.x,'lower'):
           x=[str(user_data.x)]

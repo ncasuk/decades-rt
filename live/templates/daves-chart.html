@@ -390,7 +390,7 @@
       {% for entry in y: %}
          <p class="yparameters"><label class="yname">Y<sub>{{ y.index(entry)}}</sub> </label>
               <select class="parameters" id="y{{ y.index(entry)}}" name="y"></select>
-              <label class="ycolour">Colour:</label><select id="ycol{{ y.index(entry)}}" class="ycolour" name="c">{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select>
+              <label class="ycolour">Colour:</label><select id="ycol{{ y.index(entry)}}" class="ycolour" name="c">{% for each in colours.iteritems(): %}<option value="{{ each[1] }}" {% if c[y.index(entry)] == each[1]: %} selected="selected" {% endif %} style="background-color: {{ each[1] }};">{{each[0]}}</option>{% endfor %}</select>
               <span onclick="$(this).parent().remove();update_series();" >{% if y.index(entry)>0 %}[X]{% endif %}</span></p>
       {% endfor %}
       </div>
