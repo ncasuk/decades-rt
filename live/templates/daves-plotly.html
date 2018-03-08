@@ -109,7 +109,7 @@
                //sets the opts for the xaxes, alternating between top and bottom
                window.XAxesOpts.push({ position: (XAxesUnits.length % 2)?"bottom":"top", show: true, axisLabel: paramlist.{{ xx }}.DisplayUnits});
             }
-            console.log(data['{{ nn }}']);
+            //console.log(data['{{ nn }}']);
             plotdata.push( {x: data['{{ nn }}'].x,y: data['{{ nn }}'].y, name: paramlist.{{ nn }}.DisplayText 
                                 //,color: '{{ c[dep.index(nn)] }}', 
                                 //lines: { show: true}, points:{show:false,radius:0.5},
@@ -137,16 +137,29 @@
             if(livejson.{{x[0]}}.length){            
            //for(p=0; p < livejson.{{x[0]}}.length; p++)
             //{
+               //console.log("{{nn}} {{xx}} {{yy}}");
+            // {{ paras }}
+            if(livejson.hasOwnProperty('utc_time'))
+            {
+                //convert to DateTime objects
+                xin = livejson.utc_time
+                dates = xin.map(function(xin)
+                    {
+                        return(new Date(xin * 1000));
+                    }
+                );
+                livejson.utc_time = dates
+            }
+        
             {% for nn,xx,yy in paras: %}
-               console.log("{{nn}} {{xx}} {{yy}}");
                data['{{nn}}'].x.push(...livejson.{{ xx }});
                data['{{nn}}'].y.push(...livejson.{{ yy }});
             {% endfor %}
             //}
-            console.log("HERE");
+            /*console.log("HERE");
             console.log(plotdata);
             console.log(data);
-            console.log(plot);
+            console.log(plot);*/
             if(plot){
               console.log("Restyle");
               console.log(plotdata.map(function(c,i){ return i;}));
@@ -259,7 +272,7 @@
                 }
 
                 {% endif %}
-		// Add the Flot version string to the footer
+		// Add the Plotly version string to the footer
 	});
 
 		$("#footer").prepend("Copyright &copy; FAAM 2017 based on </br>Plotly " + Plotly.version + " &ndash; ");
@@ -381,7 +394,7 @@
       <div id="XSeriesContainer">
       {% for entry in x: %}
       <p class="xparameters"><label class="xname">X<sub>{{ x.index(entry)}}</sub> </label><select class="parameters" id="x{{ x.index(entry)}}" name="x"></select>
-         <label class="xcolour" hidden>Colour:</label><select id="xcol{{ x.index(entry)}}"  class="xcolour"  name="c" hidden disabled>{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select>
+         <label class="xcolour" hidden>Colour:</label><select id="xcol{{ x.index(entry)}}"  class="xcolour"  name="c" hidden disabled>{% for each in colours.iteritems(): %}<option value="{{ each[1] }}" style="background-color: {{each[1]}};">{{each[0]}}</option>{% endfor %}</select>
          <span onclick="$(this).parent().remove();update_series();" >{% if x.index(entry)>0 %}[X]{% endif %}</span>
       </p>
       {% endfor %}
@@ -391,7 +404,7 @@
       {% for entry in y: %}
          <p class="yparameters"><label class="yname">Y<sub>{{ y.index(entry)}}</sub> </label>
               <select class="parameters" id="y{{ y.index(entry)}}" name="y"></select>
-              <label class="ycolour">Colour:</label><select id="ycol{{ y.index(entry)}}" class="ycolour" name="c">{% for each in colours: %}<option value="{{ each }}">{{each}}</option>{% endfor %}</select>
+              <label class="ycolour">Colour:</label><select id="ycol{{ y.index(entry)}}" class="ycolour" name="c">{% for each in colours.iteritems(): %}<option value="{{ each[1] }}" style="background-color: {{ each[1] }};">{{each[0]}}</option>{% endfor %}</select>
               <span onclick="$(this).parent().remove();update_series();" >{% if y.index(entry)>0 %}[X]{% endif %}</span></p>
       {% endfor %}
       </div>
