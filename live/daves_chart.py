@@ -130,7 +130,7 @@ class plotly:
       return render_template('daves-plotly.html', x=x, y=y, 
                              c=user_data.c,frm_epoch=frm_epoch, to_epoch=to_epoch,
                              frm=user_data.frm,to=user_data.to,
-                             colours=colours,mult=mult,paras=paras,allparas=allparas,indp=indp,dep=dep)
+                             colours=colours,mult=mult,paras=paras,allparas=allparas,indp=indp,dep=dep, title=", ".join(y))
            
 
 
