@@ -62,26 +62,12 @@
                                }
                                ,lines:{ show:$('#lines').is(':checked')}			
                                  },
-			xaxis: {
-         {% if x[0]=='utc_time': %}
-            mode: 'time',
-            minTickSize: [1, "second"],
-            twelveHourClock: false 
-         {% endif %}
-			},
-         xaxes: window.XAxesOpts,
-			zoom: {
-				interactive: true 
-			},
-			pan: {
-				interactive: true 
-			},
          selection:{
             mode: 'xy', 
             color: '#004400',
             shape: "round",
             minSize: 20}
-		}, window.YAxesOpts); 
+		}, window.YAxesOpts, window.XAxesOpts); 
 
       function set_plotoptions(){
          for(var i=0;i<plotdata.length;i++){ // for all series            
@@ -130,9 +116,22 @@
             }
             if(-1 == XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits))
             {
+               xindex = (YAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits) +1 )
                XAxesUnits.push(paramlist.{{ xx }}.DisplayUnits);
                //sets the opts for the xaxes, alternating between top and bottom
-               window.XAxesOpts.push({ position: (XAxesUnits.length % 2)?"bottom":"top", show: true, axisLabel: paramlist.{{ xx }}.DisplayUnits});
+               xopts = { 
+                    position: (XAxesUnits.length % 2)?"bottom":"top", 
+                    title: paramlist.{{ xx }}.DisplayUnits
+                };
+                if(yindex ==1)
+                {
+                    window.XAxesOpts['xaxis'] = xopts;
+                }
+                else
+                {
+                    //apart from the first, all need an index
+                    window.XAxesOpts['xaxis' + yindex] = xopts;
+                }
             }
             //console.log(data['{{ nn }}']);
             yindex = (YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 )
@@ -153,7 +152,7 @@
          {% endfor %};
          //leave space for all Y-axes
          console.log(plotdata);
-         $.extend(window.plotOptions, window.YAxesOpts, xdomain);
+         $.extend(window.plotOptions, window.YAxesOpts, xdomain, window.XAxesOpts);
          //console.log(plotdata.lines);
          //set_plotoptions();
        })()
