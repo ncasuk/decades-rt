@@ -49,9 +49,10 @@
 		var totalPoints = 1000/{{ dep|count }};
       window.frm_epoch = {{ frm_epoch }};
       //frm={{ frm }} frm_epoch={{ frm_epoch }} to={{ to }} to_epoch={{ to_epoch }} 
-      window.YAxesOpts = [];
+      window.YAxesOpts = {};
+      window.yaxesspacing = 0.1;
       window.XAxesOpts = [];
-      window.plotOptions = {
+      window.plotOptions = $.extend({},{
 			series: {
 				shadowSize: 0	// Drawing is faster without shadows
                                ,points:{symbol:function (ctx, x, y, radius, shadow) {
@@ -60,8 +61,6 @@
                                }
                                ,lines:{ show:$('#lines').is(':checked')}			
                                  },
-			yaxis: {
-			},
 			xaxis: {
          {% if x[0]=='utc_time': %}
             mode: 'time',
@@ -69,7 +68,6 @@
             twelveHourClock: false 
          {% endif %}
 			},
-         yaxes: window.YAxesOpts, 
          xaxes: window.XAxesOpts,
 			zoom: {
 				interactive: true 
@@ -82,7 +80,7 @@
             color: '#004400',
             shape: "round",
             minSize: 20}
-		};
+		}, window.YAxesOpts); 
 
       function set_plotoptions(){
          for(var i=0;i<plotdata.length;i++){ // for all series            
@@ -92,16 +90,42 @@
        }
 
       (function (){
-           // set up plot data and axe
-           var YAxesUnits = [];
-           var XAxesUnits = [];
+            // set up plot data and axe
+            var YAxesUnits = [];
+            var XAxesUnits = [];
+            xdomain = { xaxis: { domain :[0,1] } }
             {% for nn,xx,yy in paras: %} // arbitrary number of series
             data['{{ nn }}'] = {x:[],y:[]};
             if(-1 == YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits))
             {
                YAxesUnits.push(paramlist.{{ yy }}.DisplayUnits);
+               yindex = (YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 )
                //sets the opts for the yaxes, alternating between left and right
-               window.YAxesOpts.push({ position: (YAxesUnits.length % 2)?"left":"right", show: true, axisLabel: paramlist.{{ yy }}.DisplayUnits});
+               window.YAxesOpts['yaxis' + yindex] = {
+                    side: (yindex % 2)?"left":"right", 
+                    title: paramlist.{{ yy }}.DisplayUnits
+               };
+               if(yindex > 1)
+               {
+                    //Don't need this for first Y-axis
+                    window.YAxesOpts['yaxis' + yindex].overlaying = 'y';
+               }
+               if(yindex > 2)
+               {
+                    //third and subsequent y-axes need to be offset
+                    window.YAxesOpts['yaxis' + yindex].anchor='free';
+                    if(window.YAxesOpts['yaxis' + yindex].side == "left")
+                    {
+                        window.YAxesOpts['yaxis' + yindex].position = window.yaxesspacing*(yindex -3)/2; 
+                        xdomain.xaxis.domain[0] = window.YAxesOpts['yaxis' + yindex].position + window.yaxesspacing;
+                    }
+                    else
+                    {
+                        window.YAxesOpts['yaxis' + yindex].position = 1- (window.yaxesspacing*(yindex -4)/2);
+                        xdomain.xaxis.domain[1] = window.YAxesOpts['yaxis' + yindex].position - window.yaxesspacing;
+
+                    }
+               }
             }
             if(-1 == XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits))
             {
@@ -110,13 +134,25 @@
                window.XAxesOpts.push({ position: (XAxesUnits.length % 2)?"bottom":"top", show: true, axisLabel: paramlist.{{ xx }}.DisplayUnits});
             }
             //console.log(data['{{ nn }}']);
-            plotdata.push( {x: data['{{ nn }}'].x,y: data['{{ nn }}'].y, line: { color: $('#ycol{{ paras.index((nn,xx,yy)) }}').val()}, name: paramlist.{{ nn }}.DisplayText 
-                                //,color: '{{ c[dep.index(nn)] }}', 
-                                //lines: { show: true}, points:{show:false,radius:0.5},
-                                //yaxis: YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 ,
-                                //xaxis: XAxesUnits.indexOf(paramlist.{{ xx }}.DisplayUnits) +1 
-                                });
+            yindex = (YAxesUnits.indexOf(paramlist.{{ yy }}.DisplayUnits) +1 )
+            thislinedata = {
+                x: data['{{ nn }}'].x,
+                y: data['{{ nn }}'].y, 
+                line: { 
+                    color: $('#ycol{{ paras.index((nn,xx,yy)) }}').val()
+                }, 
+                name: paramlist.{{ nn }}.DisplayText + '/' + paramlist.{{ nn }}.DisplayUnits,
+            }
+            //Don't need this for first Y-axis
+            if(yindex > 1)
+            {
+                thislinedata.yaxis = 'y' + yindex
+            }
+            plotdata.push(thislinedata);
          {% endfor %};
+         //leave space for all Y-axes
+         console.log(plotdata);
+         $.extend(window.plotOptions, window.YAxesOpts, xdomain);
          //console.log(plotdata.lines);
          //set_plotoptions();
        })()
@@ -156,7 +192,6 @@
                data['{{nn}}'].y.push(...livejson.{{ yy }});
             {% endfor %}
             //}
-            console.log(plotdata[0].lines);
             /*console.log("HERE");
             console.log(plotdata);
             console.log(data);
@@ -264,7 +299,7 @@
                 function plotit(options){
                     //console.log("PLOTIT");
                     //console.log(plotdata);
-                    plot= Plotly.newPlot("chart", plotdata);
+                    plot= Plotly.newPlot("chart", plotdata, options);
                     //plot.getOptions().selection.mode=$('#zoomtype').val() ? "xy" : null;
                     //plot.getOptions().pan.interactive=$('#zoomtype').val() != "xy";
                     //plot.setupGrid();
