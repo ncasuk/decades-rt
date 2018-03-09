@@ -173,3 +173,5 @@ ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,
 974,seaprobe_ice_water_21,SEAPROBE ICE WATER 21,(gm-3),,,,
 975,aqdnox01_noy,NOy CONC (AQD),(ppt)
 976,aqdnox01_h2s,H2S CONC (AQD),(ppt)
+977,radar_height_kft,RADAR HEIGHT,(kft)
+978,radar_height_m,RADAR HEIGHT,(m)

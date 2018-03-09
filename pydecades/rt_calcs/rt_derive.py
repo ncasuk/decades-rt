@@ -390,6 +390,18 @@ class derived(rt_data.rt_data):
         """Radar height (ft)"""
         return self.getdata('prtaft01_rad_alt',data)/4.0
 
+    def radar_height_kft(self,data):
+        '''575,RADAR HEIGHT,kft,derived'''
+        """Radar height (kft)"""
+        feet=self.getdata('radar_height',data) 
+        return feet/1000.0
+
+    def radar_height_m(self,data):
+        '''575,RADAR HEIGHT,m,derived'''
+        """Radar height (m)"""
+        feet=self.getdata('radar_height',data) 
+        return feet*0.3048
+
     def upper_pyranometer_clear_flux(self,data):
         '''538,UPPER PYRANOMETER CLEAR FLUX,W m-2,derived'''
         ''' not sure why only CAL081[1] is used and not CAL081[0], but his is what HOR_CALCS did '''
