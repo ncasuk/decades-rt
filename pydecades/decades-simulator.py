@@ -183,6 +183,8 @@ class DecadesMUDPSender(DatagramProtocol):
                         #print(each,  int(time.time()), str(int(dataline[each]) + self.csvoffset))
                     elif datum == '$' + instcode.upper():
                         pass;
+                    elif datum == 'flight_num':
+                        fakedata[inst][datum] = 'SIMX'
                     else:
                         fakedata[inst][datum] = dataline[each]
         return fakedata
