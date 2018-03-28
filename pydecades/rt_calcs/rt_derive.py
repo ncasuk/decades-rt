@@ -47,7 +47,7 @@ class derived(rt_data.rt_data):
         '''518,MACH NO,-,derived'''
         psp=self.getdata('pitot_static_pressure',data)
         spr=self.getdata('static_pressure',data)
-        rmach=np.zeros(len(spr))
+        rmach=np.empty(len(spr))*np.nan
         ind=np.where((psp>0) & (spr>0))
         rmach[ind]=5.0*((1.0+psp[ind]/spr[ind])**(2.0/7.0)-1.0)
         ind=np.where(rmach>0)
