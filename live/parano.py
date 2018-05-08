@@ -21,6 +21,7 @@ class parameters:
    def GET(self, filetype):
       parser = DecadesConfigParser()
       parameters_file = parser.get('Config','parameters_file')
+      web.header('Access-Control-Allow-Origin', '*')
       #read CSV display parameters file
       with open(parameters_file, 'r') as csvfile:
          parameters = csv.DictReader(csvfile)   #uses first line as fieldnames

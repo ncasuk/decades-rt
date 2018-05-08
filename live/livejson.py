@@ -35,6 +35,7 @@ class livejson:
       '''Usage: via web.py, e.g. http://fish/live/livejson'''
       web.header('Content-Type','application/json; charset=utf-8', unique=True) 
       web.header('Cache-control', 'no-cache')
+      web.header('Access-Control-Allow-Origin', '*')
       conn = get_database()
       cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
       parser = DecadesConfigParser()
