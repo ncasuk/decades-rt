@@ -51,6 +51,10 @@ class MulticastServerUDP(DatagramProtocol):
     def datagramReceived(self, datagram, address):
       '''reads an incoming UDP datagram, splits it up, INSERTs into database'''
       try:
+         # Replace any 'NaN's in the UDP string with a blank
+         # At ToW, required for new AERACK code, which NaNs empty fields.
+         datagram = datagram.replace('NaN', '')
+
          data = csv.reader([datagram.replace('\x00','')]).next() #assumes only one record, strips NULL
          #copies data into a dictionary
          inst=data[0].lstrip('$')
