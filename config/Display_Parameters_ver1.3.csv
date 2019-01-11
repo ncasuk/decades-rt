@@ -175,3 +175,4 @@ ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,
 974,seaprobe_ice_water_21,SEAPROBE ICE WATER 21,(gm-3),,,,
 975,aqdnox01_noy,NOy CONC (AQD),(ppb)
 976,aqdnox01_h2s,H2S CONC (AQD),(ppb)
+977,virtual_potential_temp,VIRTUAL POTENTIAL TEMPERATURE,(K)

@@ -972,3 +972,25 @@ C ST    - Corrected Surface Temperature   (deg C)
 	twc=self.getdata('total_water_content',data)
 	result=twc*rho
 	return result
+
+    def virtual_potential_temp(self, data):
+        """
+        Return virtual potential temperature, Tv, given by
+
+        Tv = T(1 + 0.61 * r),
+
+        where T = potential temperature
+              r = 1 / (1 - q), where q is the absolute humidity.
+
+        Returns:
+            theta_v: virtual potential temperature, in the same units as
+                     'potential_temperature'.
+        """
+        theta = self.getdata('potential_temperature', data)
+        q = self.getdata('specific_humidity', data) / 1000.
+        mix_ratio = 1. / (1 - q)
+
+        theta_v = theta * (1 + (0.61 * mix_ratio))
+
+        return theta_v
+
