@@ -6,6 +6,11 @@ import time
 import formulas
 from twisted.python import log
 
+T_PARA_K = 'deiced_true_air_temp_k'
+T_PARA_C = 'deiced_true_air_temp_c'
+
+TD_PARA = 'dew_point'
+
 class derived(rt_data.rt_data):
     """ A collection of the processing routines for realtime in flight data """
     def pressure_height_feet(self,data):
@@ -99,7 +104,7 @@ class derived(rt_data.rt_data):
         return tatndi_K-273.16
     def true_air_speed_ms(self,data):
         spr=self.getdata('static_pressure',data)
-        tatdi_K=self.getdata('deiced_true_air_temp_k',data)
+        tatdi_K = self.getdata(T_PARA_K, data)
         ias=self.getdata('indicated_air_speed',data)
         tas=np.zeros(len(ias))
         good=np.where((spr>0.0) & (tatdi_K>0.0))
@@ -156,7 +161,7 @@ class derived(rt_data.rt_data):
         AMACH=self.getdata('mach_no',data)
         SPR=self.getdata('static_pressure',data)
         RTPSP=self.getdata('turb_probe_cor_pitot_static',data)
-        TTDI=self.getdata('deiced_true_air_temp_k',data)
+        TTDI = self.getdata(T_PARA_K, data)
         c=self.cals['CALTAS']
         R=np.zeros(len(SPR))
         ind=np.where((SPR>0) & (RTPSP>0))
@@ -167,7 +172,7 @@ class derived(rt_data.rt_data):
 
     def potential_temperature(self,data):
         RSPR=self.getdata('static_pressure',data)
-        RTATDI=self.getdata('deiced_true_air_temp_k',data)
+        RTATDI = self.getdata(T_PARA_K, data)
         RPOT=np.zeros(len(RSPR))
         ind=np.where(RSPR>0)
         RPOT[ind]=RTATDI[ind]*(1000.0/RSPR[ind])**(2.0/7.0) #!Potential temp (K)
@@ -175,7 +180,7 @@ class derived(rt_data.rt_data):
 
     def dry_air_density(self,data):
         RSPR=self.getdata('static_pressure',data)
-        RTATDI=self.getdata('deiced_true_air_temp_k',data)
+        RTATDI = self.getdata(T_PARA_K, data)
         RDAD=np.zeros(len(RSPR))
         ind=np.where(RTATDI!=0)
         RDAD[ind]=0.34838*RSPR[ind]/RTATDI[ind] # !Dry air dens (kg m-3)
@@ -203,8 +208,8 @@ class derived(rt_data.rt_data):
         return rh'''
     def relative_humidity(self,data):
         """Relative humidity (%)"""
-        Td=self.getdata('dew_point',data)
-        T=self.getdata('deiced_true_air_temp_c',data)
+        Td = self.getdata(TD_PARA, data)
+        T = self.getdata(T_PARA_C, data)
         RH=np.zeros(len(Td))
         RH[Td>=T]=100.0     # saturated temp<dew point
         unsat=Td<T          # calculate for unsaturated section
@@ -218,7 +223,7 @@ class derived(rt_data.rt_data):
 
     def vapour_pressure(self,data):
         """Vapour pressure (mb)"""
-        r=1000.0/(self.getdata('dew_point',data)+273.16)
+        r = 1000.0 / (self.getdata(TD_PARA, data) + 273.15)
         vp=10.0**(8.42926609-(1.82717843+(0.07120871*r))*r) #Vap press (mb)
         return vp
 
@@ -226,7 +231,7 @@ class derived(rt_data.rt_data):
         """Moist air density (kg m-3)"""
         spr=self.getdata('static_pressure',data)
         vp=self.getdata('vapour_pressure',data)
-        tat=self.getdata('deiced_true_air_temp_k',data)
+        tat = self.getdata(T_PARA_K, data)
         mad=np.zeros(len(spr))
         ind=np.where(tat>0)
         mad[ind]=0.34838*(spr[ind]-0.378*vp[ind])/tat[ind] #Mst a dens (kg m-3)
@@ -258,8 +263,8 @@ class derived(rt_data.rt_data):
 
     def equivalent_potential_temp(self,data):
         """ Equivalent Potential Temperature K"""
-        tatc=self.getdata('deiced_true_air_temp_c',data)
-        tatk=self.getdata('deiced_true_air_temp_k',data)
+        tatc = self.getdata(T_PARA_C, data)
+        tatk = self.getdata(T_PARA_K, data)
         mmr=self.getdata('mass_mixing_ratio',data)
         pot=self.getdata('potential_temperature',data)
         pote=np.zeros(len(tatc))
@@ -656,7 +661,7 @@ class derived(rt_data.rt_data):
 
 
     def refractivity(self,data):
-        tatdi=self.getdata('deiced_true_air_temp_k',data)
+        tatdi = self.getdata(T_PARA_K, data)
         tatdi[tatdi==0]=1.0
         spr=self.getdata('static_pressure',data)
         vp=self.getdata('vapour_pressure',data)
@@ -670,8 +675,8 @@ class derived(rt_data.rt_data):
 
     def lifting_condensation_level(self,data):
         phgt=self.getdata('pressure_height_m',data)
-        tatdi=self.getdata('deiced_true_air_temp_k',data)
-        dp=self.getdata('dew_point',data)+273.16
+        tatdi = self.getdata(T_PARA_K, data)
+        dp = self.getdata(TD_PARA, data) + 273.15
         return phgt+((tatdi-dp)*125.0)
 
     def theta_w(self,data):
@@ -944,7 +949,7 @@ C ST    - Corrected Surface Temperature   (deg C)
 	"""
 	p=self.getdata('wvss2a01_press',data)
 	vmr=self.getdata('wvss2a01_vmr',data)
-	temp=self.getdata('deiced_true_air_temp_k',data)
+	temp = self.getdata(T_PARA_K, data)
 
 	wmr=vmr/1.6077
 	vp=wmr*p/(622*10**3+wmr)
@@ -958,7 +963,7 @@ C ST    - Corrected Surface Temperature   (deg C)
 	"""
 	p=self.getdata('wvss2b01_press',data)
 	vmr=self.getdata('wvss2b01_vmr',data)
-	temp=self.getdata('deiced_true_air_temp_k',data)
+	temp = self.getdata(T_PARA_K ,data)
 
 	wmr=vmr/1.6077
 	vp=wmr*p/(622*10**3+wmr)
