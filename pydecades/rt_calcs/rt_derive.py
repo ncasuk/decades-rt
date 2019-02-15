@@ -6,9 +6,12 @@ import time
 import formulas
 from twisted.python import log
 
+# deiced / nondeiced
 T_PARA_K = 'deiced_true_air_temp_k'
 T_PARA_C = 'deiced_true_air_temp_c'
 
+# Buck = aerack01_buck_mirr_temp
+# GE = dew_point
 TD_PARA = 'dew_point'
 
 class derived(rt_data.rt_data):
@@ -999,3 +1002,36 @@ C ST    - Corrected Surface Temperature   (deg C)
 
         return theta_v
 
+    def chfgga01_ch4_nocals(self, data):
+        """
+        Return Methane (CH4), not including times where the FGGA is in
+        calibration mode. Calibration is signified by V4 taking the 
+        value 1.
+
+        Returns:
+            fgga01_ch4_dry, with times where chfgga01_V1 is 1 set to
+              -999.99
+        """
+        ch4 = self.getdata('chfgga01_ch4_dry', data)
+        v4 = self.getdata('chfgga01_V4', data)
+
+        ch4[np.where(v4==1)] = -999.99
+
+        return ch4
+
+    def chfgga01_co2_nocals(self, data):
+        """
+        Return Methane (CH4), not including times where the FGGA is in
+        calibration mode. Calibration is signified by V4 taking the 
+        value 1.
+
+        Returns:
+            fgga01_ch4_dry, with times where chfgga01_V1 is 1 set to
+              -999.99
+        """
+        co2 = self.getdata('chfgga01_co2_dry', data)
+        v4 = self.getdata('chfgga01_V4', data)
+
+        co2[np.where(v4==1)] = -999.99
+
+        return co2

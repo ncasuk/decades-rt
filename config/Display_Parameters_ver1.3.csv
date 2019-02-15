@@ -176,3 +176,5 @@ ParameterIdentifier,ParameterName,DisplayText,DisplayUnits,GroupID,Icon,Tooltip,
 975,aqdnox01_noy,NOy CONC (AQD),(ppb)
 976,aqdnox01_h2s,H2S CONC (AQD),(ppb)
 977,virtual_potential_temp,VIRTUAL POTENTIAL TEMPERATURE,(K)
+978,chfgga01_ch4_nocals,CH4 MMR (FGGA) [NO CALS],(ppb)
+979,chfgga01_co2_nocals,CO2 MMR (FGGA) [NO CALS],(ppm)
